@@ -7,7 +7,6 @@ from ffbb_api_client_v2.api_ffbb_app_client import ApiFFBBAppClient
 
 
 class Test_00_ApiFFBBAppClient(unittest.TestCase):
-
     def setUp(self):
         load_dotenv()
 

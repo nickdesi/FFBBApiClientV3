@@ -3,6 +3,8 @@ from typing import List
 from requests_cache import CachedSession
 
 from ffbb_api_client_v2.meilisearch_ffbb_client import MeilisearchFFBBClient
+from ffbb_api_client_v2.multi_search_query_helper import generate_queries
+from ffbb_api_client_v2.multi_search_results import MultiSearchResult
 
 from .api_ffbb_app_client import ApiFFBBAppClient
 from .http_requests_helper import default_cached_session
@@ -60,6 +62,16 @@ class FFBBAPIClientV2:
     def get_lives(self, cached_session: CachedSession = None) -> List[Live]:
         return self.api_ffbb_client.get_lives(cached_session)
 
+    def multi_search(
+        self, name: str = None, cached_session: CachedSession = None
+    ) -> List[MultiSearchResult]:
+        queries = generate_queries(name)
+        results = self.meilisearch_ffbb_client.recursive_smart_multi_search(
+            queries, cached_session=cached_session
+        )
+
+        return results.results if results else None
+
     def search_multiple_organismes(
         self, names: List[str] = None, cached_session: CachedSession = None
     ) -> List[OrganismesMultiSearchResult]:
@@ -77,7 +89,7 @@ class FFBBAPIClientV2:
         self, name: str = None, cached_session: CachedSession = None
     ) -> OrganismesMultiSearchResult:
         results = self.search_multiple_organismes([name], cached_session)
-        return results[0] if results else None
+        return results[0] if results else OrganismesMultiSearchResult()
 
     def search_multiple_rencontres(
         self, names: List[str] = None, cached_session: CachedSession = None

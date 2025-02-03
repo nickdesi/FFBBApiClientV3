@@ -23,7 +23,6 @@ class MeilisearchClientExtension(MeilisearchClient):
         queries: List[MultiSearchQuery] = None,
         cached_session: CachedSession = None,
     ) -> MultiSearchResults:
-
         results = self.multi_search(queries, cached_session)
 
         # Should filter results.hits according to query.q

@@ -6,7 +6,6 @@ from ffbb_api_client_v2 import MeilisearchClient, MultiSearchQuery, generate_que
 
 
 class Test_01_MeilisearchClient(unittest.TestCase):
-
     def setUp(self):
         mls_token = os.getenv("MEILISEARCH_TOKEN")
 

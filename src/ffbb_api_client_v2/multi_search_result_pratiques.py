@@ -119,7 +119,6 @@ class PratiquesFacetDistribution(FacetDistribution):
 
 
 class PratiquesFacetStats(FacetStats):
-
     def __init__(self) -> None:
         pass
 

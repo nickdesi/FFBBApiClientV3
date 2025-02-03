@@ -11,7 +11,6 @@ from .multi_search_results import MultiSearchResult
 class PratiquesMultiSearchResult(
     MultiSearchResult[PratiquesHit, PratiquesFacetDistribution, PratiquesFacetStats]
 ):
-
     @staticmethod
     def from_dict(obj: Any) -> "PratiquesMultiSearchResult":
         return MultiSearchResult.from_dict(

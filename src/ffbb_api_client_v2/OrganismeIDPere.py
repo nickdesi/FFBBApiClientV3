@@ -108,79 +108,90 @@ class OrganismeIDPere:
 
     @staticmethod
     def from_dict(obj: Any) -> "OrganismeIDPere":
-        assert isinstance(obj, dict)
-        adresse = from_union([from_str, from_none], obj.get("adresse"))
-        adresse_club_pro = from_none(obj.get("adresseClubPro"))
-        cartographie = from_union([from_str, from_none], obj.get("cartographie"))
-        code = from_union([from_str, from_none], obj.get("code"))
-        commune = from_union(
-            [lambda x: int(from_str(x)), from_none], obj.get("commune")
-        )
-        commune_club_pro = from_none(obj.get("communeClubPro"))
-        date_created = from_union([from_datetime, from_none], obj.get("date_created"))
-        date_updated = from_union([from_datetime, from_none], obj.get("date_updated"))
-        id = from_union([lambda x: int(from_str(x)), from_none], obj.get("id"))
-        mail = from_union([from_str, from_none], obj.get("mail"))
-        nom = from_union([from_str, from_none], obj.get("nom"))
-        nom_club_pro = from_union([from_str, from_none], obj.get("nomClubPro"))
-        organisme_id_pere = from_union(
-            [from_str, from_none], obj.get("organisme_id_pere")
-        )
-        salle = from_none(obj.get("salle"))
-        telephone = from_union([from_str, from_none], obj.get("telephone"))
-        type = from_union([from_str, from_none], obj.get("type"))
-        type_association = from_none(obj.get("type_association"))
-        url_site_web = from_union([from_str, from_none], obj.get("urlSiteWeb"))
-        logo = from_union([lambda x: UUID(x), from_none], obj.get("logo"))
-        nom_simple = from_union([from_str, from_none], obj.get("nom_simple"))
-        date_affiliation = from_none(obj.get("dateAffiliation"))
-        saison_en_cours = from_union([from_bool, from_none], obj.get("saison_en_cours"))
-        entreprise = from_union([from_bool, from_none], obj.get("entreprise"))
-        handibasket = from_union([from_bool, from_none], obj.get("handibasket"))
-        omnisport = from_union([from_bool, from_none], obj.get("omnisport"))
-        hors_association = from_union(
-            [from_bool, from_none], obj.get("horsAssociation")
-        )
-        offres_pratiques = from_union(
-            [lambda x: from_list(lambda x: x, x), from_none], obj.get("offresPratiques")
-        )
-        engagements = from_union(
-            [lambda x: from_list(lambda x: x, x), from_none], obj.get("engagements")
-        )
-        labellisation = from_union(
-            [lambda x: from_list(lambda x: x, x), from_none], obj.get("labellisation")
-        )
-        return OrganismeIDPere(
-            adresse,
-            adresse_club_pro,
-            cartographie,
-            code,
-            commune,
-            commune_club_pro,
-            date_created,
-            date_updated,
-            id,
-            mail,
-            nom,
-            nom_club_pro,
-            organisme_id_pere,
-            salle,
-            telephone,
-            type,
-            type_association,
-            url_site_web,
-            logo,
-            nom_simple,
-            date_affiliation,
-            saison_en_cours,
-            entreprise,
-            handibasket,
-            omnisport,
-            hors_association,
-            offres_pratiques,
-            engagements,
-            labellisation,
-        )
+        try:
+            assert isinstance(obj, dict)
+            adresse = from_union([from_str, from_none], obj.get("adresse"))
+            adresse_club_pro = from_none(obj.get("adresseClubPro"))
+            cartographie = from_union([from_str, from_none], obj.get("cartographie"))
+            code = from_union([from_str, from_none], obj.get("code"))
+            commune = from_union(
+                [lambda x: int(from_str(x)), from_none], obj.get("commune")
+            )
+            commune_club_pro = from_none(obj.get("communeClubPro"))
+            date_created = from_union(
+                [from_datetime, from_none], obj.get("date_created")
+            )
+            date_updated = from_union(
+                [from_datetime, from_none], obj.get("date_updated")
+            )
+            id = from_union([lambda x: int(from_str(x)), from_none], obj.get("id"))
+            mail = from_union([from_str, from_none], obj.get("mail"))
+            nom = from_union([from_str, from_none], obj.get("nom"))
+            nom_club_pro = from_union([from_str, from_none], obj.get("nomClubPro"))
+            organisme_id_pere = from_union(
+                [OrganismeIDPere.from_dict, from_none], obj.get("organisme_id_pere")
+            )
+            salle = from_none(obj.get("salle"))
+            telephone = from_union([from_str, from_none], obj.get("telephone"))
+            type = from_union([from_str, from_none], obj.get("type"))
+            type_association = from_none(obj.get("type_association"))
+            url_site_web = from_union([from_str, from_none], obj.get("urlSiteWeb"))
+            logo = from_union([lambda x: UUID(x), from_none], obj.get("logo"))
+            nom_simple = from_union([from_str, from_none], obj.get("nom_simple"))
+            date_affiliation = from_none(obj.get("dateAffiliation"))
+            saison_en_cours = from_union(
+                [from_bool, from_none], obj.get("saison_en_cours")
+            )
+            entreprise = from_union([from_bool, from_none], obj.get("entreprise"))
+            handibasket = from_union([from_bool, from_none], obj.get("handibasket"))
+            omnisport = from_union([from_bool, from_none], obj.get("omnisport"))
+            hors_association = from_union(
+                [from_bool, from_none], obj.get("horsAssociation")
+            )
+            offres_pratiques = from_union(
+                [lambda x: from_list(lambda x: x, x), from_none],
+                obj.get("offresPratiques"),
+            )
+            engagements = from_union(
+                [lambda x: from_list(lambda x: x, x), from_none], obj.get("engagements")
+            )
+            labellisation = from_union(
+                [lambda x: from_list(lambda x: x, x), from_none],
+                obj.get("labellisation"),
+            )
+            return OrganismeIDPere(
+                adresse,
+                adresse_club_pro,
+                cartographie,
+                code,
+                commune,
+                commune_club_pro,
+                date_created,
+                date_updated,
+                id,
+                mail,
+                nom,
+                nom_club_pro,
+                organisme_id_pere,
+                salle,
+                telephone,
+                type,
+                type_association,
+                url_site_web,
+                logo,
+                nom_simple,
+                date_affiliation,
+                saison_en_cours,
+                entreprise,
+                handibasket,
+                omnisport,
+                hors_association,
+                offres_pratiques,
+                engagements,
+                labellisation,
+            )
+        except Exception as e:
+            raise ValueError(f"Failed to parse OrganismeIDPere: {str(e)}") from e
 
     def to_dict(self) -> dict:
         result: dict = {}

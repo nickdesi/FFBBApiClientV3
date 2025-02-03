@@ -290,7 +290,12 @@ class RencontresHit(Hit):
             pratique = from_union([from_none, Pratique], obj.get("pratique"))
             gs_id = from_union([from_str, from_none], obj.get("gsId"))
             officiels = from_union(
-                [lambda x: from_list(from_str, x), from_none], obj.get("officiels")
+                [
+                    lambda x: from_list(from_str, x),
+                    lambda x: from_list(from_str, [s.strip() for s in x.split(",")]),
+                    from_none,
+                ],
+                obj.get("officiels"),
             )
             competition_id = from_union(
                 [CompetitionID.from_dict, from_none], obj.get("competitionId")

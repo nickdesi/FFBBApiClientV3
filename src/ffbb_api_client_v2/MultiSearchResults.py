@@ -36,13 +36,13 @@ def result_from_list(s: List[Any]) -> List[MultiSearchResult]:
 
     if s:
         for element in s:
-            index_uid = element["indexUid"]
-
             try:
+                index_uid = element["indexUid"]
                 from_dict_func = index_uids_converters[index_uid]
                 result = from_dict_func(element)
                 results.append(result)
             except Exception:
+                # Skip invalid or unsupported index results
                 pass
 
     return results

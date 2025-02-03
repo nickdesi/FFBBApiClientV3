@@ -10,7 +10,6 @@ from ffbb_api_client_v2 import (
 
 
 class Test_02_MeilisearchClientExtension(unittest.TestCase):
-
     def setUp(self):
         mls_token = os.getenv("MEILISEARCH_TOKEN")
 

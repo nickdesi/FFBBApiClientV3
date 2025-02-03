@@ -13,7 +13,6 @@ class CompetitionsMultiSearchResult(
         CompetitionsHit, CompetitionsFacetDistribution, CompetitionsFacetStats
     ]
 ):
-
     @staticmethod
     def from_dict(obj: Any) -> "CompetitionsMultiSearchResult":
         return MultiSearchResult.from_dict(
