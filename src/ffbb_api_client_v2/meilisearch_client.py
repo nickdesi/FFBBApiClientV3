@@ -25,6 +25,8 @@ class MeilisearchClient:
             debug (bool, optional): Whether to enable debug mode. Defaults to False.
             cached_session (CachedSession, optional): The cached session to use.
         """
+        if not bearer_token:
+            raise ValueError("bearer_token cannot be None or empty")
         self.bearer_token = bearer_token
         self.url = url
         self.debug = debug
