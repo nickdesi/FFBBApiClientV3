@@ -31,8 +31,10 @@ def from_union(fs, x) -> Any:
     for f in fs:
         try:
             return f(x)
-        except Exception:
+        except AssertionError:
             pass
+        except Exception as e:
+            print(f"from_union Exception : {f.__name__} : Exception: {e}")
     assert False
 
 
