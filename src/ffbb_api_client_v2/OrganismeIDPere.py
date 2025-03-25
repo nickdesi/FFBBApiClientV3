@@ -9,17 +9,18 @@ from .converters import (
     from_none,
     from_str,
     from_union,
+    from_uuid,
     is_type,
 )
 
 
 class OrganismeIDPere:
     adresse: Optional[str] = None
-    adresse_club_pro: None
+    adresse_club_pro: Optional[str] = None
     cartographie: Optional[str] = None
     code: Optional[str] = None
     commune: Optional[int] = None
-    commune_club_pro: None
+    commune_club_pro: Optional[str] = None
     date_created: Optional[datetime] = None
     date_updated: Optional[datetime] = None
     id: Optional[int] = None
@@ -27,14 +28,14 @@ class OrganismeIDPere:
     nom: Optional[str] = None
     nom_club_pro: Optional[str] = None
     organisme_id_pere: Optional[str] = None
-    salle: None
+    salle: Optional[str] = None
     telephone: Optional[str] = None
     type: Optional[str] = None
-    type_association: None
+    type_association: Optional[str] = None
     url_site_web: Optional[str] = None
     logo: Optional[UUID] = None
     nom_simple: Optional[str] = None
-    date_affiliation: None
+    date_affiliation: Optional[datetime] = None
     saison_en_cours: Optional[bool] = None
     entreprise: Optional[bool] = None
     handibasket: Optional[bool] = None
@@ -47,11 +48,11 @@ class OrganismeIDPere:
     def __init__(
         self,
         adresse: Optional[str],
-        adresse_club_pro: None,
+        adresse_club_pro: Optional[str],
         cartographie: Optional[str],
         code: Optional[str],
         commune: Optional[int],
-        commune_club_pro: None,
+        commune_club_pro: Optional[str],
         date_created: Optional[datetime],
         date_updated: Optional[datetime],
         id: Optional[int],
@@ -59,14 +60,14 @@ class OrganismeIDPere:
         nom: Optional[str],
         nom_club_pro: Optional[str],
         organisme_id_pere: Optional[str],
-        salle: None,
+        salle: Optional[str],
         telephone: Optional[str],
         type: Optional[str],
-        type_association: None,
+        type_association: Optional[str],
         url_site_web: Optional[str],
         logo: Optional[UUID],
         nom_simple: Optional[str],
-        date_affiliation: None,
+        date_affiliation: Optional[datetime],
         saison_en_cours: Optional[bool],
         entreprise: Optional[bool],
         handibasket: Optional[bool],
@@ -124,14 +125,14 @@ class OrganismeIDPere:
         nom = from_union([from_str, from_none], obj.get("nom"))
         nom_club_pro = from_union([from_str, from_none], obj.get("nomClubPro"))
         organisme_id_pere = from_union(
-            [from_str, from_none], obj.get("organisme_id_pere")
+            [OrganismeIDPere.from_dict, from_none], obj.get("organisme_id_pere")
         )
         salle = from_none(obj.get("salle"))
         telephone = from_union([from_str, from_none], obj.get("telephone"))
         type = from_union([from_str, from_none], obj.get("type"))
         type_association = from_none(obj.get("type_association"))
         url_site_web = from_union([from_str, from_none], obj.get("urlSiteWeb"))
-        logo = from_union([lambda x: UUID(x), from_none], obj.get("logo"))
+        logo = from_union([from_uuid, from_none], obj.get("logo"))
         nom_simple = from_union([from_str, from_none], obj.get("nom_simple"))
         date_affiliation = from_none(obj.get("dateAffiliation"))
         saison_en_cours = from_union([from_bool, from_none], obj.get("saison_en_cours"))

@@ -16,8 +16,8 @@ from .TypeAssociation import TypeAssociation
 
 class SallesFacetDistribution(FacetDistribution):
     @staticmethod
-    def from_dict(obj: Any) -> "FacetDistribution":
-        FacetDistribution.from_dict(obj)
+    def from_dict(obj: Any) -> "SallesFacetDistribution":
+        return SallesFacetDistribution()
 
     def to_dict(self) -> dict:
         super().to_dict()
