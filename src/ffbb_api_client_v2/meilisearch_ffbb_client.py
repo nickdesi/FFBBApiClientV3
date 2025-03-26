@@ -65,7 +65,8 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
     def search_rencontres(
         self, name: str = None, cached_session: CachedSession = None
     ) -> RencontresMultiSearchResult:
-        return self.search_multiple_rencontres([name], cached_session)[0]
+        results = self.search_multiple_rencontres([name], cached_session)
+        return results[0] if results else None
 
     def search_multiple_terrains(
         self, names: List[str] = None, cached_session: CachedSession = None
