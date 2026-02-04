@@ -145,3 +145,19 @@ def from_comma_separated_list(x: Any) -> list[str] | None:
     Convert comma separated list to list of strings.
     """
     return [s.strip() for s in x.split(",")] if x else None
+
+
+def from_officiels_list(x: Any) -> list | None:
+    """
+    Handle officiels field which can be either:
+    - A comma-separated string (old format)
+    - A list of dicts (new format)
+    - None
+    """
+    if x is None:
+        return None
+    if isinstance(x, list):
+        return x  # Return as-is if already a list
+    if isinstance(x, str):
+        return [s.strip() for s in x.split(",")] if x else None
+    return None

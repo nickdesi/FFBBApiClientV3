@@ -4,12 +4,12 @@ from datetime import datetime
 from typing import Any
 
 from ..utils.converter_utils import (
-    from_comma_separated_list,
     from_datetime,
     from_dict,
     from_int,
     from_list,
     from_none,
+    from_officiels_list,
     from_str,
     from_union,
     is_type,
@@ -210,7 +210,7 @@ class RencontresHit(Hit):
         numero_journee: int | None,
         pratique: Pratique | None,
         gs_id: str,
-        officiels: list[str] | None,
+        officiels: list | None,
         competition_id: CompetitionID | None,
         id_organisme_equipe1: IDOrganismeEquipe | None,
         id_organisme_equipe2: IDOrganismeEquipe | None,
@@ -247,7 +247,20 @@ class RencontresHit(Hit):
         self.lower_gs_id = gs_id.lower() if gs_id else None
 
         self.officiels = officiels
-        self.lower_officiels = [o.lower() for o in officiels] if officiels else None
+        # Handle both old format (list of strings) and new format (list of dicts)
+        if officiels:
+            lower_officiels = []
+            for o in officiels:
+                if isinstance(o, str):
+                    lower_officiels.append(o.lower())
+                elif isinstance(o, dict):
+                    # Extract name from dict format: {'officiel': {'nom': '...', 'prenom': '...'}}
+                    off = o.get("officiel", {})
+                    name = f"{off.get('nom', '')} {off.get('prenom', '')}".strip()
+                    lower_officiels.append(name.lower() if name else "")
+            self.lower_officiels = lower_officiels if lower_officiels else None
+        else:
+            self.lower_officiels = None
 
         self.competition_id = competition_id
         self.id_organisme_equipe1 = id_organisme_equipe1
@@ -285,7 +298,9 @@ class RencontresHit(Hit):
 
             numero_journee_tmp = obj.get("numeroJournee")
             numero_journee_tmp = (
-                numero_journee_tmp if len(numero_journee_tmp) > 0 else None
+                numero_journee_tmp
+                if numero_journee_tmp and len(numero_journee_tmp) > 0
+                else None
             )
 
             numero_journee = from_union(
@@ -293,9 +308,7 @@ class RencontresHit(Hit):
             )
             pratique = from_union([from_none, Pratique], obj.get("pratique"))
             gs_id = from_union([from_str, from_none], obj.get("gsId"))
-            officiels = from_union(
-                [from_comma_separated_list, from_none], obj.get("officiels")
-            )
+            officiels = from_officiels_list(obj.get("officiels"))
             competition_id = from_union(
                 [CompetitionID.from_dict, from_none], obj.get("competitionId")
             )
