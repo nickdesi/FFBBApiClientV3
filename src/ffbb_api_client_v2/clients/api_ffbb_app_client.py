@@ -304,6 +304,49 @@ class ApiFFBBAppClient:
         actual_data = data.get("data") if data and isinstance(data, dict) else data
         return GetOrganismeResponse.from_dict(actual_data) if actual_data else None
 
+    def list_competitions(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        cached_session: CachedSession = None,
+    ) -> list[GetCompetitionResponse]:
+        """
+        Lists competitions with optional field selection.
+
+        Args:
+            limit (int): Maximum number of competitions to return. Defaults to 10.
+            fields (List[str], optional): List of fields to retrieve.
+                If None, uses basic fields (id, nom).
+            cached_session (CachedSession, optional): The cached session to use
+
+        Returns:
+            list[GetCompetitionResponse]: List of competition data
+        """
+        url = f"{self.url}items/ffbbserver_competitions"
+
+        params = {"limit": str(limit)}
+
+        if fields:
+            params["fields[]"] = fields
+        else:
+            params["fields[]"] = ["id", "nom"]
+
+        final_url = url_with_params(url, params)
+        data = catch_result(
+            lambda: http_get_json(
+                final_url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or self.cached_session,
+            )
+        )
+
+        # Extract the actual data from the response wrapper
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        if actual_data and isinstance(actual_data, list):
+            return [GetCompetitionResponse.from_dict(item) for item in actual_data]
+        return []
+
     def get_configuration(
         self,
         cached_session: CachedSession = None,

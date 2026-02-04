@@ -38,8 +38,21 @@ class Test000ApiFfbbAppClient(unittest.TestCase):
         self.assertIsNotNone(result)
         self.assertEqual(result.id, str(organisme_id))
 
+    def _get_valid_competition_id(self) -> int:
+        """Helper method to get a valid competition ID dynamically."""
+        competitions = self.api_client.list_competitions(limit=1)
+        self.assertIsNotNone(competitions)
+        self.assertGreater(len(competitions), 0, "No competitions found")
+        return int(competitions[0].id)
+
+    def test_list_competitions(self):
+        result = self.api_client.list_competitions(limit=5)
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, list)
+        self.assertGreater(len(result), 0)
+
     def test_get_competition(self):
-        competition_id = 200000002845137  # Régionale féminine seniors - Division 2
+        competition_id = self._get_valid_competition_id()
         result = self.api_client.get_competition(competition_id)
         self.assertIsNotNone(result)
         self.assertEqual(result.id, str(competition_id))
@@ -62,7 +75,7 @@ class Test000ApiFfbbAppClient(unittest.TestCase):
             self.assertIsNotNone(first_item.id)
 
     def test_get_competition_with_custom_fields(self):
-        competition_id = 200000002845137
+        competition_id = self._get_valid_competition_id()
         fields = ["id", "nom", "sexe", "saison"]
         result = self.api_client.get_competition(competition_id, fields=fields)
         self.assertIsNotNone(result)
