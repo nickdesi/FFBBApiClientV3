@@ -50,6 +50,7 @@ class MeilisearchClient:
         self.headers = {
             "Authorization": f"Bearer {self._bearer_token}",
             "Content-Type": "application/json",
+            "user-agent": "okhttp/4.12.0",
         }
 
         # Configure retry and timeout settings

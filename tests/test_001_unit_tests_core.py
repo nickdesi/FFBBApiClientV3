@@ -193,7 +193,11 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         self.assertEqual(self.client.url, "https://api.ffbb.app/")
         self.assertFalse(self.client.debug)
         self.assertEqual(
-            self.client.headers, {"Authorization": f"Bearer {self.bearer_token}"}
+            self.client.headers,
+            {
+                "Authorization": f"Bearer {self.bearer_token}",
+                "user-agent": "okhttp/4.12.0",
+            },
         )
 
     def test_002_init_with_empty_token(self):

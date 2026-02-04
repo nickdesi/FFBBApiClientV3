@@ -5,6 +5,7 @@ from requests_cache import CachedSession
 from ..helpers.http_requests_helper import catch_result
 from ..helpers.http_requests_utils import http_get_json, url_with_params
 from ..models.competitions_models import GetCompetitionResponse
+from ..models.configuration_models import GetConfigurationResponse
 from ..models.lives import Live, lives_from_dict
 from ..models.organismes_models import GetOrganismeResponse
 from ..models.poules_models import GetPouleResponse
@@ -55,7 +56,10 @@ class ApiFFBBAppClient:
         self.url = url
         self.debug = debug
         self.cached_session = cached_session
-        self.headers = {"Authorization": f"Bearer {self._bearer_token}"}
+        self.headers = {
+            "Authorization": f"Bearer {self._bearer_token}",
+            "user-agent": "okhttp/4.12.0",
+        }
 
         # Configure retry and timeout settings
         self.retry_config = retry_config or get_default_retry_config()
@@ -299,3 +303,36 @@ class ApiFFBBAppClient:
         # Extract the actual data from the response wrapper
         actual_data = data.get("data") if data and isinstance(data, dict) else data
         return GetOrganismeResponse.from_dict(actual_data) if actual_data else None
+
+    def get_configuration(
+        self,
+        cached_session: CachedSession = None,
+    ) -> GetConfigurationResponse:
+        """
+        Retrieves the API configuration including bearer tokens.
+
+        This endpoint returns configuration data including:
+        - key_dh: The API bearer token for api.ffbb.app
+        - key_ms: The Meilisearch bearer token for meilisearch-prod.ffbb.app
+
+        Args:
+            cached_session (CachedSession, optional): The cached session to use
+
+        Returns:
+            GetConfigurationResponse: Configuration data with tokens
+        """
+        url = f"{self.url}items/configuration"
+        data = catch_result(
+            lambda: http_get_json(
+                url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or self.cached_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
+            )
+        )
+
+        # Extract the actual data from the response wrapper
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetConfigurationResponse.from_dict(actual_data) if actual_data else None

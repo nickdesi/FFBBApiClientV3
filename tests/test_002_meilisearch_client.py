@@ -32,10 +32,15 @@ class Test002MeilisearchClient(unittest.TestCase):
         self.assertIsNotNone(search_result.results)
         self.assertGreater(len(search_result.results), 0)
 
-        for i in range(0, len(search_result.results)):
-            result = search_result.results[i]
-            query = queries[i]
+        # Create a mapping of index_uid to query for proper validation
+        queries_by_index = {q.index_uid: q for q in queries}
 
+        for result in search_result.results:
+            # Find the matching query by index_uid
+            query = queries_by_index.get(result.index_uid)
+            self.assertIsNotNone(
+                query, f"No query found for result index_uid: {result.index_uid}"
+            )
             self.assertTrue(query.is_valid_result(result))
 
     def test_multi_search_with_all_possible_empty_queries(self):

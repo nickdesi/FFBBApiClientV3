@@ -21,6 +21,7 @@ from .competition_origine_type_competition_generique import (
 )
 from .competition_type import CompetitionType
 from .competitions_models import CompetitionsQuery, GetCompetitionResponse
+from .configuration_models import GetConfigurationResponse
 from .coordonnees import Coordonnees
 from .coordonnees_type import CoordonneesType
 from .document_flyer import DocumentFlyer
@@ -136,6 +137,7 @@ __all__ = [
     "GameStatsModel",
     "Geo",
     "GetCompetitionResponse",
+    "GetConfigurationResponse",
     "GetOrganismeResponse",
     "GetPouleResponse",
     "GetSaisonsResponse",

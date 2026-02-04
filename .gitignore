@@ -54,5 +54,7 @@ MANIFEST
 .python-version
 .env
 http_cache.sqlite
+http_cache.db
 .claude*
 .hive-mind
+uv.lock
