@@ -141,7 +141,7 @@ class Organisateur:
         type = from_union([from_str, from_none], obj.get("type"))
         type_association = from_none(obj.get("type_association"))
         url_site_web = from_union([from_str, from_none], obj.get("urlSiteWeb"))
-        logo = from_union([from_none, lambda x: UUID(x)], obj.get("logo"))
+        logo = from_union([from_none, UUID], obj.get("logo"))
         nom_simple = from_union([from_none, from_str], obj.get("nom_simple"))
         date_affiliation = from_none(obj.get("dateAffiliation"))
         saison_en_cours = from_union([from_bool, from_none], obj.get("saison_en_cours"))
@@ -249,7 +249,7 @@ class Organisateur:
         if self.url_site_web is not None:
             result["urlSiteWeb"] = from_union([from_str, from_none], self.url_site_web)
         if self.logo is not None:
-            result["logo"] = from_union([from_none, lambda x: str(x)], self.logo)
+            result["logo"] = from_union([from_none, str], self.logo)
         if self.nom_simple is not None:
             result["nom_simple"] = from_union([from_none, from_str], self.nom_simple)
         if self.date_affiliation is not None:
@@ -283,7 +283,7 @@ class Organisateur:
         if self.membres is not None:
             result["membres"] = from_union(
                 [
-                    lambda x: from_list(lambda x: from_str((lambda x: str(x))(x)), x),
+                    lambda x: from_list(lambda x: from_str((str)(x)), x),
                     from_none,
                 ],
                 self.membres,
@@ -305,7 +305,7 @@ class Organisateur:
         if self.organismes_fils is not None:
             result["organismes_fils"] = from_union(
                 [
-                    lambda x: from_list(lambda x: from_str((lambda x: str(x))(x)), x),
+                    lambda x: from_list(lambda x: from_str((str)(x)), x),
                     from_none,
                 ],
                 self.organismes_fils,

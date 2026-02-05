@@ -15,11 +15,11 @@ class PurpleLogo:
     @staticmethod
     def from_dict(obj: Any) -> PurpleLogo:
         assert isinstance(obj, dict)
-        id = from_union([lambda x: UUID(x), from_none], obj.get("id"))
+        id = from_union([UUID, from_none], obj.get("id"))
         return PurpleLogo(id)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.id is not None:
-            result["id"] = from_union([lambda x: str(x), from_none], self.id)
+            result["id"] = from_union([str, from_none], self.id)
         return result

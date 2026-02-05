@@ -341,7 +341,7 @@ class CompetitionsHit(Hit):
                 niveau_nb,
             )
         except Exception as e:
-            raise ValueError(f"Invalid `Hit.from_dict` input: {e}")
+            raise ValueError(f"Invalid `Hit.from_dict` input: {e}") from e
 
     def to_dict(self) -> dict:
         result: dict = {}

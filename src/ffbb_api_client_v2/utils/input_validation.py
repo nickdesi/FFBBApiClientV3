@@ -85,7 +85,7 @@ def validate_url(url: str, field_name: str = "url") -> str:
         if not parsed.scheme or not parsed.netloc:
             raise ValidationError(f"{field_name} must be a valid URL")
     except Exception as e:
-        raise ValidationError(f"{field_name} is not a valid URL: {e}")
+        raise ValidationError(f"{field_name} is not a valid URL: {e}") from e
 
     # Check scheme
     if parsed.scheme not in ["http", "https"]:
@@ -117,7 +117,7 @@ def validate_positive_integer(value: Union[int, str], field_name: str = "value")
         else:
             int_value = int(value)
     except (ValueError, AttributeError) as e:
-        raise ValidationError(f"{field_name} must be a valid integer: {e}")
+        raise ValidationError(f"{field_name} must be a valid integer: {e}") from e
 
     if int_value <= 0:
         raise ValidationError(
@@ -239,7 +239,7 @@ def validate_deep_limit(
         else:
             int_value = int(deep_limit)
     except (ValueError, AttributeError) as e:
-        raise ValidationError(f"{field_name} must be a valid integer: {e}")
+        raise ValidationError(f"{field_name} must be a valid integer: {e}") from e
 
     if int_value < 1:
         raise ValidationError(f"{field_name} must be at least 1, got {int_value}")

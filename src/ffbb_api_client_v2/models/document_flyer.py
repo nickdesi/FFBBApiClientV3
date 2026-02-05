@@ -132,7 +132,7 @@ class DocumentFlyer:
     @staticmethod
     def from_dict(obj: Any) -> DocumentFlyer:
         assert isinstance(obj, dict)
-        id = from_union([lambda x: UUID(x), from_none], obj.get("id"))
+        id = from_union([UUID, from_none], obj.get("id"))
         storage = from_union([from_str, from_none], obj.get("storage"))
         filename_disk = from_union([from_str, from_none], obj.get("filename_disk"))
         filename_download = from_union(
@@ -216,7 +216,7 @@ class DocumentFlyer:
     def to_dict(self) -> dict:
         result: dict = {}
         if self.id is not None:
-            result["id"] = from_union([lambda x: str(x), from_none], self.id)
+            result["id"] = from_union([str, from_none], self.id)
         if self.storage is not None:
             result["storage"] = from_union([from_str, from_none], self.storage)
         if self.filename_disk is not None:

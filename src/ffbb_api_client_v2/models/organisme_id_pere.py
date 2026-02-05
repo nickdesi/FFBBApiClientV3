@@ -248,7 +248,7 @@ class OrganismeIDPere:
         if self.url_site_web is not None:
             result["urlSiteWeb"] = from_union([from_str, from_none], self.url_site_web)
         if self.logo is not None:
-            result["logo"] = from_union([from_none, lambda x: str(x)], self.logo)
+            result["logo"] = from_union([from_none, str], self.logo)
         if self.nom_simple is not None:
             result["nom_simple"] = from_union([from_str, from_none], self.nom_simple)
         if self.date_affiliation is not None:

@@ -255,7 +255,7 @@ class OrganismesHit(Hit):
                 thumbnail,
             )
         except Exception as e:
-            raise ValueError(f"Invalid `OrganismesHit` object: {e}")
+            raise ValueError(f"Invalid `OrganismesHit` object: {e}") from e
 
     def to_dict(self) -> dict:
         result: dict = {}

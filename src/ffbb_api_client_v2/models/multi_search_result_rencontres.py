@@ -383,7 +383,7 @@ class RencontresHit(Hit):
                 niveau_nb,
             )
         except Exception as e:
-            raise ValueError(f"Invalid `Hit` object: {e}")
+            raise ValueError(f"Invalid `Hit` object: {e}") from e
 
     def to_dict(self) -> dict:
         result: dict = {}

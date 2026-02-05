@@ -238,7 +238,7 @@ class TournoiTypes3X3:
     def from_dict(obj: Any) -> TournoiTypes3X3:
         assert isinstance(obj, dict)
         libelle = from_union([from_none, Libelle], obj.get("libelle"))
-        logo = from_union([from_none, lambda x: UUID(x)], obj.get("logo"))
+        logo = from_union([from_none, UUID], obj.get("logo"))
         type_league = from_union([from_none, TypeLeague], obj.get("type_league"))
         type_tournois = from_union(
             [from_none, lambda x: int(from_str(x))], obj.get("type_tournois")
@@ -252,7 +252,7 @@ class TournoiTypes3X3:
                 [from_none, lambda x: to_enum(Libelle, x)], self.libelle
             )
         if self.logo is not None:
-            result["logo"] = from_union([from_none, lambda x: str(x)], self.logo)
+            result["logo"] = from_union([from_none, str], self.logo)
         if self.type_league is not None:
             result["type_league"] = from_union(
                 [from_none, lambda x: to_enum(TypeLeague, x)], self.type_league

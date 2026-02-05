@@ -7,7 +7,9 @@ from typing import TypeVar
 from requests import ReadTimeout
 
 # Import for backward compatibility - needed by client modules
-from ..utils.cache_manager import default_cached_session  # noqa: F401
+from ..utils.cache_manager import (  # noqa: F401  # pylint: disable=unused-import
+    default_cached_session,
+)
 
 T = TypeVar("T")
 

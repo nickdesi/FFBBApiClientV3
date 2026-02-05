@@ -26,3 +26,13 @@ ignore_missing_imports = true
 [tool.pyright]
 pythonVersion = "3.9"
 typeCheckingMode = "standard"
+
+[tool.pylint.messages_control]
+# Disable warnings for API field names that match Python built-ins
+disable = [
+    "redefined-builtin",  # API models use 'id', 'type' as field names
+]
+
+[tool.pylint.main]
+# Ignore generated model files for certain checks
+ignore-patterns = ["test_.*"]

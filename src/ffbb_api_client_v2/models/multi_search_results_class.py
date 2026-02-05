@@ -23,13 +23,13 @@ index_uids = [
 ]
 
 index_uids_converters = {
-    index_uids[0]: lambda x: OrganismesMultiSearchResult.from_dict(x),
-    index_uids[1]: lambda x: RencontresMultiSearchResult.from_dict(x),
-    index_uids[2]: lambda x: TerrainsMultiSearchResult.from_dict(x),
-    index_uids[3]: lambda x: SallesMultiSearchResult.from_dict(x),
-    index_uids[4]: lambda x: TournoisMultiSearchResult.from_dict(x),
-    index_uids[5]: lambda x: CompetitionsMultiSearchResult.from_dict(x),
-    index_uids[6]: lambda x: PratiquesMultiSearchResult.from_dict(x),
+    index_uids[0]: OrganismesMultiSearchResult.from_dict,
+    index_uids[1]: RencontresMultiSearchResult.from_dict,
+    index_uids[2]: TerrainsMultiSearchResult.from_dict,
+    index_uids[3]: SallesMultiSearchResult.from_dict,
+    index_uids[4]: TournoisMultiSearchResult.from_dict,
+    index_uids[5]: CompetitionsMultiSearchResult.from_dict,
+    index_uids[6]: PratiquesMultiSearchResult.from_dict,
 }
 
 

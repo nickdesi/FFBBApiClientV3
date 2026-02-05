@@ -24,7 +24,7 @@ class Folder:
     @staticmethod
     def from_dict(obj: Any) -> Folder:
         assert isinstance(obj, dict)
-        id = from_union([lambda x: UUID(x), from_none], obj.get("id"))
+        id = from_union([UUID, from_none], obj.get("id"))
         name = from_union([from_str, from_none], obj.get("name"))
         parent = from_none(obj.get("parent"))
         return Folder(id, name, parent)
@@ -32,7 +32,7 @@ class Folder:
     def to_dict(self) -> dict:
         result: dict = {}
         if self.id is not None:
-            result["id"] = from_union([lambda x: str(x), from_none], self.id)
+            result["id"] = from_union([str, from_none], self.id)
         if self.name is not None:
             result["name"] = from_union([from_str, from_none], self.name)
         if self.parent is not None:
