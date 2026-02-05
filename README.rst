@@ -65,21 +65,13 @@ Quick Start
 
 .. code-block:: python
 
-    import os
-    from ffbb_api_client_v2 import FFBBAPIClientV2
-    from dotenv import load_dotenv
+    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
 
-    # Load environment variables
-    load_dotenv()
-
-    # Retrieve API bearer tokens
-    MEILISEARCH_TOKEN = os.getenv("MEILISEARCH_BEARER_TOKEN")
-    API_TOKEN = os.getenv("API_FFBB_APP_BEARER_TOKEN")
-
-    # Create an instance of the API client
-    ffbb_api_client = FFBBAPIClientV2.create(
-        meilisearch_bearer_token=MEILISEARCH_TOKEN,
-        api_bearer_token=API_TOKEN
+    # Simplified method: automatic token retrieval
+    tokens = TokenManager.get_tokens()
+    client = FFBBAPIClientV2.create(
+        api_bearer_token=tokens.api_token,
+        meilisearch_bearer_token=tokens.meilisearch_token
     )
 
     # Search for organizations in Paris
@@ -202,6 +194,50 @@ Create a ``.env`` file in your project root:
     # .env file
     API_FFBB_APP_BEARER_TOKEN=your_ffbb_api_token_here
     MEILISEARCH_BEARER_TOKEN=your_meilisearch_token_here
+
+Token Management
+================
+
+The library provides a ``TokenManager`` class for simplified token handling:
+
+**Automatic Token Resolution:**
+
+.. code-block:: python
+
+    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+
+    # Tokens are resolved automatically:
+    # 1. From environment variables (if set)
+    # 2. From FFBB API configuration endpoint (public)
+    tokens = TokenManager.get_tokens()
+
+    client = FFBBAPIClientV2.create(
+        api_bearer_token=tokens.api_token,
+        meilisearch_bearer_token=tokens.meilisearch_token
+    )
+
+**Environment Variables (Optional):**
+
+If you prefer to use environment variables, set these in your ``.env`` file:
+
+.. code-block:: bash
+
+    API_FFBB_APP_BEARER_TOKEN=your_token_here
+    MEILISEARCH_BEARER_TOKEN=your_token_here
+
+**Token Caching:**
+
+.. code-block:: python
+
+    # Tokens are cached by default
+    tokens = TokenManager.get_tokens()  # Fetched
+    tokens = TokenManager.get_tokens()  # From cache
+
+    # Force refresh
+    tokens = TokenManager.get_tokens(use_cache=False)
+
+    # Clear cache
+    TokenManager.clear_cache()
 
 API Reference
 =============

@@ -1,5 +1,10 @@
 from requests_cache import CachedSession
 
+from ..config import (
+    DEFAULT_USER_AGENT,
+    MEILISEARCH_BASE_URL,
+    MEILISEARCH_ENDPOINT_MULTI_SEARCH,
+)
 from ..helpers.http_requests_helper import catch_result, default_cached_session
 from ..helpers.http_requests_utils import http_post_json
 from ..models.multi_search_query import MultiSearchQuery
@@ -20,7 +25,7 @@ class MeilisearchClient:
     def __init__(
         self,
         bearer_token: str,
-        url: str = "https://meilisearch-prod.ffbb.app/",
+        url: str = MEILISEARCH_BASE_URL,
         debug: bool = False,
         cached_session: CachedSession = default_cached_session,
         retry_config: RetryConfig = None,
@@ -50,7 +55,7 @@ class MeilisearchClient:
         self.headers = {
             "Authorization": f"Bearer {self._bearer_token}",
             "Content-Type": "application/json",
-            "user-agent": "okhttp/4.12.0",
+            "user-agent": DEFAULT_USER_AGENT,
         }
 
         # Configure retry and timeout settings
@@ -83,7 +88,7 @@ class MeilisearchClient:
         queries: list[MultiSearchQuery] = None,
         cached_session: CachedSession = None,
     ) -> MultiSearchResults:
-        url = f"{self.url}multi-search"
+        url = f"{self.url}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}"
         params = {"queries": [query.to_dict() for query in queries] if queries else []}
         return catch_result(
             lambda: multi_search_results_from_dict(

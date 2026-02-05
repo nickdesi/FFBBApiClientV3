@@ -2,6 +2,16 @@ from __future__ import annotations
 
 from requests_cache import CachedSession
 
+from ..config import (
+    API_FFBB_BASE_URL,
+    DEFAULT_USER_AGENT,
+    ENDPOINT_COMPETITIONS,
+    ENDPOINT_CONFIGURATION,
+    ENDPOINT_LIVES,
+    ENDPOINT_ORGANISMES,
+    ENDPOINT_POULES,
+    ENDPOINT_SAISONS,
+)
 from ..helpers.http_requests_helper import catch_result
 from ..helpers.http_requests_utils import http_get_json, url_with_params
 from ..models.competitions_models import GetCompetitionResponse
@@ -28,7 +38,7 @@ class ApiFFBBAppClient:
     def __init__(
         self,
         bearer_token: str,
-        url: str = "https://api.ffbb.app/",
+        url: str = API_FFBB_BASE_URL,
         debug: bool = False,
         cached_session: CachedSession = None,
         retry_config: RetryConfig = None,
@@ -58,7 +68,7 @@ class ApiFFBBAppClient:
         self.cached_session = cached_session
         self.headers = {
             "Authorization": f"Bearer {self._bearer_token}",
-            "user-agent": "okhttp/4.12.0",
+            "user-agent": DEFAULT_USER_AGENT,
         }
 
         # Configure retry and timeout settings
@@ -101,7 +111,7 @@ class ApiFFBBAppClient:
         Returns:
             List[Live]: A list of Live objects representing the live events.
         """
-        url = f"{self.url}json/lives.json"
+        url = f"{self.url}{ENDPOINT_LIVES}"
         return catch_result(
             lambda: lives_from_dict(
                 http_get_json(
@@ -137,7 +147,7 @@ class ApiFFBBAppClient:
             GetCompetitionResponse: Competition data with nested phases,
                 poules, and rencontres
         """
-        url = f"{self.url}items/ffbbserver_competitions/{competition_id}"
+        url = f"{self.url}{ENDPOINT_COMPETITIONS}/{competition_id}"
 
         params = {}
         if deep_limit:
@@ -189,7 +199,7 @@ class ApiFFBBAppClient:
         Returns:
             GetPouleResponse: Poule data with rencontres
         """
-        url = f"{self.url}items/ffbbserver_poules/{poule_id}"
+        url = f"{self.url}{ENDPOINT_POULES}/{poule_id}"
 
         params = {}
         if deep_limit:
@@ -235,7 +245,7 @@ class ApiFFBBAppClient:
         Returns:
             List[GetSaisonsResponse]: List of season data
         """
-        url = f"{self.url}items/ffbbserver_saisons"
+        url = f"{self.url}{ENDPOINT_SAISONS}"
 
         params = {}
         if fields:
@@ -279,7 +289,7 @@ class ApiFFBBAppClient:
         Returns:
             GetOrganismeResponse: Organisme data with members, competitions, etc.
         """
-        url = f"{self.url}items/ffbbserver_organismes/{organisme_id}"
+        url = f"{self.url}{ENDPOINT_ORGANISMES}/{organisme_id}"
 
         params = {}
         if fields:
@@ -322,7 +332,7 @@ class ApiFFBBAppClient:
         Returns:
             list[GetCompetitionResponse]: List of competition data
         """
-        url = f"{self.url}items/ffbbserver_competitions"
+        url = f"{self.url}{ENDPOINT_COMPETITIONS}"
 
         params = {"limit": str(limit)}
 
@@ -364,7 +374,7 @@ class ApiFFBBAppClient:
         Returns:
             GetConfigurationResponse: Configuration data with tokens
         """
-        url = f"{self.url}items/configuration"
+        url = f"{self.url}{ENDPOINT_CONFIGURATION}"
         data = catch_result(
             lambda: http_get_json(
                 url,

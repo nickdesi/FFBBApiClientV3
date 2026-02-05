@@ -26,6 +26,71 @@ Simple Client Creation and Usage
     lives = client.get_lives()
     print(f"Found {len(lives)} live games")
 
+Token Management
+================
+
+Automatic Token Resolution (Recommended)
+----------------------------------------
+
+The library provides a ``TokenManager`` class that automatically resolves API tokens:
+
+.. code-block:: python
+
+    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+
+    # Tokens are resolved automatically:
+    # 1. From environment variables (if set)
+    # 2. From FFBB API configuration endpoint (public)
+    tokens = TokenManager.get_tokens()
+
+    # Create the client with resolved tokens
+    client = FFBBAPIClientV2.create(
+        api_bearer_token=tokens.api_token,
+        meilisearch_bearer_token=tokens.meilisearch_token
+    )
+
+    # Use the client
+    lives = client.get_lives()
+
+Token Caching
+-------------
+
+.. code-block:: python
+
+    from ffbb_api_client_v2 import TokenManager
+
+    # First call fetches tokens (from env or API)
+    tokens = TokenManager.get_tokens()
+
+    # Subsequent calls use cached tokens
+    tokens = TokenManager.get_tokens()  # Returns cached tokens
+
+    # Force fresh fetch
+    tokens = TokenManager.get_tokens(use_cache=False)
+
+    # Clear the cache
+    TokenManager.clear_cache()
+
+Manual Token Configuration
+--------------------------
+
+If you prefer to manage tokens manually:
+
+.. code-block:: python
+
+    import os
+    from dotenv import load_dotenv
+    from ffbb_api_client_v2 import FFBBAPIClientV2
+
+    load_dotenv()
+    api_token = os.getenv("API_FFBB_APP_BEARER_TOKEN")
+    meilisearch_token = os.getenv("MEILISEARCH_BEARER_TOKEN")
+
+    client = FFBBAPIClientV2.create(
+        api_bearer_token=api_token,
+        meilisearch_bearer_token=meilisearch_token
+    )
+
 Advanced Client Usage
 =====================
 

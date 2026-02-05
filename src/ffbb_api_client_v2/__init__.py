@@ -49,6 +49,7 @@ from .models.multi_search_result_tournois import (  # noqa
     TournoisHit,
     TournoisMultiSearchResult,
 )
+from .utils.token_manager import FFBBTokens, TokenManager  # noqa
 
 if sys.version_info[:2] >= (3, 8):
     # TODO: Import directly (no need for conditional) when `python_requires = >= 3.9`

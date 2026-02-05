@@ -6,40 +6,38 @@ This example demonstrates all major features of the FFBB API Client V2,
 including model-based responses, field selection, and error handling.
 
 Prerequisites:
-- Set up your .env file with API tokens:
-  API_FFBB_APP_BEARER_TOKEN=your_api_token_here
-  MEILISEARCH_BEARER_TOKEN=your_meilisearch_token_here
+- (Optional) Set up your .env file with API tokens for manual configuration
 """
 
-import os
-
-from dotenv import load_dotenv
-
-from ffbb_api_client_v2 import FFBBAPIClientV2
+from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
 from ffbb_api_client_v2.models.query_fields import FieldSet, QueryFieldsManager
 
 
 def main():
     """Main example function demonstrating FFBB API Client V2 usage."""
 
-    # Load environment variables
-    load_dotenv()
+    print("Initializing FFBB API Client V2...")
 
-    # Get API tokens
-    api_token = os.getenv("API_FFBB_APP_BEARER_TOKEN")
-    meilisearch_token = os.getenv("MEILISEARCH_BEARER_TOKEN")
+    # Method 1: Automatic token management (Recommended)
+    print("Using TokenManager for automatic token retrieval...")
+    tokens = TokenManager.get_tokens()
 
-    if not api_token or not meilisearch_token:
-        print("❌ Missing API tokens. Please set up your .env file.")
-        return
-
-    # Create the API client
-    print("🏀 Initializing FFBB API Client V2...")
     client = FFBBAPIClientV2.create(
-        api_bearer_token=api_token, meilisearch_bearer_token=meilisearch_token
+        api_bearer_token=tokens.api_token,
+        meilisearch_bearer_token=tokens.meilisearch_token,
     )
 
-    print("✅ Client initialized successfully!\n")
+    print("Client initialized successfully!\n")
+
+    # Alternative Method: Manual token management (if needed)
+    # import os
+    # from dotenv import load_dotenv
+    # load_dotenv()
+    # api_token = os.getenv("API_FFBB_APP_BEARER_TOKEN")
+    # meilisearch_token = os.getenv("MEILISEARCH_BEARER_TOKEN")
+    # client = FFBBAPIClientV2.create(
+    #     api_bearer_token=api_token, meilisearch_bearer_token=meilisearch_token
+    # )
 
     # Example 1: Search for organizations
     print("=" * 60)
@@ -57,7 +55,7 @@ def main():
         first_org = organisations_result.hits[0]
         print(f"\n📍 First organization: {first_org.nom}")
         print(f"   ID: {first_org.id}")
-        print(f"   Type: {getattr(first_org, 'type', 'N/A')}")
+        print(f"   Type: {first_org.type or 'N/A'}")
 
         # Example 2: Get detailed organization information with different field sets
         print("\n" + "=" * 60)
@@ -143,9 +141,9 @@ def main():
     lives = client.get_lives()
 
     if lives:
-        print(f"✅ Found {len(lives)} live matches")
+        print(f"Found {len(lives)} live matches")
         for live in lives[:3]:  # Show first 3 live matches
-            print(f"   🏀 {live.equipe1} vs {live.equipe2}")
+            print(f"   {live.team_name_home} vs {live.team_name_out}")
     else:
         print("ℹ️  No live matches at the moment")
 
@@ -168,7 +166,7 @@ def main():
             # Show first result from each category
             if result.hits:
                 first_hit = result.hits[0]
-                print(f"      → {first_hit.nom} (ID: {first_hit.id})")
+                print(f"      -> ID: {first_hit.id}")
 
     # Example 6: Error handling
     print("\n" + "=" * 60)

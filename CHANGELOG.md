@@ -5,6 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2025-02-05
+
+### Added
+- **NEW**: `TokenManager` class for automatic token resolution
+  - Fetches tokens from environment variables or FFBB API
+  - Uses HTTP-level caching via `CacheManager` for configuration requests
+  - `FFBBTokens` dataclass for type-safe token handling
+- **NEW**: Centralized configuration module (`config.py`)
+  - `API_FFBB_BASE_URL`, `MEILISEARCH_BASE_URL` constants
+  - `DEFAULT_USER_AGENT` constant
+  - `ENV_API_TOKEN`, `ENV_MEILISEARCH_TOKEN` environment variable names
+  - API endpoint path constants (`ENDPOINT_CONFIGURATION`, `ENDPOINT_LIVES`, etc.)
+  - Meilisearch endpoint path constants (`MEILISEARCH_ENDPOINT_MULTI_SEARCH`)
+- New tests: `test_019_config.py`, `test_020_token_manager.py`
+
+### Changed
+- **BREAKING**: `TokenManager.get_tokens()` signature changed: `use_cache` parameter replaced by `cache_config`
+- API clients now use centralized endpoint constants from `config.py`
+- Simplified Quick Start examples using TokenManager
+- Updated all example scripts to demonstrate TokenManager usage
+
+### Removed
+- `TokenManager.clear_cache()` method (use `get_cache_manager().clear()` instead)
+- `TokenManager._cached_tokens` class variable (HTTP caching is now used)
+
+### Improved
+- No more manual token management required for basic usage
+- Environment variable handling is now optional (tokens can be auto-fetched)
+
 ## [1.1.1] - 2025-09-16
 
 ### Fixed
