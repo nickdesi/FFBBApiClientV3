@@ -537,14 +537,14 @@ class RencontresFacetStats(FacetStats):
         return RencontresFacetStats()
 
     def to_dict(self) -> dict:
-        super().to_dict()
+        return super().to_dict()
 
 
 class RencontresMultiSearchResult(
     MultiSearchResult[RencontresHit, RencontresFacetDistribution, RencontresFacetStats]
 ):
     @staticmethod
-    def from_dict(obj: Any) -> RencontresMultiSearchResult:
+    def from_dict(obj: Any) -> RencontresMultiSearchResult:  # type: ignore[override]
         return MultiSearchResult.from_dict(
             obj,
             RencontresHit,

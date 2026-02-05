@@ -12,6 +12,18 @@ class Affiche:
     width: int | None = None
     height: int | None = None
 
+    def __init__(
+        self,
+        affiche_id: UUID | None = None,
+        gradient_color: str | None = None,
+        width: int | None = None,
+        height: int | None = None,
+    ) -> None:
+        self.affiche_id = affiche_id
+        self.gradient_color = gradient_color
+        self.width = width
+        self.height = height
+
     @staticmethod
     def from_dict(obj: Any) -> Affiche:
         assert isinstance(obj, dict)

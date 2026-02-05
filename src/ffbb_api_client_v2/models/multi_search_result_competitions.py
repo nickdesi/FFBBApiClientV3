@@ -476,7 +476,7 @@ class CompetitionsFacetStats(FacetStats):
         return CompetitionsFacetStats()
 
     def to_dict(self) -> dict:
-        super().to_dict()
+        return super().to_dict()
 
 
 class CompetitionsMultiSearchResult(
@@ -485,7 +485,7 @@ class CompetitionsMultiSearchResult(
     ]
 ):
     @staticmethod
-    def from_dict(obj: Any) -> CompetitionsMultiSearchResult:
+    def from_dict(obj: Any) -> CompetitionsMultiSearchResult:  # type: ignore[override]
         return MultiSearchResult.from_dict(
             obj,
             CompetitionsHit,

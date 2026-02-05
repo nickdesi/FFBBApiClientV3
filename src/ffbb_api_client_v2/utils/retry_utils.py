@@ -10,7 +10,7 @@ import time
 from typing import Any, Callable, Optional
 
 import requests
-from requests import Response
+from requests import Response, Session
 from requests_cache import CachedSession
 
 
@@ -247,6 +247,7 @@ def make_http_request_with_retry(
         if debug:
             print(f"Making {method} request to {url}")
 
+        session: Session
         if cached_session:
             session = cached_session
         else:

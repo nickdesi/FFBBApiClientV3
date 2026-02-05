@@ -60,8 +60,8 @@ class MultiSearchQuery:
         facets: list[str] | None = None,
         limit: int | None = 10,
         offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
     ):
         self.index_uid = index_uid
         self.q = q
@@ -137,7 +137,8 @@ class MultiSearchQuery:
             ]
 
             if invalid_hits:
-                result.estimated_total_hits -= len(invalid_hits)
+                if result.estimated_total_hits is not None:
+                    result.estimated_total_hits -= len(invalid_hits)
 
                 for hit in invalid_hits:
                     result.hits.remove(hit)
@@ -150,8 +151,8 @@ class OrganismesMultiSearchQuery(MultiSearchQuery):
         q: str | None,
         limit: int | None = 10,
         offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
     ):
         super().__init__(
             index_uid="ffbbserver_organismes",
@@ -188,8 +189,8 @@ class RencontresMultiSearchQuery(MultiSearchQuery):
         q: str | None,
         limit: int | None = 10,
         offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
     ):
         super().__init__(
             index_uid="ffbbserver_rencontres",
@@ -230,8 +231,8 @@ class TerrainsMultiSearchQuery(MultiSearchQuery):
         facets: list[str] | None = None,
         limit: int | None = 10,
         offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
     ):
         super().__init__(
             index_uid="ffbbserver_terrains",
@@ -263,8 +264,8 @@ class SallesMultiSearchQuery(MultiSearchQuery):
         q: str | None,
         limit: int | None = 10,
         offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
     ):
         super().__init__(
             index_uid="ffbbserver_salles",
@@ -295,8 +296,8 @@ class TournoisMultiSearchQuery(MultiSearchQuery):
         q: str | None,
         limit: int | None = 10,
         offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
     ):
         super().__init__(
             index_uid="ffbbserver_tournois",
@@ -327,8 +328,8 @@ class CompetitionsMultiSearchQuery(MultiSearchQuery):
         q: str | None,
         limit: int | None = 10,
         offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
     ):
         super().__init__(
             index_uid="ffbbserver_competitions",
@@ -359,8 +360,8 @@ class PratiquesMultiSearchQuery(MultiSearchQuery):
         q: str | None,
         limit: int | None = 10,
         offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
     ):
         super().__init__(
             index_uid="ffbbnational_pratiques",

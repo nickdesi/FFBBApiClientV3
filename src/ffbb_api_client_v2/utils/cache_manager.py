@@ -9,9 +9,11 @@ This module provides sophisticated caching strategies including:
 - Cache warming capabilities
 """
 
+from __future__ import annotations
+
 import hashlib
 from dataclasses import dataclass
-from typing import Any, Optional
+from typing import Any, cast
 
 from requests import PreparedRequest
 from requests_cache import CachedSession
@@ -62,7 +64,7 @@ class CacheConfig:
         backend: str = "sqlite",
         expire_after: int = 1800,  # 30 minutes
         max_size: int = 1000,
-        redis_url: str = None,
+        redis_url: str | None = None,
         key_prefix: str = "ffbb_api",
         compression: bool = False,
     ):
@@ -92,7 +94,7 @@ class AdvancedCacheManager:
     Advanced cache manager with multiple backends and strategies.
     """
 
-    def __init__(self, config: CacheConfig = None):
+    def __init__(self, config: CacheConfig | None = None):
         """
         Initialize the cache manager.
 
@@ -102,7 +104,7 @@ class AdvancedCacheManager:
         self.config = config or CacheConfig()
         self.metrics = CacheMetrics()
         self._memory_cache: dict[str, dict[str, Any]] = {}
-        self._session: Optional[CachedSession] = None
+        self._session: CachedSession | None = None
 
         if self.config.enabled:
             self._initialize_cache()
@@ -172,7 +174,7 @@ class AdvancedCacheManager:
             f"{self.config.key_prefix}:{hashlib.md5(key_string.encode()).hexdigest()}"
         )
 
-    def get_session(self) -> Optional[CachedSession]:
+    def get_session(self) -> CachedSession | None:
         """
         Get the cached session.
 
@@ -208,7 +210,7 @@ class AdvancedCacheManager:
         """
         if self._session and hasattr(self._session.cache, "count"):
             try:
-                return self._session.cache.count()
+                return cast(int, self._session.cache.count())
             except Exception:
                 self.metrics.errors += 1
         return 0
@@ -222,7 +224,7 @@ class AdvancedCacheManager:
         """
         return self.metrics
 
-    def warm_cache(self, urls: list[str], headers: dict = None):
+    def warm_cache(self, urls: list[str], headers: dict[str, str] | None = None):
         """
         Warm the cache by pre-fetching specified URLs.
 
@@ -234,6 +236,8 @@ class AdvancedCacheManager:
             return
 
         headers = headers or {}
+        if self._session is None:
+            return
         for url in urls:
             try:
                 self._session.get(url, headers=headers, timeout=10)
@@ -251,18 +255,22 @@ class AdvancedCacheManager:
         if not self.is_enabled():
             return
 
+        if self._session is None:
+            return
         try:
             # This is a simplified implementation
             # In a real scenario, you'd need more sophisticated pattern matching
             # depending on the cache backend
-            if hasattr(self._session.cache, "delete"):
+            if hasattr(self._session.cache, "delete") and hasattr(
+                self._session.cache, "keys"
+            ):
                 # For Redis backend
                 keys_to_delete = []
-                for key in self._session.cache.keys():
+                for key in cast(Any, self._session.cache).keys():
                     if pattern in key:
                         keys_to_delete.append(key)
                 for key in keys_to_delete:
-                    self._session.cache.delete(key)
+                    cast(Any, self._session.cache).delete(key)
         except Exception:
             self.metrics.errors += 1
 
@@ -271,7 +279,7 @@ class AdvancedCacheManager:
 _default_cache_manager = None
 
 
-def get_cache_manager(config: CacheConfig = None) -> AdvancedCacheManager:
+def get_cache_manager(config: CacheConfig | None = None) -> AdvancedCacheManager:
     """
     Get the global cache manager instance.
 

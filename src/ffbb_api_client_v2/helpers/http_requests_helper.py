@@ -1,12 +1,18 @@
+from __future__ import annotations
+
 import json
+from collections.abc import Callable
+from typing import TypeVar
 
 from requests import ReadTimeout
 
 # Import for backward compatibility - needed by client modules
 from ..utils.cache_manager import default_cached_session  # noqa: F401
 
+T = TypeVar("T")
 
-def catch_result(callback, is_retrieving: bool = False):
+
+def catch_result(callback: Callable[[], T], is_retrieving: bool = False) -> T | None:
     """
     Catch the result of a callback function.
 

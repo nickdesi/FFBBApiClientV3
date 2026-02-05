@@ -12,7 +12,7 @@ class PratiquesMultiSearchResult(
     MultiSearchResult[PratiquesHit, PratiquesFacetDistribution, PratiquesFacetStats]
 ):
     @staticmethod
-    def from_dict(obj: Any) -> "PratiquesMultiSearchResult":
+    def from_dict(obj: Any) -> "PratiquesMultiSearchResult":  # type: ignore[override]
         return MultiSearchResult.from_dict(
             obj,
             PratiquesHit,

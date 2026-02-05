@@ -25,6 +25,22 @@ class NatureSol:
     libelle: str | None = None
     terrain: bool | None = None
 
+    def __init__(
+        self,
+        code: Code | None = None,
+        date_created: datetime | None = None,
+        date_updated: datetime | None = None,
+        id: str | None = None,
+        libelle: str | None = None,
+        terrain: bool | None = None,
+    ) -> None:
+        self.code = code
+        self.date_created = date_created
+        self.date_updated = date_updated
+        self.id = id
+        self.libelle = libelle
+        self.terrain = terrain
+
     @staticmethod
     def from_dict(obj: Any) -> NatureSol:
         assert isinstance(obj, dict)

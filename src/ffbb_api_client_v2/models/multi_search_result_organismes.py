@@ -358,14 +358,14 @@ class OrganismesFacetStats(FacetStats):
         return OrganismesFacetStats()
 
     def to_dict(self) -> dict:
-        super().to_dict()
+        return super().to_dict()
 
 
 class OrganismesMultiSearchResult(
     MultiSearchResult[OrganismesHit, OrganismesFacetDistribution, OrganismesFacetStats]
 ):
     @staticmethod
-    def from_dict(obj: Any) -> OrganismesMultiSearchResult:
+    def from_dict(obj: Any) -> OrganismesMultiSearchResult:  # type: ignore[override]
         return MultiSearchResult.from_dict(
             obj,
             OrganismesHit,

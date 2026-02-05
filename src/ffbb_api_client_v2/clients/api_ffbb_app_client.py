@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Any
+
 from requests_cache import CachedSession
 
 from ..config import (
@@ -40,10 +42,10 @@ class ApiFFBBAppClient:
         bearer_token: str,
         url: str = API_FFBB_BASE_URL,
         debug: bool = False,
-        cached_session: CachedSession = None,
-        retry_config: RetryConfig = None,
-        timeout_config: TimeoutConfig = None,
-        cache_config: CacheConfig = None,
+        cached_session: CachedSession | None = None,
+        retry_config: RetryConfig | None = None,
+        timeout_config: TimeoutConfig | None = None,
+        cache_config: CacheConfig | None = None,
     ):
         """
         Initializes an instance of the ApiFFBBAppClient class.
@@ -101,7 +103,9 @@ class ApiFFBBAppClient:
         """Get the bearer token."""
         return self._bearer_token
 
-    def get_lives(self, cached_session: CachedSession = None) -> list[Live]:
+    def get_lives(
+        self, cached_session: CachedSession | None = None
+    ) -> list[Live] | None:
         """
         Retrieves a list of live events with retry logic.
 
@@ -130,8 +134,8 @@ class ApiFFBBAppClient:
         competition_id: int,
         deep_limit: str | None = "1000",
         fields: list[str] | None = None,
-        cached_session: CachedSession = None,
-    ) -> GetCompetitionResponse:
+        cached_session: CachedSession | None = None,
+    ) -> GetCompetitionResponse | None:
         """
         Retrieves detailed information about a competition.
 
@@ -149,7 +153,7 @@ class ApiFFBBAppClient:
         """
         url = f"{self.url}{ENDPOINT_COMPETITIONS}/{competition_id}"
 
-        params = {}
+        params: dict[str, Any] = {}
         if deep_limit:
             params["deep[phases][poules][rencontres][_limit]"] = deep_limit
 
@@ -183,8 +187,8 @@ class ApiFFBBAppClient:
         poule_id: int,
         deep_limit: str | None = "1000",
         fields: list[str] | None = None,
-        cached_session: CachedSession = None,
-    ) -> GetPouleResponse:
+        cached_session: CachedSession | None = None,
+    ) -> GetPouleResponse | None:
         """
         Retrieves detailed information about a poule.
 
@@ -201,7 +205,7 @@ class ApiFFBBAppClient:
         """
         url = f"{self.url}{ENDPOINT_POULES}/{poule_id}"
 
-        params = {}
+        params: dict[str, Any] = {}
         if deep_limit:
             params["deep[rencontres][_limit]"] = deep_limit
             params["deep[classements][_limit]"] = deep_limit
@@ -230,7 +234,7 @@ class ApiFFBBAppClient:
         self,
         fields: list[str] | None = None,
         filter_criteria: str | None = '{"actif":{"_eq":true}}',
-        cached_session: CachedSession = None,
+        cached_session: CachedSession | None = None,
     ) -> list[GetSaisonsResponse]:
         """
         Retrieves list of seasons.
@@ -247,7 +251,7 @@ class ApiFFBBAppClient:
         """
         url = f"{self.url}{ENDPOINT_SAISONS}"
 
-        params = {}
+        params: dict[str, Any] = {}
         if fields:
             params["fields[]"] = fields
         else:
@@ -269,14 +273,16 @@ class ApiFFBBAppClient:
 
         # Extract the actual data from the response wrapper
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return GetSaisonsResponse.from_list(actual_data) if actual_data else []
+        if actual_data and isinstance(actual_data, list):
+            return GetSaisonsResponse.from_list(actual_data)
+        return []
 
     def get_organisme(
         self,
         organisme_id: int,
         fields: list[str] | None = None,
-        cached_session: CachedSession = None,
-    ) -> GetOrganismeResponse:
+        cached_session: CachedSession | None = None,
+    ) -> GetOrganismeResponse | None:
         """
         Retrieves detailed information about an organisme.
 
@@ -291,7 +297,7 @@ class ApiFFBBAppClient:
         """
         url = f"{self.url}{ENDPOINT_ORGANISMES}/{organisme_id}"
 
-        params = {}
+        params: dict[str, Any] = {}
         if fields:
             params["fields[]"] = fields
         else:
@@ -318,8 +324,8 @@ class ApiFFBBAppClient:
         self,
         limit: int = 10,
         fields: list[str] | None = None,
-        cached_session: CachedSession = None,
-    ) -> list[GetCompetitionResponse]:
+        cached_session: CachedSession | None = None,
+    ) -> list[GetCompetitionResponse | None]:
         """
         Lists competitions with optional field selection.
 
@@ -334,7 +340,7 @@ class ApiFFBBAppClient:
         """
         url = f"{self.url}{ENDPOINT_COMPETITIONS}"
 
-        params = {"limit": str(limit)}
+        params: dict[str, Any] = {"limit": str(limit)}
 
         if fields:
             params["fields[]"] = fields
@@ -359,8 +365,8 @@ class ApiFFBBAppClient:
 
     def get_configuration(
         self,
-        cached_session: CachedSession = None,
-    ) -> GetConfigurationResponse:
+        cached_session: CachedSession | None = None,
+    ) -> GetConfigurationResponse | None:
         """
         Retrieves the API configuration including bearer tokens.
 

@@ -12,7 +12,7 @@ class OrganismesMultiSearchResult(
     MultiSearchResult[OrganismesHit, OrganismesFacetDistribution, OrganismesFacetStats]
 ):
     @staticmethod
-    def from_dict(obj: Any) -> "OrganismesMultiSearchResult":
+    def from_dict(obj: Any) -> "OrganismesMultiSearchResult":  # type: ignore[override]
         return MultiSearchResult.from_dict(
             obj,
             OrganismesHit,

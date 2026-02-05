@@ -33,15 +33,15 @@ class GetOrganismeResponse:
         codePostal: str
         libelle: str
 
-    commune: CommuneModel
+    commune: CommuneModel | None = None
 
     @dataclass
     class CartographieModel:
         latitude: float
         longitude: float
 
-    cartographie: CartographieModel
-    communeClubPro: Any | None
+    cartographie: CartographieModel | None = None
+    communeClubPro: Any | None = None
 
     @dataclass
     class MembresitemModel:
@@ -49,16 +49,16 @@ class GetOrganismeResponse:
         nom: str
         prenom: str
         adresse1: str
-        adresse2: Any | None
-        codePostal: str
-        ville: str
-        mail: str
-        telephoneFixe: Any | None
-        telephonePortable: str
-        codeFonction: str
+        adresse2: Any | None = None
+        codePostal: str = ""
+        ville: str = ""
+        mail: str = ""
+        telephoneFixe: Any | None = None
+        telephonePortable: str = ""
+        codeFonction: str = ""
 
-    membres: list[MembresitemModel]
-    competitions: list[Any]
+    membres: list[MembresitemModel] = field(default_factory=list)
+    competitions: list[Any] = field(default_factory=list)
 
     @dataclass
     class EngagementsitemModel:
@@ -68,7 +68,7 @@ class GetOrganismeResponse:
         class IdpouleModel:
             id: str
 
-        idPoule: IdpouleModel
+        idPoule: IdpouleModel | None = None
 
         @dataclass
         class IdcompetitionModel:
@@ -80,20 +80,20 @@ class GetOrganismeResponse:
             competition_origine_nom: str
             competition_origine_niveau: int
             typeCompetition: str
-            logo: Any | None
+            logo: Any | None = None
 
             @dataclass
             class SaisonModel:
                 id: str
 
-            saison: SaisonModel
-            idCompetitionPere: Any | None
+            saison: SaisonModel | None = None
+            idCompetitionPere: Any | None = None
 
             @dataclass
             class OrganisateurModel:
                 type: str
 
-            organisateur: OrganisateurModel
+            organisateur: OrganisateurModel | None = None
 
             @dataclass
             class TypecompetitiongeneriqueModel:
@@ -103,26 +103,26 @@ class GetOrganismeResponse:
                     id: str
                     gradient_color: str
 
-                logo: LogoModel
+                logo: LogoModel | None = None
 
-            typeCompetitionGenerique: TypecompetitiongeneriqueModel
+            typeCompetitionGenerique: TypecompetitiongeneriqueModel | None = None
 
             @dataclass
             class CategorieModel:
                 code: str
                 ordre: int
 
-            categorie: CategorieModel
+            categorie: CategorieModel | None = None
 
             @property
             def niveau(self) -> Niveau | None:
                 """Extrait automatiquement le niveau depuis le nom de la compétition."""
                 return get_niveau_from_idcompetition(self)
 
-        idCompetition: IdcompetitionModel
+        idCompetition: IdcompetitionModel | None = None
 
-    engagements: list[EngagementsitemModel]
-    organismes_fils: list[Any]
+    engagements: list[EngagementsitemModel] = field(default_factory=list)
+    organismes_fils: list[Any] = field(default_factory=list)
 
     @dataclass
     class OffrespratiquesitemModel:
@@ -134,9 +134,11 @@ class GetOrganismeResponse:
             categoriePratique: str
             typePratique: str
 
-        ffbbserver_offres_pratiques_id: Ffbbserver_Offres_Pratiques_IdModel
+        ffbbserver_offres_pratiques_id: Ffbbserver_Offres_Pratiques_IdModel | None = (
+            None
+        )
 
-    offresPratiques: list[OffrespratiquesitemModel]
+    offresPratiques: list[OffrespratiquesitemModel] = field(default_factory=list)
 
     @dataclass
     class LabellisationitemModel:
@@ -149,11 +151,11 @@ class GetOrganismeResponse:
             id: str
             libelle: str
             labellisationLabel: str
-            logo_vertical: Any | None
+            logo_vertical: Any | None = None
 
-        idLabellisationProgramme: IdlabellisationprogrammeModel
+        idLabellisationProgramme: IdlabellisationprogrammeModel | None = None
 
-    labellisation: list[LabellisationitemModel]
+    labellisation: list[LabellisationitemModel] = field(default_factory=list)
 
     @dataclass
     class SalleModel:
@@ -169,23 +171,23 @@ class GetOrganismeResponse:
             codePostal: str
             libelle: str
 
-        commune: CommuneModel
+        commune: CommuneModel | None = None
 
         @dataclass
         class CartographieModel:
             latitude: float
             longitude: float
 
-        cartographie: CartographieModel
+        cartographie: CartographieModel | None = None
 
-    salle: SalleModel
+    salle: SalleModel | None = None
 
     @dataclass
     class LogoModel:
         id: str
         gradient_color: str
 
-    logo: LogoModel
+    logo: LogoModel | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> GetOrganismeResponse | None:

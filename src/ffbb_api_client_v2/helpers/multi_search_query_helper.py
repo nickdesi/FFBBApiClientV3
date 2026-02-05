@@ -11,7 +11,7 @@ from ..models.multi_search_query import (
 )
 
 
-def generate_queries(search_name: str = None, limit: int | None = 1):
+def generate_queries(search_name: str | None = None, limit: int | None = 1):
     return [
         OrganismesMultiSearchQuery(search_name, limit=limit),
         RencontresMultiSearchQuery(search_name, limit=limit),

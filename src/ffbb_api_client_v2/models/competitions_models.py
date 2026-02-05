@@ -35,7 +35,7 @@ class GetCompetitionResponse:
         code: str
         ordre: int
 
-    categorie: CategorieModel
+    categorie: CategorieModel | None = None
 
     @dataclass
     class TypecompetitiongeneriqueModel:
@@ -45,17 +45,17 @@ class GetCompetitionResponse:
             id: str
             gradient_color: str
 
-        logo: LogoModel
+        logo: LogoModel | None = None
 
-    typeCompetitionGenerique: TypecompetitiongeneriqueModel
-    logo: Any | None
+    typeCompetitionGenerique: TypecompetitiongeneriqueModel | None = None
+    logo: Any | None = None
 
     @dataclass
     class PoulesitemModel:
         id: str
         nom: str
 
-    poules: list[PoulesitemModel]
+    poules: list[PoulesitemModel] = field(default_factory=list)
 
     @dataclass
     class PhasesitemModel:
@@ -85,16 +85,16 @@ class GetCompetitionResponse:
 
                 @dataclass
                 class Idorganismeequipe1Model:
-                    logo: Any | None
+                    logo: Any | None = None
 
-                idOrganismeEquipe1: Idorganismeequipe1Model
+                idOrganismeEquipe1: Idorganismeequipe1Model | None = None
 
                 @dataclass
                 class Idorganismeequipe2Model:
-                    logo: Any | None
+                    logo: Any | None = None
 
-                idOrganismeEquipe2: Idorganismeequipe2Model
-                gsId: GameStatsModel | None
+                idOrganismeEquipe2: Idorganismeequipe2Model | None = None
+                gsId: GameStatsModel | None = None
 
                 @dataclass
                 class Idengagementequipe1Model:
@@ -103,9 +103,9 @@ class GetCompetitionResponse:
                     nomOfficiel: str
                     nomUsuel: str
                     codeAbrege: str
-                    logo: Any | None
+                    logo: Any | None = None
 
-                idEngagementEquipe1: Idengagementequipe1Model
+                idEngagementEquipe1: Idengagementequipe1Model | None = None
 
                 @dataclass
                 class Idengagementequipe2Model:
@@ -114,9 +114,9 @@ class GetCompetitionResponse:
                     nomOfficiel: str
                     nomUsuel: str
                     codeAbrege: str
-                    logo: Any | None
+                    logo: Any | None = None
 
-                idEngagementEquipe2: Idengagementequipe2Model
+                idEngagementEquipe2: Idengagementequipe2Model | None = None
 
                 @dataclass
                 class SalleModel:
@@ -132,16 +132,16 @@ class GetCompetitionResponse:
                         codePostal: str
                         libelle: str
 
-                    commune: CommuneModel
+                    commune: CommuneModel | None = None
 
                     @dataclass
                     class CartographieModel:
                         latitude: float
                         longitude: float
 
-                    cartographie: CartographieModel
+                    cartographie: CartographieModel | None = None
 
-                salle: SalleModel
+                salle: SalleModel | None = None
 
                 @dataclass
                 class OfficielsitemModel:
@@ -151,18 +151,18 @@ class GetCompetitionResponse:
                     class FonctionModel:
                         libelle: str
 
-                    fonction: FonctionModel
+                    fonction: FonctionModel | None = None
 
                     @dataclass
                     class OfficielModel:
                         nom: str
                         prenom: str
 
-                    officiel: OfficielModel
+                    officiel: OfficielModel | None = None
 
-                officiels: list[OfficielsitemModel]
+                officiels: list[OfficielsitemModel] = field(default_factory=list)
 
-            rencontres: list[RencontresitemModel]
+            rencontres: list[RencontresitemModel] = field(default_factory=list)
 
             @dataclass
             class EngagementsitemModel:
@@ -172,16 +172,16 @@ class GetCompetitionResponse:
                 class IdorganismeModel:
                     id: str
 
-                idOrganisme: IdorganismeModel
+                idOrganisme: IdorganismeModel | None = None
 
-            engagements: list[EngagementsitemModel]
+            engagements: list[EngagementsitemModel] = field(default_factory=list)
 
-        poules: list[PoulesitemModel]
+        poules: list[PoulesitemModel] = field(default_factory=list)
 
-    phases: list[PhasesitemModel]
+    phases: list[PhasesitemModel] = field(default_factory=list)
 
     @classmethod
-    def from_dict(cls, data: dict) -> GetCompetitionResponse:
+    def from_dict(cls, data: dict) -> GetCompetitionResponse | None:
         """Convert dictionary to CompetitionsModel instance."""
         if not data:
             return None

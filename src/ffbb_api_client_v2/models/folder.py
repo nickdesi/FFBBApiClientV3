@@ -11,6 +11,16 @@ class Folder:
     name: str | None = None
     parent: None
 
+    def __init__(
+        self,
+        id: UUID | None = None,
+        name: str | None = None,
+        parent: None = None,
+    ) -> None:
+        self.id = id
+        self.name = name
+        self.parent = parent
+
     @staticmethod
     def from_dict(obj: Any) -> Folder:
         assert isinstance(obj, dict)

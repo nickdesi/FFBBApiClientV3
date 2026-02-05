@@ -606,7 +606,7 @@ class TerrainsHit(Hit):
             or (self.lower_addresse and query in self.lower_addresse)
             or (self.lower_description and query in self.lower_description)
             or (self.lower_code and query in self.lower_code)
-            or (self.lower_nom_organisateur and query in self)
+            or (self.lower_nom_organisateur and query in self.lower_nom_organisateur)
             or (self.lower_nom_organisateur and query in self.lower_nom_organisateur)
             or (self.lower_site_choisi and query in self.lower_site_choisi)
         )
@@ -618,14 +618,14 @@ class TerrainsFacetStats(FacetStats):
         return TerrainsFacetStats()
 
     def to_dict(self) -> dict:
-        super().to_dict()
+        return super().to_dict()
 
 
 class TerrainsMultiSearchResult(
     MultiSearchResult[TerrainsHit, TerrainsFacetDistribution, TerrainsFacetStats]
 ):
     @staticmethod
-    def from_dict(obj: Any) -> TerrainsMultiSearchResult:
+    def from_dict(obj: Any) -> TerrainsMultiSearchResult:  # type: ignore[override]
         return MultiSearchResult.from_dict(
             obj,
             TerrainsHit,

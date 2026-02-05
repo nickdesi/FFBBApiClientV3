@@ -93,12 +93,12 @@ def from_datetime(x: Any) -> datetime | None:
     return dateutil.parser.parse(x) if x else None
 
 
-def to_class(c: type[T], x: Any) -> dict:
+def to_class(c: type[T], x: Any) -> dict[Any, Any]:
     """
     Convert Any to dictionary representation of class c.
     """
     assert isinstance(x, c)
-    return cast(Any, x).to_dict()
+    return cast(dict[Any, Any], cast(Any, x).to_dict())
 
 
 def from_bool(x: Any) -> bool:
@@ -125,9 +125,9 @@ def from_dict(f: Callable[[Any], T], x: Any) -> dict[str, T]:
     return {k: f(v) for (k, v) in x.items()}
 
 
-def to_enum(c: type[EnumT], x: Any) -> EnumT:
+def to_enum(c: type[EnumT], x: Any) -> Any:
     """
-    Convert Any to EnumT.
+    Convert EnumT to its value.
     """
     assert isinstance(x, c)
     return x.value

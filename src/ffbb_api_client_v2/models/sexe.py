@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Enum
 
 
@@ -7,7 +9,7 @@ class Sexe(Enum):
     MIXED = "Mixte"
 
 
-def extract_sex(input_str: str) -> Sexe:
+def extract_sex(input_str: str) -> Sexe | None:
     """Extracts the sex from the input string.
 
     Args:

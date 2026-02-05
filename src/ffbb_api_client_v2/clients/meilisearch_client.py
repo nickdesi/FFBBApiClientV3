@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from collections.abc import Sequence
+
 from requests_cache import CachedSession
 
 from ..config import (
@@ -27,9 +31,9 @@ class MeilisearchClient:
         bearer_token: str,
         url: str = MEILISEARCH_BASE_URL,
         debug: bool = False,
-        cached_session: CachedSession = default_cached_session,
-        retry_config: RetryConfig = None,
-        timeout_config: TimeoutConfig = None,
+        cached_session: CachedSession | None = default_cached_session,
+        retry_config: RetryConfig | None = None,
+        timeout_config: TimeoutConfig | None = None,
     ):
         """
         Initializes an instance of the MeilisearchClient class.
@@ -85,9 +89,9 @@ class MeilisearchClient:
 
     def multi_search(
         self,
-        queries: list[MultiSearchQuery] = None,
-        cached_session: CachedSession = None,
-    ) -> MultiSearchResults:
+        queries: Sequence[MultiSearchQuery] | None = None,
+        cached_session: CachedSession | None = None,
+    ) -> MultiSearchResults | None:
         url = f"{self.url}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}"
         params = {"queries": [query.to_dict() for query in queries] if queries else []}
         return catch_result(

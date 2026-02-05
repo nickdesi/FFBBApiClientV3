@@ -29,7 +29,7 @@ class SallesFacetDistribution(FacetDistribution):
         return SallesFacetDistribution()
 
     def to_dict(self) -> dict:
-        super().to_dict()
+        return super().to_dict()
 
 
 class SallesHit(Hit):
@@ -230,14 +230,14 @@ class SallesFacetStats(FacetStats):
         return SallesFacetStats()
 
     def to_dict(self) -> dict:
-        super().to_dict()
+        return super().to_dict()
 
 
 class SallesMultiSearchResult(
     MultiSearchResult[SallesHit, SallesFacetDistribution, SallesFacetStats]
 ):
     @staticmethod
-    def from_dict(obj: Any) -> SallesMultiSearchResult:
+    def from_dict(obj: Any) -> SallesMultiSearchResult:  # type: ignore[override]
         return MultiSearchResult.from_dict(
             obj,
             SallesHit,

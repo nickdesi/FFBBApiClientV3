@@ -17,7 +17,7 @@ from .hit import Hit
 HitType = TypeVar("HitType", bound=Hit)
 FacetDistributionType = TypeVar("FacetDistributionType", bound=FacetDistribution)
 FacetStatsType = TypeVar("FacetStatsType", bound=FacetStats)
-ReturnType = TypeVar("ResultType", bound="MultiSearchResult")
+ReturnType = TypeVar("ReturnType", bound="MultiSearchResult")
 
 
 class MultiSearchResult(Generic[HitType, FacetDistributionType, FacetStatsType]):

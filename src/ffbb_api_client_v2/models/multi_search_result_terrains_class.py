@@ -12,7 +12,7 @@ class TerrainsMultiSearchResult(
     MultiSearchResult[TerrainsHit, TerrainsFacetDistribution, TerrainsFacetStats]
 ):
     @staticmethod
-    def from_dict(obj: Any) -> "TerrainsMultiSearchResult":
+    def from_dict(obj: Any) -> "TerrainsMultiSearchResult":  # type: ignore[override]
         return MultiSearchResult.from_dict(
             obj,
             TerrainsHit,

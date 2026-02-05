@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+from typing import cast
+
 from requests_cache import CachedSession
 
 from ..config import MEILISEARCH_BASE_URL
@@ -27,119 +31,157 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         bearer_token: str,
         url: str = MEILISEARCH_BASE_URL,
         debug: bool = False,
-        cached_session: CachedSession = default_cached_session,
+        cached_session: CachedSession | None = default_cached_session,
     ):
         super().__init__(bearer_token, url, debug, cached_session)
 
     def search_multiple_organismes(
-        self, names: list[str] = None, cached_session: CachedSession = None
-    ) -> list[OrganismesMultiSearchResult]:
+        self,
+        names: list[str | None] | None = None,
+        cached_session: CachedSession | None = None,
+    ) -> list[OrganismesMultiSearchResult] | None:
         if not names:
             return None
 
         queries = [OrganismesMultiSearchQuery(name) for name in names]
         results = self.recursive_multi_search(queries, cached_session)
 
-        return results.results if results else None
+        return (
+            cast(list[OrganismesMultiSearchResult], results.results)
+            if results
+            else None
+        )
 
     def search_organismes(
-        self, name: str = None, cached_session: CachedSession = None
-    ) -> OrganismesMultiSearchResult:
-        return self.search_multiple_organismes([name], cached_session)[0]
+        self, name: str | None = None, cached_session: CachedSession | None = None
+    ) -> OrganismesMultiSearchResult | None:
+        results = self.search_multiple_organismes([name], cached_session)
+        return results[0] if results else None
 
     def search_multiple_rencontres(
-        self, names: list[str] = None, cached_session: CachedSession = None
-    ) -> list[RencontresMultiSearchResult]:
+        self,
+        names: list[str | None] | None = None,
+        cached_session: CachedSession | None = None,
+    ) -> list[RencontresMultiSearchResult] | None:
         if not names:
             return None
 
         queries = [RencontresMultiSearchQuery(name) for name in names]
         results = self.recursive_multi_search(queries, cached_session)
 
-        return results.results if results else None
+        return (
+            cast(list[RencontresMultiSearchResult], results.results)
+            if results
+            else None
+        )
 
     def search_rencontres(
-        self, name: str = None, cached_session: CachedSession = None
-    ) -> RencontresMultiSearchResult:
+        self, name: str | None = None, cached_session: CachedSession | None = None
+    ) -> RencontresMultiSearchResult | None:
         results = self.search_multiple_rencontres([name], cached_session)
         return results[0] if results else None
 
     def search_multiple_terrains(
-        self, names: list[str] = None, cached_session: CachedSession = None
-    ) -> list[TerrainsMultiSearchResult]:
+        self,
+        names: list[str | None] | None = None,
+        cached_session: CachedSession | None = None,
+    ) -> list[TerrainsMultiSearchResult] | None:
         if not names:
             return None
 
         queries = [TerrainsMultiSearchQuery(name) for name in names]
         results = self.recursive_multi_search(queries, cached_session)
 
-        return results.results if results else None
+        return (
+            cast(list[TerrainsMultiSearchResult], results.results) if results else None
+        )
 
     def search_terrains(
-        self, name: str = None, cached_session: CachedSession = None
-    ) -> TerrainsMultiSearchResult:
-        return self.search_multiple_terrains([name], cached_session)[0]
+        self, name: str | None = None, cached_session: CachedSession | None = None
+    ) -> TerrainsMultiSearchResult | None:
+        results = self.search_multiple_terrains([name], cached_session)
+        return results[0] if results else None
 
     def search_multiple_competitions(
-        self, names: list[str] = None, cached_session: CachedSession = None
-    ) -> list[CompetitionsMultiSearchResult]:
+        self,
+        names: list[str | None] | None = None,
+        cached_session: CachedSession | None = None,
+    ) -> list[CompetitionsMultiSearchResult] | None:
         if not names:
             return None
 
         queries = [CompetitionsMultiSearchQuery(name) for name in names]
         results = self.recursive_multi_search(queries, cached_session)
 
-        return results.results if results else None
+        return (
+            cast(list[CompetitionsMultiSearchResult], results.results)
+            if results
+            else None
+        )
 
     def search_competitions(
-        self, name: str = None, cached_session: CachedSession = None
-    ) -> CompetitionsMultiSearchResult:
-        return self.search_multiple_competitions([name], cached_session)[0]
+        self, name: str | None = None, cached_session: CachedSession | None = None
+    ) -> CompetitionsMultiSearchResult | None:
+        results = self.search_multiple_competitions([name], cached_session)
+        return results[0] if results else None
 
     def search_multiple_salles(
-        self, names: list[str] = None, cached_session: CachedSession = None
-    ) -> list[SallesMultiSearchResult]:
+        self,
+        names: list[str | None] | None = None,
+        cached_session: CachedSession | None = None,
+    ) -> list[SallesMultiSearchResult] | None:
         if not names:
             return None
 
         queries = [SallesMultiSearchQuery(name) for name in names]
         results = self.recursive_multi_search(queries, cached_session)
 
-        return results.results if results else None
+        return cast(list[SallesMultiSearchResult], results.results) if results else None
 
     def search_salles(
-        self, name: str = None, cached_session: CachedSession = None
-    ) -> SallesMultiSearchResult:
-        return self.search_multiple_salles([name], cached_session)[0]
+        self, name: str | None = None, cached_session: CachedSession | None = None
+    ) -> SallesMultiSearchResult | None:
+        results = self.search_multiple_salles([name], cached_session)
+        return results[0] if results else None
 
     def search_multiple_tournois(
-        self, names: list[str] = None, cached_session: CachedSession = None
-    ) -> list[TournoisMultiSearchResult]:
+        self,
+        names: list[str | None] | None = None,
+        cached_session: CachedSession | None = None,
+    ) -> list[TournoisMultiSearchResult] | None:
         if not names:
             return None
 
         queries = [TournoisMultiSearchQuery(name) for name in names]
         results = self.recursive_multi_search(queries, cached_session)
 
-        return results.results if results else None
+        return (
+            cast(list[TournoisMultiSearchResult], results.results) if results else None
+        )
 
     def search_tournois(
-        self, name: str = None, cached_session: CachedSession = None
-    ) -> TournoisMultiSearchResult:
-        return self.search_multiple_tournois([name], cached_session)[0]
+        self, name: str | None = None, cached_session: CachedSession | None = None
+    ) -> TournoisMultiSearchResult | None:
+        results = self.search_multiple_tournois([name], cached_session)
+        return results[0] if results else None
 
     def search_multiple_pratiques(
-        self, names: list[str] = None, cached_session: CachedSession = None
-    ) -> list[PratiquesMultiSearchResult]:
+        self,
+        names: list[str | None] | None = None,
+        cached_session: CachedSession | None = None,
+    ) -> list[PratiquesMultiSearchResult] | None:
         if not names:
             return None
 
         queries = [PratiquesMultiSearchQuery(name) for name in names]
         results = self.recursive_multi_search(queries, cached_session)
 
-        return results.results if results else None
+        return (
+            cast(list[PratiquesMultiSearchResult], results.results) if results else None
+        )
 
     def search_pratiques(
-        self, name: str = None, cached_session: CachedSession = None
-    ) -> PratiquesMultiSearchResult:
-        return self.search_multiple_pratiques([name], cached_session)[0]
+        self, name: str | None = None, cached_session: CachedSession | None = None
+    ) -> PratiquesMultiSearchResult | None:
+        results = self.search_multiple_pratiques([name], cached_session)
+        return results[0] if results else None

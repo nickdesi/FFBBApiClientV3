@@ -47,7 +47,7 @@ class TeamRanking:
 
     # Required fields first
     id: str
-    id_engagement: RankingEngagement
+    id_engagement: RankingEngagement | None
     position: int
     points: int
     match_joues: int
