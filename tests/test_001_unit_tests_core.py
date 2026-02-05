@@ -134,23 +134,15 @@ class Test001FfbbApiClientV2Core(unittest.TestCase):
             self.assertEqual(result, mock_result)
 
     def test_009_search_organismes_no_results(self):
-        """Test search_organismes returns empty result object when no results found."""
+        """Test search_organismes returns None when no results found."""
         with patch.object(
             self.client, "search_multiple_organismes"
         ) as mock_search_multiple:
             mock_search_multiple.return_value = None
 
-            mock_path = (
-                "ffbb_api_client_v2.clients.ffbb_api_client_v2."
-                "OrganismesMultiSearchResult"
-            )
-            with patch(mock_path) as mock_result_class:
-                mock_result_instance = Mock()
-                mock_result_class.return_value = mock_result_instance
+            result = self.client.search_organismes("NonExistent")
 
-                result = self.client.search_organismes("NonExistent")
-
-                self.assertEqual(result, mock_result_instance)
+            self.assertIsNone(result)
 
     def test_010_search_multiple_organismes_empty_names(self):
         """Test search_multiple_organismes returns None for empty names."""
