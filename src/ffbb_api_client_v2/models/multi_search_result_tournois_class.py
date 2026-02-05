@@ -1,22 +1,8 @@
-from typing import Any
+"""Backward compatibility module for TournoisMultiSearchResult."""
 
-from .multi_search_result_tournois import (
+from .multi_search_result_tournois import (  # noqa: F401
     TournoisFacetDistribution,
     TournoisFacetStats,
     TournoisHit,
+    TournoisMultiSearchResult,
 )
-from .multi_search_results import MultiSearchResult
-
-
-class TournoisMultiSearchResult(
-    MultiSearchResult[TournoisHit, TournoisFacetDistribution, TournoisFacetStats]
-):
-    @staticmethod
-    def from_dict(obj: Any) -> "TournoisMultiSearchResult":  # type: ignore[override]
-        return MultiSearchResult.from_dict(
-            obj,
-            TournoisHit,
-            TournoisFacetDistribution,
-            TournoisFacetStats,
-            TournoisMultiSearchResult,
-        )

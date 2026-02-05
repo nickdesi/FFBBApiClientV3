@@ -1,22 +1,8 @@
-from typing import Any
+"""Backward compatibility module for TerrainsMultiSearchResult."""
 
-from .multi_search_result_terrains import (
+from .multi_search_result_terrains import (  # noqa: F401
     TerrainsFacetDistribution,
     TerrainsFacetStats,
     TerrainsHit,
+    TerrainsMultiSearchResult,
 )
-from .multi_search_results import MultiSearchResult
-
-
-class TerrainsMultiSearchResult(
-    MultiSearchResult[TerrainsHit, TerrainsFacetDistribution, TerrainsFacetStats]
-):
-    @staticmethod
-    def from_dict(obj: Any) -> "TerrainsMultiSearchResult":  # type: ignore[override]
-        return MultiSearchResult.from_dict(
-            obj,
-            TerrainsHit,
-            TerrainsFacetDistribution,
-            TerrainsFacetStats,
-            TerrainsMultiSearchResult,
-        )

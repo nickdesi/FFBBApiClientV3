@@ -1,24 +1,8 @@
-from typing import Any
+"""Backward compatibility module for CompetitionsMultiSearchResult (Pascal naming)."""
 
-from .multi_search_result_competitions import (
+from .multi_search_result_competitions import (  # noqa: F401
     CompetitionsFacetDistribution,
     CompetitionsFacetStats,
     CompetitionsHit,
+    CompetitionsMultiSearchResult,
 )
-from .multi_search_results import MultiSearchResult
-
-
-class CompetitionsMultiSearchResult(
-    MultiSearchResult[
-        CompetitionsHit, CompetitionsFacetDistribution, CompetitionsFacetStats
-    ]
-):
-    @staticmethod
-    def from_dict(obj: Any) -> "CompetitionsMultiSearchResult":
-        return MultiSearchResult.from_dict(
-            obj,
-            CompetitionsHit,
-            CompetitionsFacetDistribution,
-            CompetitionsFacetStats,
-            CompetitionsMultiSearchResult,
-        )

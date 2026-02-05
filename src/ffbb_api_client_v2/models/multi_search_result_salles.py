@@ -203,7 +203,7 @@ class SallesHit(Hit):
         return result
 
     def is_valid_for_query(self, query: str) -> bool:
-        return (
+        return bool(
             not query
             or (self.lower_addresse and query in self.lower_addresse)
             or (
@@ -236,12 +236,4 @@ class SallesFacetStats(FacetStats):
 class SallesMultiSearchResult(
     MultiSearchResult[SallesHit, SallesFacetDistribution, SallesFacetStats]
 ):
-    @staticmethod
-    def from_dict(obj: Any) -> SallesMultiSearchResult:  # type: ignore[override]
-        return MultiSearchResult.from_dict(
-            obj,
-            SallesHit,
-            SallesFacetDistribution,
-            SallesFacetStats,
-            SallesMultiSearchResult,
-        )
+    """MultiSearchResult for Salles."""

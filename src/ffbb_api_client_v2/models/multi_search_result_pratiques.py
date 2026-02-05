@@ -817,8 +817,9 @@ class PratiquesHit(Hit):
         return result
 
     def is_valid_for_query(self, query: str) -> bool:
-        return not query or (
-            (self.lower_titre and query in self.lower_titre)
+        return bool(
+            not query
+            or (self.lower_titre and query in self.lower_titre)
             or (self.lower_addresse and query in self.lower_addresse)
             or (self.lower_description and query in self.lower_description)
             or (self.lower_site_web and query in self.lower_site_web)
@@ -843,12 +844,4 @@ class PratiquesFacetStats(FacetStats):
 class PratiquesMultiSearchResult(
     MultiSearchResult[PratiquesHit, PratiquesFacetDistribution, PratiquesFacetStats]
 ):
-    @staticmethod
-    def from_dict(obj: Any) -> PratiquesMultiSearchResult:  # type: ignore[override]
-        return MultiSearchResult.from_dict(
-            obj,
-            PratiquesHit,
-            PratiquesFacetDistribution,
-            PratiquesFacetStats,
-            PratiquesMultiSearchResult,
-        )
+    """MultiSearchResult for Pratiques."""

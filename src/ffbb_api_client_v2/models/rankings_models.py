@@ -130,11 +130,13 @@ class TeamRanking:
             match_joues=int(data.get("matchJoues", 0)),
             gagnes=int(data.get("gagnes", 0)),
             perdus=int(data.get("perdus", 0)),
-            nuls=int(data.get("nuls")) if data.get("nuls") is not None else None,
+            nuls=(
+                int(nuls_val) if (nuls_val := data.get("nuls")) is not None else None
+            ),
             nombre_forfaits=int(data.get("nombreForfaits", 0)),
             nombre_defauts=(
-                int(data.get("nombreDefauts"))
-                if data.get("nombreDefauts") is not None
+                int(defauts_val)
+                if (defauts_val := data.get("nombreDefauts")) is not None
                 else None
             ),
             paniers_marques=int(data.get("paniersMarques", 0)),
@@ -142,23 +144,23 @@ class TeamRanking:
             difference=int(data.get("difference", 0)),
             quotient=float(data.get("quotient", 0.0)),
             point_initiaux=(
-                int(data.get("pointInitiaux"))
-                if data.get("pointInitiaux") is not None
+                int(initiaux_val)
+                if (initiaux_val := data.get("pointInitiaux")) is not None
                 else None
             ),
             penalites_arbitrage=(
-                int(data.get("penalitesArbitrage"))
-                if data.get("penalitesArbitrage") is not None
+                int(arb_val)
+                if (arb_val := data.get("penalitesArbitrage")) is not None
                 else None
             ),
             penalites_entraineur=(
-                int(data.get("penalitesEntraineur"))
-                if data.get("penalitesEntraineur") is not None
+                int(entr_val)
+                if (entr_val := data.get("penalitesEntraineur")) is not None
                 else None
             ),
             penalites_diverses=(
-                int(data.get("penalitesDiverses"))
-                if data.get("penalitesDiverses") is not None
+                int(div_val)
+                if (div_val := data.get("penalitesDiverses")) is not None
                 else None
             ),
             hors_classement=(

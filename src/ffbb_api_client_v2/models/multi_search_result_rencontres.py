@@ -512,18 +512,21 @@ class RencontresHit(Hit):
         return result
 
     def is_valid_for_query(self, query: str) -> bool:
-        return (
+        return bool(
             not query
             or (self.lower_gs_id and query in self.lower_gs_id)
             or (self.lower_id and query in self.lower_id)
-            or (self.lower_officiels and query in self.lower_officiels)
+            or (
+                self.lower_officiels
+                and any(query in off for off in self.lower_officiels)
+            )
             or (
                 self.salle
                 and (
                     (self.salle.lower_adresse and query in self.salle.lower_adresse)
                     or (
                         self.salle.lower_adresse_complement
-                        and query in self.salle.lower_adresse
+                        and query in self.salle.lower_adresse_complement
                     )
                     or (self.salle.lower_libelle and query in self.salle.lower_libelle)
                 )
@@ -543,12 +546,4 @@ class RencontresFacetStats(FacetStats):
 class RencontresMultiSearchResult(
     MultiSearchResult[RencontresHit, RencontresFacetDistribution, RencontresFacetStats]
 ):
-    @staticmethod
-    def from_dict(obj: Any) -> RencontresMultiSearchResult:  # type: ignore[override]
-        return MultiSearchResult.from_dict(
-            obj,
-            RencontresHit,
-            RencontresFacetDistribution,
-            RencontresFacetStats,
-            RencontresMultiSearchResult,
-        )
+    """MultiSearchResult for Rencontres."""

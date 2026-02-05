@@ -1,22 +1,8 @@
-from typing import Any
+"""Backward compatibility module for RencontresMultiSearchResult."""
 
-from .multi_search_result_rencontres import (
+from .multi_search_result_rencontres import (  # noqa: F401
     RencontresFacetDistribution,
     RencontresFacetStats,
     RencontresHit,
+    RencontresMultiSearchResult,
 )
-from .multi_search_results import MultiSearchResult
-
-
-class RencontresMultiSearchResult(
-    MultiSearchResult[RencontresHit, RencontresFacetDistribution, RencontresFacetStats]
-):
-    @staticmethod
-    def from_dict(obj: Any) -> "RencontresMultiSearchResult":  # type: ignore[override]
-        return MultiSearchResult.from_dict(
-            obj,
-            RencontresHit,
-            RencontresFacetDistribution,
-            RencontresFacetStats,
-            RencontresMultiSearchResult,
-        )

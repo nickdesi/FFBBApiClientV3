@@ -37,7 +37,7 @@ def from_union(fs, x) -> Any:
             return f(x)
         except AssertionError:
             pass
-        except Exception:
+        except Exception:  # pylint: disable=broad-exception-caught
             # Silent failure is expected when trying different type conversions
             pass
     assert False

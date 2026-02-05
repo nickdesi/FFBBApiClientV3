@@ -139,7 +139,7 @@ class AdvancedCacheManager:
         else:
             raise ValueError(f"Unsupported cache backend: {self.config.backend}")
 
-    def _create_cache_key(self, request: PreparedRequest, **kwargs) -> str:
+    def _create_cache_key(self, request: PreparedRequest, **_kwargs) -> str:
         """
         Create a cache key from the request.
 
@@ -198,7 +198,7 @@ class AdvancedCacheManager:
             try:
                 self._session.cache.clear()
                 self.metrics.evictions = 0  # Reset eviction count
-            except Exception:
+            except Exception:  # pylint: disable=broad-exception-caught
                 self.metrics.errors += 1
 
     def get_cache_size(self) -> int:
@@ -211,7 +211,7 @@ class AdvancedCacheManager:
         if self._session and hasattr(self._session.cache, "count"):
             try:
                 return cast(int, self._session.cache.count())
-            except Exception:
+            except Exception:  # pylint: disable=broad-exception-caught
                 self.metrics.errors += 1
         return 0
 
@@ -241,7 +241,7 @@ class AdvancedCacheManager:
         for url in urls:
             try:
                 self._session.get(url, headers=headers, timeout=10)
-            except Exception:
+            except Exception:  # pylint: disable=broad-exception-caught
                 # Ignore errors during cache warming
                 pass
 
@@ -271,7 +271,7 @@ class AdvancedCacheManager:
                         keys_to_delete.append(key)
                 for key in keys_to_delete:
                     cast(Any, self._session.cache).delete(key)
-        except Exception:
+        except Exception:  # pylint: disable=broad-exception-caught
             self.metrics.errors += 1
 
 
@@ -289,7 +289,7 @@ def get_cache_manager(config: CacheConfig | None = None) -> AdvancedCacheManager
     Returns:
         AdvancedCacheManager: The cache manager instance
     """
-    global _default_cache_manager
+    global _default_cache_manager  # pylint: disable=global-statement
     if _default_cache_manager is None:
         _default_cache_manager = AdvancedCacheManager(config)
     return _default_cache_manager
@@ -307,7 +307,9 @@ def create_cache_key(request: PreparedRequest, **kwargs) -> str:
         str: Cache key
     """
     manager = get_cache_manager()
-    return manager._create_cache_key(request, **kwargs)
+    return manager._create_cache_key(
+        request, **kwargs
+    )  # pylint: disable=protected-access
 
 
 # Backward compatibility - default cached session

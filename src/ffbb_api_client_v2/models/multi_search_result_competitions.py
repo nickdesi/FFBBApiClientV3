@@ -454,7 +454,7 @@ class CompetitionsHit(Hit):
         return result
 
     def is_valid_for_query(self, query: str) -> bool:
-        return (
+        return bool(
             not query
             or (self.lower_nom and query in self.lower_nom)
             or (self.lower_code and query in self.lower_code)
@@ -484,12 +484,4 @@ class CompetitionsMultiSearchResult(
         CompetitionsHit, CompetitionsFacetDistribution, CompetitionsFacetStats
     ]
 ):
-    @staticmethod
-    def from_dict(obj: Any) -> CompetitionsMultiSearchResult:  # type: ignore[override]
-        return MultiSearchResult.from_dict(
-            obj,
-            CompetitionsHit,
-            CompetitionsFacetDistribution,
-            CompetitionsFacetStats,
-            CompetitionsMultiSearchResult,
-        )
+    """MultiSearchResult for Competitions."""

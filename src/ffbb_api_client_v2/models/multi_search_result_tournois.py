@@ -291,12 +291,4 @@ class TournoisFacetStats(FacetStats):
 class TournoisMultiSearchResult(
     MultiSearchResult[TournoisHit, TournoisFacetDistribution, TournoisFacetStats]
 ):
-    @staticmethod
-    def from_dict(obj: Any) -> TournoisMultiSearchResult:  # type: ignore[override]
-        return MultiSearchResult.from_dict(
-            obj,
-            TournoisHit,
-            TournoisFacetDistribution,
-            TournoisFacetStats,
-            TournoisMultiSearchResult,
-        )
+    """MultiSearchResult for Tournois."""

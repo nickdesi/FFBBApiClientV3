@@ -2,12 +2,15 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_list, from_none, from_union, to_class
+from ..utils.converter_utils import from_list, from_none, from_union
 from .multi_search_query import MultiSearchQuery
 
 
 class MultiSearchQueries:
     queries: list[MultiSearchQuery] | None = None
+
+    def __init__(self, queries: list[MultiSearchQuery] | None = None) -> None:
+        self.queries = queries
 
     @staticmethod
     def from_dict(obj: Any) -> MultiSearchQueries:
@@ -23,7 +26,7 @@ class MultiSearchQueries:
         if self.queries is not None:
             result["queries"] = from_union(
                 [
-                    lambda x: from_list(lambda x: to_class(MultiSearchQuery, x), x),
+                    lambda x: from_list(lambda q: q.to_dict(), x),
                     from_none,
                 ],
                 self.queries,
@@ -36,4 +39,4 @@ def multi_search_queries_from_dict(s: Any) -> MultiSearchQueries:
 
 
 def multi_search_queries_to_dict(x: MultiSearchQueries) -> Any:
-    return to_class(MultiSearchQueries, x)
+    return x.to_dict()

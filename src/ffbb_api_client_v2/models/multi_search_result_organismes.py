@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any
+from typing import Any  # noqa: F401
 
 from ..utils.converter_utils import (
     from_bool,
@@ -334,7 +334,7 @@ class OrganismesHit(Hit):
         return result
 
     def is_valid_for_query(self, query: str) -> bool:
-        return (
+        return bool(
             not query
             or (self.lower_nom and query in self.lower_nom)
             or (self.lower_nom_club_pro and query in self.lower_nom_club_pro)
@@ -364,12 +364,4 @@ class OrganismesFacetStats(FacetStats):
 class OrganismesMultiSearchResult(
     MultiSearchResult[OrganismesHit, OrganismesFacetDistribution, OrganismesFacetStats]
 ):
-    @staticmethod
-    def from_dict(obj: Any) -> OrganismesMultiSearchResult:  # type: ignore[override]
-        return MultiSearchResult.from_dict(
-            obj,
-            OrganismesHit,
-            OrganismesFacetDistribution,
-            OrganismesFacetStats,
-            OrganismesMultiSearchResult,
-        )
+    """MultiSearchResult for Organismes."""

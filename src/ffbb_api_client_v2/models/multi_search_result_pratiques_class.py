@@ -1,22 +1,8 @@
-from typing import Any
+"""Backward compatibility module for PratiquesMultiSearchResult."""
 
-from .multi_search_result_pratiques import (
+from .multi_search_result_pratiques import (  # noqa: F401
     PratiquesFacetDistribution,
     PratiquesFacetStats,
     PratiquesHit,
+    PratiquesMultiSearchResult,
 )
-from .multi_search_results import MultiSearchResult
-
-
-class PratiquesMultiSearchResult(
-    MultiSearchResult[PratiquesHit, PratiquesFacetDistribution, PratiquesFacetStats]
-):
-    @staticmethod
-    def from_dict(obj: Any) -> "PratiquesMultiSearchResult":  # type: ignore[override]
-        return MultiSearchResult.from_dict(
-            obj,
-            PratiquesHit,
-            PratiquesFacetDistribution,
-            PratiquesFacetStats,
-            PratiquesMultiSearchResult,
-        )

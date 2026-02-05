@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Callable
 
-from ..utils.converter_utils import from_list, from_none, from_union, to_class
+from ..utils.converter_utils import from_list, from_none, from_union
 from .multi_search_result_competitions import CompetitionsMultiSearchResult
 from .multi_search_result_organismes import OrganismesMultiSearchResult
 from .multi_search_result_pratiques import PratiquesMultiSearchResult
@@ -22,7 +22,7 @@ index_uids = [
     "ffbbnational_pratiques",
 ]
 
-index_uids_converters = {
+index_uids_converters: dict[str, Callable[[Any], MultiSearchResult[Any, Any, Any]]] = {
     index_uids[0]: OrganismesMultiSearchResult.from_dict,
     index_uids[1]: RencontresMultiSearchResult.from_dict,
     index_uids[2]: TerrainsMultiSearchResult.from_dict,
@@ -33,8 +33,8 @@ index_uids_converters = {
 }
 
 
-def result_from_list(s: list[Any]) -> list[MultiSearchResult]:
-    results = []
+def result_from_list(s: list[Any]) -> list[MultiSearchResult[Any, Any, Any]]:
+    results: list[MultiSearchResult[Any, Any, Any]] = []
 
     if s:
         for element in s:
@@ -43,7 +43,7 @@ def result_from_list(s: list[Any]) -> list[MultiSearchResult]:
                 from_dict_func = index_uids_converters[index_uid]
                 result = from_dict_func(element)
                 results.append(result)
-            except Exception:
+            except Exception:  # pylint: disable=broad-exception-caught
                 # Skip invalid or unsupported index results
                 pass
 
@@ -51,9 +51,9 @@ def result_from_list(s: list[Any]) -> list[MultiSearchResult]:
 
 
 class MultiSearchResults:
-    results: list[MultiSearchResult] | None = None
+    results: list[MultiSearchResult[Any, Any, Any]] | None = None
 
-    def __init__(self, results: list[MultiSearchResult] | None) -> None:
+    def __init__(self, results: list[MultiSearchResult[Any, Any, Any]] | None) -> None:
         self.results = results
 
     @staticmethod
@@ -67,7 +67,7 @@ class MultiSearchResults:
         if self.results is not None:
             result["results"] = from_union(
                 [
-                    lambda x: from_list(lambda x: to_class(MultiSearchResult, x), x),
+                    lambda x: from_list(lambda r: r.to_dict(), x),
                     from_none,
                 ],
                 self.results,
@@ -80,4 +80,4 @@ def multi_search_results_from_dict(s: Any) -> MultiSearchResults:
 
 
 def multi_search_results_to_dict(x: MultiSearchResults) -> Any:
-    return to_class(MultiSearchResults, x)
+    return x.to_dict()

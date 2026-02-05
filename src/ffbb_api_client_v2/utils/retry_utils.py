@@ -153,7 +153,7 @@ def should_retry(
     return False
 
 
-def execute_with_retry(
+def execute_with_retry(  # pylint: disable=keyword-arg-before-vararg
     func: Callable[..., Response],
     config: RetryConfig = DEFAULT_RETRY_CONFIG,
     timeout_config: TimeoutConfig = DEFAULT_TIMEOUT_CONFIG,
@@ -195,7 +195,7 @@ def execute_with_retry(
 
             return response
 
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             last_exception = e
 
             # Check if we should retry based on exception
@@ -243,7 +243,7 @@ def make_http_request_with_retry(
         Response: HTTP response
     """
 
-    def _make_request(**unused_kwargs) -> Response:
+    def _make_request(**_kwargs) -> Response:
         if debug:
             print(f"Making {method} request to {url}")
 

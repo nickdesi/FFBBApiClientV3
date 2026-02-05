@@ -269,7 +269,7 @@ class DocumentFlyer:
             result["tags"] = from_none(self.tags)
         if self.metadata is not None:
             result["metadata"] = from_union(
-                [lambda x: to_class(FacetStats, x), from_none], self.metadata
+                [lambda x: x.to_dict() if x else {}, from_none], self.metadata
             )
         if self.source is not None:
             result["source"] = from_union(
