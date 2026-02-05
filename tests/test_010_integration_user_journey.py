@@ -133,51 +133,29 @@ class Test010UserJourneyIntegration(unittest.TestCase):
 
     def test_004_get_season_calendar_for_team(self):
         """Test Step 4: Get season calendar for a specific team."""
-        city_name = "Paris"
+        # Use list_competitions to get a valid competition directly
+        competitions = self.api_client.api_ffbb_client.list_competitions(limit=1)
+        self.assertIsNotNone(competitions, "Should be able to list competitions")
+        self.assertGreater(len(competitions), 0, "Should find at least one competition")
 
-        organismes_result = self.api_client.search_organismes(city_name)
-        self.assertIsNotNone(organismes_result)
+        competition_id = int(competitions[0].id)
 
-        if not organismes_result.hits:
-            self.skipTest(f"No clubs found in {city_name} to test calendar retrieval")
-
-        first_club = organismes_result.hits[0]
-        club_id = int(first_club.id)
-        club_details = self.api_client.api_ffbb_client.get_organisme(
-            organisme_id=club_id
-        )
-
-        engagements = club_details.engagements if club_details.engagements else []
-        if not engagements:
-            self.skipTest(
-                f"No teams found for club {first_club.nom} to test calendar retrieval"
-            )
-
-        competitions = club_details.competitions if club_details.competitions else []
-        if not competitions:
-            self.skipTest(f"No competitions found for club {first_club.nom}")
-
-        first_competition = competitions[0]
-        competition_id = int(
-            first_competition.get("id")
-            if isinstance(first_competition, dict)
-            else first_competition
-        )
-
+        # Get the competition details (which includes calendar)
         competition_details = self.api_client.api_ffbb_client.get_competition(
             competition_id=competition_id
         )
 
+        # Validate competition details
         self.assertIsNotNone(
             competition_details,
             f"No details found for competition ID: {competition_id}",
         )
         self.assertIsInstance(competition_details, GetCompetitionResponse)
 
+        # Check for phases and poules (which contain the calendar/matches)
         phases = competition_details.phases if competition_details.phases else []
         if phases:
             self.assertIsInstance(phases, list)
-
             print(
                 f"✓ Successfully retrieved competition details for: {competition_details.nom}"
             )
