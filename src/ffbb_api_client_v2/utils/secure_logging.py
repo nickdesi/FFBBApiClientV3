@@ -7,7 +7,6 @@ like API tokens and authentication credentials.
 
 import logging
 import re
-from typing import Any, Optional
 
 
 class SecureLogger:
@@ -148,25 +147,3 @@ def mask_token(token: str, visible_chars: int = 4) -> str:
 
     visible_part = token[:visible_chars]
     return f"{visible_part}***MASKED***"
-
-
-def log_api_call(
-    logger: SecureLogger,
-    method: str,
-    url: str,
-    headers: Optional[dict[str, Any]] = None,
-):
-    """
-    Log an API call with sensitive data masked.
-
-    Args:
-        logger (SecureLogger): The logger to use
-        method (str): HTTP method
-        url (str): Request URL
-        headers (dict, optional): Request headers
-    """
-    if headers:
-        headers_str = ", ".join(f"{k}: {v}" for k, v in headers.items())
-        logger.debug(f"API Call: {method} {url} - Headers: {headers_str}")
-    else:
-        logger.debug(f"API Call: {method} {url}")

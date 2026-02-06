@@ -32,11 +32,3 @@ class MultiSearchQueries:
                 self.queries,
             )
         return result
-
-
-def multi_search_queries_from_dict(s: Any) -> MultiSearchQueries:
-    return MultiSearchQueries.from_dict(s)
-
-
-def multi_search_queries_to_dict(x: MultiSearchQueries) -> Any:
-    return x.to_dict()

@@ -61,7 +61,7 @@ class CategorieType(Enum):
 
 
 @dataclass
-class Niveau:
+class NiveauInfo:
     """
     Classe pour représenter le niveau d'une compétition extrait du nom.
 
@@ -116,10 +116,6 @@ class Niveau:
                 return False
 
         return True
-
-    def _extract_division_number(self) -> Optional[int]:
-        """Retourne le numéro de division."""
-        return self.division
 
 
 class NiveauExtractor:
@@ -208,7 +204,7 @@ class NiveauExtractor:
     }
 
     @classmethod
-    def extract_niveau(cls, competition_name: str) -> Optional[Niveau]:
+    def extract_niveau(cls, competition_name: str) -> Optional[NiveauInfo]:
         """
         Extrait le niveau d'une compétition depuis son nom.
 
@@ -269,7 +265,7 @@ class NiveauExtractor:
         if detected_type == NiveauType.ELITE:
             zone_geo = "regional"  # ELITE est associé à régional
 
-        return Niveau(
+        return NiveauInfo(
             type=detected_type,
             division=detected_division,
             categorie=detected_categorie,
@@ -278,7 +274,9 @@ class NiveauExtractor:
         )
 
     @classmethod
-    def extract_from_competition_data(cls, competition_data: dict) -> Optional[Niveau]:
+    def extract_from_competition_data(
+        cls, competition_data: dict
+    ) -> Optional[NiveauInfo]:
         """
         Extrait le niveau depuis les données complètes de compétition.
 
@@ -304,7 +302,7 @@ class NiveauExtractor:
 
 
 # Fonctions utilitaires pour l'analyse
-def get_niveau_from_idcompetition(idcompetition) -> Optional[Niveau]:
+def get_niveau_from_idcompetition(idcompetition) -> Optional[NiveauInfo]:
     """
     Extrait le niveau depuis un objet IdCompetitionModel.
 
@@ -318,30 +316,3 @@ def get_niveau_from_idcompetition(idcompetition) -> Optional[Niveau]:
         return None
 
     return NiveauExtractor.extract_niveau(idcompetition.nom)
-
-
-def filter_by_niveau(
-    engagements: list, zone: str, division: Optional[int] = None
-) -> list:
-    """
-    Filtre une liste d'engagements par niveau.
-
-    Args:
-        engagements: Liste d'engagements
-        zone: Zone recherchée (departemental, regional, national)
-        division: Numéro de division (optionnel)
-
-    Returns:
-        Liste des engagements correspondants
-    """
-    filtered = []
-
-    for engagement in engagements:
-        if not engagement.idCompetition:
-            continue
-
-        niveau = get_niveau_from_idcompetition(engagement.idCompetition)
-        if niveau and niveau.matches_filter(zone, division):
-            filtered.append(engagement)
-
-    return filtered

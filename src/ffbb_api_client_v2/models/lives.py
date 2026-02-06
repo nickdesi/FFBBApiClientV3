@@ -334,16 +334,3 @@ def lives_from_dict(s: Any) -> list[Live]:
         List[Live]: The list of Live objects.
     """
     return from_list(Live.from_dict, s)
-
-
-def lives_to_dict(x: list[Live]) -> Any:
-    """
-    Convert a list of Live objects to a list of dictionaries.
-
-    Args:
-        x (List[Live]): The list of Live objects.
-
-    Returns:
-        Any: The list of dictionaries.
-    """
-    return from_list(lambda x: to_class(Live, x), x)

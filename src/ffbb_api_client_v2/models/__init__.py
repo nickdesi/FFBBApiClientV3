@@ -42,7 +42,7 @@ from .id_poule import IDPoule
 from .jour import Jour
 from .label import Label
 from .labellisation import Labellisation
-from .lives import Clock, Live, lives_from_dict, lives_to_dict
+from .lives import Clock, Live, lives_from_dict
 from .logo import Logo
 from .multi_search_queries import MultiSearchQueries
 from .multi_search_query import (
@@ -207,6 +207,5 @@ __all__ = [
     "TypeLeague",
     # Functions
     "lives_from_dict",
-    "lives_to_dict",
     "multi_search_results_from_dict",
 ]
