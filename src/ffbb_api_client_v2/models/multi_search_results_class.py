@@ -77,7 +77,3 @@ class MultiSearchResults:
 
 def multi_search_results_from_dict(s: Any) -> MultiSearchResults:
     return MultiSearchResults.from_dict(s)
-
-
-def multi_search_results_to_dict(x: MultiSearchResults) -> Any:
-    return x.to_dict()
