@@ -13,6 +13,10 @@ import requests
 from requests import Response, Session
 from requests_cache import CachedSession
 
+from .secure_logging import get_secure_logger
+
+logger = get_secure_logger(__name__)
+
 
 class RetryConfig:
     """
@@ -249,7 +253,7 @@ def make_http_request_with_retry(
 
     def _make_request(**_kwargs: Any) -> Response:
         if debug:
-            print(f"Making {method} request to {url}")
+            logger.debug(f"Making {method} request to {url}")
 
         session: Session
         if cached_session:
