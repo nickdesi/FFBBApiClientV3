@@ -19,13 +19,13 @@ class RetryConfig:
     Configuration for retry behavior.
 
     Attributes:
-        max_attempts (int): Maximum number of retry attempts
-        base_delay (float): Base delay in seconds between retries
-        max_delay (float): Maximum delay between retries
-        backoff_factor (float): Exponential backoff multiplier
-        jitter (bool): Whether to add random jitter to delays
-        retry_on_status_codes (list[int]): HTTP status codes to retry on
-        retry_on_exceptions (tuple[Type[Exception]]): Exception types to retry on
+        max_attempts: Maximum number of retry attempts.
+        base_delay: Base delay in seconds between retries.
+        max_delay: Maximum delay between retries.
+        backoff_factor: Exponential backoff multiplier.
+        jitter: Whether to add random jitter to delays.
+        retry_on_status_codes: HTTP status codes to retry on.
+        retry_on_exceptions: Exception types to retry on.
     """
 
     def __init__(
@@ -37,18 +37,18 @@ class RetryConfig:
         jitter: bool = True,
         retry_on_status_codes: Optional[list[int]] = None,
         retry_on_exceptions: Optional[tuple[type[Exception], ...]] = None,
-    ):
+    ) -> None:
         """
         Initialize retry configuration.
 
         Args:
-            max_attempts: Maximum number of retry attempts
-            base_delay: Base delay in seconds between retries
-            max_delay: Maximum delay between retries
-            backoff_factor: Exponential backoff multiplier
-            jitter: Whether to add random jitter to delays
-            retry_on_status_codes: HTTP status codes to retry on
-            retry_on_exceptions: Exception types to retry on
+            max_attempts: Maximum number of retry attempts.
+            base_delay: Base delay in seconds between retries.
+            max_delay: Maximum delay between retries.
+            backoff_factor: Exponential backoff multiplier.
+            jitter: Whether to add random jitter to delays.
+            retry_on_status_codes: HTTP status codes to retry on.
+            retry_on_exceptions: Exception types to retry on.
         """
         self.max_attempts = max_attempts
         self.base_delay = base_delay
@@ -57,7 +57,7 @@ class RetryConfig:
         self.jitter = jitter
         self.retry_on_status_codes = retry_on_status_codes or [429, 500, 502, 503, 504]
         self.retry_on_exceptions = retry_on_exceptions or (
-            Exception,
+            requests.RequestException,
             ConnectionError,
             TimeoutError,
         )
@@ -68,9 +68,9 @@ class TimeoutConfig:
     Configuration for timeout behavior.
 
     Attributes:
-        connect_timeout (float): Connection timeout in seconds
-        read_timeout (float): Read timeout in seconds
-        total_timeout (float): Total request timeout in seconds
+        connect_timeout: Connection timeout in seconds.
+        read_timeout: Read timeout in seconds.
+        total_timeout: Total request timeout in seconds.
     """
 
     def __init__(
@@ -78,14 +78,14 @@ class TimeoutConfig:
         connect_timeout: float = 10.0,
         read_timeout: float = 30.0,
         total_timeout: Optional[float] = None,
-    ):
+    ) -> None:
         """
         Initialize timeout configuration.
 
         Args:
-            connect_timeout: Connection timeout in seconds
-            read_timeout: Read timeout in seconds
-            total_timeout: Total request timeout in seconds (overrides connect+read if set)
+            connect_timeout: Connection timeout in seconds.
+            read_timeout: Read timeout in seconds.
+            total_timeout: Total request timeout in seconds (overrides connect+read if set).
         """
         self.connect_timeout = connect_timeout
         self.read_timeout = read_timeout
@@ -102,11 +102,11 @@ def calculate_delay(attempt: int, config: RetryConfig) -> float:
     Calculate delay for the given retry attempt.
 
     Args:
-        attempt: Current attempt number (0-based)
-        config: Retry configuration
+        attempt: Current attempt number (0-based).
+        config: Retry configuration.
 
     Returns:
-        float: Delay in seconds
+        Delay in seconds.
     """
     delay = config.base_delay * (config.backoff_factor**attempt)
     delay = min(delay, config.max_delay)
@@ -130,13 +130,13 @@ def should_retry(
     Determine if a request should be retried.
 
     Args:
-        attempt: Current attempt number (0-based)
-        response: HTTP response (if any)
-        exception: Exception that occurred (if any)
-        config: Retry configuration
+        attempt: Current attempt number (0-based).
+        response: HTTP response (if any).
+        exception: Exception that occurred (if any).
+        config: Retry configuration.
 
     Returns:
-        bool: True if request should be retried
+        True if request should be retried.
     """
     # Retry on exceptions
     if exception and isinstance(exception, config.retry_on_exceptions):
@@ -153,30 +153,30 @@ def should_retry(
     return False
 
 
-def execute_with_retry(  # pylint: disable=keyword-arg-before-vararg
+def execute_with_retry(
     func: Callable[..., Response],
+    *args: Any,
     config: RetryConfig = DEFAULT_RETRY_CONFIG,
     timeout_config: TimeoutConfig = DEFAULT_TIMEOUT_CONFIG,
-    *args,
-    **kwargs,
+    **kwargs: Any,
 ) -> Response:
     """
     Execute a function with retry logic.
 
     Args:
-        func: Function to execute (should return a Response object)
-        config: Retry configuration
-        timeout_config: Timeout configuration
-        *args: Positional arguments for the function
-        **kwargs: Keyword arguments for the function
+        func: Function to execute (should return a Response object).
+        *args: Positional arguments for the function.
+        config: Retry configuration.
+        timeout_config: Timeout configuration.
+        **kwargs: Keyword arguments for the function.
 
     Returns:
-        Response: The HTTP response
+        The HTTP response.
 
     Raises:
-        Exception: The last exception if all retries are exhausted
+        Exception: The last exception if all retries are exhausted.
     """
-    last_exception = None
+    last_exception: Optional[Exception] = None
 
     # Update timeout in kwargs if not already set
     if "timeout" not in kwargs:
@@ -195,7 +195,12 @@ def execute_with_retry(  # pylint: disable=keyword-arg-before-vararg
 
             return response
 
-        except Exception as e:  # pylint: disable=broad-exception-caught
+        except (
+            requests.RequestException,
+            ConnectionError,
+            TimeoutError,
+            OSError,
+        ) as e:
             last_exception = e
 
             # Check if we should retry based on exception
@@ -204,9 +209,8 @@ def execute_with_retry(  # pylint: disable=keyword-arg-before-vararg
                     delay = calculate_delay(attempt, config)
                     time.sleep(delay)
                     continue
-            else:
-                # Don't retry this type of exception
-                raise
+            # Don't retry this type of exception
+            raise
 
     # All retries exhausted
     if last_exception:
@@ -230,20 +234,20 @@ def make_http_request_with_retry(
     Make an HTTP request with retry logic.
 
     Args:
-        method: HTTP method ('GET', 'POST', etc.)
-        url: Request URL
-        headers: Request headers
-        data: Request data (for POST requests)
-        cached_session: Cached session to use
-        retry_config: Retry configuration
-        timeout_config: Timeout configuration
-        debug: Whether to enable debug logging
+        method: HTTP method ('GET', 'POST', etc.).
+        url: Request URL.
+        headers: Request headers.
+        data: Request data (for POST requests).
+        cached_session: Cached session to use.
+        retry_config: Retry configuration.
+        timeout_config: Timeout configuration.
+        debug: Whether to enable debug logging.
 
     Returns:
-        Response: HTTP response
+        HTTP response.
     """
 
-    def _make_request(**_kwargs) -> Response:
+    def _make_request(**_kwargs: Any) -> Response:
         if debug:
             print(f"Making {method} request to {url}")
 
@@ -289,12 +293,12 @@ def create_custom_retry_config(
     Create a custom retry configuration.
 
     Args:
-        max_attempts: Maximum number of retry attempts
-        base_delay: Base delay in seconds
-        max_delay: Maximum delay in seconds
+        max_attempts: Maximum number of retry attempts.
+        base_delay: Base delay in seconds.
+        max_delay: Maximum delay in seconds.
 
     Returns:
-        RetryConfig: Custom retry configuration
+        Custom retry configuration.
     """
     return RetryConfig(
         max_attempts=max_attempts,
@@ -311,11 +315,11 @@ def create_custom_timeout_config(
     Create a custom timeout configuration.
 
     Args:
-        connect_timeout: Connection timeout in seconds
-        read_timeout: Read timeout in seconds
+        connect_timeout: Connection timeout in seconds.
+        read_timeout: Read timeout in seconds.
 
     Returns:
-        TimeoutConfig: Custom timeout configuration
+        Custom timeout configuration.
     """
     return TimeoutConfig(
         connect_timeout=connect_timeout,

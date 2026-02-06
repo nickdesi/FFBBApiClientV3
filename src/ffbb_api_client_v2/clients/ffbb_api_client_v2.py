@@ -4,7 +4,6 @@ from typing import cast
 
 from requests_cache import CachedSession
 
-from ..helpers.http_requests_helper import default_cached_session
 from ..helpers.multi_search_query_helper import generate_queries
 from ..models.competitions_models import GetCompetitionResponse
 from ..models.lives import Live
@@ -28,6 +27,7 @@ from ..models.multi_search_results import MultiSearchResult
 from ..models.organismes_models import GetOrganismeResponse
 from ..models.poules_models import GetPouleResponse
 from ..models.saisons_models import GetSaisonsResponse
+from ..utils.cache_manager import CacheManager
 from ..utils.input_validation import (
     validate_boolean,
     validate_filter_criteria,
@@ -53,7 +53,7 @@ class FFBBAPIClientV2:
         meilisearch_bearer_token: str,
         api_bearer_token: str,
         debug: bool = False,
-        cached_session: CachedSession = default_cached_session,
+        cached_session: CachedSession | None = None,
     ) -> FFBBAPIClientV2:
         """
         Create a new FFBB API Client V2 instance with comprehensive input validation.
@@ -76,6 +76,10 @@ class FFBBAPIClientV2:
         )
         validated_api_token = validate_token(api_bearer_token, "api_bearer_token")
         validated_debug = validate_boolean(debug, "debug")
+
+        # Use singleton session if not provided
+        if cached_session is None:
+            cached_session = CacheManager().session
 
         # Create API clients with validated parameters
         api_ffbb_client = ApiFFBBAppClient(

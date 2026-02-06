@@ -5,7 +5,6 @@ from typing import cast
 from requests_cache import CachedSession
 
 from ..config import MEILISEARCH_BASE_URL
-from ..helpers.http_requests_helper import default_cached_session
 from ..helpers.meilisearch_client_extension import MeilisearchClientExtension
 from ..models.multi_search_query import (
     CompetitionsMultiSearchQuery,
@@ -31,7 +30,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         bearer_token: str,
         url: str = MEILISEARCH_BASE_URL,
         debug: bool = False,
-        cached_session: CachedSession | None = default_cached_session,
+        cached_session: CachedSession | None = None,
     ):
         super().__init__(bearer_token, url, debug, cached_session)
 

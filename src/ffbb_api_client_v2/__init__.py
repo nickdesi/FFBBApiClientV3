@@ -1,66 +1,124 @@
+"""
+FFBB API Client V2.
+
+A Python client library for the French Basketball Federation (FFBB) API,
+providing access to clubs, competitions, matches, and other basketball data.
+"""
+
 import sys
 
-from .clients.api_ffbb_app_client import ApiFFBBAppClient  # noqa
-from .clients.ffbb_api_client_v2 import FFBBAPIClientV2  # noqa
-from .clients.meilisearch_client import MeilisearchClient  # noqa
-from .clients.meilisearch_ffbb_client import MeilisearchFFBBClient  # noqa
-from .helpers.meilisearch_client_extension import MeilisearchClientExtension  # noqa
-from .helpers.multi_search_query_helper import generate_queries  # noqa
-from .models.multi_search_query import MultiSearchQuery  # noqa
-from .models.multi_search_result_competitions import (  # noqa
+from .clients.api_ffbb_app_client import ApiFFBBAppClient
+from .clients.ffbb_api_client_v2 import FFBBAPIClientV2
+from .clients.meilisearch_client import MeilisearchClient
+from .clients.meilisearch_ffbb_client import MeilisearchFFBBClient
+from .helpers.meilisearch_client_extension import MeilisearchClientExtension
+from .helpers.multi_search_query_helper import generate_queries
+from .models.multi_search_query import MultiSearchQuery
+from .models.multi_search_result_competitions import (
     CompetitionsFacetDistribution,
     CompetitionsFacetStats,
     CompetitionsHit,
     CompetitionsMultiSearchResult,
 )
-from .models.multi_search_result_organismes import (  # noqa
+from .models.multi_search_result_organismes import (
     OrganismesFacetDistribution,
     OrganismesFacetStats,
     OrganismesHit,
     OrganismesMultiSearchResult,
 )
-from .models.multi_search_result_pratiques import (  # noqa
+from .models.multi_search_result_pratiques import (
     PratiquesFacetDistribution,
     PratiquesFacetStats,
     PratiquesHit,
     PratiquesMultiSearchResult,
 )
-from .models.multi_search_result_rencontres import (  # noqa
+from .models.multi_search_result_rencontres import (
     RencontresFacetDistribution,
     RencontresFacetStats,
     RencontresHit,
     RencontresMultiSearchResult,
 )
-from .models.multi_search_result_salles import (  # noqa
+from .models.multi_search_result_salles import (
     SallesFacetDistribution,
     SallesFacetStats,
     SallesHit,
     SallesMultiSearchResult,
 )
-from .models.multi_search_result_terrains import (  # noqa
+from .models.multi_search_result_terrains import (
     TerrainsFacetDistribution,
     TerrainsFacetStats,
     TerrainsHit,
     TerrainsMultiSearchResult,
 )
-from .models.multi_search_result_tournois import (  # noqa
+from .models.multi_search_result_tournois import (
     TournoisFacetDistribution,
     TournoisFacetStats,
     TournoisHit,
     TournoisMultiSearchResult,
 )
-from .utils.token_manager import FFBBTokens, TokenManager  # noqa
+from .utils.token_manager import FFBBTokens, TokenManager
+
+# Public API exports
+__all__ = [
+    # Clients
+    "ApiFFBBAppClient",
+    "FFBBAPIClientV2",
+    "MeilisearchClient",
+    "MeilisearchFFBBClient",
+    # Helpers
+    "MeilisearchClientExtension",
+    "generate_queries",
+    # Query
+    "MultiSearchQuery",
+    # Competitions
+    "CompetitionsFacetDistribution",
+    "CompetitionsFacetStats",
+    "CompetitionsHit",
+    "CompetitionsMultiSearchResult",
+    # Organismes
+    "OrganismesFacetDistribution",
+    "OrganismesFacetStats",
+    "OrganismesHit",
+    "OrganismesMultiSearchResult",
+    # Pratiques
+    "PratiquesFacetDistribution",
+    "PratiquesFacetStats",
+    "PratiquesHit",
+    "PratiquesMultiSearchResult",
+    # Rencontres
+    "RencontresFacetDistribution",
+    "RencontresFacetStats",
+    "RencontresHit",
+    "RencontresMultiSearchResult",
+    # Salles
+    "SallesFacetDistribution",
+    "SallesFacetStats",
+    "SallesHit",
+    "SallesMultiSearchResult",
+    # Terrains
+    "TerrainsFacetDistribution",
+    "TerrainsFacetStats",
+    "TerrainsHit",
+    "TerrainsMultiSearchResult",
+    # Tournois
+    "TournoisFacetDistribution",
+    "TournoisFacetStats",
+    "TournoisHit",
+    "TournoisMultiSearchResult",
+    # Token management
+    "FFBBTokens",
+    "TokenManager",
+]
 
 if sys.version_info[:2] >= (3, 8):
-    from importlib.metadata import PackageNotFoundError, version  # pragma: no cover
+    from importlib.metadata import PackageNotFoundError, version
 else:
-    from importlib_metadata import PackageNotFoundError, version  # pragma: no cover
+    from importlib_metadata import PackageNotFoundError, version
 
 try:
-    # Change here if project is renamed and does not equal the package name
-    dist_name = __name__
-    __version__ = version(dist_name)
-except PackageNotFoundError:  # pragma: no cover
+    DIST_NAME = __name__
+    __version__ = version(DIST_NAME)
+except PackageNotFoundError:
     __version__ = "unknown"
 finally:
     del version, PackageNotFoundError

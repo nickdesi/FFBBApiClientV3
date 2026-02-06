@@ -69,6 +69,7 @@ def http_get(
     Returns:
         Response: The HTTP response.
     """
+    start_time: float = 0.0
     if debug:
         print(f"Making GET request to {url}")
         start_time = time.time()
@@ -125,6 +126,8 @@ def http_post(
     Returns:
         Response: The HTTP response.
     """
+    start_time: float = 0.0
+    data_str: str = ""
     if debug:
         data_str = ", ".join([f"{k}:{v}" for k, v in data.items()]) if data else ""
         print(f"Making POST request to {url} {data_str}")

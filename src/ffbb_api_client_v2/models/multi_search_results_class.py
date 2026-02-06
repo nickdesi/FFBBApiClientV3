@@ -43,7 +43,7 @@ def result_from_list(s: list[Any]) -> list[MultiSearchResult[Any, Any, Any]]:
                 from_dict_func = index_uids_converters[index_uid]
                 result = from_dict_func(element)
                 results.append(result)
-            except Exception:  # pylint: disable=broad-exception-caught
+            except (KeyError, TypeError, ValueError, AssertionError):
                 # Skip invalid or unsupported index results
                 pass
 

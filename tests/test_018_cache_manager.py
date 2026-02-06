@@ -6,10 +6,9 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from ffbb_api_client_v2.utils.cache_manager import (
-    AdvancedCacheManager,
     CacheConfig,
+    CacheManager,
     CacheMetrics,
-    create_cache_key,
 )
 
 
@@ -18,12 +17,19 @@ class Test018CacheManager(unittest.TestCase):
 
     def setUp(self):
         """Set up test fixtures."""
+        # Reset singleton before each test to ensure clean state
+        CacheManager.reset_instance()
         self.config = CacheConfig(
             enabled=True,
             backend="memory",
             expire_after=1800,
             max_size=100,
         )
+
+    def tearDown(self):
+        """Clean up after each test."""
+        # Reset singleton after each test
+        CacheManager.reset_instance()
 
     def test_cache_config_defaults(self):
         """Test CacheConfig default values."""
@@ -60,7 +66,7 @@ class Test018CacheManager(unittest.TestCase):
     def test_cache_manager_initialization_memory(self):
         """Test cache manager initialization with memory backend."""
         config = CacheConfig(backend="memory")
-        manager = AdvancedCacheManager(config)
+        manager = CacheManager(config)
 
         self.assertTrue(manager.is_enabled())
         self.assertIsNotNone(manager.get_session())
@@ -68,8 +74,9 @@ class Test018CacheManager(unittest.TestCase):
 
     def test_cache_manager_initialization_sqlite(self):
         """Test cache manager initialization with SQLite backend."""
+        CacheManager.reset_instance()  # Reset first
         config = CacheConfig(backend="sqlite")
-        manager = AdvancedCacheManager(config)
+        manager = CacheManager(config)
 
         self.assertTrue(manager.is_enabled())
         self.assertIsNotNone(manager.get_session())
@@ -78,7 +85,7 @@ class Test018CacheManager(unittest.TestCase):
     def test_cache_manager_initialization_disabled(self):
         """Test cache manager with caching disabled."""
         config = CacheConfig(enabled=False)
-        manager = AdvancedCacheManager(config)
+        manager = CacheManager(config)
 
         self.assertFalse(manager.is_enabled())
         self.assertIsNone(manager.get_session())
@@ -87,7 +94,7 @@ class Test018CacheManager(unittest.TestCase):
     def test_cache_manager_initialization_redis(self, mock_cached_session):
         """Test cache manager initialization with Redis backend."""
         config = CacheConfig(backend="redis", redis_url="redis://localhost:6379")
-        manager = AdvancedCacheManager(config)
+        manager = CacheManager(config)
 
         self.assertTrue(manager.is_enabled())
         mock_cached_session.assert_called_once()
@@ -97,7 +104,7 @@ class Test018CacheManager(unittest.TestCase):
         config = CacheConfig(backend="redis")
 
         with self.assertRaises(ValueError) as context:
-            AdvancedCacheManager(config)
+            CacheManager(config)
 
         self.assertIn("Redis URL is required", str(context.exception))
 
@@ -106,13 +113,13 @@ class Test018CacheManager(unittest.TestCase):
         config = CacheConfig(backend="invalid")
 
         with self.assertRaises(ValueError) as context:
-            AdvancedCacheManager(config)
+            CacheManager(config)
 
         self.assertIn("Unsupported cache backend", str(context.exception))
 
     def test_create_cache_key(self):
         """Test cache key creation."""
-        AdvancedCacheManager(self.config)
+        manager = CacheManager(self.config)
 
         # Mock request
         mock_request = MagicMock()
@@ -121,13 +128,13 @@ class Test018CacheManager(unittest.TestCase):
         mock_request.headers = {"Authorization": "Bearer token123"}
         mock_request.body = None
 
-        key = create_cache_key(mock_request)
+        key = manager.create_cache_key(mock_request)
         self.assertIsInstance(key, str)
         self.assertTrue(key.startswith("ffbb_api:"))
 
     def test_create_cache_key_with_body(self):
         """Test cache key creation with request body."""
-        AdvancedCacheManager(self.config)
+        manager = CacheManager(self.config)
 
         mock_request = MagicMock()
         mock_request.method = "POST"
@@ -135,13 +142,13 @@ class Test018CacheManager(unittest.TestCase):
         mock_request.headers = {}
         mock_request.body = "test data"
 
-        key = create_cache_key(mock_request)
+        key = manager.create_cache_key(mock_request)
         self.assertIsInstance(key, str)
         self.assertTrue(key.startswith("ffbb_api:"))
 
     def test_cache_operations(self):
         """Test basic cache operations."""
-        manager = AdvancedCacheManager(self.config)
+        manager = CacheManager(self.config)
 
         # Test cache size (may not be available for all backends)
         size = manager.get_cache_size()
@@ -156,7 +163,7 @@ class Test018CacheManager(unittest.TestCase):
 
     def test_warm_cache(self):
         """Test cache warming functionality."""
-        manager = AdvancedCacheManager(self.config)
+        manager = CacheManager(self.config)
 
         urls = ["https://api.example.com/test1", "https://api.example.com/test2"]
         headers = {"Authorization": "Bearer token"}
@@ -166,29 +173,21 @@ class Test018CacheManager(unittest.TestCase):
 
     def test_invalidate_pattern(self):
         """Test cache invalidation by pattern."""
-        manager = AdvancedCacheManager(self.config)
+        manager = CacheManager(self.config)
 
         # This should not raise an exception
         manager.invalidate_pattern("test_pattern")
 
-    def test_get_cache_manager_singleton(self):
-        """Test that get_cache_manager returns a singleton."""
-        from ffbb_api_client_v2.utils.cache_manager import get_cache_manager
-
-        manager1 = get_cache_manager()
-        manager2 = get_cache_manager()
+    def test_singleton_pattern(self):
+        """Test that CacheManager follows singleton pattern."""
+        manager1 = CacheManager(self.config)
+        manager2 = CacheManager()
 
         self.assertIs(manager1, manager2)
 
-    def test_backward_compatibility(self):
-        """Test backward compatibility functions."""
-        from ffbb_api_client_v2.utils.cache_manager import default_cached_session
-
-        self.assertIsNotNone(default_cached_session)
-
     def test_cache_key_masking(self):
         """Test that authorization headers are masked in cache keys."""
-        AdvancedCacheManager(self.config)
+        manager = CacheManager(self.config)
 
         mock_request = MagicMock()
         mock_request.method = "GET"
@@ -196,8 +195,8 @@ class Test018CacheManager(unittest.TestCase):
         mock_request.headers = {"Authorization": "Bearer sensitive_token_123"}
         mock_request.body = None
 
-        key1 = create_cache_key(mock_request)
-        key2 = create_cache_key(mock_request)
+        key1 = manager.create_cache_key(mock_request)
+        key2 = manager.create_cache_key(mock_request)
 
         # Same request should generate same key
         self.assertEqual(key1, key2)
@@ -211,10 +210,22 @@ class Test018CacheManager(unittest.TestCase):
         }
         mock_request_different_auth.body = None
 
-        key3 = create_cache_key(mock_request_different_auth)
+        key3 = manager.create_cache_key(mock_request_different_auth)
 
         # Different auth tokens should produce the same key (because auth is masked)
         self.assertEqual(key1, key3)
+
+    def test_reset_instance(self):
+        """Test that reset_instance properly clears the singleton."""
+        CacheManager(self.config)
+        CacheManager.reset_instance()
+
+        # Now create a new instance with different config
+        new_config = CacheConfig(backend="sqlite")
+        manager2 = CacheManager(new_config)
+
+        # Should be a different backend since we reset
+        self.assertEqual(manager2.config.backend, "sqlite")
 
 
 if __name__ == "__main__":

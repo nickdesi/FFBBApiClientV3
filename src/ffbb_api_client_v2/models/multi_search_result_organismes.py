@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Any  # noqa: F401
+from typing import Any
 
 from ..utils.converter_utils import (
     from_bool,

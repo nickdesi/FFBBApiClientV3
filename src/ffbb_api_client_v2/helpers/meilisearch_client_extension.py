@@ -7,7 +7,7 @@ from requests_cache import CachedSession
 from ..clients.meilisearch_client import MeilisearchClient
 from ..models.multi_search_query import MultiSearchQuery
 from ..models.multi_search_results_class import MultiSearchResults
-from .http_requests_helper import default_cached_session
+from ..utils.cache_manager import CacheManager
 
 
 class MeilisearchClientExtension(MeilisearchClient):
@@ -16,8 +16,10 @@ class MeilisearchClientExtension(MeilisearchClient):
         bearer_token: str,
         url: str,
         debug: bool = False,
-        cached_session: CachedSession | None = default_cached_session,
+        cached_session: CachedSession | None = None,
     ):
+        if cached_session is None:
+            cached_session = CacheManager().session
         super().__init__(bearer_token, url, debug, cached_session)
 
     def smart_multi_search(

@@ -65,7 +65,10 @@ class MultiSearchResult(Generic[HitType, FacetDistributionType, FacetStatsType])
         # Extract generic type arguments from class definition
         # e.g., OrganismesMultiSearchResult inherits from
         # MultiSearchResult[OrganismesHit, OrganismesFacetDistribution, OrganismesFacetStats]
-        type_args = get_args(cls.__orig_bases__[0])  # type: ignore[attr-defined]
+        orig_bases = getattr(cls, "__orig_bases__", ())
+        if not orig_bases:
+            raise TypeError(f"{cls.__name__} must be a generic subclass")
+        type_args = get_args(orig_bases[0])
         hit_type: type[HitType] = type_args[0]
         facet_distribution_type: type[FacetDistributionType] = type_args[1]
         facet_stats_type: type[FacetStatsType] = type_args[2]

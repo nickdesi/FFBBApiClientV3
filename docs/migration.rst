@@ -72,9 +72,13 @@ Helper Imports
 
     # Option 2: Use new package structure
     from ffbb_api_client_v2.helpers import MeilisearchClientExtension
-    from ffbb_api_client_v2.helpers import catch_result, default_cached_session
+    from ffbb_api_client_v2.helpers import catch_result
     from ffbb_api_client_v2.helpers import http_get_json, http_post_json
     from ffbb_api_client_v2.helpers import generate_queries
+
+    # For cached sessions, use CacheManager singleton:
+    from ffbb_api_client_v2.utils.cache_manager import CacheManager
+    session = CacheManager().session
 
 Model Imports
 -------------

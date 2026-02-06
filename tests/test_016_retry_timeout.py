@@ -133,7 +133,7 @@ class Test016RetryTimeout(unittest.TestCase):
         def success_func(**kwargs):
             return "success"
 
-        result = execute_with_retry(success_func, self.retry_config)
+        result = execute_with_retry(success_func, config=self.retry_config)
         self.assertEqual(result, "success")
 
     def test_execute_with_retry_failure_then_success(self):
@@ -147,7 +147,7 @@ class Test016RetryTimeout(unittest.TestCase):
                 raise ConnectionError("Temporary failure")
             return "success"
 
-        result = execute_with_retry(failing_func, self.retry_config)
+        result = execute_with_retry(failing_func, config=self.retry_config)
         self.assertEqual(result, "success")
         self.assertEqual(call_count, 3)
 
@@ -158,7 +158,7 @@ class Test016RetryTimeout(unittest.TestCase):
             raise ConnectionError("Always fails")
 
         with self.assertRaises(ConnectionError):
-            execute_with_retry(always_failing_func, self.retry_config)
+            execute_with_retry(always_failing_func, config=self.retry_config)
 
     @patch("time.sleep")
     def test_execute_with_retry_delays(self, mock_sleep):
@@ -172,7 +172,7 @@ class Test016RetryTimeout(unittest.TestCase):
                 raise ConnectionError("Temporary failure")
             return "success"
 
-        result = execute_with_retry(failing_func, self.retry_config)
+        result = execute_with_retry(failing_func, config=self.retry_config)
         self.assertEqual(result, "success")
 
         # Should have slept twice (after attempt 1 and 2)
@@ -201,8 +201,11 @@ class Test016RetryTimeout(unittest.TestCase):
         self.assertEqual(config.backoff_factor, 2.0)
         self.assertTrue(config.jitter)
         self.assertEqual(config.retry_on_status_codes, [429, 500, 502, 503, 504])
+        import requests
+
         self.assertEqual(
-            config.retry_on_exceptions, (Exception, ConnectionError, TimeoutError)
+            config.retry_on_exceptions,
+            (requests.RequestException, ConnectionError, TimeoutError),
         )
 
 

@@ -26,7 +26,7 @@ from ..models.query_fields import (
     QueryFieldsManager,
 )
 from ..models.saisons_models import GetSaisonsResponse
-from ..utils.cache_manager import CacheConfig, get_cache_manager
+from ..utils.cache_manager import CacheConfig, CacheManager
 from ..utils.retry_utils import (
     RetryConfig,
     TimeoutConfig,
@@ -78,9 +78,9 @@ class ApiFFBBAppClient:
         self.timeout_config = timeout_config or get_default_timeout_config()
 
         # Configure cache manager
-        self.cache_manager = get_cache_manager(cache_config)
+        self.cache_manager = CacheManager(cache_config)
         if cached_session is None:
-            self.cached_session = self.cache_manager.get_session()
+            self.cached_session = self.cache_manager.session
         else:
             self.cached_session = cached_session
 

@@ -1,6 +1,5 @@
 """Helper modules and class extensions."""
 
-from ..utils.cache_manager import create_cache_key, default_cached_session
 from .http_requests_helper import catch_result
 from .http_requests_utils import (
     encode_params,
@@ -17,8 +16,6 @@ from .multi_search_query_helper import generate_queries
 __all__ = [
     "MeilisearchClientExtension",
     "catch_result",
-    "create_cache_key",
-    "default_cached_session",
     "encode_params",
     "generate_queries",
     "http_get",

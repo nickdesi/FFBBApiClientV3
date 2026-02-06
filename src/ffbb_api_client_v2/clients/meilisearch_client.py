@@ -9,13 +9,14 @@ from ..config import (
     MEILISEARCH_BASE_URL,
     MEILISEARCH_ENDPOINT_MULTI_SEARCH,
 )
-from ..helpers.http_requests_helper import catch_result, default_cached_session
+from ..helpers.http_requests_helper import catch_result
 from ..helpers.http_requests_utils import http_post_json
 from ..models.multi_search_query import MultiSearchQuery
 from ..models.multi_search_results_class import (
     MultiSearchResults,
     multi_search_results_from_dict,
 )
+from ..utils.cache_manager import CacheManager
 from ..utils.retry_utils import (
     RetryConfig,
     TimeoutConfig,
@@ -31,7 +32,7 @@ class MeilisearchClient:
         bearer_token: str,
         url: str = MEILISEARCH_BASE_URL,
         debug: bool = False,
-        cached_session: CachedSession | None = default_cached_session,
+        cached_session: CachedSession | None = None,
         retry_config: RetryConfig | None = None,
         timeout_config: TimeoutConfig | None = None,
     ):
@@ -55,7 +56,9 @@ class MeilisearchClient:
         self._bearer_token = bearer_token
         self.url = url
         self.debug = debug
-        self.cached_session = cached_session
+        self.cached_session = (
+            cached_session if cached_session else CacheManager().session
+        )
         self.headers = {
             "Authorization": f"Bearer {self._bearer_token}",
             "Content-Type": "application/json",

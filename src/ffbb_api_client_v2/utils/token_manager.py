@@ -15,7 +15,7 @@ from ..config import (
 from ..helpers.http_requests_helper import catch_result
 from ..helpers.http_requests_utils import http_get_json
 from ..models.configuration_models import GetConfigurationResponse
-from ..utils.cache_manager import CacheConfig, get_cache_manager
+from ..utils.cache_manager import CacheConfig, CacheManager
 
 
 @dataclass
@@ -73,8 +73,8 @@ class TokenManager:
         cache_config: CacheConfig | None = None,
     ) -> GetConfigurationResponse:
         """Fetch configuration from FFBB API (public endpoint)."""
-        cache_manager = get_cache_manager(cache_config)
-        cached_session = cache_manager.get_session()
+        cache_manager = CacheManager(cache_config)
+        cached_session = cache_manager.session
 
         config_url = f"{API_FFBB_BASE_URL}{ENDPOINT_CONFIGURATION}"
         headers = {"user-agent": DEFAULT_USER_AGENT}
