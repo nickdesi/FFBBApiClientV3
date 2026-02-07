@@ -8,7 +8,6 @@ from ..utils.converter_utils import (
     from_bool,
     from_datetime,
     from_list,
-    from_none,
     from_obj,
     from_str,
     from_uuid,
@@ -18,24 +17,24 @@ from .organisme_id_pere import OrganismeIDPere
 
 class Organisateur:
     adresse: str | None = None
-    adresse_club_pro: None
+    adresse_club_pro: str | None = None
     cartographie: str | None = None
     code: str | None = None
     commune: str | None = None
-    commune_club_pro: None
+    commune_club_pro: str | None = None
     id: str | None = None
     mail: str | None = None
     nom: str | None = None
     nom_club_pro: str | None = None
     organisme_id_pere: OrganismeIDPere | None = None
-    salle: None
+    salle: str | None = None
     telephone: str | None = None
     type: str | None = None
-    type_association: None
+    type_association: str | None = None
     url_site_web: str | None = None
     logo: UUID | None = None
     nom_simple: str | None = None
-    date_affiliation: None
+    date_affiliation: datetime | None = None
     saison_en_cours: bool | None = None
     entreprise: bool | None = None
     handibasket: bool | None = None
@@ -47,31 +46,31 @@ class Organisateur:
     membres: list[int] | None = None
     date_created: datetime | None = None
     date_updated: datetime | None = None
-    logo_base64: None
+    logo_base64: UUID | None = None
     competitions: list[str] | None = None
     organismes_fils: list[int] | None = None
 
     def __init__(
         self,
         adresse: str | None,
-        adresse_club_pro: None,
+        adresse_club_pro: str | None,
         cartographie: str | None,
         code: str | None,
         commune: str | None,
-        commune_club_pro: None,
+        commune_club_pro: str | None,
         id: str | None,
         mail: str | None,
         nom: str | None,
         nom_club_pro: str | None,
         organisme_id_pere: OrganismeIDPere | None,
-        salle: None,
+        salle: str | None,
         telephone: str | None,
         type: str | None,
-        type_association: None,
+        type_association: str | None,
         url_site_web: str | None,
         logo: UUID | None,
         nom_simple: str | None,
-        date_affiliation: None,
+        date_affiliation: datetime | None,
         saison_en_cours: bool | None,
         entreprise: bool | None,
         handibasket: bool | None,
@@ -83,7 +82,7 @@ class Organisateur:
         membres: list[int] | None,
         date_created: datetime | None,
         date_updated: datetime | None,
-        logo_base64: None,
+        logo_base64: UUID | None,
         competitions: list[str] | None,
         organismes_fils: list[int] | None,
     ) -> None:
@@ -125,11 +124,11 @@ class Organisateur:
     def from_dict(obj: Any) -> Organisateur:
         assert isinstance(obj, dict)
         adresse = from_str(obj, "adresse")
-        adresse_club_pro = from_none(obj.get("adresseClubPro"))
+        adresse_club_pro = from_str(obj, "adresseClubPro")
         cartographie = from_str(obj, "cartographie")
         code = from_str(obj, "code")
         commune = from_str(obj, "commune")
-        commune_club_pro = from_none(obj.get("communeClubPro"))
+        commune_club_pro = from_str(obj, "communeClubPro")
         id = from_str(obj, "id")
         mail = from_str(obj, "mail")
         nom = from_str(obj, "nom")
@@ -137,14 +136,14 @@ class Organisateur:
         organisme_id_pere = from_obj(
             OrganismeIDPere.from_dict, obj, "organisme_id_pere"
         )
-        salle = from_none(obj.get("salle"))
+        salle = from_str(obj, "salle")
         telephone = from_str(obj, "telephone")
         type = from_str(obj, "type")
-        type_association = from_none(obj.get("type_association"))
+        type_association = from_str(obj, "type_association")
         url_site_web = from_str(obj, "urlSiteWeb")
         logo = from_uuid(obj, "logo")
         nom_simple = from_str(obj, "nom_simple")
-        date_affiliation = from_none(obj.get("dateAffiliation"))
+        date_affiliation = from_datetime(obj, "dateAffiliation")
         saison_en_cours = from_bool(obj, "saison_en_cours")
         entreprise = from_bool(obj, "entreprise")
         handibasket = from_bool(obj, "handibasket")
@@ -156,7 +155,7 @@ class Organisateur:
         membres = from_list(int, obj, "membres")
         date_created = from_datetime(obj, "date_created")
         date_updated = from_datetime(obj, "date_updated")
-        logo_base64 = from_none(obj.get("logo_base64"))
+        logo_base64 = from_uuid(obj, "logo_base64")
         competitions = from_list(str, obj, "competitions")
         organismes_fils = from_list(int, obj, "organismes_fils")
         return Organisateur(
@@ -200,7 +199,7 @@ class Organisateur:
         if self.adresse is not None:
             result["adresse"] = self.adresse
         if self.adresse_club_pro is not None:
-            result["adresseClubPro"] = from_none(self.adresse_club_pro)
+            result["adresseClubPro"] = self.adresse_club_pro
         if self.cartographie is not None:
             result["cartographie"] = self.cartographie
         if self.code is not None:
@@ -208,7 +207,7 @@ class Organisateur:
         if self.commune is not None:
             result["commune"] = self.commune
         if self.commune_club_pro is not None:
-            result["communeClubPro"] = from_none(self.commune_club_pro)
+            result["communeClubPro"] = self.commune_club_pro
         if self.id is not None:
             result["id"] = self.id
         if self.mail is not None:
@@ -220,13 +219,13 @@ class Organisateur:
         if self.organisme_id_pere is not None:
             result["organisme_id_pere"] = self.organisme_id_pere.to_dict()
         if self.salle is not None:
-            result["salle"] = from_none(self.salle)
+            result["salle"] = self.salle
         if self.telephone is not None:
             result["telephone"] = self.telephone
         if self.type is not None:
             result["type"] = self.type
         if self.type_association is not None:
-            result["type_association"] = from_none(self.type_association)
+            result["type_association"] = self.type_association
         if self.url_site_web is not None:
             result["urlSiteWeb"] = self.url_site_web
         if self.logo is not None:
@@ -234,7 +233,7 @@ class Organisateur:
         if self.nom_simple is not None:
             result["nom_simple"] = self.nom_simple
         if self.date_affiliation is not None:
-            result["dateAffiliation"] = from_none(self.date_affiliation)
+            result["dateAffiliation"] = self.date_affiliation.isoformat()
         if self.saison_en_cours is not None:
             result["saison_en_cours"] = self.saison_en_cours
         if self.entreprise is not None:
@@ -258,7 +257,7 @@ class Organisateur:
         if self.date_updated is not None:
             result["date_updated"] = self.date_updated.isoformat()
         if self.logo_base64 is not None:
-            result["logo_base64"] = from_none(self.logo_base64)
+            result["logo_base64"] = str(self.logo_base64)
         if self.competitions is not None:
             result["competitions"] = self.competitions
         if self.organismes_fils is not None:

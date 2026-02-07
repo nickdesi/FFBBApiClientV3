@@ -9,7 +9,6 @@ from ..utils.converter_utils import (
     from_datetime,
     from_enum,
     from_int,
-    from_none,
     from_obj,
     from_str,
 )
@@ -116,7 +115,7 @@ class TournoisHit(Hit):
     commune: Commune | None = None
     nature_sol: NatureSol | None = None
     geo: Geo | None = None
-    thumbnail: None
+    thumbnail: str | None = None
     type: HitType | None = None
 
     def __init__(
@@ -134,7 +133,7 @@ class TournoisHit(Hit):
         commune: Commune | None,
         nature_sol: NatureSol | None,
         geo: Geo | None,
-        thumbnail: None,
+        thumbnail: str | None,
         type: HitType | None,
     ) -> None:
         self.nom = nom
@@ -171,7 +170,7 @@ class TournoisHit(Hit):
         commune = from_obj(Commune.from_dict, obj, "commune")
         nature_sol = from_obj(NatureSol.from_dict, obj, "natureSol")
         geo = from_obj(Geo.from_dict, obj, "_geo")
-        thumbnail = from_none(obj.get("thumbnail"))
+        thumbnail = from_str(obj, "thumbnail")
         type = from_enum(HitType, obj, "type")
         return TournoisHit(
             nom,
@@ -220,7 +219,7 @@ class TournoisHit(Hit):
         if self.geo is not None:
             result["_geo"] = self.geo.to_dict()
         if self.thumbnail is not None:
-            result["thumbnail"] = from_none(self.thumbnail)
+            result["thumbnail"] = self.thumbnail
         if self.type is not None:
             result["type"] = self.type.value
         return result

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any
 
 from ..utils.converter_utils import (
+    from_datetime,
     from_float,
     from_int,
-    from_none,
     from_obj,
     from_str,
 )
@@ -16,8 +17,8 @@ class Cartographie:
     adresse: str | None = None
     code_postal: int | None = None
     coordonnees: Coordonnees | None = None
-    date_created: None
-    date_updated: None
+    date_created: datetime | None = None
+    date_updated: datetime | None = None
     cartographie_id: str | None = None
     latitude: float | None = None
     longitude: float | None = None
@@ -30,8 +31,8 @@ class Cartographie:
         adresse: str | None,
         code_postal: int | None,
         coordonnees: Coordonnees | None,
-        date_created: None,
-        date_updated: None,
+        date_created: datetime | None,
+        date_updated: datetime | None,
         id: str | None,
         latitude: float | None,
         longitude: float | None,
@@ -57,8 +58,8 @@ class Cartographie:
         adresse = from_str(obj, "adresse")
         code_postal = from_int(obj, "codePostal")
         coordonnees = from_obj(Coordonnees.from_dict, obj, "coordonnees")
-        date_created = from_none(obj.get("date_created"))
-        date_updated = from_none(obj.get("date_updated"))
+        date_created = from_datetime(obj, "date_created")
+        date_updated = from_datetime(obj, "date_updated")
         cartographie_id = from_str(obj, "id")
         latitude = from_float(obj, "latitude")
         longitude = from_float(obj, "longitude")
@@ -88,9 +89,9 @@ class Cartographie:
         if self.coordonnees is not None:
             result["coordonnees"] = self.coordonnees.to_dict()
         if self.date_created is not None:
-            result["date_created"] = from_none(self.date_created)
+            result["date_created"] = self.date_created.isoformat()
         if self.date_updated is not None:
-            result["date_updated"] = from_none(self.date_updated)
+            result["date_updated"] = self.date_updated.isoformat()
         if self.cartographie_id is not None:
             result["id"] = self.cartographie_id
         if self.latitude is not None:

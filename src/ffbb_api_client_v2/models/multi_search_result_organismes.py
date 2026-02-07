@@ -8,7 +8,6 @@ from ..utils.converter_utils import (
     from_bool,
     from_datetime,
     from_list,
-    from_none,
     from_obj,
     from_str,
 )
@@ -83,7 +82,7 @@ class OrganismesHit(Hit):
     nom_club_pro: str | None = None
     nom: str | None = None
     adresse: str | None = None
-    adresse_club_pro: None
+    adresse_club_pro: str | None = None
     code: str | None = None
     id: str | None = None
     engagements_noms: str | None = None
@@ -110,7 +109,7 @@ class OrganismesHit(Hit):
         nom_club_pro: str | None,
         nom: str | None,
         adresse: str | None,
-        adresse_club_pro: None,
+        adresse_club_pro: str | None,
         code: str | None,
         id: str | None,
         engagements_noms: str | None,
@@ -172,7 +171,7 @@ class OrganismesHit(Hit):
             nom_club_pro = from_str(obj, "nomClubPro")
             nom = from_str(obj, "nom")
             adresse = from_str(obj, "adresse")
-            adresse_club_pro = from_none(obj.get("adresseClubPro"))
+            adresse_club_pro = from_str(obj, "adresseClubPro")
             code = from_str(obj, "code")
             id = from_str(obj, "id")
             engagements_noms = from_str(obj, "engagements_noms")
@@ -235,7 +234,7 @@ class OrganismesHit(Hit):
         if self.adresse is not None:
             result["adresse"] = self.adresse
         if self.adresse_club_pro is not None:
-            result["adresseClubPro"] = from_none(self.adresse_club_pro)
+            result["adresseClubPro"] = self.adresse_club_pro
         if self.code is not None:
             result["code"] = self.code
         if self.id is not None:

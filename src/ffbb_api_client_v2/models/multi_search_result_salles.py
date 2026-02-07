@@ -5,7 +5,6 @@ from typing import Any
 
 from ..utils.converter_utils import (
     from_datetime,
-    from_none,
     from_obj,
     from_str,
 )
@@ -46,7 +45,7 @@ class SallesHit(Hit):
     cartographie: Cartographie | None = None
     commune: Commune | None = None
     geo: Geo | None = None
-    thumbnail: None
+    thumbnail: str | None = None
     type: str | None = None
     type_association: TypeAssociation | None = None
 
@@ -66,7 +65,7 @@ class SallesHit(Hit):
         cartographie: Cartographie | None,
         commune: Commune | None,
         geo: Geo | None,
-        thumbnail: None,
+        thumbnail: str | None,
         type: str | None,
         type_association: TypeAssociation | None,
     ) -> None:
@@ -115,7 +114,7 @@ class SallesHit(Hit):
         cartographie = from_obj(Cartographie.from_dict, obj, "cartographie")
         commune = from_obj(Commune.from_dict, obj, "commune")
         geo = from_obj(Geo.from_dict, obj, "_geo")
-        thumbnail = from_none(obj.get("thumbnail"))
+        thumbnail = from_str(obj, "thumbnail")
         type = from_str(obj, "type")
         type_association = from_obj(TypeAssociation.from_dict, obj, "type_association")
         return SallesHit(
@@ -169,7 +168,7 @@ class SallesHit(Hit):
         if self.geo is not None:
             result["_geo"] = self.geo.to_dict()
         if self.thumbnail is not None:
-            result["thumbnail"] = from_none(self.thumbnail)
+            result["thumbnail"] = self.thumbnail
         if self.type is not None:
             result["type"] = self.type
         if self.type_association is not None:

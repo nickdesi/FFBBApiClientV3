@@ -7,7 +7,6 @@ from ..utils.converter_utils import (
     from_datetime,
     from_enum,
     from_int,
-    from_none,
     from_obj,
     from_officiels_list,
     from_str,
@@ -163,7 +162,7 @@ class RencontresHit(Hit):
     creation_timestamp: int | None = None
     date_saisie_resultat_timestamp: int | None = None
     modification_timestamp: int | None = None
-    thumbnail: None
+    thumbnail: str | None = None
     organisateur: Organisateur | None = None
     niveau_nb: int | None = None
 
@@ -194,7 +193,7 @@ class RencontresHit(Hit):
         creation_timestamp: int | None,
         date_saisie_resultat_timestamp: int | None,
         modification_timestamp: int | None,
-        thumbnail: None,
+        thumbnail: str | None,
         organisateur: Organisateur | None,
         niveau_nb: int | None,
     ):
@@ -289,7 +288,7 @@ class RencontresHit(Hit):
                 obj, "dateSaisieResultat_timestamp"
             )
             modification_timestamp = from_int(obj, "modification_timestamp")
-            thumbnail = from_none(obj.get("thumbnail"))
+            thumbnail = from_str(obj, "thumbnail")
             organisateur = from_obj(Organisateur.from_dict, obj, "organisateur")
             niveau_nb = from_int(obj, "niveau_nb")
             return RencontresHit(
@@ -378,7 +377,7 @@ class RencontresHit(Hit):
         if self.modification_timestamp is not None:
             result["modification_timestamp"] = self.modification_timestamp
         if self.thumbnail is not None:
-            result["thumbnail"] = from_none(self.thumbnail)
+            result["thumbnail"] = self.thumbnail
         if self.organisateur is not None:
             result["organisateur"] = self.organisateur.to_dict()
         if self.niveau_nb is not None:

@@ -10,7 +10,6 @@ from ..utils.converter_utils import (
     from_enum,
     from_int,
     from_list,
-    from_none,
     from_obj,
     from_str,
     from_uuid,
@@ -249,11 +248,11 @@ class TerrainsHit(Hit):
     debut: datetime | None = None
     fin: datetime | None = None
     mail_organisateur: str | None = None
-    nb_participant_prevu: None
+    nb_participant_prevu: int | None = None
     tarif_organisateur: int | None = None
     telephone_organisateur: str | None = None
     url_organisateur: str | None = None
-    adresse_complement: None
+    adresse_complement: str | None = None
     tournoi_types3_x3: list[TournoiTypes3X3] | None = None
     cartographie: Cartographie | None = None
     commune: Commune | None = None
@@ -262,7 +261,7 @@ class TerrainsHit(Hit):
     geo: Geo | None = None
     debut_timestamp: int | None = None
     fin_timestamp: int | None = None
-    thumbnail: None
+    thumbnail: str | None = None
 
     def __init__(
         self,
@@ -283,11 +282,11 @@ class TerrainsHit(Hit):
         debut: datetime | None,
         fin: datetime | None,
         mail_organisateur: str | None,
-        nb_participant_prevu: None,
+        nb_participant_prevu: int | None,
         tarif_organisateur: int | None,
         telephone_organisateur: str | None,
         url_organisateur: str | None,
-        adresse_complement: None,
+        adresse_complement: str | None,
         tournoi_types3_x3: list[TournoiTypes3X3] | None,
         cartographie: Cartographie | None,
         commune: Commune | None,
@@ -296,7 +295,7 @@ class TerrainsHit(Hit):
         geo: Geo | None,
         debut_timestamp: int | None,
         fin_timestamp: int | None,
-        thumbnail: None,
+        thumbnail: str | None,
     ) -> None:
         self.nom = nom
         self.lower_nom = nom.lower() if nom else None
@@ -366,11 +365,11 @@ class TerrainsHit(Hit):
         debut = from_datetime(obj, "debut")
         fin = from_datetime(obj, "fin")
         mail_organisateur = from_str(obj, "mailOrganisateur")
-        nb_participant_prevu = from_none(obj.get("nbParticipantPrevu"))
+        nb_participant_prevu = from_int(obj, "nbParticipantPrevu")
         tarif_organisateur = from_int(obj, "tarifOrganisateur")
         telephone_organisateur = from_str(obj, "telephoneOrganisateur")
         url_organisateur = from_str(obj, "urlOrganisateur")
-        adresse_complement = from_none(obj.get("adresseComplement"))
+        adresse_complement = from_str(obj, "adresseComplement")
         tournoi_types3_x3 = from_list(TournoiTypes3X3.from_dict, obj, "tournoiTypes3x3")
         cartographie = from_obj(Cartographie.from_dict, obj, "cartographie")
         commune = from_obj(Commune.from_dict, obj, "commune")
@@ -379,7 +378,7 @@ class TerrainsHit(Hit):
         geo = from_obj(Geo.from_dict, obj, "_geo")
         debut_timestamp = from_int(obj, "debut_timestamp")
         fin_timestamp = from_int(obj, "fin_timestamp")
-        thumbnail = from_none(obj.get("thumbnail"))
+        thumbnail = from_str(obj, "thumbnail")
         return TerrainsHit(
             nom,
             sexe,
@@ -453,7 +452,7 @@ class TerrainsHit(Hit):
         if self.mail_organisateur is not None:
             result["mailOrganisateur"] = self.mail_organisateur
         if self.nb_participant_prevu is not None:
-            result["nbParticipantPrevu"] = from_none(self.nb_participant_prevu)
+            result["nbParticipantPrevu"] = str(self.nb_participant_prevu)
         if self.tarif_organisateur is not None:
             result["tarifOrganisateur"] = str(self.tarif_organisateur)
         if self.telephone_organisateur is not None:
@@ -461,7 +460,7 @@ class TerrainsHit(Hit):
         if self.url_organisateur is not None:
             result["urlOrganisateur"] = self.url_organisateur
         if self.adresse_complement is not None:
-            result["adresseComplement"] = from_none(self.adresse_complement)
+            result["adresseComplement"] = self.adresse_complement
         if self.tournoi_types3_x3 is not None:
             result["tournoiTypes3x3"] = [t.to_dict() for t in self.tournoi_types3_x3]
         if self.cartographie is not None:
@@ -479,7 +478,7 @@ class TerrainsHit(Hit):
         if self.fin_timestamp is not None:
             result["fin_timestamp"] = self.fin_timestamp
         if self.thumbnail is not None:
-            result["thumbnail"] = from_none(self.thumbnail)
+            result["thumbnail"] = self.thumbnail
         return result
 
     def is_valid_for_query(self, query: str) -> bool:

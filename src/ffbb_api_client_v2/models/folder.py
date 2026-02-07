@@ -4,7 +4,6 @@ from typing import Any
 from uuid import UUID
 
 from ..utils.converter_utils import (
-    from_none,
     from_str,
     from_uuid,
 )
@@ -13,13 +12,13 @@ from ..utils.converter_utils import (
 class Folder:
     id: UUID | None = None
     name: str | None = None
-    parent: None
+    parent: str | None = None
 
     def __init__(
         self,
         id: UUID | None = None,
         name: str | None = None,
-        parent: None = None,
+        parent: str | None = None,
     ) -> None:
         self.id = id
         self.name = name
@@ -30,7 +29,7 @@ class Folder:
         assert isinstance(obj, dict)
         id = from_uuid(obj, "id")
         name = from_str(obj, "name")
-        parent = from_none(obj.get("parent"))
+        parent = from_str(obj, "parent")
         return Folder(id, name, parent)
 
     def to_dict(self) -> dict:
@@ -40,5 +39,5 @@ class Folder:
         if self.name is not None:
             result["name"] = self.name
         if self.parent is not None:
-            result["parent"] = from_none(self.parent)
+            result["parent"] = self.parent
         return result

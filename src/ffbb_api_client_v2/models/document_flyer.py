@@ -7,9 +7,9 @@ from uuid import UUID
 from ..utils.converter_utils import (
     from_datetime,
     from_enum,
+    from_float,
     from_int,
     from_list,
-    from_none,
     from_obj,
     from_str,
     from_uuid,
@@ -29,32 +29,32 @@ class DocumentFlyer:
     type: DocumentFlyerType | None = None
     uploaded_on: datetime | None = None
     modified_on: datetime | None = None
-    charset: None
+    charset: str | None = None
     filesize: int | None = None
     width: int | None = None
     height: int | None = None
-    duration: None
-    embed: None
-    description: None
-    location: None
-    tags: None
+    duration: int | None = None
+    embed: str | None = None
+    description: str | None = None
+    location: str | None = None
+    tags: str | None = None
     metadata: FacetStats | None = None
     source: Source | None = None
-    credits: None
+    credits: str | None = None
     gradient_color: str | None = None
     md5: str | None = None
-    newsbridge_media_id: None
-    newsbridge_metadatas: None
-    newsbridge_name: None
-    newsbridge_recorded_at: None
-    focal_point_x: None
-    focal_point_y: None
+    newsbridge_media_id: str | None = None
+    newsbridge_metadatas: str | None = None
+    newsbridge_name: str | None = None
+    newsbridge_recorded_at: datetime | None = None
+    focal_point_x: float | None = None
+    focal_point_y: float | None = None
     newsbridge_labels: list[Any] | None = None
     newsbridge_persons: list[Any] | None = None
     folder: Folder | None = None
-    uploaded_by: None
-    modified_by: None
-    newsbridge_mission: None
+    uploaded_by: UUID | None = None
+    modified_by: UUID | None = None
+    newsbridge_mission: str | None = None
 
     def __init__(
         self,
@@ -66,32 +66,32 @@ class DocumentFlyer:
         type: DocumentFlyerType | None = None,
         uploaded_on: datetime | None = None,
         modified_on: datetime | None = None,
-        charset: None = None,
+        charset: str | None = None,
         filesize: int | None = None,
         width: int | None = None,
         height: int | None = None,
-        duration: None = None,
-        embed: None = None,
-        description: None = None,
-        location: None = None,
-        tags: None = None,
+        duration: int | None = None,
+        embed: str | None = None,
+        description: str | None = None,
+        location: str | None = None,
+        tags: str | None = None,
         metadata: FacetStats | None = None,
         source: Source | None = None,
-        credits: None = None,
+        credits: str | None = None,
         gradient_color: str | None = None,
         md5: str | None = None,
-        newsbridge_media_id: None = None,
-        newsbridge_metadatas: None = None,
-        newsbridge_name: None = None,
-        newsbridge_recorded_at: None = None,
-        focal_point_x: None = None,
-        focal_point_y: None = None,
+        newsbridge_media_id: str | None = None,
+        newsbridge_metadatas: str | None = None,
+        newsbridge_name: str | None = None,
+        newsbridge_recorded_at: datetime | None = None,
+        focal_point_x: float | None = None,
+        focal_point_y: float | None = None,
         newsbridge_labels: list[Any] | None = None,
         newsbridge_persons: list[Any] | None = None,
         folder: Folder | None = None,
-        uploaded_by: None = None,
-        modified_by: None = None,
-        newsbridge_mission: None = None,
+        uploaded_by: UUID | None = None,
+        modified_by: UUID | None = None,
+        newsbridge_mission: str | None = None,
     ) -> None:
         self.id = id
         self.storage = storage
@@ -139,32 +139,32 @@ class DocumentFlyer:
         type = from_enum(DocumentFlyerType, obj, "type")
         uploaded_on = from_datetime(obj, "uploaded_on")
         modified_on = from_datetime(obj, "modified_on")
-        charset = from_none(obj.get("charset"))
+        charset = from_str(obj, "charset")
         filesize = from_int(obj, "filesize")
         width = from_int(obj, "width")
         height = from_int(obj, "height")
-        duration = from_none(obj.get("duration"))
-        embed = from_none(obj.get("embed"))
-        description = from_none(obj.get("description"))
-        location = from_none(obj.get("location"))
-        tags = from_none(obj.get("tags"))
+        duration = from_int(obj, "duration")
+        embed = from_str(obj, "embed")
+        description = from_str(obj, "description")
+        location = from_str(obj, "location")
+        tags = from_str(obj, "tags")
         metadata = from_obj(FacetStats.from_dict, obj, "metadata")
         source = from_enum(Source, obj, "source")
-        credits = from_none(obj.get("credits"))
+        credits = from_str(obj, "credits")
         gradient_color = from_str(obj, "gradient_color")
         md5 = from_str(obj, "md5")
-        newsbridge_media_id = from_none(obj.get("newsbridge_media_id"))
-        newsbridge_metadatas = from_none(obj.get("newsbridge_metadatas"))
-        newsbridge_name = from_none(obj.get("newsbridge_name"))
-        newsbridge_recorded_at = from_none(obj.get("newsbridge_recorded_at"))
-        focal_point_x = from_none(obj.get("focal_point_x"))
-        focal_point_y = from_none(obj.get("focal_point_y"))
+        newsbridge_media_id = from_str(obj, "newsbridge_media_id")
+        newsbridge_metadatas = from_str(obj, "newsbridge_metadatas")
+        newsbridge_name = from_str(obj, "newsbridge_name")
+        newsbridge_recorded_at = from_datetime(obj, "newsbridge_recorded_at")
+        focal_point_x = from_float(obj, "focal_point_x")
+        focal_point_y = from_float(obj, "focal_point_y")
         newsbridge_labels = from_list(lambda x: x, obj, "newsbridge_labels")
         newsbridge_persons = from_list(lambda x: x, obj, "newsbridge_persons")
         folder = from_obj(Folder.from_dict, obj, "folder")
-        uploaded_by = from_none(obj.get("uploaded_by"))
-        modified_by = from_none(obj.get("modified_by"))
-        newsbridge_mission = from_none(obj.get("newsbridge_mission"))
+        uploaded_by = from_uuid(obj, "uploaded_by")
+        modified_by = from_uuid(obj, "modified_by")
+        newsbridge_mission = from_str(obj, "newsbridge_mission")
         return DocumentFlyer(
             id,
             storage,
@@ -240,4 +240,36 @@ class DocumentFlyer:
             result["newsbridge_persons"] = self.newsbridge_persons
         if self.folder is not None:
             result["folder"] = self.folder.to_dict()
+        if self.charset is not None:
+            result["charset"] = self.charset
+        if self.duration is not None:
+            result["duration"] = self.duration
+        if self.embed is not None:
+            result["embed"] = self.embed
+        if self.description is not None:
+            result["description"] = self.description
+        if self.location is not None:
+            result["location"] = self.location
+        if self.tags is not None:
+            result["tags"] = self.tags
+        if self.credits is not None:
+            result["credits"] = self.credits
+        if self.newsbridge_media_id is not None:
+            result["newsbridge_media_id"] = self.newsbridge_media_id
+        if self.newsbridge_metadatas is not None:
+            result["newsbridge_metadatas"] = self.newsbridge_metadatas
+        if self.newsbridge_name is not None:
+            result["newsbridge_name"] = self.newsbridge_name
+        if self.newsbridge_recorded_at is not None:
+            result["newsbridge_recorded_at"] = self.newsbridge_recorded_at.isoformat()
+        if self.focal_point_x is not None:
+            result["focal_point_x"] = self.focal_point_x
+        if self.focal_point_y is not None:
+            result["focal_point_y"] = self.focal_point_y
+        if self.uploaded_by is not None:
+            result["uploaded_by"] = str(self.uploaded_by)
+        if self.modified_by is not None:
+            result["modified_by"] = str(self.modified_by)
+        if self.newsbridge_mission is not None:
+            result["newsbridge_mission"] = self.newsbridge_mission
         return result

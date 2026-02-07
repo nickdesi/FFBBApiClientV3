@@ -11,7 +11,6 @@ from ..utils.converter_utils import (
     from_float,
     from_int,
     from_list,
-    from_none,
     from_obj,
     from_str,
     from_uuid,
@@ -178,8 +177,8 @@ class Cartographie:
     adresse: str | None = None
     code_postal: str | None = None
     coordonnees: Coordonnees | None = None
-    date_created: None
-    date_updated: None
+    date_created: datetime | None = None
+    date_updated: datetime | None = None
     id: str | None = None
     latitude: float | None = None
     longitude: float | None = None
@@ -192,8 +191,8 @@ class Cartographie:
         adresse: str | None,
         code_postal: str | None,
         coordonnees: Coordonnees | None,
-        date_created: None,
-        date_updated: None,
+        date_created: datetime | None,
+        date_updated: datetime | None,
         id: str | None,
         latitude: float | None,
         longitude: float | None,
@@ -219,8 +218,8 @@ class Cartographie:
         adresse = from_str(obj, "adresse")
         code_postal = from_str(obj, "codePostal")
         coordonnees = from_obj(Coordonnees.from_dict, obj, "coordonnees")
-        date_created = from_none(obj.get("date_created"))
-        date_updated = from_none(obj.get("date_updated"))
+        date_created = from_datetime(obj, "date_created")
+        date_updated = from_datetime(obj, "date_updated")
         id = from_str(obj, "id")
         latitude = from_float(obj, "latitude")
         longitude = from_float(obj, "longitude")
@@ -250,9 +249,9 @@ class Cartographie:
         if self.coordonnees is not None:
             result["coordonnees"] = self.coordonnees.to_dict()
         if self.date_created is not None:
-            result["date_created"] = from_none(self.date_created)
+            result["date_created"] = self.date_created.isoformat()
         if self.date_updated is not None:
-            result["date_updated"] = from_none(self.date_updated)
+            result["date_updated"] = self.date_updated.isoformat()
         if self.id is not None:
             result["id"] = self.id
         if self.latitude is not None:
@@ -341,9 +340,9 @@ class PratiquesHit(Hit):
     date_demande: int | None = None
     date_fin: datetime | None = None
     date_updated: datetime | None = None
-    facebook: None
+    facebook: str | None = None
     site_web: str | None = None
-    twitter: None
+    twitter: str | None = None
     action: str | None = None
     adresse_salle: str | None = None
     adresse_structure: str | None = None
@@ -357,8 +356,8 @@ class PratiquesHit(Hit):
     inscriptions: str | None = None
     jours: list[Jour] | None = None
     label: Label | None = None
-    latitude: None
-    longitude: None
+    latitude: float | None = None
+    longitude: float | None = None
     mail_demandeur: str | None = None
     mail_structure: str | None = None
     nom_demandeur: str | None = None
@@ -390,9 +389,9 @@ class PratiquesHit(Hit):
         date_demande: int | None,
         date_fin: datetime | None,
         date_updated: datetime | None,
-        facebook: None,
+        facebook: str | None,
         site_web: str | None,
-        twitter: None,
+        twitter: str | None,
         action: str | None,
         adresse_salle: str | None,
         adresse_structure: str | None,
@@ -406,8 +405,8 @@ class PratiquesHit(Hit):
         inscriptions: str | None,
         jours: list[Jour] | None,
         label: Label | None,
-        latitude: None,
-        longitude: None,
+        latitude: float | None,
+        longitude: float | None,
         mail_demandeur: str | None,
         mail_structure: str | None,
         nom_demandeur: str | None,
@@ -509,9 +508,9 @@ class PratiquesHit(Hit):
         date_demande = from_int(obj, "date_demande")
         date_fin = from_datetime(obj, "date_fin")
         date_updated = from_datetime(obj, "date_updated")
-        facebook = from_none(obj.get("facebook"))
+        facebook = from_str(obj, "facebook")
         site_web = from_str(obj, "site_web")
-        twitter = from_none(obj.get("twitter"))
+        twitter = from_str(obj, "twitter")
         action = from_str(obj, "action")
         adresse_salle = from_str(obj, "adresse_salle")
         adresse_structure = from_str(obj, "adresse_structure")
@@ -525,8 +524,8 @@ class PratiquesHit(Hit):
         inscriptions = from_str(obj, "inscriptions")
         jours = from_list(Jour, obj, "jours")
         label = from_enum(Label, obj, "label")
-        latitude = from_none(obj.get("latitude"))
-        longitude = from_none(obj.get("longitude"))
+        latitude = from_float(obj, "latitude")
+        longitude = from_float(obj, "longitude")
         mail_demandeur = from_str(obj, "mail_demandeur")
         mail_structure = from_str(obj, "mail_structure")
         nom_demandeur = from_str(obj, "nom_demandeur")
@@ -617,11 +616,11 @@ class PratiquesHit(Hit):
         if self.date_updated is not None:
             result["date_updated"] = self.date_updated.isoformat()
         if self.facebook is not None:
-            result["facebook"] = from_none(self.facebook)
+            result["facebook"] = self.facebook
         if self.site_web is not None:
             result["site_web"] = self.site_web
         if self.twitter is not None:
-            result["twitter"] = from_none(self.twitter)
+            result["twitter"] = self.twitter
         if self.action is not None:
             result["action"] = self.action
         if self.adresse_salle is not None:
@@ -649,9 +648,9 @@ class PratiquesHit(Hit):
         if self.label is not None:
             result["label"] = self.label.value
         if self.latitude is not None:
-            result["latitude"] = from_none(self.latitude)
+            result["latitude"] = self.latitude
         if self.longitude is not None:
-            result["longitude"] = from_none(self.longitude)
+            result["longitude"] = self.longitude
         if self.mail_demandeur is not None:
             result["mail_demandeur"] = self.mail_demandeur
         if self.mail_structure is not None:

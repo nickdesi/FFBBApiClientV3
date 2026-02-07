@@ -6,13 +6,12 @@ from typing import Any
 from ..utils.converter_utils import (
     from_datetime,
     from_int,
-    from_none,
     from_str,
 )
 
 
 class Commune:
-    code_insee: None
+    code_insee: str | None = None
     code_postal: int | None = None
     date_created: datetime | None = None
     date_updated: datetime | None = None
@@ -22,7 +21,7 @@ class Commune:
 
     def __init__(
         self,
-        code_insee: None,
+        code_insee: str | None,
         code_postal: int | None,
         date_created: datetime | None,
         date_updated: datetime | None,
@@ -44,7 +43,7 @@ class Commune:
     @staticmethod
     def from_dict(obj: Any) -> Commune:
         assert isinstance(obj, dict)
-        code_insee = from_none(obj.get("codeInsee"))
+        code_insee = from_str(obj, "codeInsee")
         code_postal = from_int(obj, "codePostal")
         date_created = from_datetime(obj, "date_created")
         date_updated = from_datetime(obj, "date_updated")
@@ -64,7 +63,7 @@ class Commune:
     def to_dict(self) -> dict:
         result: dict = {}
         if self.code_insee is not None:
-            result["codeInsee"] = from_none(self.code_insee)
+            result["codeInsee"] = self.code_insee
         if self.code_postal is not None:
             result["codePostal"] = str(self.code_postal)
         if self.date_created is not None:

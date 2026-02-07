@@ -9,7 +9,6 @@ from ..utils.converter_utils import (
     from_enum,
     from_int,
     from_list,
-    from_none,
     from_obj,
     from_str,
 )
@@ -137,7 +136,7 @@ class CompetitionsHit(Hit):
     poules: list[Poule] | None = None
     phases: list[str] | None = None
     categorie: Categorie | None = None
-    id_competition_pere: None
+    id_competition_pere: str | None = None
     organisateur: Organisateur | None = None
     saison: Saison | None = None
     logo: Logo | None = None
@@ -168,7 +167,7 @@ class CompetitionsHit(Hit):
         poules: list[Poule] | None,
         phases: list[str] | None,
         categorie: Categorie | None,
-        id_competition_pere: None,
+        id_competition_pere: str | None,
         organisateur: Organisateur | None,
         saison: Saison | None,
         logo: Logo | None,
@@ -246,7 +245,7 @@ class CompetitionsHit(Hit):
             poules = from_list(Poule.from_dict, obj, "poules")
             phases = from_list(str, obj, "phases")
             categorie = from_obj(Categorie.from_dict, obj, "categorie")
-            id_competition_pere = from_none(obj.get("idCompetitionPere"))
+            id_competition_pere = from_str(obj, "idCompetitionPere")
             organisateur = from_obj(Organisateur.from_dict, obj, "organisateur")
             saison = from_obj(Saison.from_dict, obj, "saison")
             logo = from_obj(Logo.from_dict, obj, "logo")
@@ -333,7 +332,7 @@ class CompetitionsHit(Hit):
         if self.categorie is not None:
             result["categorie"] = self.categorie.to_dict()
         if self.id_competition_pere is not None:
-            result["idCompetitionPere"] = from_none(self.id_competition_pere)
+            result["idCompetitionPere"] = self.id_competition_pere
         if self.organisateur is not None:
             result["organisateur"] = self.organisateur.to_dict()
         if self.saison is not None:
