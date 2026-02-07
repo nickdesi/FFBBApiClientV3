@@ -17,6 +17,11 @@ class GetSaisonsResponse:
     id: str
     nom: str | None = None
     actif: bool | None = None
+    debut: str | None = None
+    fin: str | None = None
+    code: str | None = None
+    libelle: str | None = None
+    enCours: bool | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> GetSaisonsResponse | None:
@@ -36,6 +41,11 @@ class GetSaisonsResponse:
             id=str(data.get("id", "")),
             nom=str(data.get("nom", "")) if data.get("nom") else None,
             actif=bool(data.get("actif", False)) if "actif" in data else None,
+            debut=str(data.get("debut", "")) if data.get("debut") else None,
+            fin=str(data.get("fin", "")) if data.get("fin") else None,
+            code=str(data.get("code", "")) if data.get("code") else None,
+            libelle=str(data.get("libelle", "")) if data.get("libelle") else None,
+            enCours=bool(data.get("enCours", False)) if "enCours" in data else None,
         )
 
     @classmethod

@@ -76,6 +76,57 @@ class OrganismeFields:
     ENGAGEMENTS_ID_POULE_ID = "engagements.idPoule.id"
     ENGAGEMENTS_ID_POULE_NOM = "engagements.idPoule.nom"
 
+    # Cartographie fields (model: CartographieModel)
+    CARTOGRAPHIE_LATITUDE = "cartographie.latitude"
+    CARTOGRAPHIE_LONGITUDE = "cartographie.longitude"
+
+    # Club Pro fields (model: direct attributes)
+    NOM_CLUB_PRO = "nomClubPro"
+    ADRESSE_CLUB_PRO = "adresseClubPro"
+    COMMUNE_CLUB_PRO = "communeClubPro"
+
+    # Logo fields (model: LogoModel)
+    LOGO_ID = "logo.id"
+    LOGO_GRADIENT_COLOR = "logo.gradient_color"
+
+    # Salle fields (model: SalleModel)
+    SALLE_ID = "salle.id"
+    SALLE_NUMERO = "salle.numero"
+    SALLE_LIBELLE = "salle.libelle"
+    SALLE_LIBELLE2 = "salle.libelle2"
+    SALLE_ADRESSE = "salle.adresse"
+    SALLE_ADRESSE_COMPLEMENT = "salle.adresseComplement"
+    SALLE_COMMUNE_CODE_POSTAL = "salle.commune.codePostal"
+    SALLE_COMMUNE_LIBELLE = "salle.commune.libelle"
+    SALLE_CARTOGRAPHIE_LATITUDE = "salle.cartographie.latitude"
+    SALLE_CARTOGRAPHIE_LONGITUDE = "salle.cartographie.longitude"
+
+    # Organismes fils (model: list[Any])
+    ORGANISMES_FILS = "organismes_fils"
+
+    # Offres Pratiques fields (model: OffrespratiquesitemModel)
+    OFFRES_PRATIQUES_ID = "offresPratiques.ffbbserver_offres_pratiques_id.id"
+    OFFRES_PRATIQUES_TITLE = "offresPratiques.ffbbserver_offres_pratiques_id.title"
+    OFFRES_PRATIQUES_CATEGORIE = (
+        "offresPratiques.ffbbserver_offres_pratiques_id.categoriePratique"
+    )
+    OFFRES_PRATIQUES_TYPE = (
+        "offresPratiques.ffbbserver_offres_pratiques_id.typePratique"
+    )
+
+    # Labellisation fields (model: LabellisationitemModel)
+    LABELLISATION_ID = "labellisation.id"
+    LABELLISATION_DEBUT = "labellisation.debut"
+    LABELLISATION_FIN = "labellisation.fin"
+    LABELLISATION_PROGRAMME_ID = "labellisation.idLabellisationProgramme.id"
+    LABELLISATION_PROGRAMME_LIBELLE = "labellisation.idLabellisationProgramme.libelle"
+    LABELLISATION_PROGRAMME_LABEL = (
+        "labellisation.idLabellisationProgramme.labellisationLabel"
+    )
+    LABELLISATION_PROGRAMME_LOGO_VERTICAL = (
+        "labellisation.idLabellisationProgramme.logo_vertical"
+    )
+
     # Membres fields
     MEMBRES_ID = "membres.id"
     MEMBRES_NOM = "membres.nom"
@@ -96,10 +147,47 @@ class OrganismeFields:
             cls.TYPE,
             cls.NOM_SIMPLE,
             cls.URL_SITE_WEB,
+            # Cartographie
+            cls.CARTOGRAPHIE_LATITUDE,
+            cls.CARTOGRAPHIE_LONGITUDE,
+            # Club Pro
+            cls.NOM_CLUB_PRO,
+            cls.ADRESSE_CLUB_PRO,
+            cls.COMMUNE_CLUB_PRO,
+            # Logo
+            cls.LOGO_ID,
+            cls.LOGO_GRADIENT_COLOR,
+            # Salle
+            cls.SALLE_ID,
+            cls.SALLE_NUMERO,
+            cls.SALLE_LIBELLE,
+            cls.SALLE_LIBELLE2,
+            cls.SALLE_ADRESSE,
+            cls.SALLE_ADRESSE_COMPLEMENT,
+            cls.SALLE_COMMUNE_CODE_POSTAL,
+            cls.SALLE_COMMUNE_LIBELLE,
+            cls.SALLE_CARTOGRAPHIE_LATITUDE,
+            cls.SALLE_CARTOGRAPHIE_LONGITUDE,
+            # Organismes fils
+            cls.ORGANISMES_FILS,
+            # Offres Pratiques
+            cls.OFFRES_PRATIQUES_ID,
+            cls.OFFRES_PRATIQUES_TITLE,
+            cls.OFFRES_PRATIQUES_CATEGORIE,
+            cls.OFFRES_PRATIQUES_TYPE,
+            # Labellisation
+            cls.LABELLISATION_ID,
+            cls.LABELLISATION_DEBUT,
+            cls.LABELLISATION_FIN,
+            cls.LABELLISATION_PROGRAMME_ID,
+            cls.LABELLISATION_PROGRAMME_LIBELLE,
+            cls.LABELLISATION_PROGRAMME_LABEL,
+            cls.LABELLISATION_PROGRAMME_LOGO_VERTICAL,
+            # Competitions
             cls.COMPETITIONS_ID,
             cls.COMPETITIONS_NOM,
+            # Engagements
             cls.ENGAGEMENTS_ID,
-            # Complete idCompetition fields for proper model mapping
             cls.ENGAGEMENTS_ID_COMPETITION_ID,
             cls.ENGAGEMENTS_ID_COMPETITION_NOM,
             cls.ENGAGEMENTS_ID_COMPETITION_CODE,
@@ -122,6 +210,7 @@ class OrganismeFields:
             cls.ENGAGEMENTS_ID_COMPETITION_CATEGORIE_ORDRE,
             cls.ENGAGEMENTS_ID_POULE_ID,
             cls.ENGAGEMENTS_ID_POULE_NOM,
+            # Membres (basic info)
             cls.MEMBRES_ID,
             cls.MEMBRES_NOM,
             cls.MEMBRES_PRENOM,
@@ -141,24 +230,17 @@ class OrganismeFields:
 
     @classmethod
     def get_detailed_fields(cls) -> list[str]:
-        """Get detailed fields including nested relationships."""
+        """Get detailed fields including personal member data."""
         return cls.get_default_fields() + [
-            "cartographie.latitude",
-            "cartographie.longitude",
-            "logo.id",
-            "logo.gradient_color",
+            # Additional member personal data (not in default)
             "membres.mail",
             "membres.telephonePortable",
-            # Additional detailed fields beyond default
             "membres.adresse1",
             "membres.adresse2",
             "membres.codePostal",
             "membres.ville",
             "membres.telephoneFixe",
             "membres.codeFonction",
-            "nomClubPro",
-            "adresseClubPro",
-            "communeClubPro",
         ]
 
 
@@ -289,6 +371,76 @@ class CompetitionFields:
         "phases.poules.rencontres.officiels.officiel.prenom"
     )
 
+    # idOrganismeEquipe logo fields
+    PHASES_POULES_RENCONTRES_ID_ORGANISME_EQUIPE1_LOGO_ID = (
+        "phases.poules.rencontres.idOrganismeEquipe1.logo.id"
+    )
+    PHASES_POULES_RENCONTRES_ID_ORGANISME_EQUIPE2_LOGO_ID = (
+        "phases.poules.rencontres.idOrganismeEquipe2.logo.id"
+    )
+
+    # idEngagementEquipe1 fields (model: Idengagementequipe1Model)
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_ID = (
+        "phases.poules.rencontres.idEngagementEquipe1.id"
+    )
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_NOM = (
+        "phases.poules.rencontres.idEngagementEquipe1.nom"
+    )
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_NOM_OFFICIEL = (
+        "phases.poules.rencontres.idEngagementEquipe1.nomOfficiel"
+    )
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_NOM_USUEL = (
+        "phases.poules.rencontres.idEngagementEquipe1.nomUsuel"
+    )
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_CODE_ABREGE = (
+        "phases.poules.rencontres.idEngagementEquipe1.codeAbrege"
+    )
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_LOGO = (
+        "phases.poules.rencontres.idEngagementEquipe1.logo"
+    )
+
+    # idEngagementEquipe2 fields (model: Idengagementequipe2Model)
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_ID = (
+        "phases.poules.rencontres.idEngagementEquipe2.id"
+    )
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_NOM = (
+        "phases.poules.rencontres.idEngagementEquipe2.nom"
+    )
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_NOM_OFFICIEL = (
+        "phases.poules.rencontres.idEngagementEquipe2.nomOfficiel"
+    )
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_NOM_USUEL = (
+        "phases.poules.rencontres.idEngagementEquipe2.nomUsuel"
+    )
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_CODE_ABREGE = (
+        "phases.poules.rencontres.idEngagementEquipe2.codeAbrege"
+    )
+    PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_LOGO = (
+        "phases.poules.rencontres.idEngagementEquipe2.logo"
+    )
+
+    # Salle in rencontres (model: SalleModel)
+    PHASES_POULES_RENCONTRES_SALLE_ID = "phases.poules.rencontres.salle.id"
+    PHASES_POULES_RENCONTRES_SALLE_NUMERO = "phases.poules.rencontres.salle.numero"
+    PHASES_POULES_RENCONTRES_SALLE_LIBELLE = "phases.poules.rencontres.salle.libelle"
+    PHASES_POULES_RENCONTRES_SALLE_LIBELLE2 = "phases.poules.rencontres.salle.libelle2"
+    PHASES_POULES_RENCONTRES_SALLE_ADRESSE = "phases.poules.rencontres.salle.adresse"
+    PHASES_POULES_RENCONTRES_SALLE_ADRESSE_COMPLEMENT = (
+        "phases.poules.rencontres.salle.adresseComplement"
+    )
+    PHASES_POULES_RENCONTRES_SALLE_COMMUNE_CP = (
+        "phases.poules.rencontres.salle.commune.codePostal"
+    )
+    PHASES_POULES_RENCONTRES_SALLE_COMMUNE_LIBELLE = (
+        "phases.poules.rencontres.salle.commune.libelle"
+    )
+    PHASES_POULES_RENCONTRES_SALLE_CARTO_LAT = (
+        "phases.poules.rencontres.salle.cartographie.latitude"
+    )
+    PHASES_POULES_RENCONTRES_SALLE_CARTO_LNG = (
+        "phases.poules.rencontres.salle.cartographie.longitude"
+    )
+
     @classmethod
     def get_default_fields(cls) -> list[str]:
         """Get default fields for competition queries based on real API usage."""
@@ -335,32 +487,34 @@ class CompetitionFields:
             # Phases > Poules > Engagements
             cls.PHASES_POULES_ENGAGEMENTS_ID,
             cls.PHASES_POULES_ENGAGEMENTS_ID_ORGANISME_ID,
-        ]
-
-    @classmethod
-    def get_basic_fields(cls) -> list[str]:
-        """Get basic fields for simple competition queries."""
-        return [
-            cls.ID,
-            cls.NOM,
-            cls.SEXE,
-            cls.SAISON,
-            cls.CODE,
-        ]
-
-    @classmethod
-    def get_detailed_fields(cls) -> list[str]:
-        """Get detailed fields including all nested relationships."""
-        return cls.get_default_fields() + [
-            cls.PHASES_POULES_ID,
-            cls.PHASES_POULES_NOM,
-            cls.PHASES_POULES_RENCONTRES_NUMERO,
-            cls.PHASES_POULES_RENCONTRES_DATE,
-            "phases.poules.rencontres.nomEquipe1",
-            "phases.poules.rencontres.nomEquipe2",
-            "phases.poules.rencontres.resultatEquipe1",
-            "phases.poules.rencontres.resultatEquipe2",
-            "phases.poules.rencontres.joue",
+            # idOrganismeEquipe logo
+            cls.PHASES_POULES_RENCONTRES_ID_ORGANISME_EQUIPE1_LOGO_ID,
+            cls.PHASES_POULES_RENCONTRES_ID_ORGANISME_EQUIPE2_LOGO_ID,
+            # idEngagementEquipe1
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_ID,
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_NOM,
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_NOM_OFFICIEL,
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_NOM_USUEL,
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_CODE_ABREGE,
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE1_LOGO,
+            # idEngagementEquipe2
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_ID,
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_NOM,
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_NOM_OFFICIEL,
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_NOM_USUEL,
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_CODE_ABREGE,
+            cls.PHASES_POULES_RENCONTRES_ID_ENGAGEMENT_EQUIPE2_LOGO,
+            # Salle in rencontres
+            cls.PHASES_POULES_RENCONTRES_SALLE_ID,
+            cls.PHASES_POULES_RENCONTRES_SALLE_NUMERO,
+            cls.PHASES_POULES_RENCONTRES_SALLE_LIBELLE,
+            cls.PHASES_POULES_RENCONTRES_SALLE_LIBELLE2,
+            cls.PHASES_POULES_RENCONTRES_SALLE_ADRESSE,
+            cls.PHASES_POULES_RENCONTRES_SALLE_ADRESSE_COMPLEMENT,
+            cls.PHASES_POULES_RENCONTRES_SALLE_COMMUNE_CP,
+            cls.PHASES_POULES_RENCONTRES_SALLE_COMMUNE_LIBELLE,
+            cls.PHASES_POULES_RENCONTRES_SALLE_CARTO_LAT,
+            cls.PHASES_POULES_RENCONTRES_SALLE_CARTO_LNG,
             # GameStats fields for live match data
             cls.PHASES_POULES_RENCONTRES_GSID_MATCH_ID,
             cls.PHASES_POULES_RENCONTRES_GSID_CURRENT_STATUS,
@@ -383,6 +537,22 @@ class CompetitionFields:
             cls.PHASES_POULES_RENCONTRES_OFFICIELS_OFFICIEL_NOM,
             cls.PHASES_POULES_RENCONTRES_OFFICIELS_OFFICIEL_PRENOM,
         ]
+
+    @classmethod
+    def get_basic_fields(cls) -> list[str]:
+        """Get basic fields for simple competition queries."""
+        return [
+            cls.ID,
+            cls.NOM,
+            cls.SEXE,
+            cls.SAISON,
+            cls.CODE,
+        ]
+
+    @classmethod
+    def get_detailed_fields(cls) -> list[str]:
+        """Get detailed fields (all fields now included in default)."""
+        return cls.get_default_fields()
 
 
 class PouleFields:
@@ -589,16 +759,8 @@ class PouleFields:
 
     @classmethod
     def get_detailed_fields(cls) -> list[str]:
-        """Get detailed fields including all nested relationships."""
-        return cls.get_default_fields() + [
-            cls.CLASSEMENTS_ORGANISME_ID,
-            cls.CLASSEMENTS_ORGANISME_NOM,
-            cls.CLASSEMENTS_ORGANISME_LOGO_ID,
-            cls.CLASSEMENTS_ORGANISME_NOM_SIMPLE,
-            cls.CLASSEMENTS_ID_COMPETITION,
-            cls.CLASSEMENTS_ID_POULE,
-            cls.CLASSEMENTS_ID_POULE_ID,
-        ]
+        """Get detailed fields (all fields now included in default)."""
+        return cls.get_default_fields()
 
     @classmethod
     def get_basic_fields(cls) -> list[str]:
@@ -619,21 +781,32 @@ class SaisonFields:
     ACTIF = "actif"
     DEBUT = "debut"
     FIN = "fin"
+    CODE = "code"
+    LIBELLE = "libelle"
+    EN_COURS = "enCours"
+    DATE_CREATED = "date_created"
+    DATE_UPDATED = "date_updated"
 
     @classmethod
     def get_default_fields(cls) -> list[str]:
         """Get default fields for saison queries."""
-        return [cls.ID]
-
-    @classmethod
-    def get_detailed_fields(cls) -> list[str]:
-        """Get detailed fields for saison queries."""
         return [
             cls.ID,
             cls.NOM,
             cls.ACTIF,
             cls.DEBUT,
             cls.FIN,
+            cls.CODE,
+            cls.LIBELLE,
+            cls.EN_COURS,
+        ]
+
+    @classmethod
+    def get_detailed_fields(cls) -> list[str]:
+        """Get detailed fields for saison queries."""
+        return cls.get_default_fields() + [
+            cls.DATE_CREATED,
+            cls.DATE_UPDATED,
         ]
 
 

@@ -417,7 +417,7 @@ class GetCompetitionResponse:
                                         officiel = (
                                             cls.PhasesitemModel.PoulesitemModel.RencontresitemModel.OfficielsitemModel
                                         )(
-                                            ordre=int(officiel_data.get("ordre", 0)),
+                                            ordre=int(officiel_data.get("ordre") or 0),
                                             fonction=fonction,
                                             officiel=officiel_person,
                                         )
