@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_none, from_str, from_union
+from ..utils.converter_utils import from_none, from_str, from_union, to_class
 from .logo import Logo
 
 
@@ -31,5 +31,7 @@ class IDEngagementEquipe:
         if self.nom_usuel is not None:
             result["nomUsuel"] = from_union([from_none, from_str], self.nom_usuel)
         if self.logo is not None:
-            result["logo"] = from_union([from_none, Logo.from_dict], self.logo)
+            result["logo"] = from_union(
+                [from_none, lambda x: to_class(Logo, x)], self.logo
+            )
         return result
