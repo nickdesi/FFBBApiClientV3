@@ -7,14 +7,13 @@ from uuid import UUID
 
 from ..utils.converter_utils import (
     from_datetime,
+    from_enum,
     from_int,
     from_list,
     from_none,
+    from_obj,
     from_str,
-    from_union,
-    is_type,
-    to_class,
-    to_enum,
+    from_uuid,
 )
 from .cartographie import Cartographie
 from .commune import Commune
@@ -44,19 +43,19 @@ class SexeClass:
     @staticmethod
     def from_dict(obj: Any) -> SexeClass:
         assert isinstance(obj, dict)
-        feminine = from_union([from_none, from_int], obj.get("Féminin"))
-        masculine = from_union([from_none, from_int], obj.get("Masculin"))
-        mixed = from_union([from_none, from_int], obj.get("Mixte"))
+        feminine = from_int(obj, "Féminin")
+        masculine = from_int(obj, "Masculin")
+        mixed = from_int(obj, "Mixte")
         return SexeClass(feminine, masculine, mixed)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.feminine is not None:
-            result["Féminin"] = from_union([from_none, from_int], self.feminine)
+            result["Féminin"] = self.feminine
         if self.masculine is not None:
-            result["Masculin"] = from_union([from_none, from_int], self.masculine)
+            result["Masculin"] = self.masculine
         if self.mixed is not None:
-            result["Mixte"] = from_union([from_none, from_int], self.mixed)
+            result["Mixte"] = self.mixed
         return result
 
 
@@ -87,24 +86,16 @@ class TournoiTypes3X3Libelle:
     @staticmethod
     def from_dict(obj: Any) -> TournoiTypes3X3Libelle:
         assert isinstance(obj, dict)
-        open_plus_junior_league_3_x3 = from_union(
-            [from_none, from_int], obj.get("Open Plus - Junior league 3x3")
+        open_plus_junior_league_3_x3 = from_int(obj, "Open Plus - Junior league 3x3")
+        open_plus_super_league_3_x3 = from_int(obj, "Open Plus - Super league 3x3")
+        open_plus_access_junior_league_3_x3 = from_int(
+            obj, "Open Plus Access - Junior league 3x3"
         )
-        open_plus_super_league_3_x3 = from_union(
-            [from_none, from_int], obj.get("Open Plus - Super league 3x3")
+        open_plus_access_super_league_3_x3 = from_int(
+            obj, "Open Plus Access - Super league 3x3"
         )
-        open_plus_access_junior_league_3_x3 = from_union(
-            [from_none, from_int], obj.get("Open Plus Access - Junior league 3x3")
-        )
-        open_plus_access_super_league_3_x3 = from_union(
-            [from_none, from_int], obj.get("Open Plus Access - Super league 3x3")
-        )
-        open_start_junior_league_3_x3 = from_union(
-            [from_none, from_int], obj.get("Open Start - Junior league 3x3")
-        )
-        open_start_super_league_3_x3 = from_union(
-            [from_none, from_int], obj.get("Open Start - Super league 3x3")
-        )
+        open_start_junior_league_3_x3 = from_int(obj, "Open Start - Junior league 3x3")
+        open_start_super_league_3_x3 = from_int(obj, "Open Start - Super league 3x3")
         return TournoiTypes3X3Libelle(
             open_plus_junior_league_3_x3,
             open_plus_super_league_3_x3,
@@ -117,29 +108,23 @@ class TournoiTypes3X3Libelle:
     def to_dict(self) -> dict:
         result: dict = {}
         if self.open_plus_junior_league_3_x3 is not None:
-            result["Open Plus - Junior league 3x3"] = from_union(
-                [from_none, from_int], self.open_plus_junior_league_3_x3
-            )
+            result["Open Plus - Junior league 3x3"] = self.open_plus_junior_league_3_x3
         if self.open_plus_super_league_3_x3 is not None:
-            result["Open Plus - Super league 3x3"] = from_union(
-                [from_none, from_int], self.open_plus_super_league_3_x3
-            )
+            result["Open Plus - Super league 3x3"] = self.open_plus_super_league_3_x3
         if self.open_plus_access_junior_league_3_x3 is not None:
-            result["Open Plus Access - Junior league 3x3"] = from_union(
-                [from_none, from_int], self.open_plus_access_junior_league_3_x3
+            result["Open Plus Access - Junior league 3x3"] = (
+                self.open_plus_access_junior_league_3_x3
             )
         if self.open_plus_access_super_league_3_x3 is not None:
-            result["Open Plus Access - Super league 3x3"] = from_union(
-                [from_none, from_int], self.open_plus_access_super_league_3_x3
+            result["Open Plus Access - Super league 3x3"] = (
+                self.open_plus_access_super_league_3_x3
             )
         if self.open_start_junior_league_3_x3 is not None:
-            result["Open Start - Junior league 3x3"] = from_union(
-                [from_none, from_int], self.open_start_junior_league_3_x3
+            result["Open Start - Junior league 3x3"] = (
+                self.open_start_junior_league_3_x3
             )
         if self.open_start_super_league_3_x3 is not None:
-            result["Open Start - Super league 3x3"] = from_union(
-                [from_none, from_int], self.open_start_super_league_3_x3
-            )
+            result["Open Start - Super league 3x3"] = self.open_start_super_league_3_x3
         return result
 
 
@@ -161,31 +146,21 @@ class TerrainsFacetDistribution(FacetDistribution):
     @staticmethod
     def from_dict(obj: Any) -> TerrainsFacetDistribution:
         assert isinstance(obj, dict)
-        sexe = from_union([from_none, SexeClass.from_dict], obj.get("sexe"))
-        tournoi_type = from_union(
-            [from_none, TournoiTypeClass.from_dict], obj.get("tournoiType")
-        )
-        tournoi_types3_x3_libelle = from_union(
-            [from_none, TournoiTypes3X3Libelle.from_dict],
-            obj.get("tournoiTypes3x3.libelle"),
+        sexe = from_obj(SexeClass.from_dict, obj, "sexe")
+        tournoi_type = from_obj(TournoiTypeClass.from_dict, obj, "tournoiType")
+        tournoi_types3_x3_libelle = from_obj(
+            TournoiTypes3X3Libelle.from_dict, obj, "tournoiTypes3x3.libelle"
         )
         return TerrainsFacetDistribution(sexe, tournoi_type, tournoi_types3_x3_libelle)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.sexe is not None:
-            result["sexe"] = from_union(
-                [from_none, lambda x: to_class(SexeClass, x)], self.sexe
-            )
+            result["sexe"] = self.sexe.to_dict()
         if self.tournoi_type is not None:
-            result["tournoiType"] = from_union(
-                [from_none, lambda x: to_class(TournoiTypeClass, x)], self.tournoi_type
-            )
+            result["tournoiType"] = self.tournoi_type.to_dict()
         if self.tournoi_types3_x3_libelle is not None:
-            result["tournoiTypes3x3.libelle"] = from_union(
-                [from_none, lambda x: to_class(TournoiTypes3X3Libelle, x)],
-                self.tournoi_types3_x3_libelle,
-            )
+            result["tournoiTypes3x3.libelle"] = self.tournoi_types3_x3_libelle.to_dict()
         return result
 
 
@@ -237,36 +212,22 @@ class TournoiTypes3X3:
     @staticmethod
     def from_dict(obj: Any) -> TournoiTypes3X3:
         assert isinstance(obj, dict)
-        libelle = from_union([from_none, Libelle], obj.get("libelle"))
-        logo = from_union([from_none, UUID], obj.get("logo"))
-        type_league = from_union([from_none, TypeLeague], obj.get("type_league"))
-        type_tournois = from_union(
-            [from_none, lambda x: int(from_str(x))], obj.get("type_tournois")
-        )
+        libelle = from_enum(Libelle, obj, "libelle")
+        logo = from_uuid(obj, "logo")
+        type_league = from_enum(TypeLeague, obj, "type_league")
+        type_tournois = from_int(obj, "type_tournois")
         return TournoiTypes3X3(libelle, logo, type_league, type_tournois)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.libelle is not None:
-            result["libelle"] = from_union(
-                [from_none, lambda x: to_enum(Libelle, x)], self.libelle
-            )
+            result["libelle"] = self.libelle.value
         if self.logo is not None:
-            result["logo"] = from_union([from_none, str], self.logo)
+            result["logo"] = str(self.logo)
         if self.type_league is not None:
-            result["type_league"] = from_union(
-                [from_none, lambda x: to_enum(TypeLeague, x)], self.type_league
-            )
+            result["type_league"] = self.type_league.value
         if self.type_tournois is not None:
-            result["type_tournois"] = from_union(
-                [
-                    from_none,
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.type_tournois,
-            )
+            result["type_tournois"] = str(self.type_tournois)
         return result
 
 
@@ -386,55 +347,38 @@ class TerrainsHit(Hit):
     @staticmethod
     def from_dict(obj: Any) -> TerrainsHit:
         assert isinstance(obj, dict)
-        nom = from_union([from_none, from_str], obj.get("nom"))
-        sexe = from_union([from_none, SexeEnum], obj.get("sexe"))
-        adresse = from_union([from_none, from_str], obj.get("adresse"))
-        nom_organisateur = from_union([from_none, from_str], obj.get("nomOrganisateur"))
-        description = from_union([from_none, from_str], obj.get("description"))
-        site_choisi = from_union([from_none, from_str], obj.get("siteChoisi"))
-        id = from_union([from_none, lambda x: int(from_str(x))], obj.get("id"))
-        code = from_union([from_none, from_str], obj.get("code"))
-        date_created = from_union([from_none, from_datetime], obj.get("date_created"))
-        date_updated = from_union([from_none, from_datetime], obj.get("date_updated"))
-        age_max = from_union([from_none, from_int], obj.get("ageMax"))
-        age_min = from_union([from_none, from_int], obj.get("ageMin"))
-        categorie_championnat3_x3_id = from_union(
-            [from_none, lambda x: int(from_str(x))],
-            obj.get("categorieChampionnat3x3Id"),
+        nom = from_str(obj, "nom")
+        sexe = from_enum(SexeEnum, obj, "sexe")
+        adresse = from_str(obj, "adresse")
+        nom_organisateur = from_str(obj, "nomOrganisateur")
+        description = from_str(obj, "description")
+        site_choisi = from_str(obj, "siteChoisi")
+        id = from_int(obj, "id")
+        code = from_str(obj, "code")
+        date_created = from_datetime(obj, "date_created")
+        date_updated = from_datetime(obj, "date_updated")
+        age_max = from_int(obj, "ageMax")
+        age_min = from_int(obj, "ageMin")
+        categorie_championnat3_x3_id = from_int(obj, "categorieChampionnat3x3Id")
+        categorie_championnat3_x3_libelle = from_enum(
+            CategorieChampionnat3X3Libelle, obj, "categorieChampionnat3x3Libelle"
         )
-        categorie_championnat3_x3_libelle = from_union(
-            [from_none, CategorieChampionnat3X3Libelle],
-            obj.get("categorieChampionnat3x3Libelle"),
-        )
-        debut = from_union([from_none, from_datetime], obj.get("debut"))
-        fin = from_union([from_none, from_datetime], obj.get("fin"))
-        mail_organisateur = from_union(
-            [from_none, from_str], obj.get("mailOrganisateur")
-        )
+        debut = from_datetime(obj, "debut")
+        fin = from_datetime(obj, "fin")
+        mail_organisateur = from_str(obj, "mailOrganisateur")
         nb_participant_prevu = from_none(obj.get("nbParticipantPrevu"))
-        tarif_organisateur = from_union(
-            [from_none, lambda x: int(from_str(x))], obj.get("tarifOrganisateur")
-        )
-        telephone_organisateur = from_union(
-            [from_none, from_str], obj.get("telephoneOrganisateur")
-        )
-        url_organisateur = from_union([from_none, from_str], obj.get("urlOrganisateur"))
+        tarif_organisateur = from_int(obj, "tarifOrganisateur")
+        telephone_organisateur = from_str(obj, "telephoneOrganisateur")
+        url_organisateur = from_str(obj, "urlOrganisateur")
         adresse_complement = from_none(obj.get("adresseComplement"))
-        tournoi_types3_x3 = from_union(
-            [from_none, lambda x: from_list(TournoiTypes3X3.from_dict, x)],
-            obj.get("tournoiTypes3x3"),
-        )
-        cartographie = from_union(
-            [from_none, Cartographie.from_dict], obj.get("cartographie")
-        )
-        commune = from_union([from_none, Commune.from_dict], obj.get("commune"))
-        document_flyer = from_union(
-            [from_none, DocumentFlyer.from_dict], obj.get("document_flyer")
-        )
-        tournoi_type = from_union([from_none, TournoiTypeEnum], obj.get("tournoiType"))
-        geo = from_union([from_none, Geo.from_dict], obj.get("_geo"))
-        debut_timestamp = from_union([from_none, from_int], obj.get("debut_timestamp"))
-        fin_timestamp = from_union([from_none, from_int], obj.get("fin_timestamp"))
+        tournoi_types3_x3 = from_list(TournoiTypes3X3.from_dict, obj, "tournoiTypes3x3")
+        cartographie = from_obj(Cartographie.from_dict, obj, "cartographie")
+        commune = from_obj(Commune.from_dict, obj, "commune")
+        document_flyer = from_obj(DocumentFlyer.from_dict, obj, "document_flyer")
+        tournoi_type = from_enum(TournoiTypeEnum, obj, "tournoiType")
+        geo = from_obj(Geo.from_dict, obj, "_geo")
+        debut_timestamp = from_int(obj, "debut_timestamp")
+        fin_timestamp = from_int(obj, "fin_timestamp")
         thumbnail = from_none(obj.get("thumbnail"))
         return TerrainsHit(
             nom,
@@ -473,128 +417,67 @@ class TerrainsHit(Hit):
     def to_dict(self) -> dict:
         result: dict = {}
         if self.nom is not None:
-            result["nom"] = from_union([from_none, from_str], self.nom)
+            result["nom"] = self.nom
         if self.sexe is not None:
-            result["sexe"] = from_union(
-                [from_none, lambda x: to_enum(SexeEnum, x)], self.sexe
-            )
+            result["sexe"] = self.sexe.value
         if self.adresse is not None:
-            result["adresse"] = from_union([from_none, from_str], self.adresse)
+            result["adresse"] = self.adresse
         if self.nom_organisateur is not None:
-            result["nomOrganisateur"] = from_union(
-                [from_none, from_str], self.nom_organisateur
-            )
+            result["nomOrganisateur"] = self.nom_organisateur
         if self.description is not None:
-            result["description"] = from_union([from_none, from_str], self.description)
+            result["description"] = self.description
         if self.site_choisi is not None:
-            result["siteChoisi"] = from_union([from_none, from_str], self.site_choisi)
+            result["siteChoisi"] = self.site_choisi
         if self.id is not None:
-            result["id"] = from_union(
-                [
-                    from_none,
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.id,
-            )
+            result["id"] = str(self.id)
         if self.code is not None:
-            result["code"] = from_union([from_none, from_str], self.code)
+            result["code"] = self.code
         if self.date_created is not None:
-            result["date_created"] = from_union(
-                [from_none, lambda x: x.isoformat()], self.date_created
-            )
+            result["date_created"] = self.date_created.isoformat()
         if self.date_updated is not None:
-            result["date_updated"] = from_union(
-                [from_none, lambda x: x.isoformat()], self.date_updated
-            )
+            result["date_updated"] = self.date_updated.isoformat()
         if self.age_max is not None:
-            result["ageMax"] = from_union([from_none, from_int], self.age_max)
+            result["ageMax"] = self.age_max
         if self.age_min is not None:
-            result["ageMin"] = from_union([from_none, from_int], self.age_min)
+            result["ageMin"] = self.age_min
         if self.categorie_championnat3_x3_id is not None:
-            result["categorieChampionnat3x3Id"] = from_union(
-                [
-                    from_none,
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.categorie_championnat3_x3_id,
-            )
+            result["categorieChampionnat3x3Id"] = str(self.categorie_championnat3_x3_id)
         if self.categorie_championnat3_x3_libelle is not None:
-            result["categorieChampionnat3x3Libelle"] = from_union(
-                [from_none, lambda x: to_enum(CategorieChampionnat3X3Libelle, x)],
-                self.categorie_championnat3_x3_libelle,
+            result["categorieChampionnat3x3Libelle"] = (
+                self.categorie_championnat3_x3_libelle.value
             )
         if self.debut is not None:
-            result["debut"] = from_union(
-                [from_none, lambda x: x.isoformat()], self.debut
-            )
+            result["debut"] = self.debut.isoformat()
         if self.fin is not None:
-            result["fin"] = from_union([from_none, lambda x: x.isoformat()], self.fin)
+            result["fin"] = self.fin.isoformat()
         if self.mail_organisateur is not None:
-            result["mailOrganisateur"] = from_union(
-                [from_none, from_str], self.mail_organisateur
-            )
+            result["mailOrganisateur"] = self.mail_organisateur
         if self.nb_participant_prevu is not None:
             result["nbParticipantPrevu"] = from_none(self.nb_participant_prevu)
         if self.tarif_organisateur is not None:
-            result["tarifOrganisateur"] = from_union(
-                [
-                    from_none,
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.tarif_organisateur,
-            )
+            result["tarifOrganisateur"] = str(self.tarif_organisateur)
         if self.telephone_organisateur is not None:
-            result["telephoneOrganisateur"] = from_union(
-                [from_none, from_str], self.telephone_organisateur
-            )
+            result["telephoneOrganisateur"] = self.telephone_organisateur
         if self.url_organisateur is not None:
-            result["urlOrganisateur"] = from_union(
-                [from_none, from_str], self.url_organisateur
-            )
+            result["urlOrganisateur"] = self.url_organisateur
         if self.adresse_complement is not None:
             result["adresseComplement"] = from_none(self.adresse_complement)
         if self.tournoi_types3_x3 is not None:
-            result["tournoiTypes3x3"] = from_union(
-                [
-                    from_none,
-                    lambda x: from_list(lambda x: to_class(TournoiTypes3X3, x), x),
-                ],
-                self.tournoi_types3_x3,
-            )
+            result["tournoiTypes3x3"] = [t.to_dict() for t in self.tournoi_types3_x3]
         if self.cartographie is not None:
-            result["cartographie"] = from_union(
-                [from_none, lambda x: to_class(Cartographie, x)], self.cartographie
-            )
+            result["cartographie"] = self.cartographie.to_dict()
         if self.commune is not None:
-            result["commune"] = from_union(
-                [from_none, lambda x: to_class(Commune, x)], self.commune
-            )
+            result["commune"] = self.commune.to_dict()
         if self.document_flyer is not None:
-            result["document_flyer"] = from_union(
-                [from_none, lambda x: to_class(DocumentFlyer, x)], self.document_flyer
-            )
+            result["document_flyer"] = self.document_flyer.to_dict()
         if self.tournoi_type is not None:
-            result["tournoiType"] = from_union(
-                [from_none, lambda x: to_enum(TournoiTypeEnum, x)], self.tournoi_type
-            )
+            result["tournoiType"] = self.tournoi_type.value
         if self.geo is not None:
-            result["_geo"] = from_union(
-                [from_none, lambda x: to_class(Geo, x)], self.geo
-            )
+            result["_geo"] = self.geo.to_dict()
         if self.debut_timestamp is not None:
-            result["debut_timestamp"] = from_union(
-                [from_none, from_int], self.debut_timestamp
-            )
+            result["debut_timestamp"] = self.debut_timestamp
         if self.fin_timestamp is not None:
-            result["fin_timestamp"] = from_union(
-                [from_none, from_int], self.fin_timestamp
-            )
+            result["fin_timestamp"] = self.fin_timestamp
         if self.thumbnail is not None:
             result["thumbnail"] = from_none(self.thumbnail)
         return result

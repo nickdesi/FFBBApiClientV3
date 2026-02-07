@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 from uuid import UUID
 
-from ..utils.converter_utils import from_none, from_union
+from ..utils.converter_utils import from_uuid
 
 
 class PurpleLogo:
@@ -15,11 +15,11 @@ class PurpleLogo:
     @staticmethod
     def from_dict(obj: Any) -> PurpleLogo:
         assert isinstance(obj, dict)
-        id = from_union([UUID, from_none], obj.get("id"))
+        id = from_uuid(obj, "id")
         return PurpleLogo(id)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.id is not None:
-            result["id"] = from_union([str, from_none], self.id)
+            result["id"] = str(self.id)
         return result

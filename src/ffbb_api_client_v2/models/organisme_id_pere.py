@@ -7,12 +7,12 @@ from uuid import UUID
 from ..utils.converter_utils import (
     from_bool,
     from_datetime,
+    from_int,
     from_list,
     from_none,
+    from_obj,
     from_str,
-    from_union,
     from_uuid,
-    is_type,
 )
 
 
@@ -29,7 +29,7 @@ class OrganismeIDPere:
     mail: str | None = None
     nom: str | None = None
     nom_club_pro: str | None = None
-    organisme_id_pere: str | None = None
+    organisme_id_pere: OrganismeIDPere | None = None
     salle: str | None = None
     telephone: str | None = None
     type: str | None = None
@@ -61,7 +61,7 @@ class OrganismeIDPere:
         mail: str | None,
         nom: str | None,
         nom_club_pro: str | None,
-        organisme_id_pere: str | None,
+        organisme_id_pere: OrganismeIDPere | None,
         salle: str | None,
         telephone: str | None,
         type: str | None,
@@ -112,47 +112,37 @@ class OrganismeIDPere:
     @staticmethod
     def from_dict(obj: Any) -> OrganismeIDPere:
         assert isinstance(obj, dict)
-        adresse = from_union([from_str, from_none], obj.get("adresse"))
+        adresse = from_str(obj, "adresse")
         adresse_club_pro = from_none(obj.get("adresseClubPro"))
-        cartographie = from_union([from_str, from_none], obj.get("cartographie"))
-        code = from_union([from_str, from_none], obj.get("code"))
-        commune = from_union(
-            [lambda x: int(from_str(x)), from_none], obj.get("commune")
-        )
+        cartographie = from_str(obj, "cartographie")
+        code = from_str(obj, "code")
+        commune = from_int(obj, "commune")
         commune_club_pro = from_none(obj.get("communeClubPro"))
-        date_created = from_union([from_datetime, from_none], obj.get("date_created"))
-        date_updated = from_union([from_datetime, from_none], obj.get("date_updated"))
-        id = from_union([lambda x: int(from_str(x)), from_none], obj.get("id"))
-        mail = from_union([from_str, from_none], obj.get("mail"))
-        nom = from_union([from_str, from_none], obj.get("nom"))
-        nom_club_pro = from_union([from_str, from_none], obj.get("nomClubPro"))
-        organisme_id_pere = from_union(
-            [OrganismeIDPere.from_dict, from_none], obj.get("organisme_id_pere")
+        date_created = from_datetime(obj, "date_created")
+        date_updated = from_datetime(obj, "date_updated")
+        id = from_int(obj, "id")
+        mail = from_str(obj, "mail")
+        nom = from_str(obj, "nom")
+        nom_club_pro = from_str(obj, "nomClubPro")
+        organisme_id_pere = from_obj(
+            OrganismeIDPere.from_dict, obj, "organisme_id_pere"
         )
         salle = from_none(obj.get("salle"))
-        telephone = from_union([from_str, from_none], obj.get("telephone"))
-        type = from_union([from_str, from_none], obj.get("type"))
+        telephone = from_str(obj, "telephone")
+        type = from_str(obj, "type")
         type_association = from_none(obj.get("type_association"))
-        url_site_web = from_union([from_str, from_none], obj.get("urlSiteWeb"))
-        logo = from_union([from_uuid, from_none], obj.get("logo"))
-        nom_simple = from_union([from_str, from_none], obj.get("nom_simple"))
+        url_site_web = from_str(obj, "urlSiteWeb")
+        logo = from_uuid(obj, "logo")
+        nom_simple = from_str(obj, "nom_simple")
         date_affiliation = from_none(obj.get("dateAffiliation"))
-        saison_en_cours = from_union([from_bool, from_none], obj.get("saison_en_cours"))
-        entreprise = from_union([from_bool, from_none], obj.get("entreprise"))
-        handibasket = from_union([from_bool, from_none], obj.get("handibasket"))
-        omnisport = from_union([from_bool, from_none], obj.get("omnisport"))
-        hors_association = from_union(
-            [from_bool, from_none], obj.get("horsAssociation")
-        )
-        offres_pratiques = from_union(
-            [lambda x: from_list(lambda x: x, x), from_none], obj.get("offresPratiques")
-        )
-        engagements = from_union(
-            [lambda x: from_list(lambda x: x, x), from_none], obj.get("engagements")
-        )
-        labellisation = from_union(
-            [lambda x: from_list(lambda x: x, x), from_none], obj.get("labellisation")
-        )
+        saison_en_cours = from_bool(obj, "saison_en_cours")
+        entreprise = from_bool(obj, "entreprise")
+        handibasket = from_bool(obj, "handibasket")
+        omnisport = from_bool(obj, "omnisport")
+        hors_association = from_bool(obj, "horsAssociation")
+        offres_pratiques = from_list(lambda x: x, obj, "offresPratiques")
+        engagements = from_list(lambda x: x, obj, "engagements")
+        labellisation = from_list(lambda x: x, obj, "labellisation")
         return OrganismeIDPere(
             adresse,
             adresse_club_pro,
@@ -188,95 +178,61 @@ class OrganismeIDPere:
     def to_dict(self) -> dict:
         result: dict = {}
         if self.adresse is not None:
-            result["adresse"] = from_union([from_str, from_none], self.adresse)
+            result["adresse"] = self.adresse
         if self.adresse_club_pro is not None:
             result["adresseClubPro"] = from_none(self.adresse_club_pro)
         if self.cartographie is not None:
-            result["cartographie"] = from_union(
-                [from_str, from_none], self.cartographie
-            )
+            result["cartographie"] = self.cartographie
         if self.code is not None:
-            result["code"] = from_union([from_str, from_none], self.code)
+            result["code"] = self.code
         if self.commune is not None:
-            result["commune"] = from_union(
-                [
-                    lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.commune,
-            )
+            result["commune"] = str(self.commune)
         if self.commune_club_pro is not None:
             result["communeClubPro"] = from_none(self.commune_club_pro)
         if self.date_created is not None:
-            result["date_created"] = from_union(
-                [lambda x: x.isoformat(), from_none], self.date_created
-            )
+            result["date_created"] = self.date_created.isoformat()
         if self.date_updated is not None:
-            result["date_updated"] = from_union(
-                [lambda x: x.isoformat(), from_none], self.date_updated
-            )
+            result["date_updated"] = self.date_updated.isoformat()
         if self.id is not None:
-            result["id"] = from_union(
-                [
-                    lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.id,
-            )
+            result["id"] = str(self.id)
         if self.mail is not None:
-            result["mail"] = from_union([from_str, from_none], self.mail)
+            result["mail"] = self.mail
         if self.nom is not None:
-            result["nom"] = from_union([from_str, from_none], self.nom)
+            result["nom"] = self.nom
         if self.nom_club_pro is not None:
-            result["nomClubPro"] = from_union([from_str, from_none], self.nom_club_pro)
+            result["nomClubPro"] = self.nom_club_pro
         if self.organisme_id_pere is not None:
-            result["organisme_id_pere"] = from_union(
-                [from_str, from_none], self.organisme_id_pere
-            )
+            result["organisme_id_pere"] = self.organisme_id_pere.to_dict()
         if self.salle is not None:
             result["salle"] = from_none(self.salle)
         if self.telephone is not None:
-            result["telephone"] = from_union([from_str, from_none], self.telephone)
+            result["telephone"] = self.telephone
         if self.type is not None:
-            result["type"] = from_union([from_str, from_none], self.type)
+            result["type"] = self.type
         if self.type_association is not None:
             result["type_association"] = from_none(self.type_association)
         if self.url_site_web is not None:
-            result["urlSiteWeb"] = from_union([from_str, from_none], self.url_site_web)
+            result["urlSiteWeb"] = self.url_site_web
         if self.logo is not None:
-            result["logo"] = from_union([from_none, str], self.logo)
+            result["logo"] = str(self.logo)
         if self.nom_simple is not None:
-            result["nom_simple"] = from_union([from_str, from_none], self.nom_simple)
+            result["nom_simple"] = self.nom_simple
         if self.date_affiliation is not None:
             result["dateAffiliation"] = from_none(self.date_affiliation)
         if self.saison_en_cours is not None:
-            result["saison_en_cours"] = from_union(
-                [from_bool, from_none], self.saison_en_cours
-            )
+            result["saison_en_cours"] = self.saison_en_cours
         if self.entreprise is not None:
-            result["entreprise"] = from_union([from_bool, from_none], self.entreprise)
+            result["entreprise"] = self.entreprise
         if self.handibasket is not None:
-            result["handibasket"] = from_union([from_bool, from_none], self.handibasket)
+            result["handibasket"] = self.handibasket
         if self.omnisport is not None:
-            result["omnisport"] = from_union([from_bool, from_none], self.omnisport)
+            result["omnisport"] = self.omnisport
         if self.hors_association is not None:
-            result["horsAssociation"] = from_union(
-                [from_bool, from_none], self.hors_association
-            )
+            result["horsAssociation"] = self.hors_association
         if self.offres_pratiques is not None:
-            result["offresPratiques"] = from_union(
-                [lambda x: from_list(lambda x: x, x), from_none], self.offres_pratiques
-            )
+            result["offresPratiques"] = self.offres_pratiques
         if self.engagements is not None:
-            result["engagements"] = from_union(
-                [lambda x: from_list(lambda x: x, x), from_none], self.engagements
-            )
+            result["engagements"] = self.engagements
         if self.labellisation is not None:
-            result["labellisation"] = from_union(
-                [lambda x: from_list(lambda x: x, x), from_none], self.labellisation
-            )
+            result["labellisation"] = self.labellisation
         return result

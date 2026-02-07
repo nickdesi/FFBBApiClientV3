@@ -6,9 +6,7 @@ class FacetDistribution(ABC):
     @staticmethod
     def from_dict(obj: Any) -> "FacetDistribution":
         # Cannot instantiate abstract class - should be implemented by subclasses
-        raise NotImplementedError(
-            "FacetDistribution is abstract and cannot be instantiated"
-        )
+        assert False
 
     @abstractmethod
     def to_dict(self) -> dict[str, Any]:

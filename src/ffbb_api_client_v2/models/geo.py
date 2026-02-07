@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_float, from_none, from_union, to_float
+from ..utils.converter_utils import from_float
 
 
 class Geo:
@@ -16,14 +16,14 @@ class Geo:
     @staticmethod
     def from_dict(obj: Any) -> Geo:
         assert isinstance(obj, dict)
-        lat = from_union([from_float, from_none], obj.get("lat"))
-        lng = from_union([from_float, from_none], obj.get("lng"))
+        lat = from_float(obj, "lat")
+        lng = from_float(obj, "lng")
         return Geo(lat, lng)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.lat is not None:
-            result["lat"] = from_union([to_float, from_none], self.lat)
+            result["lat"] = self.lat
         if self.lng is not None:
-            result["lng"] = from_union([to_float, from_none], self.lng)
+            result["lng"] = self.lng
         return result

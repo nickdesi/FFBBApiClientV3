@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_none, from_str, from_union, to_class
+from ..utils.converter_utils import from_obj, from_str
 from .cartographie import Cartographie
 
 
@@ -37,31 +37,23 @@ class Salle:
     @staticmethod
     def from_dict(obj: Any) -> Salle:
         assert isinstance(obj, dict)
-        id = from_union([from_str, from_none], obj.get("id"))
-        libelle = from_union([from_str, from_none], obj.get("libelle"))
-        adresse = from_union([from_str, from_none], obj.get("adresse"))
-        adresse_complement = from_union(
-            [from_str, from_none], obj.get("adresseComplement")
-        )
-        cartographie = from_union(
-            [Cartographie.from_dict, from_none], obj.get("cartographie")
-        )
+        id = from_str(obj, "id")
+        libelle = from_str(obj, "libelle")
+        adresse = from_str(obj, "adresse")
+        adresse_complement = from_str(obj, "adresseComplement")
+        cartographie = from_obj(Cartographie.from_dict, obj, "cartographie")
         return Salle(id, libelle, adresse, adresse_complement, cartographie)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.id is not None:
-            result["id"] = from_union([from_str, from_none], self.id)
+            result["id"] = self.id
         if self.libelle is not None:
-            result["libelle"] = from_union([from_str, from_none], self.libelle)
+            result["libelle"] = self.libelle
         if self.adresse is not None:
-            result["adresse"] = from_union([from_str, from_none], self.adresse)
+            result["adresse"] = self.adresse
         if self.adresse_complement is not None:
-            result["adresseComplement"] = from_union(
-                [from_str, from_none], self.adresse_complement
-            )
+            result["adresseComplement"] = self.adresse_complement
         if self.cartographie is not None:
-            result["cartographie"] = from_union(
-                [lambda x: to_class(Cartographie, x), from_none], self.cartographie
-            )
+            result["cartographie"] = self.cartographie.to_dict()
         return result

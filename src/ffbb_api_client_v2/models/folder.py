@@ -3,7 +3,11 @@ from __future__ import annotations
 from typing import Any
 from uuid import UUID
 
-from ..utils.converter_utils import from_none, from_str, from_union
+from ..utils.converter_utils import (
+    from_none,
+    from_str,
+    from_uuid,
+)
 
 
 class Folder:
@@ -24,17 +28,17 @@ class Folder:
     @staticmethod
     def from_dict(obj: Any) -> Folder:
         assert isinstance(obj, dict)
-        id = from_union([UUID, from_none], obj.get("id"))
-        name = from_union([from_str, from_none], obj.get("name"))
+        id = from_uuid(obj, "id")
+        name = from_str(obj, "name")
         parent = from_none(obj.get("parent"))
         return Folder(id, name, parent)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.id is not None:
-            result["id"] = from_union([str, from_none], self.id)
+            result["id"] = str(self.id)
         if self.name is not None:
-            result["name"] = from_union([from_str, from_none], self.name)
+            result["name"] = self.name
         if self.parent is not None:
             result["parent"] = from_none(self.parent)
         return result

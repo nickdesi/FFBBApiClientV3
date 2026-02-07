@@ -5,8 +5,6 @@ A Python client library for the French Basketball Federation (FFBB) API,
 providing access to clubs, competitions, matches, and other basketball data.
 """
 
-import sys
-
 from .clients.api_ffbb_app_client import ApiFFBBAppClient
 from .clients.ffbb_api_client_v2 import FFBBAPIClientV2
 from .clients.meilisearch_client import MeilisearchClient
@@ -110,10 +108,7 @@ __all__ = [
     "TokenManager",
 ]
 
-if sys.version_info[:2] >= (3, 8):
-    from importlib.metadata import PackageNotFoundError, version
-else:
-    from importlib_metadata import PackageNotFoundError, version
+from importlib.metadata import PackageNotFoundError, version
 
 try:
     DIST_NAME = __name__

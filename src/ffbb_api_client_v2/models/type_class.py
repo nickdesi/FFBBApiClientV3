@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_int, from_none, from_union
+from ..utils.converter_utils import from_int
 
 
 class TypeClass:
@@ -14,11 +14,11 @@ class TypeClass:
     @staticmethod
     def from_dict(obj: Any) -> TypeClass:
         assert isinstance(obj, dict)
-        groupement = from_union([from_int, from_none], obj.get("Groupement"))
+        groupement = from_int(obj, "Groupement")
         return TypeClass(groupement)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.groupement is not None:
-            result["Groupement"] = from_union([from_int, from_none], self.groupement)
+            result["Groupement"] = self.groupement
         return result

@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from typing import Any, Callable
 
-from ..utils.converter_utils import from_list, from_none, from_union
 from .multi_search_result_competitions import CompetitionsMultiSearchResult
 from .multi_search_result_organismes import OrganismesMultiSearchResult
 from .multi_search_result_pratiques import PratiquesMultiSearchResult
@@ -59,19 +58,14 @@ class MultiSearchResults:
     @staticmethod
     def from_dict(obj: Any) -> MultiSearchResults:
         assert isinstance(obj, dict)
-        results = from_union([result_from_list, from_none], obj.get("results"))
+        results_raw = obj.get("results")
+        results = result_from_list(results_raw) if results_raw is not None else None
         return MultiSearchResults(results)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.results is not None:
-            result["results"] = from_union(
-                [
-                    lambda x: from_list(lambda r: r.to_dict(), x),
-                    from_none,
-                ],
-                self.results,
-            )
+            result["results"] = [r.to_dict() for r in self.results]
         return result
 
 

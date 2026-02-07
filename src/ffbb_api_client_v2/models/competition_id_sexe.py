@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_int, from_none, from_union
+from ..utils.converter_utils import from_int
 
 
 class CompetitionIDSexe:
@@ -20,17 +20,17 @@ class CompetitionIDSexe:
     @staticmethod
     def from_dict(obj: Any) -> CompetitionIDSexe:
         assert isinstance(obj, dict)
-        feminine = from_union([from_int, from_none], obj.get("Féminin"))
-        masculine = from_union([from_int, from_none], obj.get("Masculin"))
-        mixed = from_union([from_int, from_none], obj.get("Mixte"))
+        feminine = from_int(obj, "Féminin")
+        masculine = from_int(obj, "Masculin")
+        mixed = from_int(obj, "Mixte")
         return CompetitionIDSexe(feminine, masculine, mixed)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.feminine is not None:
-            result["Féminin"] = from_union([from_int, from_none], self.feminine)
+            result["Féminin"] = self.feminine
         if self.masculine is not None:
-            result["Masculin"] = from_union([from_int, from_none], self.masculine)
+            result["Masculin"] = self.masculine
         if self.mixed is not None:
-            result["Mixte"] = from_union([from_int, from_none], self.mixed)
+            result["Mixte"] = self.mixed
         return result

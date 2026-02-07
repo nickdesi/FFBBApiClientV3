@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_none, from_str, from_union, to_class
+from ..utils.converter_utils import from_obj, from_str
 from .logo import Logo
 
 
@@ -17,18 +17,14 @@ class TypeCompetitionGenerique:
     @staticmethod
     def from_dict(obj: Any) -> TypeCompetitionGenerique:
         assert isinstance(obj, dict)
-        type_competition_generique_id = from_union([from_str, from_none], obj.get("id"))
-        logo = from_union([Logo.from_dict, from_none], obj.get("logo"))
+        type_competition_generique_id = from_str(obj, "id")
+        logo = from_obj(Logo.from_dict, obj, "logo")
         return TypeCompetitionGenerique(type_competition_generique_id, logo)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.type_competition_generique_id is not None:
-            result["id"] = from_union(
-                [from_str, from_none], self.type_competition_generique_id
-            )
+            result["id"] = self.type_competition_generique_id
         if self.logo is not None:
-            result["logo"] = from_union(
-                [lambda x: to_class(Logo, x), from_none], self.logo
-            )
+            result["logo"] = self.logo.to_dict()
         return result

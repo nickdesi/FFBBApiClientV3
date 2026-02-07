@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_none, from_str, from_union
+from ..utils.converter_utils import from_str
 
 
 class Saison:
@@ -14,11 +14,11 @@ class Saison:
     @staticmethod
     def from_dict(obj: Any) -> Saison:
         assert isinstance(obj, dict)
-        code = from_union([from_str, from_none], obj.get("code"))
+        code = from_str(obj, "code")
         return Saison(code)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.code is not None:
-            result["code"] = from_union([from_str, from_none], self.code)
+            result["code"] = self.code
         return result

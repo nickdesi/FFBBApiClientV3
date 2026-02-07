@@ -6,9 +6,8 @@ from typing import Any
 from ..utils.converter_utils import (
     from_datetime,
     from_none,
+    from_obj,
     from_str,
-    from_union,
-    to_class,
 )
 from .cartographie import Cartographie
 from .commune import Commune
@@ -102,31 +101,23 @@ class SallesHit(Hit):
     @staticmethod
     def from_dict(obj: Any) -> SallesHit:
         assert isinstance(obj, dict)
-        libelle = from_union([from_str, from_none], obj.get("libelle"))
-        adresse = from_union([from_none, from_str], obj.get("adresse"))
-        id = from_union([from_str, from_none], obj.get("id"))
-        adresse_complement = from_union(
-            [from_none, from_str], obj.get("adresseComplement")
-        )
-        capacite_spectateur = from_union(
-            [from_none, from_str], obj.get("capaciteSpectateur")
-        )
-        date_created = from_union([from_datetime, from_none], obj.get("date_created"))
-        date_updated = from_union([from_datetime, from_none], obj.get("date_updated"))
-        libelle2 = from_union([from_none, from_str], obj.get("libelle2"))
-        mail = from_union([from_none, from_str], obj.get("mail"))
-        numero = from_union([from_str, from_none], obj.get("numero"))
-        telephone = from_union([from_none, from_str], obj.get("telephone"))
-        cartographie = from_union(
-            [Cartographie.from_dict, from_none], obj.get("cartographie")
-        )
-        commune = from_union([Commune.from_dict, from_none], obj.get("commune"))
-        geo = from_union([Geo.from_dict, from_none], obj.get("_geo"))
+        libelle = from_str(obj, "libelle")
+        adresse = from_str(obj, "adresse")
+        id = from_str(obj, "id")
+        adresse_complement = from_str(obj, "adresseComplement")
+        capacite_spectateur = from_str(obj, "capaciteSpectateur")
+        date_created = from_datetime(obj, "date_created")
+        date_updated = from_datetime(obj, "date_updated")
+        libelle2 = from_str(obj, "libelle2")
+        mail = from_str(obj, "mail")
+        numero = from_str(obj, "numero")
+        telephone = from_str(obj, "telephone")
+        cartographie = from_obj(Cartographie.from_dict, obj, "cartographie")
+        commune = from_obj(Commune.from_dict, obj, "commune")
+        geo = from_obj(Geo.from_dict, obj, "_geo")
         thumbnail = from_none(obj.get("thumbnail"))
-        type = from_union([from_str, from_none], obj.get("type"))
-        type_association = from_union(
-            [TypeAssociation.from_dict, from_none], obj.get("type_association")
-        )
+        type = from_str(obj, "type")
+        type_association = from_obj(TypeAssociation.from_dict, obj, "type_association")
         return SallesHit(
             libelle,
             adresse,
@@ -150,56 +141,39 @@ class SallesHit(Hit):
     def to_dict(self) -> dict:
         result: dict = {}
         if self.libelle is not None:
-            result["libelle"] = from_union([from_str, from_none], self.libelle)
+            result["libelle"] = self.libelle
         if self.adresse is not None:
-            result["adresse"] = from_union([from_none, from_str], self.adresse)
+            result["adresse"] = self.adresse
         if self.id is not None:
-            result["id"] = from_union([from_str, from_none], self.id)
+            result["id"] = self.id
         if self.adresse_complement is not None:
-            result["adresseComplement"] = from_union(
-                [from_none, from_str], self.adresse_complement
-            )
+            result["adresseComplement"] = self.adresse_complement
         if self.capacite_spectateur is not None:
-            result["capaciteSpectateur"] = from_union(
-                [from_none, from_str], self.capacite_spectateur
-            )
+            result["capaciteSpectateur"] = self.capacite_spectateur
         if self.date_created is not None:
-            result["date_created"] = from_union(
-                [lambda x: x.isoformat(), from_none], self.date_created
-            )
+            result["date_created"] = self.date_created.isoformat()
         if self.date_updated is not None:
-            result["date_updated"] = from_union(
-                [lambda x: x.isoformat(), from_none], self.date_updated
-            )
+            result["date_updated"] = self.date_updated.isoformat()
         if self.libelle2 is not None:
-            result["libelle2"] = from_union([from_none, from_str], self.libelle2)
+            result["libelle2"] = self.libelle2
         if self.mail is not None:
-            result["mail"] = from_union([from_none, from_str], self.mail)
+            result["mail"] = self.mail
         if self.numero is not None:
-            result["numero"] = from_union([from_str, from_none], self.numero)
+            result["numero"] = self.numero
         if self.telephone is not None:
-            result["telephone"] = from_union([from_none, from_str], self.telephone)
+            result["telephone"] = self.telephone
         if self.cartographie is not None:
-            result["cartographie"] = from_union(
-                [lambda x: to_class(Cartographie, x), from_none], self.cartographie
-            )
+            result["cartographie"] = self.cartographie.to_dict()
         if self.commune is not None:
-            result["commune"] = from_union(
-                [lambda x: to_class(Commune, x), from_none], self.commune
-            )
+            result["commune"] = self.commune.to_dict()
         if self.geo is not None:
-            result["_geo"] = from_union(
-                [lambda x: to_class(Geo, x), from_none], self.geo
-            )
+            result["_geo"] = self.geo.to_dict()
         if self.thumbnail is not None:
             result["thumbnail"] = from_none(self.thumbnail)
         if self.type is not None:
-            result["type"] = from_union([from_str, from_none], self.type)
+            result["type"] = self.type
         if self.type_association is not None:
-            result["type_association"] = from_union(
-                [lambda x: to_class(TypeAssociation, x), from_none],
-                self.type_association,
-            )
+            result["type_association"] = self.type_association.to_dict()
         return result
 
     def is_valid_for_query(self, query: str) -> bool:

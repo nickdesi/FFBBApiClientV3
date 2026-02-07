@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_bool, from_none, from_str, from_union, to_class
+from ..utils.converter_utils import (
+    from_bool,
+    from_obj,
+    from_str,
+)
 from .competition_id_categorie import CompetitionIDCategorie
 from .competition_id_type_competition_generique import (
     CompetitionIDTypeCompetitionGenerique,
@@ -22,8 +26,8 @@ class CompetitionID:
     sexe: str | None = None
     type_competition: str | None = None
     pro: bool | None = None
-    logo: Logo
-    categorie: str | None = None
+    logo: Logo | None = None
+    categorie: CompetitionIDCategorie | None = None
     type_competition_generique: CompetitionIDTypeCompetitionGenerique | None = None
     competition_origine: CompetitionOrigine | None = None
     nom_extended: str | None = None
@@ -40,8 +44,8 @@ class CompetitionID:
         sexe: str | None,
         type_competition: str | None,
         pro: bool | None,
-        logo: Logo,
-        categorie: str | None,
+        logo: Logo | None,
+        categorie: CompetitionIDCategorie | None,
         type_competition_generique: CompetitionIDTypeCompetitionGenerique | None,
         competition_origine: CompetitionOrigine | None,
         nom_extended: str | None,
@@ -66,37 +70,27 @@ class CompetitionID:
     def from_dict(obj: Any) -> CompetitionID:
         try:
             assert isinstance(obj, dict)
-            id = from_union([from_str, from_none], obj.get("id"))
-            nom = from_union([from_str, from_none], obj.get("nom"))
-            competition_origine_nom = from_union(
-                [from_str, from_none], obj.get("competition_origine_nom")
+            id = from_str(obj, "id")
+            nom = from_str(obj, "nom")
+            competition_origine_nom = from_str(obj, "competition_origine_nom")
+            code = from_str(obj, "code")
+            creation_en_cours = from_bool(obj, "creationEnCours")
+            live_stat = from_bool(obj, "liveStat")
+            publication_internet = from_str(obj, "publicationInternet")
+            sexe = from_str(obj, "sexe")
+            type_competition = from_str(obj, "typeCompetition")
+            pro = from_bool(obj, "pro")
+            logo = from_obj(Logo.from_dict, obj, "logo")
+            categorie = from_obj(CompetitionIDCategorie.from_dict, obj, "categorie")
+            type_competition_generique = from_obj(
+                CompetitionIDTypeCompetitionGenerique.from_dict,
+                obj,
+                "typeCompetitionGenerique",
             )
-            code = from_union([from_str, from_none], obj.get("code"))
-            creation_en_cours = from_union(
-                [from_bool, from_none], obj.get("creationEnCours")
+            competition_origine = from_obj(
+                CompetitionOrigine.from_dict, obj, "competition_origine"
             )
-            live_stat = from_union([from_bool, from_none], obj.get("liveStat"))
-            publication_internet = from_union(
-                [from_str, from_none], obj.get("publicationInternet")
-            )
-            sexe = from_union([from_str, from_none], obj.get("sexe"))
-            type_competition = from_union(
-                [from_str, from_none], obj.get("typeCompetition")
-            )
-            pro = from_union([from_bool, from_none], obj.get("pro"))
-            logo = from_union([Logo.from_dict, from_none], obj.get("logo"))
-            categorie = from_union(
-                [CompetitionIDCategorie.from_dict, from_none], obj.get("categorie")
-            )
-            type_competition_generique = from_union(
-                [CompetitionIDTypeCompetitionGenerique.from_dict, from_none],
-                obj.get("typeCompetitionGenerique"),
-            )
-            competition_origine = from_union(
-                [CompetitionOrigine.from_dict, from_none],
-                obj.get("competition_origine"),
-            )
-            nom_extended = from_union([from_str, from_none], obj.get("nomExtended"))
+            nom_extended = from_str(obj, "nomExtended")
             return CompetitionID(
                 id,
                 nom,
@@ -120,55 +114,35 @@ class CompetitionID:
     def to_dict(self) -> dict:
         result: dict = {}
         if self.id is not None:
-            result["id"] = from_union([from_str, from_none], self.id)
+            result["id"] = self.id
         if self.nom is not None:
-            result["nom"] = from_union([from_str, from_none], self.nom)
+            result["nom"] = self.nom
         if self.competition_origine_nom is not None:
-            result["competition_origine_nom"] = from_union(
-                [from_str, from_none], self.competition_origine_nom
-            )
+            result["competition_origine_nom"] = self.competition_origine_nom
         if self.code is not None:
-            result["code"] = from_union([from_str, from_none], self.code)
+            result["code"] = self.code
         if self.creation_en_cours is not None:
-            result["creationEnCours"] = from_union(
-                [from_bool, from_none], self.creation_en_cours
-            )
+            result["creationEnCours"] = self.creation_en_cours
         if self.live_stat is not None:
-            result["liveStat"] = from_union([from_bool, from_none], self.live_stat)
+            result["liveStat"] = self.live_stat
         if self.publication_internet is not None:
-            result["publicationInternet"] = from_union(
-                [from_str, from_none],
-                self.publication_internet,
-            )
+            result["publicationInternet"] = self.publication_internet
         if self.sexe is not None:
-            result["sexe"] = from_union([from_str, from_none], self.sexe)
+            result["sexe"] = self.sexe
         if self.type_competition is not None:
-            result["typeCompetition"] = from_union(
-                [from_str, from_none],
-                self.type_competition,
-            )
+            result["typeCompetition"] = self.type_competition
         if self.pro is not None:
-            result["pro"] = from_union([from_bool, from_none], self.pro)
+            result["pro"] = self.pro
         if self.logo is not None:
-            result["logo"] = from_none(self.logo)
+            result["logo"] = self.logo.to_dict()
         if self.categorie is not None:
-            result["categorie"] = from_union(
-                [lambda x: to_class(CompetitionIDCategorie, x), from_none],
-                self.categorie,
-            )
+            result["categorie"] = self.categorie.to_dict()
         if self.type_competition_generique is not None:
-            result["typeCompetitionGenerique"] = from_union(
-                [
-                    lambda x: to_class(CompetitionIDTypeCompetitionGenerique, x),
-                    from_none,
-                ],
-                self.type_competition_generique,
+            result["typeCompetitionGenerique"] = (
+                self.type_competition_generique.to_dict()
             )
         if self.competition_origine is not None:
-            result["competition_origine"] = from_union(
-                [lambda x: to_class(CompetitionOrigine, x), from_none],
-                self.competition_origine,
-            )
+            result["competition_origine"] = self.competition_origine.to_dict()
         if self.nom_extended is not None:
-            result["nomExtended"] = from_union([from_str, from_none], self.nom_extended)
+            result["nomExtended"] = self.nom_extended
         return result

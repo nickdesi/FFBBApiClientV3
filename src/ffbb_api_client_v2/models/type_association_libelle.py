@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_int, from_none, from_union
+from ..utils.converter_utils import from_int
 
 
 class TypeAssociationLibelle:
@@ -18,18 +18,14 @@ class TypeAssociationLibelle:
     @staticmethod
     def from_dict(obj: Any) -> TypeAssociationLibelle:
         assert isinstance(obj, dict)
-        club = from_union([from_int, from_none], obj.get("Club"))
-        coopération_territoriale_club = from_union(
-            [from_int, from_none], obj.get("Coopération Territoriale Club")
-        )
+        club = from_int(obj, "Club")
+        coopération_territoriale_club = from_int(obj, "Coopération Territoriale Club")
         return TypeAssociationLibelle(club, coopération_territoriale_club)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.club is not None:
-            result["Club"] = from_union([from_int, from_none], self.club)
+            result["Club"] = self.club
         if self.coopération_territoriale_club is not None:
-            result["Coopération Territoriale Club"] = from_union(
-                [from_int, from_none], self.coopération_territoriale_club
-            )
+            result["Coopération Territoriale Club"] = self.coopération_territoriale_club
         return result

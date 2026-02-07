@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_int, from_none, from_union
+from ..utils.converter_utils import from_int
 
 
 class CompetitionIDTypeCompetition:
@@ -16,14 +16,14 @@ class CompetitionIDTypeCompetition:
     @staticmethod
     def from_dict(obj: Any) -> CompetitionIDTypeCompetition:
         assert isinstance(obj, dict)
-        championnat = from_union([from_int, from_none], obj.get("Championnat"))
-        coupe = from_union([from_int, from_none], obj.get("Coupe"))
+        championnat = from_int(obj, "Championnat")
+        coupe = from_int(obj, "Coupe")
         return CompetitionIDTypeCompetition(championnat, coupe)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.championnat is not None:
-            result["Championnat"] = from_union([from_int, from_none], self.championnat)
+            result["Championnat"] = self.championnat
         if self.coupe is not None:
-            result["Coupe"] = from_union([from_int, from_none], self.coupe)
+            result["Coupe"] = self.coupe
         return result

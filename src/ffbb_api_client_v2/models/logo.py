@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 from uuid import UUID
 
-from ..utils.converter_utils import from_none, from_str, from_union
+from ..utils.converter_utils import from_str, from_uuid
 
 
 class Logo:
@@ -17,16 +17,14 @@ class Logo:
     @staticmethod
     def from_dict(obj: Any) -> Logo:
         assert isinstance(obj, dict)
-        id = from_union([from_none, UUID], obj.get("id"))
-        gradient_color = from_union([from_str, from_none], obj.get("gradient_color"))
+        id = from_uuid(obj, "id")
+        gradient_color = from_str(obj, "gradient_color")
         return Logo(id, gradient_color)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.id is not None:
-            result["id"] = from_union([from_none, str], self.id)
+            result["id"] = str(self.id)
         if self.gradient_color is not None:
-            result["gradient_color"] = from_union(
-                [from_str, from_none], self.gradient_color
-            )
+            result["gradient_color"] = self.gradient_color
         return result

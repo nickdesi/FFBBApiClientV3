@@ -7,17 +7,14 @@ from uuid import UUID
 
 from ..utils.converter_utils import (
     from_datetime,
-    from_dict,
+    from_enum,
     from_float,
     from_int,
     from_list,
     from_none,
+    from_obj,
     from_str,
-    from_union,
-    is_type,
-    to_class,
-    to_enum,
-    to_float,
+    from_uuid,
 )
 from .facet_distribution import FacetDistribution
 from .facet_stats import FacetStats
@@ -49,13 +46,11 @@ class TypeClass:
     @staticmethod
     def from_dict(obj: Any) -> TypeClass:
         assert isinstance(obj, dict)
-        basket_inclusif = from_union([from_int, from_none], obj.get("Basket Inclusif"))
-        basket_santé = from_union([from_int, from_none], obj.get("Basket Santé"))
-        basket_tonik = from_union([from_int, from_none], obj.get("Basket Tonik"))
-        centre_génération_basket = from_union(
-            [from_int, from_none], obj.get("Centre Génération Basket")
-        )
-        micro_basket = from_union([from_int, from_none], obj.get("Micro Basket"))
+        basket_inclusif = from_int(obj, "Basket Inclusif")
+        basket_santé = from_int(obj, "Basket Santé")
+        basket_tonik = from_int(obj, "Basket Tonik")
+        centre_génération_basket = from_int(obj, "Centre Génération Basket")
+        micro_basket = from_int(obj, "Micro Basket")
         return TypeClass(
             basket_inclusif,
             basket_santé,
@@ -67,25 +62,15 @@ class TypeClass:
     def to_dict(self) -> dict:
         result: dict = {}
         if self.basket_inclusif is not None:
-            result["Basket Inclusif"] = from_union(
-                [from_int, from_none], self.basket_inclusif
-            )
+            result["Basket Inclusif"] = self.basket_inclusif
         if self.basket_santé is not None:
-            result["Basket Santé"] = from_union(
-                [from_int, from_none], self.basket_santé
-            )
+            result["Basket Santé"] = self.basket_santé
         if self.basket_tonik is not None:
-            result["Basket Tonik"] = from_union(
-                [from_int, from_none], self.basket_tonik
-            )
+            result["Basket Tonik"] = self.basket_tonik
         if self.centre_génération_basket is not None:
-            result["Centre Génération Basket"] = from_union(
-                [from_int, from_none], self.centre_génération_basket
-            )
+            result["Centre Génération Basket"] = self.centre_génération_basket
         if self.micro_basket is not None:
-            result["Micro Basket"] = from_union(
-                [from_int, from_none], self.micro_basket
-            )
+            result["Micro Basket"] = self.micro_basket
         return result
 
 
@@ -102,22 +87,16 @@ class PratiquesFacetDistribution(FacetDistribution):
     @staticmethod
     def from_dict(obj: Any) -> PratiquesFacetDistribution:
         assert isinstance(obj, dict)
-        label = from_union(
-            [lambda x: from_dict(from_int, x), from_none], obj.get("label")
-        )
-        type = from_union([TypeClass.from_dict, from_none], obj.get("type"))
+        label = obj.get("label")
+        type = from_obj(TypeClass.from_dict, obj, "type")
         return PratiquesFacetDistribution(label, type)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.label is not None:
-            result["label"] = from_union(
-                [lambda x: from_dict(from_int, x), from_none], self.label
-            )
+            result["label"] = self.label
         if self.type is not None:
-            result["type"] = from_union(
-                [lambda x: to_class(TypeClass, x), from_none], self.type
-            )
+            result["type"] = self.type.to_dict()
         return result
 
 
@@ -142,24 +121,22 @@ class Affiche:
     @staticmethod
     def from_dict(obj: Any) -> Affiche:
         assert isinstance(obj, dict)
-        id = from_union([UUID, from_none], obj.get("id"))
-        gradient_color = from_union([from_none, from_str], obj.get("gradient_color"))
-        width = from_union([from_int, from_none], obj.get("width"))
-        height = from_union([from_int, from_none], obj.get("height"))
+        id = from_uuid(obj, "id")
+        gradient_color = from_str(obj, "gradient_color")
+        width = from_int(obj, "width")
+        height = from_int(obj, "height")
         return Affiche(id, gradient_color, width, height)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.id is not None:
-            result["id"] = from_union([str, from_none], self.id)
+            result["id"] = str(self.id)
         if self.gradient_color is not None:
-            result["gradient_color"] = from_union(
-                [from_none, from_str], self.gradient_color
-            )
+            result["gradient_color"] = self.gradient_color
         if self.width is not None:
-            result["width"] = from_union([from_int, from_none], self.width)
+            result["width"] = self.width
         if self.height is not None:
-            result["height"] = from_union([from_int, from_none], self.height)
+            result["height"] = self.height
         return result
 
 
@@ -180,22 +157,16 @@ class Coordonnees:
     @staticmethod
     def from_dict(obj: Any) -> Coordonnees:
         assert isinstance(obj, dict)
-        type = from_union([CoordonneesType, from_none], obj.get("type"))
-        coordinates = from_union(
-            [lambda x: from_list(from_float, x), from_none], obj.get("coordinates")
-        )
+        type = from_enum(CoordonneesType, obj, "type")
+        coordinates = from_list(float, obj, "coordinates")
         return Coordonnees(type, coordinates)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.type is not None:
-            result["type"] = from_union(
-                [lambda x: to_enum(CoordonneesType, x), from_none], self.type
-            )
+            result["type"] = self.type.value
         if self.coordinates is not None:
-            result["coordinates"] = from_union(
-                [lambda x: from_list(to_float, x), from_none], self.coordinates
-            )
+            result["coordinates"] = self.coordinates
         return result
 
 
@@ -245,19 +216,17 @@ class Cartographie:
     @staticmethod
     def from_dict(obj: Any) -> Cartographie:
         assert isinstance(obj, dict)
-        adresse = from_union([from_str, from_none], obj.get("adresse"))
-        code_postal = from_union([from_str, from_none], obj.get("codePostal"))
-        coordonnees = from_union(
-            [Coordonnees.from_dict, from_none], obj.get("coordonnees")
-        )
+        adresse = from_str(obj, "adresse")
+        code_postal = from_str(obj, "codePostal")
+        coordonnees = from_obj(Coordonnees.from_dict, obj, "coordonnees")
         date_created = from_none(obj.get("date_created"))
         date_updated = from_none(obj.get("date_updated"))
-        id = from_union([from_str, from_none], obj.get("id"))
-        latitude = from_union([from_float, from_none], obj.get("latitude"))
-        longitude = from_union([from_float, from_none], obj.get("longitude"))
-        title = from_union([from_str, from_none], obj.get("title"))
-        ville = from_union([from_str, from_none], obj.get("ville"))
-        status = from_union([Status, from_none], obj.get("status"))
+        id = from_str(obj, "id")
+        latitude = from_float(obj, "latitude")
+        longitude = from_float(obj, "longitude")
+        title = from_str(obj, "title")
+        ville = from_str(obj, "ville")
+        status = from_enum(Status, obj, "status")
         return Cartographie(
             adresse,
             code_postal,
@@ -275,31 +244,27 @@ class Cartographie:
     def to_dict(self) -> dict:
         result: dict = {}
         if self.adresse is not None:
-            result["adresse"] = from_union([from_str, from_none], self.adresse)
+            result["adresse"] = self.adresse
         if self.code_postal is not None:
-            result["codePostal"] = from_union([from_str, from_none], self.code_postal)
+            result["codePostal"] = self.code_postal
         if self.coordonnees is not None:
-            result["coordonnees"] = from_union(
-                [lambda x: to_class(Coordonnees, x), from_none], self.coordonnees
-            )
+            result["coordonnees"] = self.coordonnees.to_dict()
         if self.date_created is not None:
             result["date_created"] = from_none(self.date_created)
         if self.date_updated is not None:
             result["date_updated"] = from_none(self.date_updated)
         if self.id is not None:
-            result["id"] = from_union([from_str, from_none], self.id)
+            result["id"] = self.id
         if self.latitude is not None:
-            result["latitude"] = from_union([to_float, from_none], self.latitude)
+            result["latitude"] = self.latitude
         if self.longitude is not None:
-            result["longitude"] = from_union([to_float, from_none], self.longitude)
+            result["longitude"] = self.longitude
         if self.title is not None:
-            result["title"] = from_union([from_str, from_none], self.title)
+            result["title"] = self.title
         if self.ville is not None:
-            result["ville"] = from_union([from_str, from_none], self.ville)
+            result["ville"] = self.ville
         if self.status is not None:
-            result["status"] = from_union(
-                [lambda x: to_enum(Status, x), from_none], self.status
-            )
+            result["status"] = self.status.value
         return result
 
 
@@ -314,16 +279,16 @@ class Geo:
     @staticmethod
     def from_dict(obj: Any) -> Geo:
         assert isinstance(obj, dict)
-        lat = from_union([from_float, from_none], obj.get("lat"))
-        lng = from_union([from_float, from_none], obj.get("lng"))
+        lat = from_float(obj, "lat")
+        lng = from_float(obj, "lng")
         return Geo(lat, lng)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.lat is not None:
-            result["lat"] = from_union([to_float, from_none], self.lat)
+            result["lat"] = self.lat
         if self.lng is not None:
-            result["lng"] = from_union([to_float, from_none], self.lng)
+            result["lng"] = self.lng
         return result
 
 
@@ -534,70 +499,52 @@ class PratiquesHit(Hit):
     @staticmethod
     def from_dict(obj: Any) -> PratiquesHit:
         assert isinstance(obj, dict)
-        titre = from_union([from_str, from_none], obj.get("titre"))
-        type = from_union([HitType, from_none], obj.get("type"))
-        adresse = from_union([from_str, from_none], obj.get("adresse"))
-        description = from_union([from_none, from_str], obj.get("description"))
-        id = from_union([from_none, lambda x: int(from_str(x))], obj.get("id"))
-        date_created = from_union([from_datetime, from_none], obj.get("date_created"))
-        date_debut = from_union([from_datetime, from_none], obj.get("date_debut"))
-        date_demande = from_union(
-            [from_none, lambda x: int(from_str(x))], obj.get("date_demande")
-        )
-        date_fin = from_union([from_datetime, from_none], obj.get("date_fin"))
-        date_updated = from_union([from_datetime, from_none], obj.get("date_updated"))
+        titre = from_str(obj, "titre")
+        type = from_enum(HitType, obj, "type")
+        adresse = from_str(obj, "adresse")
+        description = from_str(obj, "description")
+        id = from_int(obj, "id")
+        date_created = from_datetime(obj, "date_created")
+        date_debut = from_datetime(obj, "date_debut")
+        date_demande = from_int(obj, "date_demande")
+        date_fin = from_datetime(obj, "date_fin")
+        date_updated = from_datetime(obj, "date_updated")
         facebook = from_none(obj.get("facebook"))
-        site_web = from_union([from_none, from_str], obj.get("site_web"))
+        site_web = from_str(obj, "site_web")
         twitter = from_none(obj.get("twitter"))
-        action = from_union([from_str, from_none], obj.get("action"))
-        adresse_salle = from_union([from_str, from_none], obj.get("adresse_salle"))
-        adresse_structure = from_union(
-            [from_none, from_str], obj.get("adresse_structure")
-        )
-        assurance = from_union([from_none, from_str], obj.get("assurance"))
-        code = from_union([from_none, from_str], obj.get("code"))
-        cp_salle = from_union([from_str, from_none], obj.get("cp_salle"))
-        date_inscription = from_union(
-            [from_none, lambda x: int(from_str(x))], obj.get("date_inscription")
-        )
-        email = from_union([from_none, from_str], obj.get("email"))
-        engagement = from_union([from_none, from_str], obj.get("engagement"))
-        horaires_seances = from_union(
-            [from_none, from_str], obj.get("horaires_seances")
-        )
-        inscriptions = from_union([from_none, from_str], obj.get("inscriptions"))
-        jours = from_union([lambda x: from_list(Jour, x), from_none], obj.get("jours"))
-        label = from_union([Label, from_none], obj.get("label"))
+        action = from_str(obj, "action")
+        adresse_salle = from_str(obj, "adresse_salle")
+        adresse_structure = from_str(obj, "adresse_structure")
+        assurance = from_str(obj, "assurance")
+        code = from_str(obj, "code")
+        cp_salle = from_str(obj, "cp_salle")
+        date_inscription = from_int(obj, "date_inscription")
+        email = from_str(obj, "email")
+        engagement = from_str(obj, "engagement")
+        horaires_seances = from_str(obj, "horaires_seances")
+        inscriptions = from_str(obj, "inscriptions")
+        jours = from_list(Jour, obj, "jours")
+        label = from_enum(Label, obj, "label")
         latitude = from_none(obj.get("latitude"))
         longitude = from_none(obj.get("longitude"))
-        mail_demandeur = from_union([from_none, from_str], obj.get("mail_demandeur"))
-        mail_structure = from_union([from_none, from_str], obj.get("mail_structure"))
-        nom_demandeur = from_union([from_none, from_str], obj.get("nom_demandeur"))
-        nom_salle = from_union([from_str, from_none], obj.get("nom_salle"))
-        nom_structure = from_union([from_none, from_str], obj.get("nom_structure"))
-        nombre_personnes = from_union(
-            [from_none, from_str], obj.get("nombre_personnes")
-        )
-        nombre_seances = from_union([from_none, from_str], obj.get("nombre_seances"))
-        objectif = from_union([from_none, Objectif], obj.get("objectif"))
-        prenom_demandeur = from_union(
-            [from_none, from_str], obj.get("prenom_demandeur")
-        )
-        public = from_union([from_none, from_str], obj.get("public"))
-        telephone = from_union([from_none, from_str], obj.get("telephone"))
-        ville_salle = from_union([from_str, from_none], obj.get("ville_salle"))
-        cartographie = from_union(
-            [Cartographie.from_dict, from_none], obj.get("cartographie")
-        )
-        affiche = from_union([from_none, Affiche.from_dict], obj.get("affiche"))
-        geo = from_union([Geo.from_dict, from_none], obj.get("_geo"))
-        date_debut_timestamp = from_union(
-            [from_int, from_none], obj.get("date_debut_timestamp")
-        )
-        date_fin_timestamp = from_union(
-            [from_int, from_none], obj.get("date_fin_timestamp")
-        )
-        thumbnail = from_union([from_none, from_str], obj.get("thumbnail"))
+        mail_demandeur = from_str(obj, "mail_demandeur")
+        mail_structure = from_str(obj, "mail_structure")
+        nom_demandeur = from_str(obj, "nom_demandeur")
+        nom_salle = from_str(obj, "nom_salle")
+        nom_structure = from_str(obj, "nom_structure")
+        nombre_personnes = from_str(obj, "nombre_personnes")
+        nombre_seances = from_str(obj, "nombre_seances")
+        objectif = from_enum(Objectif, obj, "objectif")
+        prenom_demandeur = from_str(obj, "prenom_demandeur")
+        public = from_str(obj, "public")
+        telephone = from_str(obj, "telephone")
+        ville_salle = from_str(obj, "ville_salle")
+        cartographie = from_obj(Cartographie.from_dict, obj, "cartographie")
+        affiche = from_obj(Affiche.from_dict, obj, "affiche")
+        geo = from_obj(Geo.from_dict, obj, "_geo")
+        date_debut_timestamp = from_int(obj, "date_debut_timestamp")
+        date_fin_timestamp = from_int(obj, "date_fin_timestamp")
+        thumbnail = from_str(obj, "thumbnail")
         return PratiquesHit(
             titre,
             type,
@@ -650,170 +597,97 @@ class PratiquesHit(Hit):
     def to_dict(self) -> dict:
         result: dict = {}
         if self.titre is not None:
-            result["titre"] = from_union([from_str, from_none], self.titre)
+            result["titre"] = self.titre
         if self.type is not None:
-            result["type"] = from_union(
-                [lambda x: to_enum(HitType, x), from_none], self.type
-            )
+            result["type"] = self.type.value
         if self.adresse is not None:
-            result["adresse"] = from_union([from_str, from_none], self.adresse)
+            result["adresse"] = self.adresse
         if self.description is not None:
-            result["description"] = from_union([from_none, from_str], self.description)
+            result["description"] = self.description
         if self.id is not None:
-            result["id"] = from_union(
-                [
-                    lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.id,
-            )
+            result["id"] = str(self.id)
         if self.date_created is not None:
-            result["date_created"] = from_union(
-                [lambda x: x.isoformat(), from_none], self.date_created
-            )
+            result["date_created"] = self.date_created.isoformat()
         if self.date_debut is not None:
-            result["date_debut"] = from_union(
-                [lambda x: x.isoformat(), from_none], self.date_debut
-            )
+            result["date_debut"] = self.date_debut.isoformat()
         if self.date_demande is not None:
-            result["date_demande"] = from_union(
-                [
-                    lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.date_demande,
-            )
+            result["date_demande"] = str(self.date_demande)
         if self.date_fin is not None:
-            result["date_fin"] = from_union(
-                [lambda x: x.isoformat(), from_none], self.date_fin
-            )
+            result["date_fin"] = self.date_fin.isoformat()
         if self.date_updated is not None:
-            result["date_updated"] = from_union(
-                [lambda x: x.isoformat(), from_none], self.date_updated
-            )
+            result["date_updated"] = self.date_updated.isoformat()
         if self.facebook is not None:
             result["facebook"] = from_none(self.facebook)
         if self.site_web is not None:
-            result["site_web"] = from_union([from_none, from_str], self.site_web)
+            result["site_web"] = self.site_web
         if self.twitter is not None:
             result["twitter"] = from_none(self.twitter)
         if self.action is not None:
-            result["action"] = from_union([from_str, from_none], self.action)
+            result["action"] = self.action
         if self.adresse_salle is not None:
-            result["adresse_salle"] = from_union(
-                [from_str, from_none], self.adresse_salle
-            )
+            result["adresse_salle"] = self.adresse_salle
         if self.adresse_structure is not None:
-            result["adresse_structure"] = from_union(
-                [from_none, from_str], self.adresse_structure
-            )
+            result["adresse_structure"] = self.adresse_structure
         if self.assurance is not None:
-            result["assurance"] = from_union([from_none, from_str], self.assurance)
+            result["assurance"] = self.assurance
         if self.code is not None:
-            result["code"] = from_union([from_none, from_str], self.code)
+            result["code"] = self.code
         if self.cp_salle is not None:
-            result["cp_salle"] = from_union([from_str, from_none], self.cp_salle)
+            result["cp_salle"] = self.cp_salle
         if self.date_inscription is not None:
-            result["date_inscription"] = from_union(
-                [
-                    lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.date_inscription,
-            )
+            result["date_inscription"] = str(self.date_inscription)
         if self.email is not None:
-            result["email"] = from_union([from_none, from_str], self.email)
+            result["email"] = self.email
         if self.engagement is not None:
-            result["engagement"] = from_union([from_none, from_str], self.engagement)
+            result["engagement"] = self.engagement
         if self.horaires_seances is not None:
-            result["horaires_seances"] = from_union(
-                [from_none, from_str], self.horaires_seances
-            )
+            result["horaires_seances"] = self.horaires_seances
         if self.inscriptions is not None:
-            result["inscriptions"] = from_union(
-                [from_none, from_str], self.inscriptions
-            )
+            result["inscriptions"] = self.inscriptions
         if self.jours is not None:
-            result["jours"] = from_union(
-                [lambda x: from_list(lambda x: to_enum(Jour, x), x), from_none],
-                self.jours,
-            )
+            result["jours"] = [j.value for j in self.jours]
         if self.label is not None:
-            result["label"] = from_union(
-                [lambda x: to_enum(Label, x), from_none], self.label
-            )
+            result["label"] = self.label.value
         if self.latitude is not None:
             result["latitude"] = from_none(self.latitude)
         if self.longitude is not None:
             result["longitude"] = from_none(self.longitude)
         if self.mail_demandeur is not None:
-            result["mail_demandeur"] = from_union(
-                [from_none, from_str], self.mail_demandeur
-            )
+            result["mail_demandeur"] = self.mail_demandeur
         if self.mail_structure is not None:
-            result["mail_structure"] = from_union(
-                [from_none, from_str], self.mail_structure
-            )
+            result["mail_structure"] = self.mail_structure
         if self.nom_demandeur is not None:
-            result["nom_demandeur"] = from_union(
-                [from_none, from_str], self.nom_demandeur
-            )
+            result["nom_demandeur"] = self.nom_demandeur
         if self.nom_salle is not None:
-            result["nom_salle"] = from_union([from_str, from_none], self.nom_salle)
+            result["nom_salle"] = self.nom_salle
         if self.nom_structure is not None:
-            result["nom_structure"] = from_union(
-                [from_none, from_str], self.nom_structure
-            )
+            result["nom_structure"] = self.nom_structure
         if self.nombre_personnes is not None:
-            result["nombre_personnes"] = from_union(
-                [from_none, from_str], self.nombre_personnes
-            )
+            result["nombre_personnes"] = self.nombre_personnes
         if self.nombre_seances is not None:
-            result["nombre_seances"] = from_union(
-                [from_none, from_str], self.nombre_seances
-            )
+            result["nombre_seances"] = self.nombre_seances
         if self.objectif is not None:
-            result["objectif"] = from_union(
-                [from_none, lambda x: to_enum(Objectif, x)], self.objectif
-            )
+            result["objectif"] = self.objectif.value
         if self.prenom_demandeur is not None:
-            result["prenom_demandeur"] = from_union(
-                [from_none, from_str], self.prenom_demandeur
-            )
+            result["prenom_demandeur"] = self.prenom_demandeur
         if self.public is not None:
-            result["public"] = from_union([from_none, from_str], self.public)
+            result["public"] = self.public
         if self.telephone is not None:
-            result["telephone"] = from_union([from_none, from_str], self.telephone)
+            result["telephone"] = self.telephone
         if self.ville_salle is not None:
-            result["ville_salle"] = from_union([from_str, from_none], self.ville_salle)
+            result["ville_salle"] = self.ville_salle
         if self.cartographie is not None:
-            result["cartographie"] = from_union(
-                [lambda x: to_class(Cartographie, x), from_none], self.cartographie
-            )
+            result["cartographie"] = self.cartographie.to_dict()
         if self.affiche is not None:
-            result["affiche"] = from_union(
-                [from_none, lambda x: to_class(Affiche, x)], self.affiche
-            )
+            result["affiche"] = self.affiche.to_dict()
         if self.geo is not None:
-            result["_geo"] = from_union(
-                [lambda x: to_class(Geo, x), from_none], self.geo
-            )
+            result["_geo"] = self.geo.to_dict()
         if self.date_debut_timestamp is not None:
-            result["date_debut_timestamp"] = from_union(
-                [from_int, from_none], self.date_debut_timestamp
-            )
+            result["date_debut_timestamp"] = self.date_debut_timestamp
         if self.date_fin_timestamp is not None:
-            result["date_fin_timestamp"] = from_union(
-                [from_int, from_none], self.date_fin_timestamp
-            )
+            result["date_fin_timestamp"] = self.date_fin_timestamp
         if self.thumbnail is not None:
-            result["thumbnail"] = from_union([from_none, from_str], self.thumbnail)
+            result["thumbnail"] = self.thumbnail
         return result
 
     def is_valid_for_query(self, query: str) -> bool:

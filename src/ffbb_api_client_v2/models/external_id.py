@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from ..utils.converter_utils import from_none, from_str, from_union, is_type, to_class
+from ..utils.converter_utils import (
+    from_int,
+    from_obj,
+    from_str,
+)
 from .id_organisme_equipe import IDOrganismeEquipe
 from .id_poule import IDPoule
 from .salle import Salle
@@ -29,24 +33,22 @@ class CompetitionID:
     @staticmethod
     def from_dict(obj: Any) -> CompetitionID:
         assert isinstance(obj, dict)
-        code = from_union([from_str, from_none], obj.get("code"))
-        nom = from_union([from_str, from_none], obj.get("nom"))
-        sexe = from_union([from_str, from_none], obj.get("sexe"))
-        type_competition = from_union([from_str, from_none], obj.get("typeCompetition"))
+        code = from_str(obj, "code")
+        nom = from_str(obj, "nom")
+        sexe = from_str(obj, "sexe")
+        type_competition = from_str(obj, "typeCompetition")
         return CompetitionID(code, nom, sexe, type_competition)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.code is not None:
-            result["code"] = from_union([from_str, from_none], self.code)
+            result["code"] = self.code
         if self.nom is not None:
-            result["nom"] = from_union([from_str, from_none], self.nom)
+            result["nom"] = self.nom
         if self.sexe is not None:
-            result["sexe"] = from_union([from_str, from_none], self.sexe)
+            result["sexe"] = self.sexe
         if self.type_competition is not None:
-            result["typeCompetition"] = from_union(
-                [from_str, from_none], self.type_competition
-            )
+            result["typeCompetition"] = self.type_competition
         return result
 
 
@@ -92,22 +94,18 @@ class ExternalID:
             ExternalID: The constructed ExternalID object.
         """
         assert isinstance(obj, dict)
-        nom_equipe1 = from_union([from_str, from_none], obj.get("nomEquipe1"))
-        nom_equipe2 = from_union([from_str, from_none], obj.get("nomEquipe2"))
-        numero_journee = from_union(
-            [lambda x: int(from_str(x)), from_none], obj.get("numeroJournee")
+        nom_equipe1 = from_str(obj, "nomEquipe1")
+        nom_equipe2 = from_str(obj, "nomEquipe2")
+        numero_journee = from_int(obj, "numeroJournee")
+        competition_id = from_obj(CompetitionID.from_dict, obj, "competitionId")
+        id_organisme_equipe1 = from_obj(
+            IDOrganismeEquipe.from_dict, obj, "idOrganismeEquipe1"
         )
-        competition_id = from_union(
-            [CompetitionID.from_dict, from_none], obj.get("competitionId")
+        id_organisme_equipe2 = from_obj(
+            IDOrganismeEquipe.from_dict, obj, "idOrganismeEquipe2"
         )
-        id_organisme_equipe1 = from_union(
-            [IDOrganismeEquipe.from_dict, from_none], obj.get("idOrganismeEquipe1")
-        )
-        id_organisme_equipe2 = from_union(
-            [IDOrganismeEquipe.from_dict, from_none], obj.get("idOrganismeEquipe2")
-        )
-        salle = from_union([Salle.from_dict, from_none], obj.get("salle"))
-        id_poule = from_union([IDPoule.from_dict, from_none], obj.get("idPoule"))
+        salle = from_obj(Salle.from_dict, obj, "salle")
+        id_poule = from_obj(IDPoule.from_dict, obj, "idPoule")
         return ExternalID(
             nom_equipe1,
             nom_equipe2,
@@ -128,39 +126,19 @@ class ExternalID:
         """
         result: dict = {}
         if self.nom_equipe1 is not None:
-            result["nomEquipe1"] = from_union([from_str, from_none], self.nom_equipe1)
+            result["nomEquipe1"] = self.nom_equipe1
         if self.nom_equipe2 is not None:
-            result["nomEquipe2"] = from_union([from_str, from_none], self.nom_equipe2)
+            result["nomEquipe2"] = self.nom_equipe2
         if self.numero_journee is not None:
-            result["numeroJournee"] = from_union(
-                [
-                    lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.numero_journee,
-            )
+            result["numeroJournee"] = str(self.numero_journee)
         if self.competition_id is not None:
-            result["competitionId"] = from_union(
-                [lambda x: to_class(CompetitionID, x), from_none], self.competition_id
-            )
+            result["competitionId"] = self.competition_id.to_dict()
         if self.id_organisme_equipe1 is not None:
-            result["idOrganismeEquipe1"] = from_union(
-                [lambda x: to_class(IDOrganismeEquipe, x), from_none],
-                self.id_organisme_equipe1,
-            )
+            result["idOrganismeEquipe1"] = self.id_organisme_equipe1.to_dict()
         if self.id_organisme_equipe2 is not None:
-            result["idOrganismeEquipe2"] = from_union(
-                [lambda x: to_class(IDOrganismeEquipe, x), from_none],
-                self.id_organisme_equipe2,
-            )
+            result["idOrganismeEquipe2"] = self.id_organisme_equipe2.to_dict()
         if self.salle is not None:
-            result["salle"] = from_union(
-                [lambda x: to_class(Salle, x), from_none], self.salle
-            )
+            result["salle"] = self.salle.to_dict()
         if self.id_poule is not None:
-            result["idPoule"] = from_union(
-                [lambda x: to_class(IDPoule, x), from_none], self.id_poule
-            )
+            result["idPoule"] = self.id_poule.to_dict()
         return result

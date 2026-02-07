@@ -5,16 +5,12 @@ from typing import Any
 
 from ..utils.converter_utils import (
     from_datetime,
-    from_dict,
+    from_enum,
     from_int,
-    from_list,
     from_none,
+    from_obj,
     from_officiels_list,
     from_str,
-    from_union,
-    is_type,
-    to_class,
-    to_enum,
 )
 from .competition_id import CompetitionID
 from .competition_id_sexe import CompetitionIDSexe
@@ -40,7 +36,7 @@ class RencontresFacetDistribution(FacetDistribution):
     competition_id_nom_extended: dict[str, int] | None = None
     competition_id_sexe: CompetitionIDSexe | None = None
     competition_id_type_competition: CompetitionIDTypeCompetition | None = None
-    niveau: Niveau | None = None
+    niveau: NiveauClass | None = None
     organisateur_id: dict[str, int] | None = None
     organisateur_nom: dict[str, int] | None = None
 
@@ -50,7 +46,7 @@ class RencontresFacetDistribution(FacetDistribution):
         competition_id_nom_extended: dict[str, int] | None,
         competition_id_sexe: CompetitionIDSexe | None,
         competition_id_type_competition: CompetitionIDTypeCompetition | None,
-        niveau: Niveau | None,
+        niveau: NiveauClass | None,
         organisateur_id: dict[str, int] | None,
         organisateur_nom: dict[str, int] | None,
     ):
@@ -65,28 +61,17 @@ class RencontresFacetDistribution(FacetDistribution):
     @staticmethod
     def from_dict(obj: Any) -> RencontresFacetDistribution:
         assert isinstance(obj, dict)
-        competition_id_categorie_code = from_union(
-            [lambda x: from_dict(from_int, x), from_none],
-            obj.get("competitionId.categorie.code"),
+        competition_id_categorie_code = obj.get("competitionId.categorie.code")
+        competition_id_nom_extended = obj.get("competitionId.nomExtended")
+        competition_id_sexe = from_obj(
+            CompetitionIDSexe.from_dict, obj, "competitionId.sexe"
         )
-        competition_id_nom_extended = from_union(
-            [lambda x: from_dict(from_int, x), from_none],
-            obj.get("competitionId.nomExtended"),
+        competition_id_type_competition = from_obj(
+            CompetitionIDTypeCompetition.from_dict, obj, "competitionId.typeCompetition"
         )
-        competition_id_sexe = from_union(
-            [CompetitionIDSexe.from_dict, from_none], obj.get("competitionId.sexe")
-        )
-        competition_id_type_competition = from_union(
-            [CompetitionIDTypeCompetition.from_dict, from_none],
-            obj.get("competitionId.typeCompetition"),
-        )
-        niveau = from_union([NiveauClass.from_dict, from_none], obj.get("niveau"))
-        organisateur_id = from_union(
-            [lambda x: from_dict(from_int, x), from_none], obj.get("organisateur.id")
-        )
-        organisateur_nom = from_union(
-            [lambda x: from_dict(from_int, x), from_none], obj.get("organisateur.nom")
-        )
+        niveau = from_obj(NiveauClass.from_dict, obj, "niveau")
+        organisateur_id = obj.get("organisateur.id")
+        organisateur_nom = obj.get("organisateur.nom")
         return RencontresFacetDistribution(
             competition_id_categorie_code,
             competition_id_nom_extended,
@@ -100,37 +85,21 @@ class RencontresFacetDistribution(FacetDistribution):
     def to_dict(self) -> dict:
         result: dict = {}
         if self.competition_id_categorie_code is not None:
-            result["competitionId.categorie.code"] = from_union(
-                [lambda x: from_dict(from_int, x), from_none],
-                self.competition_id_categorie_code,
-            )
+            result["competitionId.categorie.code"] = self.competition_id_categorie_code
         if self.competition_id_nom_extended is not None:
-            result["competitionId.nomExtended"] = from_union(
-                [lambda x: from_dict(from_int, x), from_none],
-                self.competition_id_nom_extended,
-            )
+            result["competitionId.nomExtended"] = self.competition_id_nom_extended
         if self.competition_id_sexe is not None:
-            result["competitionId.sexe"] = from_union(
-                [lambda x: to_class(CompetitionIDSexe, x), from_none],
-                self.competition_id_sexe,
-            )
+            result["competitionId.sexe"] = self.competition_id_sexe.to_dict()
         if self.competition_id_type_competition is not None:
-            result["competitionId.typeCompetition"] = from_union(
-                [lambda x: to_class(CompetitionIDTypeCompetition, x), from_none],
-                self.competition_id_type_competition,
+            result["competitionId.typeCompetition"] = (
+                self.competition_id_type_competition.to_dict()
             )
         if self.niveau is not None:
-            result["niveau"] = from_union(
-                [lambda x: to_enum(Niveau, x), from_none], self.niveau
-            )
+            result["niveau"] = self.niveau.to_dict()
         if self.organisateur_id is not None:
-            result["organisateur.id"] = from_union(
-                [lambda x: from_dict(from_int, x), from_none], self.organisateur_id
-            )
+            result["organisateur.id"] = self.organisateur_id
         if self.organisateur_nom is not None:
-            result["organisateur.nom"] = from_union(
-                [lambda x: from_dict(from_int, x), from_none], self.organisateur_nom
-            )
+            result["organisateur.nom"] = self.organisateur_nom
         return result
 
 
@@ -158,13 +127,13 @@ class Engagement:
     @staticmethod
     def from_dict(obj: Any) -> Engagement:
         assert isinstance(obj, dict)
-        id = from_union([from_str, from_none], obj.get("id"))
+        id = from_str(obj, "id")
         return Engagement(id)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.id is not None:
-            result["id"] = from_union([from_str, from_none], self.id)
+            result["id"] = self.id
         return result
 
 
@@ -178,7 +147,7 @@ class RencontresHit(Hit):
     nom_equipe2: str | None = None
     numero_journee: int | None = None
     pratique: Pratique | None = None
-    gs_id: str
+    gs_id: str | None = None
     officiels: list[str] | None = None
     competition_id: CompetitionID | None = None
     id_organisme_equipe1: IDOrganismeEquipe | None = None
@@ -192,7 +161,7 @@ class RencontresHit(Hit):
     date_timestamp: int | None = None
     date_rencontre_timestamp: int | None = None
     creation_timestamp: int | None = None
-    date_saisie_resultat_timestamp: None
+    date_saisie_resultat_timestamp: int | None = None
     modification_timestamp: int | None = None
     thumbnail: None
     organisateur: Organisateur | None = None
@@ -209,7 +178,7 @@ class RencontresHit(Hit):
         nom_equipe2: str | None,
         numero_journee: int | None,
         pratique: Pratique | None,
-        gs_id: str,
+        gs_id: str | None,
         officiels: list | None,
         competition_id: CompetitionID | None,
         id_organisme_equipe1: IDOrganismeEquipe | None,
@@ -223,7 +192,7 @@ class RencontresHit(Hit):
         date_timestamp: int | None,
         date_rencontre_timestamp: int | None,
         creation_timestamp: int | None,
-        date_saisie_resultat_timestamp: None,
+        date_saisie_resultat_timestamp: int | None,
         modification_timestamp: int | None,
         thumbnail: None,
         organisateur: Organisateur | None,
@@ -284,74 +253,45 @@ class RencontresHit(Hit):
     def from_dict(obj: Any) -> Hit:
         try:
             assert isinstance(obj, dict)
-            niveau = from_union([Niveau, from_none], obj.get("niveau"))
-            id = from_union([from_str, from_none], obj.get("id"))
-            date = from_union([from_datetime, from_none], obj.get("date"))
-            date_rencontre = from_union(
-                [from_datetime, from_none], obj.get("date_rencontre")
-            )
-            horaire = from_union(
-                [from_none, lambda x: int(from_str(x))], obj.get("horaire")
-            )
-            nom_equipe1 = from_union([from_str, from_none], obj.get("nomEquipe1"))
-            nom_equipe2 = from_union([from_str, from_none], obj.get("nomEquipe2"))
+            niveau = from_enum(Niveau, obj, "niveau")
+            id = from_str(obj, "id")
+            date = from_datetime(obj, "date")
+            date_rencontre = from_datetime(obj, "date_rencontre")
+            horaire = from_int(obj, "horaire")
+            nom_equipe1 = from_str(obj, "nomEquipe1")
+            nom_equipe2 = from_str(obj, "nomEquipe2")
 
-            numero_journee_tmp = obj.get("numeroJournee")
-            numero_journee_tmp = (
-                numero_journee_tmp
-                if numero_journee_tmp and len(numero_journee_tmp) > 0
-                else None
-            )
-
-            numero_journee = from_union(
-                [from_none, lambda x: int(from_str(x))], numero_journee_tmp
-            )
-            pratique = from_union([from_none, Pratique], obj.get("pratique"))
-            gs_id = from_union([from_str, from_none], obj.get("gsId"))
+            numero_journee = from_int(obj, "numeroJournee")
+            pratique = from_enum(Pratique, obj, "pratique")
+            gs_id = from_str(obj, "gsId")
             officiels = from_officiels_list(obj.get("officiels"))
-            competition_id = from_union(
-                [CompetitionID.from_dict, from_none], obj.get("competitionId")
+            competition_id = from_obj(CompetitionID.from_dict, obj, "competitionId")
+            id_organisme_equipe1 = from_obj(
+                IDOrganismeEquipe.from_dict, obj, "idOrganismeEquipe1"
             )
-            id_organisme_equipe1 = from_union(
-                [IDOrganismeEquipe.from_dict, from_none], obj.get("idOrganismeEquipe1")
+            id_organisme_equipe2 = from_obj(
+                IDOrganismeEquipe.from_dict, obj, "idOrganismeEquipe2"
             )
-            id_organisme_equipe2 = from_union(
-                [IDOrganismeEquipe.from_dict, from_none], obj.get("idOrganismeEquipe2")
+            id_poule = from_obj(IDPoule.from_dict, obj, "idPoule")
+            saison = from_obj(Saison.from_dict, obj, "saison")
+            salle = from_obj(Salle.from_dict, obj, "salle")
+            id_engagement_equipe1 = from_obj(
+                IDEngagementEquipe.from_dict, obj, "idEngagementEquipe1"
             )
-            id_poule = from_union([IDPoule.from_dict, from_none], obj.get("idPoule"))
-            saison = from_union([Saison.from_dict, from_none], obj.get("saison"))
-            salle = from_union([Salle.from_dict, from_none], obj.get("salle"))
-            id_engagement_equipe1 = from_union(
-                [IDEngagementEquipe.from_dict, from_none],
-                obj.get("idEngagementEquipe1"),
+            id_engagement_equipe2 = from_obj(
+                IDEngagementEquipe.from_dict, obj, "idEngagementEquipe2"
             )
-            id_engagement_equipe2 = from_union(
-                [IDEngagementEquipe.from_dict, from_none],
-                obj.get("idEngagementEquipe2"),
+            geo = from_obj(Geo.from_dict, obj, "_geo")
+            date_timestamp = from_int(obj, "date_timestamp")
+            date_rencontre_timestamp = from_int(obj, "date_rencontre_timestamp")
+            creation_timestamp = from_int(obj, "creation_timestamp")
+            date_saisie_resultat_timestamp = from_int(
+                obj, "dateSaisieResultat_timestamp"
             )
-            geo = from_union([Geo.from_dict, from_none], obj.get("_geo"))
-            date_timestamp = from_union(
-                [from_int, from_none], obj.get("date_timestamp")
-            )
-            date_rencontre_timestamp = from_union(
-                [from_int, from_none], obj.get("date_rencontre_timestamp")
-            )
-            creation_timestamp = from_union(
-                [from_int, from_none], obj.get("creation_timestamp")
-            )
-            date_saisie_resultat_timestamp = from_union(
-                [from_int, from_none], obj.get("dateSaisieResultat_timestamp")
-            )
-            modification_timestamp = from_union(
-                [from_int, from_none], obj.get("modification_timestamp")
-            )
+            modification_timestamp = from_int(obj, "modification_timestamp")
             thumbnail = from_none(obj.get("thumbnail"))
-            organisateur = from_union(
-                [Organisateur.from_dict, from_none], obj.get("organisateur")
-            )
-            niveau_nb = from_union(
-                [from_none, lambda x: int(from_str(x))], obj.get("niveau_nb")
-            )
+            organisateur = from_obj(Organisateur.from_dict, obj, "organisateur")
+            niveau_nb = from_int(obj, "niveau_nb")
             return RencontresHit(
                 niveau,
                 id,
@@ -388,127 +328,61 @@ class RencontresHit(Hit):
     def to_dict(self) -> dict:
         result: dict = {}
         if self.niveau is not None:
-            result["niveau"] = from_union(
-                [lambda x: to_enum(Niveau, x), from_none], self.niveau
-            )
+            result["niveau"] = self.niveau.value
         if self.id is not None:
-            result["id"] = from_union([from_str, from_none], self.id)
+            result["id"] = self.id
         if self.date is not None:
-            result["date"] = from_union([lambda x: x.isoformat(), from_none], self.date)
+            result["date"] = self.date.isoformat()
         if self.date_rencontre is not None:
-            result["date_rencontre"] = from_union(
-                [lambda x: x.isoformat(), from_none], self.date_rencontre
-            )
+            result["date_rencontre"] = self.date_rencontre.isoformat()
         if self.horaire is not None:
-            result["horaire"] = from_union(
-                [
-                    lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.horaire,
-            )
+            result["horaire"] = str(self.horaire)
         if self.nom_equipe1 is not None:
-            result["nomEquipe1"] = from_union([from_str, from_none], self.nom_equipe1)
+            result["nomEquipe1"] = self.nom_equipe1
         if self.nom_equipe2 is not None:
-            result["nomEquipe2"] = from_union([from_str, from_none], self.nom_equipe2)
+            result["nomEquipe2"] = self.nom_equipe2
         if self.numero_journee is not None:
-            result["numeroJournee"] = from_union(
-                [
-                    lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.numero_journee,
-            )
+            result["numeroJournee"] = str(self.numero_journee)
         if self.pratique is not None:
-            result["pratique"] = from_union(
-                [from_none, lambda x: to_enum(Pratique, x)], self.pratique
-            )
+            result["pratique"] = self.pratique.value
         if self.gs_id is not None:
-            result["gsId"] = from_union([from_str, from_none], self.gs_id)
+            result["gsId"] = self.gs_id
         if self.officiels is not None:
-            result["officiels"] = from_union(
-                [lambda x: from_list(from_str, x), from_none], self.officiels
-            )
+            result["officiels"] = self.officiels
         if self.competition_id is not None:
-            result["competitionId"] = from_union(
-                [lambda x: to_class(CompetitionID, x), from_none], self.competition_id
-            )
+            result["competitionId"] = self.competition_id.to_dict()
         if self.id_organisme_equipe1 is not None:
-            result["idOrganismeEquipe1"] = from_union(
-                [lambda x: to_class(IDOrganismeEquipe, x), from_none],
-                self.id_organisme_equipe1,
-            )
+            result["idOrganismeEquipe1"] = self.id_organisme_equipe1.to_dict()
         if self.id_organisme_equipe2 is not None:
-            result["idOrganismeEquipe2"] = from_union(
-                [lambda x: to_class(IDOrganismeEquipe, x), from_none],
-                self.id_organisme_equipe2,
-            )
+            result["idOrganismeEquipe2"] = self.id_organisme_equipe2.to_dict()
         if self.id_poule is not None:
-            result["idPoule"] = from_union(
-                [lambda x: to_class(IDPoule, x), from_none], self.id_poule
-            )
+            result["idPoule"] = self.id_poule.to_dict()
         if self.saison is not None:
-            result["saison"] = from_union(
-                [lambda x: to_class(Saison, x), from_none], self.saison
-            )
+            result["saison"] = self.saison.to_dict()
         if self.salle is not None:
-            result["salle"] = from_union(
-                [lambda x: to_class(Salle, x), from_none], self.salle
-            )
+            result["salle"] = self.salle.to_dict()
         if self.id_engagement_equipe1 is not None:
-            result["idEngagementEquipe1"] = from_union(
-                [lambda x: to_class(IDEngagementEquipe, x), from_none],
-                self.id_engagement_equipe1,
-            )
+            result["idEngagementEquipe1"] = self.id_engagement_equipe1.to_dict()
         if self.id_engagement_equipe2 is not None:
-            result["idEngagementEquipe2"] = from_union(
-                [lambda x: to_class(IDEngagementEquipe, x), from_none],
-                self.id_engagement_equipe2,
-            )
+            result["idEngagementEquipe2"] = self.id_engagement_equipe2.to_dict()
         if self.geo is not None:
-            result["_geo"] = from_union(
-                [lambda x: to_class(Geo, x), from_none], self.geo
-            )
+            result["_geo"] = self.geo.to_dict()
         if self.date_timestamp is not None:
-            result["date_timestamp"] = from_union(
-                [from_int, from_none], self.date_timestamp
-            )
+            result["date_timestamp"] = self.date_timestamp
         if self.date_rencontre_timestamp is not None:
-            result["date_rencontre_timestamp"] = from_union(
-                [from_int, from_none], self.date_rencontre_timestamp
-            )
+            result["date_rencontre_timestamp"] = self.date_rencontre_timestamp
         if self.creation_timestamp is not None:
-            result["creation_timestamp"] = from_union(
-                [from_int, from_none], self.creation_timestamp
-            )
+            result["creation_timestamp"] = self.creation_timestamp
         if self.date_saisie_resultat_timestamp is not None:
-            result["dateSaisieResultat_timestamp"] = from_none(
-                self.date_saisie_resultat_timestamp
-            )
+            result["dateSaisieResultat_timestamp"] = self.date_saisie_resultat_timestamp
         if self.modification_timestamp is not None:
-            result["modification_timestamp"] = from_union(
-                [from_int, from_none], self.modification_timestamp
-            )
+            result["modification_timestamp"] = self.modification_timestamp
         if self.thumbnail is not None:
             result["thumbnail"] = from_none(self.thumbnail)
         if self.organisateur is not None:
-            result["organisateur"] = from_union(
-                [lambda x: to_class(Organisateur, x), from_none], self.organisateur
-            )
+            result["organisateur"] = self.organisateur.to_dict()
         if self.niveau_nb is not None:
-            result["niveau_nb"] = from_union(
-                [
-                    lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.niveau_nb,
-            )
+            result["niveau_nb"] = str(self.niveau_nb)
         return result
 
     def is_valid_for_query(self, query: str) -> bool:

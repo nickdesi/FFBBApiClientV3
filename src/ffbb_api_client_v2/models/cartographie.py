@@ -4,12 +4,10 @@ from typing import Any
 
 from ..utils.converter_utils import (
     from_float,
+    from_int,
     from_none,
+    from_obj,
     from_str,
-    from_union,
-    is_type,
-    to_class,
-    to_float,
 )
 from .coordonnees import Coordonnees
 
@@ -56,21 +54,17 @@ class Cartographie:
     @staticmethod
     def from_dict(obj: Any) -> Cartographie:
         assert isinstance(obj, dict)
-        adresse = from_union([from_str, from_none], obj.get("adresse"))
-        code_postal = from_union(
-            [lambda x: int(from_str(x)), from_none], obj.get("codePostal")
-        )
-        coordonnees = from_union(
-            [Coordonnees.from_dict, from_none], obj.get("coordonnees")
-        )
+        adresse = from_str(obj, "adresse")
+        code_postal = from_int(obj, "codePostal")
+        coordonnees = from_obj(Coordonnees.from_dict, obj, "coordonnees")
         date_created = from_none(obj.get("date_created"))
         date_updated = from_none(obj.get("date_updated"))
-        cartographie_id = from_union([from_str, from_none], obj.get("id"))
-        latitude = from_union([from_float, from_none], obj.get("latitude"))
-        longitude = from_union([from_float, from_none], obj.get("longitude"))
-        title = from_union([from_str, from_none], obj.get("title"))
-        ville = from_union([from_str, from_none], obj.get("ville"))
-        status = from_union([from_str, from_none], obj.get("status"))
+        cartographie_id = from_str(obj, "id")
+        latitude = from_float(obj, "latitude")
+        longitude = from_float(obj, "longitude")
+        title = from_str(obj, "title")
+        ville = from_str(obj, "ville")
+        status = from_str(obj, "status")
         return Cartographie(
             adresse,
             code_postal,
@@ -88,35 +82,25 @@ class Cartographie:
     def to_dict(self) -> dict:
         result: dict = {}
         if self.adresse is not None:
-            result["adresse"] = from_union([from_str, from_none], self.adresse)
+            result["adresse"] = self.adresse
         if self.code_postal is not None:
-            result["codePostal"] = from_union(
-                [
-                    lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.code_postal,
-            )
+            result["codePostal"] = str(self.code_postal)
         if self.coordonnees is not None:
-            result["coordonnees"] = from_union(
-                [lambda x: to_class(Coordonnees, x), from_none], self.coordonnees
-            )
+            result["coordonnees"] = self.coordonnees.to_dict()
         if self.date_created is not None:
             result["date_created"] = from_none(self.date_created)
         if self.date_updated is not None:
             result["date_updated"] = from_none(self.date_updated)
         if self.cartographie_id is not None:
-            result["id"] = from_union([from_str, from_none], self.cartographie_id)
+            result["id"] = self.cartographie_id
         if self.latitude is not None:
-            result["latitude"] = from_union([to_float, from_none], self.latitude)
+            result["latitude"] = self.latitude
         if self.longitude is not None:
-            result["longitude"] = from_union([to_float, from_none], self.longitude)
+            result["longitude"] = self.longitude
         if self.title is not None:
-            result["title"] = from_union([from_str, from_none], self.title)
+            result["title"] = self.title
         if self.ville is not None:
-            result["ville"] = from_union([from_str, from_none], self.ville)
+            result["ville"] = self.ville
         if self.status is not None:
-            result["status"] = from_union([from_str, from_none], self.status)
+            result["status"] = self.status
         return result

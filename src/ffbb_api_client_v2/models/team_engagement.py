@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from ..utils.converter_utils import from_none, from_str, from_union, to_class
+from ..utils.converter_utils import from_obj, from_str
 from .logo import Logo
 
 
@@ -38,10 +38,10 @@ class TeamEngagement:
             TeamEngagement: The converted TeamEngagement instance.
         """
         assert isinstance(obj, dict)
-        nom_officiel = from_union([from_str, from_none], obj.get("nomOfficiel"))
-        nom_usuel = from_union([from_str, from_none], obj.get("nomUsuel"))
-        code_abrege = from_union([from_str, from_none], obj.get("codeAbrege"))
-        logo = from_union([Logo.from_dict, from_none], obj.get("logo"))
+        nom_officiel = from_str(obj, "nomOfficiel")
+        nom_usuel = from_str(obj, "nomUsuel")
+        code_abrege = from_str(obj, "codeAbrege")
+        logo = from_obj(Logo.from_dict, obj, "logo")
         return TeamEngagement(nom_officiel, nom_usuel, code_abrege, logo)
 
     def to_dict(self) -> dict:
@@ -53,13 +53,11 @@ class TeamEngagement:
         """
         result: dict = {}
         if self.nom_officiel is not None:
-            result["nomOfficiel"] = from_union([from_str, from_none], self.nom_officiel)
+            result["nomOfficiel"] = self.nom_officiel
         if self.nom_usuel is not None:
-            result["nomUsuel"] = from_union([from_str, from_none], self.nom_usuel)
+            result["nomUsuel"] = self.nom_usuel
         if self.code_abrege is not None:
-            result["codeAbrege"] = from_union([from_str, from_none], self.code_abrege)
+            result["codeAbrege"] = self.code_abrege
         if self.logo is not None:
-            result["logo"] = from_union(
-                [lambda x: to_class(Logo, x), from_none], self.logo
-            )
+            result["logo"] = self.logo.to_dict()
         return result

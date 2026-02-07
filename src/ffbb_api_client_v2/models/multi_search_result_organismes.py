@@ -1,18 +1,16 @@
 from __future__ import annotations
 
+from datetime import datetime
 from enum import Enum
 from typing import Any
 
 from ..utils.converter_utils import (
     from_bool,
     from_datetime,
-    from_dict,
-    from_int,
     from_list,
     from_none,
+    from_obj,
     from_str,
-    from_union,
-    to_class,
 )
 from .cartographie import Cartographie
 from .commune import Commune
@@ -50,16 +48,11 @@ class OrganismesFacetDistribution(FacetDistribution):
     @staticmethod
     def from_dict(obj: Any) -> OrganismesFacetDistribution:
         assert isinstance(obj, dict)
-        labellisation = from_union(
-            [Labellisation.from_dict, from_none], obj.get("labellisation")
-        )
-        offres_pratiques = from_union(
-            [lambda x: from_dict(from_int, x), from_none], obj.get("offresPratiques")
-        )
-        type = from_union([TypeClass.from_dict, from_none], obj.get("type"))
-        type_association_libelle = from_union(
-            [TypeAssociationLibelle.from_dict, from_none],
-            obj.get("type_association.libelle"),
+        labellisation = from_obj(Labellisation.from_dict, obj, "labellisation")
+        offres_pratiques = obj.get("offresPratiques")
+        type = from_obj(TypeClass.from_dict, obj, "type")
+        type_association_libelle = from_obj(
+            TypeAssociationLibelle.from_dict, obj, "type_association.libelle"
         )
         return OrganismesFacetDistribution(
             labellisation, offres_pratiques, type, type_association_libelle
@@ -68,22 +61,13 @@ class OrganismesFacetDistribution(FacetDistribution):
     def to_dict(self) -> dict:
         result: dict = {}
         if self.labellisation is not None:
-            result["labellisation"] = from_union(
-                [lambda x: to_class(Labellisation, x), from_none], self.labellisation
-            )
+            result["labellisation"] = self.labellisation.to_dict()
         if self.offres_pratiques is not None:
-            result["offresPratiques"] = from_union(
-                [lambda x: from_dict(from_int, x), from_none], self.offres_pratiques
-            )
+            result["offresPratiques"] = self.offres_pratiques
         if self.type is not None:
-            result["type"] = from_union(
-                [lambda x: to_class(TypeClass, x), from_none], self.type
-            )
+            result["type"] = self.type.to_dict()
         if self.type_association_libelle is not None:
-            result["type_association.libelle"] = from_union(
-                [lambda x: to_class(TypeAssociationLibelle, x), from_none],
-                self.type_association_libelle,
-            )
+            result["type_association.libelle"] = self.type_association_libelle.to_dict()
         return result
 
 
@@ -107,15 +91,15 @@ class OrganismesHit(Hit):
     telephone: str | None = None
     type: str | None = None
     url_site_web: str | None = None
-    nom_simple: None
-    date_affiliation: None
+    nom_simple: str | None = None
+    date_affiliation: datetime | None = None
     saison_en_cours: bool | None = None
     offres_pratiques: list[str] | None = None
     labellisation: list[str] | None = None
     cartographie: Cartographie | None = None
     organisme_id_pere: OrganismeIDPere | None = None
     commune: Commune | None = None
-    commune_club_pro: None
+    commune_club_pro: Commune | None = None
     type_association: TypeAssociation | None = None
     logo: Logo | None = None
     geo: Geo | None = None
@@ -134,15 +118,15 @@ class OrganismesHit(Hit):
         telephone: str | None,
         type: str | None,
         url_site_web: str | None,
-        nom_simple: None,
-        date_affiliation: None,
+        nom_simple: str | None,
+        date_affiliation: datetime | None,
         saison_en_cours: bool | None,
         offres_pratiques: list[str] | None,
         labellisation: list[str] | None,
         cartographie: Cartographie | None,
         organisme_id_pere: OrganismeIDPere | None,
         commune: Commune | None,
-        commune_club_pro: None,
+        commune_club_pro: Commune | None,
         type_association: TypeAssociation | None,
         logo: Logo | None,
         geo: Geo | None,
@@ -185,49 +169,34 @@ class OrganismesHit(Hit):
     def from_dict(obj: Any) -> Hit:
         try:
             assert isinstance(obj, dict)
-            nom_club_pro = from_union([from_str, from_none], obj.get("nomClubPro"))
-            nom = from_union([from_str, from_none], obj.get("nom"))
-            adresse = from_union([from_str, from_none], obj.get("adresse"))
+            nom_club_pro = from_str(obj, "nomClubPro")
+            nom = from_str(obj, "nom")
+            adresse = from_str(obj, "adresse")
             adresse_club_pro = from_none(obj.get("adresseClubPro"))
-            code = from_union([from_str, from_none], obj.get("code"))
-            id = from_union([from_str, from_none], obj.get("id"))
-            engagements_noms = from_union(
-                [from_str, from_none], obj.get("engagements_noms")
+            code = from_str(obj, "code")
+            id = from_str(obj, "id")
+            engagements_noms = from_str(obj, "engagements_noms")
+            mail = from_str(obj, "mail")
+            telephone = from_str(obj, "telephone")
+            type = from_str(obj, "type")
+            url_site_web = from_str(obj, "urlSiteWeb")
+            nom_simple = from_str(obj, "nom_simple")
+            date_affiliation = from_datetime(obj, "dateAffiliation")
+            saison_en_cours = from_bool(obj, "saison_en_cours")
+            offres_pratiques = from_list(str, obj, "offresPratiques")
+            labellisation = from_list(str, obj, "labellisation")
+            cartographie = from_obj(Cartographie.from_dict, obj, "cartographie")
+            organisme_id_pere = from_obj(
+                OrganismeIDPere.from_dict, obj, "organisme_id_pere"
             )
-            mail = from_union([from_str, from_none], obj.get("mail"))
-            telephone = from_union([from_str, from_none], obj.get("telephone"))
-            type = from_union([from_str, from_none], obj.get("type"))
-            url_site_web = from_union([from_str, from_none], obj.get("urlSiteWeb"))
-            nom_simple = from_union([from_str, from_none], obj.get("nom_simple"))
-            date_affiliation = from_union(
-                [from_datetime, from_none], obj.get("dateAffiliation")
+            commune = from_obj(Commune.from_dict, obj, "commune")
+            commune_club_pro = from_obj(Commune.from_dict, obj, "communeClubPro")
+            type_association = from_obj(
+                TypeAssociation.from_dict, obj, "type_association"
             )
-            saison_en_cours = from_union(
-                [from_bool, from_none], obj.get("saison_en_cours")
-            )
-            offres_pratiques = from_union(
-                [lambda x: from_list(from_str, x), from_none],
-                obj.get("offresPratiques"),
-            )
-            labellisation = from_union(
-                [lambda x: from_list(from_str, x), from_none], obj.get("labellisation")
-            )
-            cartographie = from_union(
-                [Cartographie.from_dict, from_none], obj.get("cartographie")
-            )
-            organisme_id_pere = from_union(
-                [OrganismeIDPere.from_dict, from_none], obj.get("organisme_id_pere")
-            )
-            commune = from_union([Commune.from_dict, from_none], obj.get("commune"))
-            commune_club_pro = from_union(
-                [Commune.from_dict, from_none], obj.get("communeClubPro")
-            )
-            type_association = from_union(
-                [TypeAssociation.from_dict, from_none], obj.get("type_association")
-            )
-            logo = from_union([Logo.from_dict, from_none], obj.get("logo"))
-            geo = from_union([Geo.from_dict, from_none], obj.get("_geo"))
-            thumbnail = from_union([from_none, from_str], obj.get("thumbnail"))
+            logo = from_obj(Logo.from_dict, obj, "logo")
+            geo = from_obj(Geo.from_dict, obj, "_geo")
+            thumbnail = from_str(obj, "thumbnail")
             return OrganismesHit(
                 nom_club_pro,
                 nom,
@@ -260,77 +229,53 @@ class OrganismesHit(Hit):
     def to_dict(self) -> dict:
         result: dict = {}
         if self.nom_club_pro is not None:
-            result["nomClubPro"] = from_union([from_str, from_none], self.nom_club_pro)
+            result["nomClubPro"] = self.nom_club_pro
         if self.nom is not None:
-            result["nom"] = from_union([from_str, from_none], self.nom)
+            result["nom"] = self.nom
         if self.adresse is not None:
-            result["adresse"] = from_union([from_str, from_none], self.adresse)
+            result["adresse"] = self.adresse
         if self.adresse_club_pro is not None:
             result["adresseClubPro"] = from_none(self.adresse_club_pro)
         if self.code is not None:
-            result["code"] = from_union([from_str, from_none], self.code)
+            result["code"] = self.code
         if self.id is not None:
-            result["id"] = from_union([from_str, from_none], self.id)
+            result["id"] = self.id
         if self.engagements_noms is not None:
-            result["engagements_noms"] = from_union(
-                [from_str, from_none], self.engagements_noms
-            )
+            result["engagements_noms"] = self.engagements_noms
         if self.mail is not None:
-            result["mail"] = from_union([from_str, from_none], self.mail)
+            result["mail"] = self.mail
         if self.telephone is not None:
-            result["telephone"] = from_union([from_str, from_none], self.telephone)
+            result["telephone"] = self.telephone
         if self.type is not None:
-            result["type"] = from_union([from_str, from_none], self.type)
+            result["type"] = self.type
         if self.url_site_web is not None:
-            result["urlSiteWeb"] = from_union([from_str, from_none], self.url_site_web)
+            result["urlSiteWeb"] = self.url_site_web
         if self.nom_simple is not None:
-            result["nom_simple"] = from_none(self.nom_simple)
+            result["nom_simple"] = self.nom_simple
         if self.date_affiliation is not None:
-            result["dateAffiliation"] = from_none(self.date_affiliation)
+            result["dateAffiliation"] = self.date_affiliation.isoformat()
         if self.saison_en_cours is not None:
-            result["saison_en_cours"] = from_union(
-                [from_bool, from_none], self.saison_en_cours
-            )
+            result["saison_en_cours"] = self.saison_en_cours
         if self.offres_pratiques is not None:
-            result["offresPratiques"] = from_union(
-                [lambda x: from_list(from_str, x), from_none], self.offres_pratiques
-            )
+            result["offresPratiques"] = self.offres_pratiques
         if self.labellisation is not None:
-            result["labellisation"] = from_union(
-                [lambda x: from_list(from_str, x), from_none], self.labellisation
-            )
+            result["labellisation"] = self.labellisation
         if self.cartographie is not None:
-            result["cartographie"] = from_union(
-                [lambda x: to_class(Cartographie, x), from_none], self.cartographie
-            )
+            result["cartographie"] = self.cartographie.to_dict()
         if self.organisme_id_pere is not None:
-            result["organisme_id_pere"] = from_union(
-                [lambda x: to_class(OrganismeIDPere, x), from_none],
-                self.organisme_id_pere,
-            )
+            result["organisme_id_pere"] = self.organisme_id_pere.to_dict()
         if self.commune is not None:
-            result["commune"] = from_union(
-                [lambda x: to_class(Commune, x), from_none], self.commune
-            )
+            result["commune"] = self.commune.to_dict()
         if self.commune_club_pro is not None:
-            result["communeClubPro"] = from_union(
-                [lambda x: to_class(Commune, x), from_none], self.commune_club_pro
-            )
+            result["communeClubPro"] = self.commune_club_pro.to_dict()
         if self.type_association is not None:
-            result["type_association"] = from_union(
-                [lambda x: to_class(TypeAssociation, x), from_none],
-                self.type_association,
-            )
+            result["type_association"] = self.type_association.to_dict()
         if self.logo is not None:
-            result["logo"] = from_union(
-                [lambda x: to_class(Logo, x), from_none], self.logo
-            )
+            result["logo"] = self.logo.to_dict()
         if self.geo is not None:
-            result["_geo"] = from_union(
-                [lambda x: to_class(Geo, x), from_none], self.geo
-            )
+            result["_geo"] = self.geo.to_dict()
         if self.thumbnail is not None:
-            result["thumbnail"] = from_union([from_none, from_str], self.thumbnail)
+            result["thumbnail"] = self.thumbnail
         return result
 
     def is_valid_for_query(self, query: str) -> bool:
