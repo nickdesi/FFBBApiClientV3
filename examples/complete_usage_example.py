@@ -10,7 +10,8 @@ Prerequisites:
 """
 
 from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
-from ffbb_api_client_v2.models.query_fields import FieldSet, QueryFieldsManager
+from ffbb_api_client_v2.models.field_set import FieldSet
+from ffbb_api_client_v2.models.query_fields_manager import QueryFieldsManager
 
 
 def main():

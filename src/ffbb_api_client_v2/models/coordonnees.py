@@ -1,24 +1,22 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ..utils.converter_utils import from_list, from_str
 
 
+@dataclass
 class Coordonnees:
     type: str | None = None
     coordinates: list[float] | None = None
-
-    def __init__(self, type: str | None, coordinates: list[float] | None):
-        self.type = type
-        self.coordinates = coordinates
 
     @staticmethod
     def from_dict(obj: Any) -> Coordonnees:
         assert isinstance(obj, dict)
         type = from_str(obj, "type")
         coordinates = from_list(float, obj, "coordinates")
-        return Coordonnees(type, coordinates)
+        return Coordonnees(type=type, coordinates=coordinates)
 
     def to_dict(self) -> dict:
         result: dict = {}

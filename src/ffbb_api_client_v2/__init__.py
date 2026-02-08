@@ -11,49 +11,35 @@ from .clients.meilisearch_client import MeilisearchClient
 from .clients.meilisearch_ffbb_client import MeilisearchFFBBClient
 from .helpers.meilisearch_client_extension import MeilisearchClientExtension
 from .helpers.multi_search_query_helper import generate_queries
+from .models.competitions_facet_distribution import CompetitionsFacetDistribution
+from .models.competitions_facet_stats import CompetitionsFacetStats
+from .models.competitions_hit import CompetitionsHit
 from .models.multi_search_query import MultiSearchQuery
-from .models.multi_search_result_competitions import (
-    CompetitionsFacetDistribution,
-    CompetitionsFacetStats,
-    CompetitionsHit,
-    CompetitionsMultiSearchResult,
-)
-from .models.multi_search_result_organismes import (
-    OrganismesFacetDistribution,
-    OrganismesFacetStats,
-    OrganismesHit,
-    OrganismesMultiSearchResult,
-)
-from .models.multi_search_result_pratiques import (
-    PratiquesFacetDistribution,
-    PratiquesFacetStats,
-    PratiquesHit,
-    PratiquesMultiSearchResult,
-)
-from .models.multi_search_result_rencontres import (
-    RencontresFacetDistribution,
-    RencontresFacetStats,
-    RencontresHit,
-    RencontresMultiSearchResult,
-)
-from .models.multi_search_result_salles import (
-    SallesFacetDistribution,
-    SallesFacetStats,
-    SallesHit,
-    SallesMultiSearchResult,
-)
-from .models.multi_search_result_terrains import (
-    TerrainsFacetDistribution,
-    TerrainsFacetStats,
-    TerrainsHit,
-    TerrainsMultiSearchResult,
-)
-from .models.multi_search_result_tournois import (
-    TournoisFacetDistribution,
-    TournoisFacetStats,
-    TournoisHit,
-    TournoisMultiSearchResult,
-)
+from .models.multi_search_result_competitions import CompetitionsMultiSearchResult
+from .models.multi_search_result_organismes import OrganismesMultiSearchResult
+from .models.multi_search_result_pratiques import PratiquesMultiSearchResult
+from .models.multi_search_result_rencontres import RencontresMultiSearchResult
+from .models.multi_search_result_salles import SallesMultiSearchResult
+from .models.multi_search_result_terrains import TerrainsMultiSearchResult
+from .models.multi_search_result_tournois import TournoisMultiSearchResult
+from .models.organismes_facet_distribution import OrganismesFacetDistribution
+from .models.organismes_facet_stats import OrganismesFacetStats
+from .models.organismes_hit import OrganismesHit
+from .models.pratiques_facet_distribution import PratiquesFacetDistribution
+from .models.pratiques_facet_stats import PratiquesFacetStats
+from .models.pratiques_hit import PratiquesHit
+from .models.rencontres_facet_distribution import RencontresFacetDistribution
+from .models.rencontres_facet_stats import RencontresFacetStats
+from .models.rencontres_hit import RencontresHit
+from .models.salles_facet_distribution import SallesFacetDistribution
+from .models.salles_facet_stats import SallesFacetStats
+from .models.salles_hit import SallesHit
+from .models.terrains_facet_distribution import TerrainsFacetDistribution
+from .models.terrains_facet_stats import TerrainsFacetStats
+from .models.terrains_hit import TerrainsHit
+from .models.tournois_facet_distribution import TournoisFacetDistribution
+from .models.tournois_facet_stats import TournoisFacetStats
+from .models.tournois_hit import TournoisHit
 from .utils.token_manager import FFBBTokens, TokenManager
 
 # Public API exports

@@ -14,18 +14,6 @@ class TeamEngagement:
     code_abrege: str | None = None
     logo: Logo | None = None
 
-    def __init__(
-        self,
-        nom_officiel: str | None,
-        nom_usuel: str | None,
-        code_abrege: str | None,
-        logo: Logo | None,
-    ) -> None:
-        self.nom_officiel = nom_officiel
-        self.nom_usuel = nom_usuel
-        self.code_abrege = code_abrege
-        self.logo = logo
-
     @staticmethod
     def from_dict(obj: Any) -> TeamEngagement:
         """
@@ -42,7 +30,12 @@ class TeamEngagement:
         nom_usuel = from_str(obj, "nomUsuel")
         code_abrege = from_str(obj, "codeAbrege")
         logo = from_obj(Logo.from_dict, obj, "logo")
-        return TeamEngagement(nom_officiel, nom_usuel, code_abrege, logo)
+        return TeamEngagement(
+            nom_officiel=nom_officiel,
+            nom_usuel=nom_usuel,
+            code_abrege=code_abrege,
+            logo=logo,
+        )
 
     def to_dict(self) -> dict:
         """

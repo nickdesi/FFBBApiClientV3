@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 from uuid import UUID
 
@@ -9,20 +10,11 @@ from ..utils.converter_utils import (
 )
 
 
+@dataclass
 class Folder:
     id: UUID | None = None
     name: str | None = None
     parent: str | None = None
-
-    def __init__(
-        self,
-        id: UUID | None = None,
-        name: str | None = None,
-        parent: str | None = None,
-    ) -> None:
-        self.id = id
-        self.name = name
-        self.parent = parent
 
     @staticmethod
     def from_dict(obj: Any) -> Folder:
@@ -30,7 +22,7 @@ class Folder:
         id = from_uuid(obj, "id")
         name = from_str(obj, "name")
         parent = from_str(obj, "parent")
-        return Folder(id, name, parent)
+        return Folder(id=id, name=name, parent=parent)
 
     def to_dict(self) -> dict:
         result: dict = {}

@@ -6,15 +6,7 @@ from requests_cache import CachedSession
 
 from ..config import MEILISEARCH_BASE_URL
 from ..helpers.meilisearch_client_extension import MeilisearchClientExtension
-from ..models.multi_search_query import (
-    CompetitionsMultiSearchQuery,
-    OrganismesMultiSearchQuery,
-    PratiquesMultiSearchQuery,
-    RencontresMultiSearchQuery,
-    SallesMultiSearchQuery,
-    TerrainsMultiSearchQuery,
-    TournoisMultiSearchQuery,
-)
+from ..models.competitions_multi_search_query import CompetitionsMultiSearchQuery
 from ..models.multi_search_result_competitions import CompetitionsMultiSearchResult
 from ..models.multi_search_result_organismes import OrganismesMultiSearchResult
 from ..models.multi_search_result_pratiques import PratiquesMultiSearchResult
@@ -22,6 +14,12 @@ from ..models.multi_search_result_rencontres import RencontresMultiSearchResult
 from ..models.multi_search_result_salles import SallesMultiSearchResult
 from ..models.multi_search_result_terrains import TerrainsMultiSearchResult
 from ..models.multi_search_result_tournois import TournoisMultiSearchResult
+from ..models.organismes_multi_search_query import OrganismesMultiSearchQuery
+from ..models.pratiques_multi_search_query import PratiquesMultiSearchQuery
+from ..models.rencontres_multi_search_query import RencontresMultiSearchQuery
+from ..models.salles_multi_search_query import SallesMultiSearchQuery
+from ..models.terrains_multi_search_query import TerrainsMultiSearchQuery
+from ..models.tournois_multi_search_query import TournoisMultiSearchQuery
 
 
 class MeilisearchFFBBClient(MeilisearchClientExtension):

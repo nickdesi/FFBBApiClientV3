@@ -7,8 +7,8 @@ from ffbb_api_client_v2 import (
     OrganismesHit,
     OrganismesMultiSearchResult,
 )
-from ffbb_api_client_v2.models.competitions_models import GetCompetitionResponse
-from ffbb_api_client_v2.models.organismes_models import GetOrganismeResponse
+from ffbb_api_client_v2.models.get_competition_response import GetCompetitionResponse
+from ffbb_api_client_v2.models.get_organisme_response import GetOrganismeResponse
 
 
 class Test005UserJourneyIntegration(unittest.TestCase):

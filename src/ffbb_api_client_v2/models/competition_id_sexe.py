@@ -1,21 +1,16 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ..utils.converter_utils import from_int
 
 
+@dataclass
 class CompetitionIDSexe:
     feminine: int | None = None
     masculine: int | None = None
     mixed: int | None = None
-
-    def __init__(
-        self, feminine: int | None, masculine: int | None, mixed: int | None
-    ) -> None:
-        self.feminine = feminine
-        self.masculine = masculine
-        self.mixed = mixed
 
     @staticmethod
     def from_dict(obj: Any) -> CompetitionIDSexe:
@@ -23,7 +18,7 @@ class CompetitionIDSexe:
         feminine = from_int(obj, "Féminin")
         masculine = from_int(obj, "Masculin")
         mixed = from_int(obj, "Mixte")
-        return CompetitionIDSexe(feminine, masculine, mixed)
+        return CompetitionIDSexe(feminine=feminine, masculine=masculine, mixed=mixed)
 
     def to_dict(self) -> dict:
         result: dict = {}

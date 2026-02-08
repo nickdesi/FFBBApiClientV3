@@ -26,8 +26,8 @@ from typing import Optional, Union
 from dotenv import load_dotenv
 
 from ffbb_api_client_v2 import FFBBAPIClientV2
+from ffbb_api_client_v2.models.get_organisme_response import GetOrganismeResponse
 from ffbb_api_client_v2.models.niveau_models import NiveauType
-from ffbb_api_client_v2.models.organismes_models import GetOrganismeResponse
 from ffbb_api_client_v2.models.poules_models import GetPouleResponse
 from ffbb_api_client_v2.models.rankings_models import TeamRanking
 

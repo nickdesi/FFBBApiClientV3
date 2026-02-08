@@ -1,21 +1,16 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ..utils.converter_utils import from_int, from_str
 
 
+@dataclass
 class CompetitionIDCategorie:
     code: str | None = None
     libelle: str | None = None
     ordre: int | None = None
-
-    def __init__(
-        self, code: str | None, libelle: str | None, ordre: int | None
-    ) -> None:
-        self.code = code
-        self.libelle = libelle
-        self.ordre = ordre
 
     @staticmethod
     def from_dict(obj: Any) -> CompetitionIDCategorie:
@@ -23,7 +18,7 @@ class CompetitionIDCategorie:
         code = from_str(obj, "code")
         libelle = from_str(obj, "libelle")
         ordre = from_int(obj, "ordre")
-        return CompetitionIDCategorie(code, libelle, ordre)
+        return CompetitionIDCategorie(code=code, libelle=libelle, ordre=ordre)
 
     def to_dict(self) -> dict:
         result: dict = {}

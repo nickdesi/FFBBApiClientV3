@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
@@ -13,6 +14,7 @@ from ..utils.converter_utils import (
 from .coordonnees import Coordonnees
 
 
+@dataclass
 class Cartographie:
     adresse: str | None = None
     code_postal: int | None = None
@@ -25,32 +27,6 @@ class Cartographie:
     title: str | None = None
     ville: str | None = None
     status: str | None = None
-
-    def __init__(
-        self,
-        adresse: str | None,
-        code_postal: int | None,
-        coordonnees: Coordonnees | None,
-        date_created: datetime | None,
-        date_updated: datetime | None,
-        id: str | None,
-        latitude: float | None,
-        longitude: float | None,
-        title: str | None,
-        ville: str | None,
-        status: str | None,
-    ):
-        self.adresse = adresse
-        self.code_postal = code_postal
-        self.coordonnees = coordonnees
-        self.date_created = date_created
-        self.date_updated = date_updated
-        self.cartographie_id = id
-        self.latitude = latitude
-        self.longitude = longitude
-        self.title = title
-        self.ville = ville
-        self.status = status
 
     @staticmethod
     def from_dict(obj: Any) -> Cartographie:
@@ -67,17 +43,17 @@ class Cartographie:
         ville = from_str(obj, "ville")
         status = from_str(obj, "status")
         return Cartographie(
-            adresse,
-            code_postal,
-            coordonnees,
-            date_created,
-            date_updated,
-            cartographie_id,
-            latitude,
-            longitude,
-            title,
-            ville,
-            status,
+            adresse=adresse,
+            code_postal=code_postal,
+            coordonnees=coordonnees,
+            date_created=date_created,
+            date_updated=date_updated,
+            cartographie_id=cartographie_id,
+            latitude=latitude,
+            longitude=longitude,
+            title=title,
+            ville=ville,
+            status=status,
         )
 
     def to_dict(self) -> dict:

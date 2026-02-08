@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 from uuid import UUID
@@ -20,6 +21,7 @@ from .folder import Folder
 from .source import Source
 
 
+@dataclass
 class DocumentFlyer:
     id: UUID | None = None
     storage: str | None = None
@@ -55,78 +57,6 @@ class DocumentFlyer:
     uploaded_by: UUID | None = None
     modified_by: UUID | None = None
     newsbridge_mission: str | None = None
-
-    def __init__(
-        self,
-        id: UUID | None = None,
-        storage: str | None = None,
-        filename_disk: str | None = None,
-        filename_download: str | None = None,
-        title: str | None = None,
-        type: DocumentFlyerType | None = None,
-        uploaded_on: datetime | None = None,
-        modified_on: datetime | None = None,
-        charset: str | None = None,
-        filesize: int | None = None,
-        width: int | None = None,
-        height: int | None = None,
-        duration: int | None = None,
-        embed: str | None = None,
-        description: str | None = None,
-        location: str | None = None,
-        tags: str | None = None,
-        metadata: FacetStats | None = None,
-        source: Source | None = None,
-        credits: str | None = None,
-        gradient_color: str | None = None,
-        md5: str | None = None,
-        newsbridge_media_id: str | None = None,
-        newsbridge_metadatas: str | None = None,
-        newsbridge_name: str | None = None,
-        newsbridge_recorded_at: datetime | None = None,
-        focal_point_x: float | None = None,
-        focal_point_y: float | None = None,
-        newsbridge_labels: list[Any] | None = None,
-        newsbridge_persons: list[Any] | None = None,
-        folder: Folder | None = None,
-        uploaded_by: UUID | None = None,
-        modified_by: UUID | None = None,
-        newsbridge_mission: str | None = None,
-    ) -> None:
-        self.id = id
-        self.storage = storage
-        self.filename_disk = filename_disk
-        self.filename_download = filename_download
-        self.title = title
-        self.type = type
-        self.uploaded_on = uploaded_on
-        self.modified_on = modified_on
-        self.charset = charset
-        self.filesize = filesize
-        self.width = width
-        self.height = height
-        self.duration = duration
-        self.embed = embed
-        self.description = description
-        self.location = location
-        self.tags = tags
-        self.metadata = metadata
-        self.source = source
-        self.credits = credits
-        self.gradient_color = gradient_color
-        self.md5 = md5
-        self.newsbridge_media_id = newsbridge_media_id
-        self.newsbridge_metadatas = newsbridge_metadatas
-        self.newsbridge_name = newsbridge_name
-        self.newsbridge_recorded_at = newsbridge_recorded_at
-        self.focal_point_x = focal_point_x
-        self.focal_point_y = focal_point_y
-        self.newsbridge_labels = newsbridge_labels
-        self.newsbridge_persons = newsbridge_persons
-        self.folder = folder
-        self.uploaded_by = uploaded_by
-        self.modified_by = modified_by
-        self.newsbridge_mission = newsbridge_mission
 
     @staticmethod
     def from_dict(obj: Any) -> DocumentFlyer:
@@ -166,40 +96,40 @@ class DocumentFlyer:
         modified_by = from_uuid(obj, "modified_by")
         newsbridge_mission = from_str(obj, "newsbridge_mission")
         return DocumentFlyer(
-            id,
-            storage,
-            filename_disk,
-            filename_download,
-            title,
-            type,
-            uploaded_on,
-            modified_on,
-            charset,
-            filesize,
-            width,
-            height,
-            duration,
-            embed,
-            description,
-            location,
-            tags,
-            metadata,
-            source,
-            credits,
-            gradient_color,
-            md5,
-            newsbridge_media_id,
-            newsbridge_metadatas,
-            newsbridge_name,
-            newsbridge_recorded_at,
-            focal_point_x,
-            focal_point_y,
-            newsbridge_labels,
-            newsbridge_persons,
-            folder,
-            uploaded_by,
-            modified_by,
-            newsbridge_mission,
+            id=id,
+            storage=storage,
+            filename_disk=filename_disk,
+            filename_download=filename_download,
+            title=title,
+            type=type,
+            uploaded_on=uploaded_on,
+            modified_on=modified_on,
+            charset=charset,
+            filesize=filesize,
+            width=width,
+            height=height,
+            duration=duration,
+            embed=embed,
+            description=description,
+            location=location,
+            tags=tags,
+            metadata=metadata,
+            source=source,
+            credits=credits,
+            gradient_color=gradient_color,
+            md5=md5,
+            newsbridge_media_id=newsbridge_media_id,
+            newsbridge_metadatas=newsbridge_metadatas,
+            newsbridge_name=newsbridge_name,
+            newsbridge_recorded_at=newsbridge_recorded_at,
+            focal_point_x=focal_point_x,
+            focal_point_y=focal_point_y,
+            newsbridge_labels=newsbridge_labels,
+            newsbridge_persons=newsbridge_persons,
+            folder=folder,
+            uploaded_by=uploaded_by,
+            modified_by=modified_by,
+            newsbridge_mission=newsbridge_mission,
         )
 
     def to_dict(self) -> dict:

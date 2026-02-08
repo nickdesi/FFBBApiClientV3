@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 from uuid import UUID
@@ -15,6 +16,7 @@ from ..utils.converter_utils import (
 from .organisme_id_pere import OrganismeIDPere
 
 
+@dataclass
 class Organisateur:
     adresse: str | None = None
     adresse_club_pro: str | None = None
@@ -49,76 +51,6 @@ class Organisateur:
     logo_base64: UUID | None = None
     competitions: list[str] | None = None
     organismes_fils: list[int] | None = None
-
-    def __init__(
-        self,
-        adresse: str | None,
-        adresse_club_pro: str | None,
-        cartographie: str | None,
-        code: str | None,
-        commune: str | None,
-        commune_club_pro: str | None,
-        id: str | None,
-        mail: str | None,
-        nom: str | None,
-        nom_club_pro: str | None,
-        organisme_id_pere: OrganismeIDPere | None,
-        salle: str | None,
-        telephone: str | None,
-        type: str | None,
-        type_association: str | None,
-        url_site_web: str | None,
-        logo: UUID | None,
-        nom_simple: str | None,
-        date_affiliation: datetime | None,
-        saison_en_cours: bool | None,
-        entreprise: bool | None,
-        handibasket: bool | None,
-        omnisport: bool | None,
-        hors_association: bool | None,
-        offres_pratiques: list[Any] | None,
-        engagements: list[Any] | None,
-        labellisation: list[Any] | None,
-        membres: list[int] | None,
-        date_created: datetime | None,
-        date_updated: datetime | None,
-        logo_base64: UUID | None,
-        competitions: list[str] | None,
-        organismes_fils: list[int] | None,
-    ) -> None:
-        self.adresse = adresse
-        self.adresse_club_pro = adresse_club_pro
-        self.cartographie = cartographie
-        self.code = code
-        self.commune = commune
-        self.commune_club_pro = commune_club_pro
-        self.id = id
-        self.mail = mail
-        self.nom = nom
-        self.nom_club_pro = nom_club_pro
-        self.organisme_id_pere = organisme_id_pere
-        self.salle = salle
-        self.telephone = telephone
-        self.type = type
-        self.type_association = type_association
-        self.url_site_web = url_site_web
-        self.logo = logo
-        self.nom_simple = nom_simple
-        self.date_affiliation = date_affiliation
-        self.saison_en_cours = saison_en_cours
-        self.entreprise = entreprise
-        self.handibasket = handibasket
-        self.omnisport = omnisport
-        self.hors_association = hors_association
-        self.offres_pratiques = offres_pratiques
-        self.engagements = engagements
-        self.labellisation = labellisation
-        self.membres = membres
-        self.date_created = date_created
-        self.date_updated = date_updated
-        self.logo_base64 = logo_base64
-        self.competitions = competitions
-        self.organismes_fils = organismes_fils
 
     @staticmethod
     def from_dict(obj: Any) -> Organisateur:
@@ -159,39 +91,39 @@ class Organisateur:
         competitions = from_list(str, obj, "competitions")
         organismes_fils = from_list(int, obj, "organismes_fils")
         return Organisateur(
-            adresse,
-            adresse_club_pro,
-            cartographie,
-            code,
-            commune,
-            commune_club_pro,
-            id,
-            mail,
-            nom,
-            nom_club_pro,
-            organisme_id_pere,
-            salle,
-            telephone,
-            type,
-            type_association,
-            url_site_web,
-            logo,
-            nom_simple,
-            date_affiliation,
-            saison_en_cours,
-            entreprise,
-            handibasket,
-            omnisport,
-            hors_association,
-            offres_pratiques,
-            engagements,
-            labellisation,
-            membres,
-            date_created,
-            date_updated,
-            logo_base64,
-            competitions,
-            organismes_fils,
+            adresse=adresse,
+            adresse_club_pro=adresse_club_pro,
+            cartographie=cartographie,
+            code=code,
+            commune=commune,
+            commune_club_pro=commune_club_pro,
+            id=id,
+            mail=mail,
+            nom=nom,
+            nom_club_pro=nom_club_pro,
+            organisme_id_pere=organisme_id_pere,
+            salle=salle,
+            telephone=telephone,
+            type=type,
+            type_association=type_association,
+            url_site_web=url_site_web,
+            logo=logo,
+            nom_simple=nom_simple,
+            date_affiliation=date_affiliation,
+            saison_en_cours=saison_en_cours,
+            entreprise=entreprise,
+            handibasket=handibasket,
+            omnisport=omnisport,
+            hors_association=hors_association,
+            offres_pratiques=offres_pratiques,
+            engagements=engagements,
+            labellisation=labellisation,
+            membres=membres,
+            date_created=date_created,
+            date_updated=date_updated,
+            logo_base64=logo_base64,
+            competitions=competitions,
+            organismes_fils=organismes_fils,
         )
 
     def to_dict(self) -> dict:

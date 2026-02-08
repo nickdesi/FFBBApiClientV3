@@ -1,21 +1,20 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ..utils.converter_utils import from_str
 
 
+@dataclass
 class Saison:
     code: str | None = None
-
-    def __init__(self, code: str | None) -> None:
-        self.code = code
 
     @staticmethod
     def from_dict(obj: Any) -> Saison:
         assert isinstance(obj, dict)
         code = from_str(obj, "code")
-        return Saison(code)
+        return Saison(code=code)
 
     def to_dict(self) -> dict:
         result: dict = {}

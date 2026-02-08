@@ -1,28 +1,20 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ..utils.converter_utils import (
     from_list,
     from_str,
 )
-from .multi_search_result_rencontres import Engagement
+from .rencontres_engagement import Engagement
 
 
+@dataclass
 class Poule:
     nom: str | None = None
     id: str | None = None
     engagements: list[Engagement] | None = None
-
-    def __init__(
-        self,
-        nom: str | None,
-        id: str | None,
-        engagements: list[Engagement] | None,
-    ):
-        self.nom = nom
-        self.id = id
-        self.engagements = engagements
 
     @staticmethod
     def from_dict(obj: Any) -> Poule:
@@ -30,7 +22,7 @@ class Poule:
         nom = from_str(obj, "nom")
         id = from_str(obj, "id")
         engagements = from_list(Engagement.from_dict, obj, "engagements")
-        return Poule(nom, id, engagements)
+        return Poule(nom=nom, id=id, engagements=engagements)
 
     def to_dict(self) -> dict:
         result: dict = {}

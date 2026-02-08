@@ -26,35 +26,30 @@ from ffbb_api_client_v2.config import (
     MEILISEARCH_BASE_URL,
     MEILISEARCH_ENDPOINT_MULTI_SEARCH,
 )
-from ffbb_api_client_v2.models.competitions_models import GetCompetitionResponse
 from ffbb_api_client_v2.models.configuration_models import GetConfigurationResponse
 from ffbb_api_client_v2.models.game_stats_models import GameStatsModel
+from ffbb_api_client_v2.models.get_competition_response import GetCompetitionResponse
+from ffbb_api_client_v2.models.get_organisme_response import GetOrganismeResponse
 from ffbb_api_client_v2.models.lives import Clock, Live, lives_from_dict
 from ffbb_api_client_v2.models.multi_search_result_competitions import (
     CompetitionsMultiSearchResult,
 )
 from ffbb_api_client_v2.models.multi_search_result_organismes import (
-    OrganismesFacetDistribution,
     OrganismesMultiSearchResult,
 )
 from ffbb_api_client_v2.models.multi_search_result_pratiques import (
-    PratiquesFacetDistribution,
     PratiquesMultiSearchResult,
 )
 from ffbb_api_client_v2.models.multi_search_result_rencontres import (
-    RencontresFacetDistribution,
     RencontresMultiSearchResult,
 )
 from ffbb_api_client_v2.models.multi_search_result_salles import (
-    SallesFacetDistribution,
     SallesMultiSearchResult,
 )
 from ffbb_api_client_v2.models.multi_search_result_terrains import (
-    TerrainsFacetDistribution,
     TerrainsMultiSearchResult,
 )
 from ffbb_api_client_v2.models.multi_search_result_tournois import (
-    TournoisFacetDistribution,
     TournoisMultiSearchResult,
 )
 from ffbb_api_client_v2.models.multi_search_results_class import (
@@ -67,10 +62,27 @@ from ffbb_api_client_v2.models.niveau_models import (
     NiveauInfo,
     NiveauType,
 )
-from ffbb_api_client_v2.models.organismes_models import GetOrganismeResponse
+from ffbb_api_client_v2.models.organismes_facet_distribution import (
+    OrganismesFacetDistribution,
+)
 from ffbb_api_client_v2.models.poules_models import GetPouleResponse
+from ffbb_api_client_v2.models.pratiques_facet_distribution import (
+    PratiquesFacetDistribution,
+)
 from ffbb_api_client_v2.models.rankings_models import RankingEngagement, TeamRanking
+from ffbb_api_client_v2.models.rencontres_facet_distribution import (
+    RencontresFacetDistribution,
+)
 from ffbb_api_client_v2.models.saisons_models import GetSaisonsResponse
+from ffbb_api_client_v2.models.salles_facet_distribution import (
+    SallesFacetDistribution,
+)
+from ffbb_api_client_v2.models.terrains_facet_distribution import (
+    TerrainsFacetDistribution,
+)
+from ffbb_api_client_v2.models.tournois_facet_distribution import (
+    TournoisFacetDistribution,
+)
 
 # ---------------------------------------------------------------------------
 # Section A: Integration tests - API REST (api.ffbb.app)

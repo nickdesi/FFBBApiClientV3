@@ -16,15 +16,13 @@ from ..config import (
 )
 from ..helpers.http_requests_helper import catch_result
 from ..helpers.http_requests_utils import http_get_json, url_with_params
-from ..models.competitions_models import GetCompetitionResponse
 from ..models.configuration_models import GetConfigurationResponse
+from ..models.field_set import FieldSet
+from ..models.get_competition_response import GetCompetitionResponse
+from ..models.get_organisme_response import GetOrganismeResponse
 from ..models.lives import Live, lives_from_dict
-from ..models.organismes_models import GetOrganismeResponse
 from ..models.poules_models import GetPouleResponse
-from ..models.query_fields import (
-    FieldSet,
-    QueryFieldsManager,
-)
+from ..models.query_fields_manager import QueryFieldsManager
 from ..models.saisons_models import GetSaisonsResponse
 from ..utils.cache_manager import CacheConfig, CacheManager
 from ..utils.retry_utils import (

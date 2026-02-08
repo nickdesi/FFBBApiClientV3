@@ -4,19 +4,9 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
-from .game_stats_models import GameStatsModel
+from .game_stats_model import GameStatsModel
 
 
-# Query Parameters Model
-@dataclass
-class CompetitionsQuery:
-    deep_phases_poules_rencontres__limit: str | None = (
-        "1000"  # Original: deep[phases][poules][rencontres][_limit]
-    )
-    fields_: list[str] | None = field(default=None)  # Original: fields[]
-
-
-# Response Model
 @dataclass
 class GetCompetitionResponse:
     id: str

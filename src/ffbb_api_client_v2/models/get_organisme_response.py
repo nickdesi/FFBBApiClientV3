@@ -7,13 +7,6 @@ from typing import Any
 from .niveau_models import NiveauInfo, get_niveau_from_idcompetition
 
 
-# Query Parameters Model
-@dataclass
-class OrganismesQuery:
-    fields_: list[str] | None = field(default=None)  # Original: fields[]
-
-
-# Response Model
 @dataclass
 class GetOrganismeResponse:
     id: str
@@ -116,7 +109,7 @@ class GetOrganismeResponse:
 
             @property
             def niveau(self) -> NiveauInfo | None:
-                """Extrait automatiquement le niveau depuis le nom de la compétition."""
+                """Extrait automatiquement le niveau depuis le nom de la competition."""
                 return get_niveau_from_idcompetition(self)
 
         idCompetition: IdcompetitionModel | None = None

@@ -31,7 +31,7 @@ class TestCategorieToDictCoverage:
             code="U13",
             date_created=now,
             date_updated=now,
-            id="cat-1",
+            categorie_id="cat-1",
             libelle="Under 13",
             ordre=3,
         )
@@ -58,7 +58,7 @@ class TestCartographieToDictCoverage:
             coordonnees=coords,
             date_created=None,
             date_updated=None,
-            id="carto-1",
+            cartographie_id="carto-1",
             latitude=48.85,
             longitude=2.35,
             title="Salle A",
@@ -107,8 +107,8 @@ class TestPouleToDictCoverage:
     """poule.py — cover to_dict engagements branch."""
 
     def test_to_dict_with_engagements(self):
-        from ffbb_api_client_v2.models.multi_search_result_rencontres import Engagement
         from ffbb_api_client_v2.models.poule import Poule
+        from ffbb_api_client_v2.models.rencontres_engagement import Engagement
 
         eng = Engagement.from_dict({"nomEquipe": "Team A"})
         p = Poule(nom="Poule A", id="p-1", engagements=[eng])
@@ -145,9 +145,9 @@ class TestExternalIDToDictCoverage:
     """external_id.py — cover to_dict branches for CompetitionID and ExternalID."""
 
     def test_competition_id_to_dict(self):
-        from ffbb_api_client_v2.models.external_id import CompetitionID
+        from ffbb_api_client_v2.models.external_id import ExternalCompetitionID
 
-        c = CompetitionID(
+        c = ExternalCompetitionID(
             code="NM1",
             nom="Nationale 1",
             sexe="Masculin",
@@ -160,12 +160,15 @@ class TestExternalIDToDictCoverage:
         assert d["typeCompetition"] == "Championnat"
 
     def test_external_id_to_dict_all_fields(self):
-        from ffbb_api_client_v2.models.external_id import CompetitionID, ExternalID
+        from ffbb_api_client_v2.models.external_id import (
+            ExternalCompetitionID,
+            ExternalID,
+        )
         from ffbb_api_client_v2.models.id_organisme_equipe import IDOrganismeEquipe
         from ffbb_api_client_v2.models.id_poule import IDPoule
         from ffbb_api_client_v2.models.salle import Salle
 
-        comp = CompetitionID(
+        comp = ExternalCompetitionID(
             code="NM1", nom="Nationale 1", sexe="M", type_competition="Champ"
         )
         org1 = IDOrganismeEquipe(
@@ -262,7 +265,7 @@ class TestTournoisToDictCoverage:
     """multi_search_result_tournois.py — cover SexeClass and TournoisFacetDistribution to_dict."""
 
     def test_sexe_class_to_dict(self):
-        from ffbb_api_client_v2.models.multi_search_result_tournois import SexeClass
+        from ffbb_api_client_v2.models.sexe_class import SexeClass
 
         s = SexeClass(feminine=3, masculine=5, mixed=2)
         d = s.to_dict()
@@ -271,11 +274,11 @@ class TestTournoisToDictCoverage:
         assert d["Mixte"] == 2
 
     def test_tournois_facet_distribution_to_dict(self):
-        from ffbb_api_client_v2.models.multi_search_result_tournois import (
-            SexeClass,
+        from ffbb_api_client_v2.models.sexe_class import SexeClass
+        from ffbb_api_client_v2.models.tournoi_type_class import TournoiTypeClass
+        from ffbb_api_client_v2.models.tournois_facet_distribution import (
             TournoisFacetDistribution,
         )
-        from ffbb_api_client_v2.models.tournoi_type_class import TournoiTypeClass
 
         sexe = SexeClass(feminine=1, masculine=2, mixed=0)
         tt = TournoiTypeClass.from_dict({"Terrain": 3})
@@ -290,11 +293,9 @@ class TestTournoisToDictCoverage:
         from ffbb_api_client_v2.models.cartographie import Cartographie
         from ffbb_api_client_v2.models.commune import Commune
         from ffbb_api_client_v2.models.geo import Geo
-        from ffbb_api_client_v2.models.multi_search_result_tournois import (
-            HitType,
-            TournoisHit,
-        )
         from ffbb_api_client_v2.models.nature_sol import NatureSol
+        from ffbb_api_client_v2.models.tournois_hit import TournoisHit
+        from ffbb_api_client_v2.models.tournois_hit_type import HitType
 
         now = datetime(2024, 6, 1, 12, 0, 0)
         commune = Commune.from_dict({"libelle": "Paris", "departement": "75"})
@@ -315,7 +316,7 @@ class TestTournoisToDictCoverage:
                 coordonnees=None,
                 date_created=None,
                 date_updated=None,
-                id="c1",
+                cartographie_id="c1",
                 latitude=48.85,
                 longitude=2.35,
                 title="T",
@@ -489,11 +490,15 @@ class TestMultiSearchResultsToDictCoverage:
 
     def test_multi_search_result_to_dict_all_fields(self):
         from ffbb_api_client_v2.models.multi_search_result_organismes import (
-            OrganismesFacetDistribution,
-            OrganismesFacetStats,
-            OrganismesHit,
             OrganismesMultiSearchResult,
         )
+        from ffbb_api_client_v2.models.organismes_facet_distribution import (
+            OrganismesFacetDistribution,
+        )
+        from ffbb_api_client_v2.models.organismes_facet_stats import (
+            OrganismesFacetStats,
+        )
+        from ffbb_api_client_v2.models.organismes_hit import OrganismesHit
 
         hit = OrganismesHit.from_dict({"nom": "Club A", "code": "CL01"})
         fd = OrganismesFacetDistribution.from_dict({})
@@ -976,9 +981,7 @@ class TestMultiSearchResultRencontresToDictCoverage:
     """multi_search_result_rencontres.py — cover to_dict branches."""
 
     def test_rencontres_hit_to_dict_all_fields(self):
-        from ffbb_api_client_v2.models.multi_search_result_rencontres import (
-            RencontresHit,
-        )
+        from ffbb_api_client_v2.models.rencontres_hit import RencontresHit
 
         data = {
             "niveau": "Départemental",

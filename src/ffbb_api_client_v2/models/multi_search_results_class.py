@@ -1,7 +1,18 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any, Callable
 
+from ..config import (
+    MEILISEARCH_INDEX_COMPETITIONS,
+    MEILISEARCH_INDEX_ORGANISMES,
+    MEILISEARCH_INDEX_PRATIQUES,
+    MEILISEARCH_INDEX_RENCONTRES,
+    MEILISEARCH_INDEX_SALLES,
+    MEILISEARCH_INDEX_TERRAINS,
+    MEILISEARCH_INDEX_TOURNOIS,
+    MEILISEARCH_INDEX_UIDS,
+)
 from .multi_search_result_competitions import CompetitionsMultiSearchResult
 from .multi_search_result_organismes import OrganismesMultiSearchResult
 from .multi_search_result_pratiques import PratiquesMultiSearchResult
@@ -11,24 +22,17 @@ from .multi_search_result_terrains import TerrainsMultiSearchResult
 from .multi_search_result_tournois import TournoisMultiSearchResult
 from .multi_search_results import MultiSearchResult
 
-index_uids = [
-    "ffbbserver_organismes",
-    "ffbbserver_rencontres",
-    "ffbbserver_terrains",
-    "ffbbserver_salles",
-    "ffbbserver_tournois",
-    "ffbbserver_competitions",
-    "ffbbnational_pratiques",
-]
+# Re-export for backward compatibility
+index_uids = MEILISEARCH_INDEX_UIDS
 
 index_uids_converters: dict[str, Callable[[Any], MultiSearchResult[Any, Any, Any]]] = {
-    index_uids[0]: OrganismesMultiSearchResult.from_dict,
-    index_uids[1]: RencontresMultiSearchResult.from_dict,
-    index_uids[2]: TerrainsMultiSearchResult.from_dict,
-    index_uids[3]: SallesMultiSearchResult.from_dict,
-    index_uids[4]: TournoisMultiSearchResult.from_dict,
-    index_uids[5]: CompetitionsMultiSearchResult.from_dict,
-    index_uids[6]: PratiquesMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_ORGANISMES: OrganismesMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_RENCONTRES: RencontresMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_TERRAINS: TerrainsMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_SALLES: SallesMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_TOURNOIS: TournoisMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_COMPETITIONS: CompetitionsMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_PRATIQUES: PratiquesMultiSearchResult.from_dict,
 }
 
 
@@ -49,18 +53,16 @@ def result_from_list(s: list[Any]) -> list[MultiSearchResult[Any, Any, Any]]:
     return results
 
 
+@dataclass
 class MultiSearchResults:
     results: list[MultiSearchResult[Any, Any, Any]] | None = None
-
-    def __init__(self, results: list[MultiSearchResult[Any, Any, Any]] | None) -> None:
-        self.results = results
 
     @staticmethod
     def from_dict(obj: Any) -> MultiSearchResults:
         assert isinstance(obj, dict)
         results_raw = obj.get("results")
         results = result_from_list(results_raw) if results_raw is not None else None
-        return MultiSearchResults(results)
+        return MultiSearchResults(results=results)
 
     def to_dict(self) -> dict:
         result: dict = {}

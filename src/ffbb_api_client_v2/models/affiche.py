@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 from uuid import UUID
 
@@ -10,23 +11,12 @@ from ..utils.converter_utils import (
 )
 
 
+@dataclass
 class Affiche:
     affiche_id: UUID | None = None
     gradient_color: str | None = None
     width: int | None = None
     height: int | None = None
-
-    def __init__(
-        self,
-        affiche_id: UUID | None = None,
-        gradient_color: str | None = None,
-        width: int | None = None,
-        height: int | None = None,
-    ) -> None:
-        self.affiche_id = affiche_id
-        self.gradient_color = gradient_color
-        self.width = width
-        self.height = height
 
     @staticmethod
     def from_dict(obj: Any) -> Affiche:
@@ -35,7 +25,12 @@ class Affiche:
         gradient_color = from_str(obj, "gradient_color")
         width = from_int(obj, "width")
         height = from_int(obj, "height")
-        return Affiche(affiche_id, gradient_color, width, height)
+        return Affiche(
+            affiche_id=affiche_id,
+            gradient_color=gradient_color,
+            width=width,
+            height=height,
+        )
 
     def to_dict(self) -> dict:
         result: dict = {}

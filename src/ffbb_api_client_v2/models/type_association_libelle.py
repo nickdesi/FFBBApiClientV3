@@ -1,26 +1,25 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ..utils.converter_utils import from_int
 
 
+@dataclass
 class TypeAssociationLibelle:
     club: int | None = None
     coopération_territoriale_club: int | None = None
-
-    def __init__(
-        self, club: int | None, coopération_territoriale_club: int | None
-    ) -> None:
-        self.club = club
-        self.coopération_territoriale_club = coopération_territoriale_club
 
     @staticmethod
     def from_dict(obj: Any) -> TypeAssociationLibelle:
         assert isinstance(obj, dict)
         club = from_int(obj, "Club")
         coopération_territoriale_club = from_int(obj, "Coopération Territoriale Club")
-        return TypeAssociationLibelle(club, coopération_territoriale_club)
+        return TypeAssociationLibelle(
+            club=club,
+            coopération_territoriale_club=coopération_territoriale_club,
+        )
 
     def to_dict(self) -> dict:
         result: dict = {}

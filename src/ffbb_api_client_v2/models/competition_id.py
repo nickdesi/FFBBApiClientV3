@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ..utils.converter_utils import (
@@ -15,6 +16,7 @@ from .competition_origine import CompetitionOrigine
 from .logo import Logo
 
 
+@dataclass
 class CompetitionID:
     id: str | None = None
     nom: str | None = None
@@ -31,40 +33,6 @@ class CompetitionID:
     type_competition_generique: CompetitionIDTypeCompetitionGenerique | None = None
     competition_origine: CompetitionOrigine | None = None
     nom_extended: str | None = None
-
-    def __init__(
-        self,
-        id: str | None,
-        nom: str | None,
-        competition_origine_nom: str | None,
-        code: str | None,
-        creation_en_cours: bool | None,
-        live_stat: bool | None,
-        publication_internet: str | None,
-        sexe: str | None,
-        type_competition: str | None,
-        pro: bool | None,
-        logo: Logo | None,
-        categorie: CompetitionIDCategorie | None,
-        type_competition_generique: CompetitionIDTypeCompetitionGenerique | None,
-        competition_origine: CompetitionOrigine | None,
-        nom_extended: str | None,
-    ) -> None:
-        self.id = id
-        self.nom = nom
-        self.competition_origine_nom = competition_origine_nom
-        self.code = code
-        self.creation_en_cours = creation_en_cours
-        self.live_stat = live_stat
-        self.publication_internet = publication_internet
-        self.sexe = sexe
-        self.type_competition = type_competition
-        self.pro = pro
-        self.logo = logo
-        self.categorie = categorie
-        self.type_competition_generique = type_competition_generique
-        self.competition_origine = competition_origine
-        self.nom_extended = nom_extended
 
     @staticmethod
     def from_dict(obj: Any) -> CompetitionID:
@@ -92,21 +60,21 @@ class CompetitionID:
             )
             nom_extended = from_str(obj, "nomExtended")
             return CompetitionID(
-                id,
-                nom,
-                competition_origine_nom,
-                code,
-                creation_en_cours,
-                live_stat,
-                publication_internet,
-                sexe,
-                type_competition,
-                pro,
-                logo,
-                categorie,
-                type_competition_generique,
-                competition_origine,
-                nom_extended,
+                id=id,
+                nom=nom,
+                competition_origine_nom=competition_origine_nom,
+                code=code,
+                creation_en_cours=creation_en_cours,
+                live_stat=live_stat,
+                publication_internet=publication_internet,
+                sexe=sexe,
+                type_competition=type_competition,
+                pro=pro,
+                logo=logo,
+                categorie=categorie,
+                type_competition_generique=type_competition_generique,
+                competition_origine=competition_origine,
+                nom_extended=nom_extended,
             )
         except Exception as e:
             raise ValueError("Invalid CompetitionID object") from e

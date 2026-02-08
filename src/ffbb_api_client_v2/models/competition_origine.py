@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ..utils.converter_utils import (
@@ -13,6 +14,7 @@ from .competition_origine_type_competition_generique import (
 )
 
 
+@dataclass
 class CompetitionOrigine:
     id: str | None = None
     code: str | None = None
@@ -20,22 +22,6 @@ class CompetitionOrigine:
     type_competition: CompetitionOrigineTypeCompetition | None = None
     categorie: CompetitionOrigineCategorie | None = None
     type_competition_generique: CompetitionOrigineTypeCompetitionGenerique | None = None
-
-    def __init__(
-        self,
-        id: str | None,
-        code: str | None,
-        nom: str | None,
-        type_competition: CompetitionOrigineTypeCompetition | None,
-        categorie: CompetitionOrigineCategorie | None,
-        type_competition_generique: None | (CompetitionOrigineTypeCompetitionGenerique),
-    ) -> None:
-        self.id = id
-        self.code = code
-        self.nom = nom
-        self.type_competition = type_competition
-        self.categorie = categorie
-        self.type_competition_generique = type_competition_generique
 
     @staticmethod
     def from_dict(obj: Any) -> CompetitionOrigine:
@@ -56,7 +42,12 @@ class CompetitionOrigine:
             "typeCompetitionGenerique",
         )
         return CompetitionOrigine(
-            id, code, nom, type_competition, categorie, type_competition_generique
+            id=id,
+            code=code,
+            nom=nom,
+            type_competition=type_competition,
+            categorie=categorie,
+            type_competition_generique=type_competition_generique,
         )
 
     def to_dict(self) -> dict:

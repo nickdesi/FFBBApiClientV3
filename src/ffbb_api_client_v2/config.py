@@ -21,3 +21,48 @@ ENDPOINT_ORGANISMES = "items/ffbbserver_organismes"
 
 # Meilisearch Endpoint Paths
 MEILISEARCH_ENDPOINT_MULTI_SEARCH = "multi-search"
+
+# Meilisearch Index UIDs
+MEILISEARCH_INDEX_ORGANISMES = "ffbbserver_organismes"
+MEILISEARCH_INDEX_RENCONTRES = "ffbbserver_rencontres"
+MEILISEARCH_INDEX_TERRAINS = "ffbbserver_terrains"
+MEILISEARCH_INDEX_SALLES = "ffbbserver_salles"
+MEILISEARCH_INDEX_TOURNOIS = "ffbbserver_tournois"
+MEILISEARCH_INDEX_COMPETITIONS = "ffbbserver_competitions"
+MEILISEARCH_INDEX_PRATIQUES = "ffbbnational_pratiques"
+
+MEILISEARCH_INDEX_UIDS = [
+    MEILISEARCH_INDEX_ORGANISMES,
+    MEILISEARCH_INDEX_RENCONTRES,
+    MEILISEARCH_INDEX_TERRAINS,
+    MEILISEARCH_INDEX_SALLES,
+    MEILISEARCH_INDEX_TOURNOIS,
+    MEILISEARCH_INDEX_COMPETITIONS,
+    MEILISEARCH_INDEX_PRATIQUES,
+]
+
+# Meilisearch Default Facets per Index
+MEILISEARCH_FACETS_ORGANISMES = [
+    "type_association.libelle",
+    "type",
+    "labellisation",
+    "offresPratiques",
+]
+MEILISEARCH_FACETS_RENCONTRES = [
+    "competitionId.categorie.code",
+    "competitionId.typeCompetition",
+    "niveau",
+    "competitionId.sexe",
+    "organisateur.nom",
+    "organisateur.id",
+    "competitionId.nomExtended",
+]
+MEILISEARCH_FACETS_TOURNOIS = [
+    "sexe",
+    "tournoiTypes3x3.libelle",
+    "tournoiType",
+]
+MEILISEARCH_FACETS_PRATIQUES = [
+    "label",
+    "type",
+]

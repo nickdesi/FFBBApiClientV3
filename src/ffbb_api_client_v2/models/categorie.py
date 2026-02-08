@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
@@ -10,6 +11,7 @@ from ..utils.converter_utils import (
 )
 
 
+@dataclass
 class Categorie:
     code: str | None = None
     date_created: datetime | None = None
@@ -17,22 +19,6 @@ class Categorie:
     categorie_id: str | None = None
     libelle: str | None = None
     ordre: int | None = None
-
-    def __init__(
-        self,
-        code: str | None = None,
-        date_created: datetime | None = None,
-        date_updated: datetime | None = None,
-        id: str | None = None,
-        libelle: str | None = None,
-        ordre: int | None = None,
-    ) -> None:
-        self.code = code
-        self.date_created = date_created
-        self.date_updated = date_updated
-        self.categorie_id = id
-        self.libelle = libelle
-        self.ordre = ordre
 
     @staticmethod
     def from_dict(obj: Any) -> Categorie:
@@ -43,7 +29,14 @@ class Categorie:
         categorie_id = from_str(obj, "id")
         libelle = from_str(obj, "libelle")
         ordre = from_int(obj, "ordre")
-        return Categorie(code, date_created, date_updated, categorie_id, libelle, ordre)
+        return Categorie(
+            code=code,
+            date_created=date_created,
+            date_updated=date_updated,
+            categorie_id=categorie_id,
+            libelle=libelle,
+            ordre=ordre,
+        )
 
     def to_dict(self) -> dict:
         result: dict = {}

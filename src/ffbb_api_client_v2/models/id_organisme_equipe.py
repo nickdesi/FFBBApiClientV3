@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ..utils.converter_utils import from_obj, from_str
 from .id_organisme_equipe1_logo import IDOrganismeEquipe1Logo
 
 
+@dataclass
 class IDOrganismeEquipe:
     id: str | None = None
     nom: str | None = None
@@ -13,22 +15,6 @@ class IDOrganismeEquipe:
     code: str | None = None
     nom_club_pro: str | None = None
     logo: IDOrganismeEquipe1Logo | None = None
-
-    def __init__(
-        self,
-        id: str | None,
-        nom: str | None,
-        nom_simple: str | None,
-        code: str | None,
-        nom_club_pro: str | None,
-        logo: IDOrganismeEquipe1Logo | None,
-    ) -> None:
-        self.id = id
-        self.nom = nom
-        self.nom_simple = nom_simple
-        self.code = code
-        self.nom_club_pro = nom_club_pro
-        self.logo = logo
 
     @staticmethod
     def from_dict(obj: Any) -> IDOrganismeEquipe:
@@ -39,7 +25,14 @@ class IDOrganismeEquipe:
         code = from_str(obj, "code")
         nom_club_pro = from_str(obj, "nomClubPro")
         logo = from_obj(IDOrganismeEquipe1Logo.from_dict, obj, "logo")
-        return IDOrganismeEquipe(id, nom, nom_simple, code, nom_club_pro, logo)
+        return IDOrganismeEquipe(
+            id=id,
+            nom=nom,
+            nom_simple=nom_simple,
+            code=code,
+            nom_club_pro=nom_club_pro,
+            logo=logo,
+        )
 
     def to_dict(self) -> dict:
         result: dict = {}

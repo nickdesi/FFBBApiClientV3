@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
@@ -11,9 +12,8 @@ from ..utils.converter_utils import (
 )
 from .code import Code
 
-# from .multi_search_result_tournois import Libelle
 
-
+@dataclass
 class NatureSol:
     code: Code | None = None
     date_created: datetime | None = None
@@ -21,22 +21,6 @@ class NatureSol:
     id: str | None = None
     libelle: str | None = None
     terrain: bool | None = None
-
-    def __init__(
-        self,
-        code: Code | None = None,
-        date_created: datetime | None = None,
-        date_updated: datetime | None = None,
-        id: str | None = None,
-        libelle: str | None = None,
-        terrain: bool | None = None,
-    ) -> None:
-        self.code = code
-        self.date_created = date_created
-        self.date_updated = date_updated
-        self.id = id
-        self.libelle = libelle
-        self.terrain = terrain
 
     @staticmethod
     def from_dict(obj: Any) -> NatureSol:
@@ -47,7 +31,14 @@ class NatureSol:
         id = from_str(obj, "id")
         libelle = from_str(obj, "libelle")
         terrain = from_bool(obj, "terrain")
-        return NatureSol(code, date_created, date_updated, id, libelle, terrain)
+        return NatureSol(
+            code=code,
+            date_created=date_created,
+            date_updated=date_updated,
+            id=id,
+            libelle=libelle,
+            terrain=terrain,
+        )
 
     def to_dict(self) -> dict:
         result: dict = {}

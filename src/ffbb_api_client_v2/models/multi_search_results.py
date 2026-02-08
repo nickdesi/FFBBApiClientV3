@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any, Generic, TypeVar, get_args
 
 from ..utils.converter_utils import (
@@ -16,6 +17,7 @@ FacetDistributionType = TypeVar("FacetDistributionType", bound=FacetDistribution
 FacetStatsType = TypeVar("FacetStatsType", bound=FacetStats)
 
 
+@dataclass
 class MultiSearchResult(Generic[HitType, FacetDistributionType, FacetStatsType]):
     index_uid: str | None = None
     hits: list[HitType] | None = None
@@ -26,28 +28,6 @@ class MultiSearchResult(Generic[HitType, FacetDistributionType, FacetStatsType])
     estimated_total_hits: int | None = None
     facet_distribution: FacetDistributionType | None = None
     facet_stats: FacetStatsType | None = None
-
-    def __init__(
-        self,
-        index_uid: str | None,
-        hits: list[HitType] | None,
-        query: str | None,
-        processing_time_ms: int | None,
-        limit: int | None,
-        offset: int | None,
-        estimated_total_hits: int | None,
-        facet_distribution: FacetDistributionType | None,
-        facet_stats: FacetStatsType | None,
-    ) -> None:
-        self.index_uid = index_uid
-        self.hits = hits
-        self.query = query
-        self.processing_time_ms = processing_time_ms
-        self.limit = limit
-        self.offset = offset
-        self.estimated_total_hits = estimated_total_hits
-        self.facet_distribution = facet_distribution
-        self.facet_stats = facet_stats
 
     @classmethod
     def from_dict(
@@ -89,15 +69,15 @@ class MultiSearchResult(Generic[HitType, FacetDistributionType, FacetStatsType])
             facet_stats_type.from_dict(fs_val) if isinstance(fs_val, dict) else None
         )
         return cls(
-            index_uid,
-            hits,  # type: ignore[arg-type]  # from_dict returns Hit base type
-            query,
-            processing_time_ms,
-            limit,
-            offset,
-            estimated_total_hits,
-            facet_distribution,  # type: ignore[arg-type]  # dynamic type from generics
-            facet_stats,  # type: ignore[arg-type]  # dynamic type from generics
+            index_uid=index_uid,
+            hits=hits,  # type: ignore[arg-type]  # from_dict returns Hit base type
+            query=query,
+            processing_time_ms=processing_time_ms,
+            limit=limit,
+            offset=offset,
+            estimated_total_hits=estimated_total_hits,
+            facet_distribution=facet_distribution,  # type: ignore[arg-type]  # dynamic type from generics
+            facet_stats=facet_stats,  # type: ignore[arg-type]  # dynamic type from generics
         )
 
     def to_dict(self) -> dict:

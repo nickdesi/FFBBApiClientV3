@@ -4,8 +4,10 @@
 from .affiche import Affiche
 from .cartographie import Cartographie
 from .categorie import Categorie
+from .clock import Clock
 from .code import Code
 from .commune import Commune
+from .competition_fields import CompetitionFields
 from .competition_id import CompetitionID
 from .competition_id_categorie import CompetitionIDCategorie
 from .competition_id_sexe import CompetitionIDSexe
@@ -20,19 +22,26 @@ from .competition_origine_type_competition_generique import (
     CompetitionOrigineTypeCompetitionGenerique,
 )
 from .competition_type import CompetitionType
-from .competitions_models import CompetitionsQuery, GetCompetitionResponse
-from .configuration_models import GetConfigurationResponse
+from .competitions_multi_search_query import CompetitionsMultiSearchQuery
+from .competitions_query import CompetitionsQuery
 from .coordonnees import Coordonnees
 from .coordonnees_type import CoordonneesType
 from .document_flyer import DocumentFlyer
 from .document_flyer_type import DocumentFlyerType
 from .etat import Etat
+from .external_competition_id import ExternalCompetitionID
 from .external_id import ExternalID
 from .facet_distribution import FacetDistribution
 from .facet_stats import FacetStats
+from .field_set import FieldSet
 from .folder import Folder
-from .game_stats_models import GameStatsModel
+from .game_stats_model import GameStatsModel
 from .geo import Geo
+from .get_competition_response import GetCompetitionResponse
+from .get_configuration_response import GetConfigurationResponse
+from .get_organisme_response import GetOrganismeResponse
+from .get_poule_response import GetPouleResponse
+from .get_saisons_response import GetSaisonsResponse
 from .gradient_color import GradientColor
 from .hit import Hit
 from .id_engagement_equipe import IDEngagementEquipe
@@ -42,19 +51,10 @@ from .id_poule import IDPoule
 from .jour import Jour
 from .label import Label
 from .labellisation import Labellisation
-from .lives import Clock, Live, lives_from_dict
+from .live import Live, lives_from_dict
 from .logo import Logo
 from .multi_search_queries import MultiSearchQueries
-from .multi_search_query import (
-    CompetitionsMultiSearchQuery,
-    MultiSearchQuery,
-    OrganismesMultiSearchQuery,
-    PratiquesMultiSearchQuery,
-    RencontresMultiSearchQuery,
-    SallesMultiSearchQuery,
-    TerrainsMultiSearchQuery,
-    TournoisMultiSearchQuery,
-)
+from .multi_search_query import MultiSearchQuery
 from .multi_search_result_competitions import CompetitionsMultiSearchResult
 from .multi_search_result_organismes import OrganismesMultiSearchResult
 from .multi_search_result_pratiques import PratiquesMultiSearchResult
@@ -70,32 +70,37 @@ from .niveau_class import NiveauClass
 from .objectif import Objectif
 from .organisateur import Organisateur
 from .organisateur_type import OrganisateurType
+from .organisme_fields import OrganismeFields
 from .organisme_id_pere import OrganismeIDPere
-from .organismes_models import GetOrganismeResponse, OrganismesQuery
+from .organismes_multi_search_query import OrganismesMultiSearchQuery
+from .organismes_query import OrganismesQuery
 from .phase_code import PhaseCode
 from .poule import Poule
-from .poules_models import GetPouleResponse, PoulesQuery
+from .poule_fields import PouleFields
+from .poules_query import PoulesQuery
 from .pratique import Pratique
+from .pratiques_multi_search_query import PratiquesMultiSearchQuery
+from .pratiques_type_class import PratiquesTypeClass
 from .publication_internet import PublicationInternet
 from .purple_logo import PurpleLogo
-from .query_fields import (
-    CompetitionFields,
-    FieldSet,
-    OrganismeFields,
-    PouleFields,
-    QueryFieldsManager,
-    SaisonFields,
-)
-from .rankings_models import RankingEngagement, TeamRanking
+from .query_fields_manager import QueryFieldsManager
+from .ranking_engagement import RankingEngagement
+from .rencontres_multi_search_query import RencontresMultiSearchQuery
 from .saison import Saison
-from .saisons_models import GetSaisonsResponse, SaisonsQuery
+from .saison_fields import SaisonFields
+from .saisons_query import SaisonsQuery
 from .salle import Salle
+from .salles_multi_search_query import SallesMultiSearchQuery
 from .sexe import Sexe
+from .sexe_class import SexeClass
 from .source import Source
 from .status import Status
 from .team_engagement import TeamEngagement
+from .team_ranking import TeamRanking
+from .terrains_multi_search_query import TerrainsMultiSearchQuery
 from .tournoi_type_class import TournoiTypeClass
 from .tournoi_type_enum import TournoiTypeEnum
+from .tournois_multi_search_query import TournoisMultiSearchQuery
 from .type_association import TypeAssociation
 from .type_association_libelle import TypeAssociationLibelle
 from .type_class import TypeClass
@@ -130,6 +135,7 @@ __all__ = [
     "DocumentFlyer",
     "DocumentFlyerType",
     "Etat",
+    "ExternalCompetitionID",
     "ExternalID",
     "FacetDistribution",
     "FacetStats",
@@ -204,6 +210,8 @@ __all__ = [
     "TypeCompetition",
     "TypeCompetitionGenerique",
     "TypeEnum",
+    "PratiquesTypeClass",
+    "SexeClass",
     "TypeLeague",
     # Functions
     "lives_from_dict",

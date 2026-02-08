@@ -1,24 +1,16 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
 from ..utils.converter_utils import from_int
 
 
+@dataclass
 class TournoiTypeClass:
     open_plus: int | None = None
     open_plus_access: int | None = None
     open_start: int | None = None
-
-    def __init__(
-        self,
-        open_plus: int | None = None,
-        open_plus_access: int | None = None,
-        open_start: int | None = None,
-    ):
-        self.open_plus = open_plus
-        self.open_plus_access = open_plus_access
-        self.open_start = open_start
 
     @staticmethod
     def from_dict(obj: Any) -> TournoiTypeClass:
@@ -26,7 +18,11 @@ class TournoiTypeClass:
         open_plus = from_int(obj, "Open Plus")
         open_plus_access = from_int(obj, "Open Plus Access")
         open_start = from_int(obj, "Open Start")
-        return TournoiTypeClass(open_plus, open_plus_access, open_start)
+        return TournoiTypeClass(
+            open_plus=open_plus,
+            open_plus_access=open_plus_access,
+            open_start=open_start,
+        )
 
     def to_dict(self) -> dict:
         result: dict = {}
