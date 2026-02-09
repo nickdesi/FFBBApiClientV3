@@ -4,7 +4,7 @@ import logging
 from collections.abc import Callable
 from datetime import datetime
 from enum import Enum
-from typing import Any, TypeVar, cast
+from typing import Any, TypeVar
 from uuid import UUID
 
 import dateutil.parser
@@ -13,61 +13,6 @@ T = TypeVar("T")
 EnumT = TypeVar("EnumT", bound=Enum)
 
 logger = logging.getLogger(__name__)
-
-
-def from_none(x: Any) -> Any:
-    """
-    Convert None to Any.
-    """
-    assert x is None
-    return x
-
-
-def is_type(t: type[T], x: Any) -> T:
-    """
-    Check if x is of type t.
-    """
-    assert isinstance(x, t)
-    return x
-
-
-def to_float(x: Any) -> float:
-    """
-    Convert Any to float.
-    """
-    assert isinstance(x, float)
-    return x
-
-
-def to_class(c: type[T], x: Any) -> dict[Any, Any]:
-    """
-    Convert Any to dictionary representation of class c.
-    """
-    assert isinstance(x, c)
-    return cast(dict[Any, Any], cast(Any, x).to_dict())
-
-
-def from_dict(f: Callable[[Any], T], x: Any) -> dict[str, T]:
-    """
-    Convert dict to dict of type T.
-    """
-    assert isinstance(x, dict)
-    return {k: f(v) for (k, v) in x.items()}
-
-
-def to_enum(c: type[EnumT], x: Any) -> Any:
-    """
-    Convert EnumT to its value.
-    """
-    assert isinstance(x, c)
-    return x.value
-
-
-def from_comma_separated_list(x: Any) -> list[str] | None:
-    """
-    Convert comma separated list to list of strings.
-    """
-    return [s.strip() for s in x.split(",")] if x else None
 
 
 def from_officiels_list(x: Any) -> list | None:
