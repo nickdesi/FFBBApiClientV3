@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Callable
-from datetime import datetime
+from datetime import datetime, time
 from enum import Enum
 from typing import Any, TypeVar
 from uuid import UUID
@@ -61,6 +61,8 @@ def from_int(obj: dict, key: str) -> int | None:
     if isinstance(x, int) and not isinstance(x, bool):
         return x
     if isinstance(x, str):
+        if not x.strip():
+            return None
         try:
             return int(x)
         except ValueError:
@@ -133,6 +135,41 @@ def from_datetime(obj: dict, key: str) -> datetime | None:
             return None
     logger.warning(
         "from_datetime(%r): unexpected type %s (value: %.100r)",
+        key,
+        type(x).__name__,
+        x,
+    )
+    return None
+
+
+def from_time(obj: dict, key: str) -> time | None:
+    x = obj.get(key)
+    if not x:
+        return None
+    if isinstance(x, str):
+        # Format HH:MM:SS (Meilisearch)
+        if ":" in x:
+            parts = x.split(":")
+            try:
+                return time(
+                    int(parts[0]), int(parts[1]), int(parts[2]) if len(parts) > 2 else 0
+                )
+            except (ValueError, IndexError):
+                logger.warning("from_time(%r): cannot parse %r as time", key, x)
+                return None
+        # Format HHMM (REST API, 4-digit)
+        if x.isdigit() and len(x) == 4:
+            try:
+                return time(int(x[:2]), int(x[2:]))
+            except ValueError:
+                logger.warning("from_time(%r): cannot parse %r as time", key, x)
+                return None
+        logger.warning("from_time(%r): cannot parse %r as time", key, x)
+        return None
+    if isinstance(x, time):
+        return x
+    logger.warning(
+        "from_time(%r): unexpected type %s (value: %.100r)",
         key,
         type(x).__name__,
         x,

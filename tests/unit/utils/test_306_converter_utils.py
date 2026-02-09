@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import unittest
-from datetime import datetime
+from datetime import datetime, time
 from enum import Enum
 from uuid import UUID
 
@@ -17,6 +17,7 @@ from ffbb_api_client_v2.utils.converter_utils import (
     from_list,
     from_obj,
     from_str,
+    from_time,
     from_uuid,
 )
 
@@ -84,6 +85,12 @@ class TestFromInt(unittest.TestCase):
 
     def test_str_negative_coerced(self) -> None:
         self.assertEqual(from_int({"k": "-7"}, "k"), -7)
+
+    def test_empty_str_returns_none(self) -> None:
+        self.assertIsNone(from_int({"k": ""}, "k"))
+
+    def test_whitespace_str_returns_none(self) -> None:
+        self.assertIsNone(from_int({"k": "  "}, "k"))
 
     def test_str_non_numeric_warns(self) -> None:
         with self.assertLogs(LOGGER_NAME, level=logging.WARNING) as cm:
@@ -317,6 +324,40 @@ class TestFromUuid(unittest.TestCase):
             result = from_uuid({"k": "not-a-uuid"}, "k")
         self.assertIsNone(result)
         self.assertTrue(any("invalid UUID" in msg for msg in cm.output))
+
+
+# ==========================================================================
+# from_time
+# ==========================================================================
+
+
+class TestFromTime(unittest.TestCase):
+    def test_iso_format(self) -> None:
+        self.assertEqual(from_time({"k": "20:30:00"}, "k"), time(20, 30, 0))
+
+    def test_hhmm_format(self) -> None:
+        self.assertEqual(from_time({"k": "2030"}, "k"), time(20, 30, 0))
+
+    def test_hh_mm(self) -> None:
+        self.assertEqual(from_time({"k": "20:30"}, "k"), time(20, 30, 0))
+
+    def test_none_returns_none(self) -> None:
+        self.assertIsNone(from_time({"k": None}, "k"))
+
+    def test_missing_key_returns_none(self) -> None:
+        self.assertIsNone(from_time({}, "k"))
+
+    def test_empty_str_returns_none(self) -> None:
+        self.assertIsNone(from_time({"k": ""}, "k"))
+
+    def test_invalid_warns(self) -> None:
+        with self.assertLogs(LOGGER_NAME, level=logging.WARNING) as cm:
+            result = from_time({"k": "abc"}, "k")
+        self.assertIsNone(result)
+        self.assertTrue(any("cannot parse" in msg for msg in cm.output))
+
+    def test_time_passthrough(self) -> None:
+        self.assertEqual(from_time({"k": time(20, 30)}, "k"), time(20, 30))
 
 
 if __name__ == "__main__":

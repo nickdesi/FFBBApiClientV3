@@ -7,7 +7,6 @@ from typing import Any
 from ..utils.converter_utils import (
     from_datetime,
     from_float,
-    from_int,
     from_obj,
     from_str,
 )
@@ -17,7 +16,7 @@ from .coordonnees import Coordonnees
 @dataclass
 class Cartographie:
     adresse: str | None = None
-    code_postal: int | None = None
+    code_postal: str | None = None
     coordonnees: Coordonnees | None = None
     date_created: datetime | None = None
     date_updated: datetime | None = None
@@ -32,7 +31,7 @@ class Cartographie:
     def from_dict(obj: Any) -> Cartographie:
         assert isinstance(obj, dict)
         adresse = from_str(obj, "adresse")
-        code_postal = from_int(obj, "codePostal")
+        code_postal = from_str(obj, "codePostal")
         coordonnees = from_obj(Coordonnees.from_dict, obj, "coordonnees")
         date_created = from_datetime(obj, "date_created")
         date_updated = from_datetime(obj, "date_updated")
@@ -61,7 +60,7 @@ class Cartographie:
         if self.adresse is not None:
             result["adresse"] = self.adresse
         if self.code_postal is not None:
-            result["codePostal"] = str(self.code_postal)
+            result["codePostal"] = self.code_postal
         if self.coordonnees is not None:
             result["coordonnees"] = self.coordonnees.to_dict()
         if self.date_created is not None:

@@ -14,7 +14,7 @@ from ..utils.converter_utils import (
 @dataclass
 class Commune:
     code_insee: str | None = None
-    code_postal: int | None = None
+    code_postal: str | None = None
     date_created: datetime | None = None
     date_updated: datetime | None = None
     commune_id: int | None = None
@@ -31,7 +31,7 @@ class Commune:
     def from_dict(obj: Any) -> Commune:
         assert isinstance(obj, dict)
         code_insee = from_str(obj, "codeInsee")
-        code_postal = from_int(obj, "codePostal")
+        code_postal = from_str(obj, "codePostal")
         date_created = from_datetime(obj, "date_created")
         date_updated = from_datetime(obj, "date_updated")
         commune_id = from_int(obj, "id")
@@ -52,7 +52,7 @@ class Commune:
         if self.code_insee is not None:
             result["codeInsee"] = self.code_insee
         if self.code_postal is not None:
-            result["codePostal"] = str(self.code_postal)
+            result["codePostal"] = self.code_postal
         if self.date_created is not None:
             result["date_created"] = self.date_created.isoformat()
         if self.date_updated is not None:

@@ -57,7 +57,7 @@ class TestCartographieToDictCoverage(unittest.TestCase):
         coords = Coordonnees(coordinates=[2.35, 48.85], type="Point")
         c = Cartographie(
             adresse="1 rue du Panier",
-            code_postal=75001,
+            code_postal="75001",
             coordonnees=coords,
             date_created=None,
             date_updated=None,
@@ -315,7 +315,7 @@ class TestTournoisToDictCoverage(unittest.TestCase):
             numero=1,
             cartographie=Cartographie(
                 adresse="addr",
-                code_postal=75001,
+                code_postal="75001",
                 coordonnees=None,
                 date_created=None,
                 date_updated=None,
@@ -634,7 +634,7 @@ class TestMultiSearchResultRencontresToDictCoverage(unittest.TestCase):
             "id": "r-1",
             "date": "2024-06-15T20:00:00",
             "date_rencontre": "2024-06-15T20:00:00",
-            "horaire": "2000",
+            "horaire": "20:00:00",
             "nomEquipe1": "Team A",
             "nomEquipe2": "Team B",
             "numeroJournee": "5",
@@ -669,7 +669,7 @@ class TestMultiSearchResultRencontresToDictCoverage(unittest.TestCase):
         self.assertEqual(d["id"], "r-1")
         self.assertIn("date", d)
         self.assertIn("date_rencontre", d)
-        self.assertEqual(d["horaire"], "2000")
+        self.assertEqual(d["horaire"], "20:00:00")
         self.assertEqual(d["numeroJournee"], "5")
         self.assertIn("competitionId", d)
         self.assertIn("idOrganismeEquipe1", d)
