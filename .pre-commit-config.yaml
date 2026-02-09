@@ -22,7 +22,7 @@ repos:
 
 # If you want to automatically "modernize" your Python code:
 - repo: https://github.com/asottile/pyupgrade
-  rev: v3.20.0
+  rev: v3.21.0
   hooks:
   - id: pyupgrade
     args: ['--py39-plus']
@@ -44,7 +44,7 @@ repos:
   - id: isort
 
 - repo: https://github.com/psf/black
-  rev: 25.1.0
+  rev: 25.11.0
   hooks:
   - id: black
 
