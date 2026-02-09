@@ -43,17 +43,35 @@ class TokenManager:
     """
 
     @staticmethod
-    def get_tokens(cache_config: CacheConfig | None = None) -> FFBBTokens:
+    def get_tokens(
+        cache_config: CacheConfig | None = None,
+        use_cache: bool | None = None,
+    ) -> FFBBTokens:
         """
         Get FFBB tokens from environment or API.
 
         Args:
-            cache_config: Optional cache configuration for HTTP requests.
-                If None, uses the default cache manager.
+            cache_config: Optional cache configuration object for advanced settings.
+            use_cache: Simple boolean to enable/disable caching (mutually exclusive with cache_config).
 
         Returns:
             FFBBTokens with api_token and meilisearch_token
+
+        Raises:
+            ValueError: If both cache_config and use_cache are provided.
+
+        Note:
+            If neither cache_config nor use_cache is provided, default caching is used.
         """
+        if cache_config is not None and use_cache is not None:
+            raise ValueError(
+                "Cannot specify both 'cache_config' and 'use_cache' parameters"
+            )
+
+        # Convert simple use_cache boolean to CacheConfig if provided
+        if use_cache is not None:
+            cache_config = CacheConfig(enabled=use_cache)
+
         # Try environment variables first
         api_token = os.getenv(ENV_API_TOKEN)
         meilisearch_token = os.getenv(ENV_MEILISEARCH_TOKEN)

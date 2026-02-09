@@ -15,20 +15,27 @@ from ffbb_api_client_v2.models.query_fields_manager import QueryFieldsManager
 
 
 def main():
-    """Main example function demonstrating FFBB API Client V2 usage."""
+    """Main example function demonstrating FFBB API Client V2 usage with comprehensive error handling."""
 
-    print("Initializing FFBB API Client V2...")
+    print("🚀 Initializing FFBB API Client V2...")
+    print("=" * 60)
 
-    # Method 1: Automatic token management (Recommended)
-    print("Using TokenManager for automatic token retrieval...")
-    tokens = TokenManager.get_tokens()
+    try:
+        # Method 1: Automatic token management (Recommended)
+        print("🔑 Using TokenManager for automatic token retrieval...")
+        tokens = TokenManager.get_tokens()
 
-    client = FFBBAPIClientV2.create(
-        api_bearer_token=tokens.api_token,
-        meilisearch_bearer_token=tokens.meilisearch_token,
-    )
+        client = FFBBAPIClientV2.create(
+            api_bearer_token=tokens.api_token,
+            meilisearch_bearer_token=tokens.meilisearch_token,
+        )
 
-    print("Client initialized successfully!\n")
+        print("✅ Client initialized successfully!\n")
+
+    except Exception as e:
+        print(f"❌ Failed to initialize client: {e}")
+        print("💡 Check your environment configuration")
+        return
 
     # Alternative Method: Manual token management (if needed)
     # import os

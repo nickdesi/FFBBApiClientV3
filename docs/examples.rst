@@ -29,47 +29,121 @@ Simple Client Creation and Usage
 Token Management
 ================
 
-Automatic Token Resolution (Recommended)
-----------------------------------------
+The FFBB API Client V2 provides advanced token management features introduced in v1.2.0.
 
-The library provides a ``TokenManager`` class that automatically resolves API tokens:
+Automatic Token Resolution (Recommended)
+-----------------------------------------
+
+The ``TokenManager`` class automatically resolves API tokens from multiple sources:
 
 .. code-block:: python
 
     from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
 
-    # Tokens are resolved automatically:
-    # 1. From environment variables (if set)
-    # 2. From FFBB API configuration endpoint (public)
+    # Automatic token resolution - no configuration needed!
     tokens = TokenManager.get_tokens()
 
-    # Create the client with resolved tokens
     client = FFBBAPIClientV2.create(
         api_bearer_token=tokens.api_token,
         meilisearch_bearer_token=tokens.meilisearch_token
     )
 
-    # Use the client
-    lives = client.get_lives()
+Token Resolution Priority:
 
-Token Caching
--------------
+1. **Environment Variables** (if set)
+2. **FFBB API Configuration Endpoint** (public, automatic fallback)
+
+Token Caching and Performance
+------------------------------
+
+Tokens are automatically cached for performance:
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import TokenManager
-
-    # First call fetches tokens (from env or API)
+    # First call fetches tokens
     tokens = TokenManager.get_tokens()
 
-    # Subsequent calls use cached tokens
-    tokens = TokenManager.get_tokens()  # Returns cached tokens
+    # Subsequent calls use cached tokens (fast!)
+    tokens = TokenManager.get_tokens()
 
-    # Force fresh fetch
+    # Force refresh with new parameters (v1.2.0+)
     tokens = TokenManager.get_tokens(use_cache=False)
 
-    # Clear the cache
-    TokenManager.clear_cache()
+Cache Management
+~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    from ffbb_api_client_v2.utils.cache_manager import CacheManager
+
+    # Clear token cache
+    CacheManager().clear()
+
+Configuration Management (v1.2.0+)
+====================================
+
+Centralized configuration constants for better maintainability:
+
+.. code-block:: python
+
+    from ffbb_api_client_v2 import config
+
+    # API endpoints
+    print(f"API Base URL: {config.API_FFBB_BASE_URL}")
+    print(f"Meilisearch URL: {config.MEILISEARCH_BASE_URL}")
+
+    # Default headers
+    print(f"User Agent: {config.DEFAULT_USER_AGENT}")
+
+    # Endpoint paths
+    print(f"Configuration: {config.ENDPOINT_CONFIGURATION}")
+    print(f"Lives: {config.ENDPOINT_LIVES}")
+
+Advanced Features (v1.2.0+)
+============================
+
+Parallel Test Execution
+-----------------------
+
+Run tests in parallel for faster CI/CD:
+
+.. code-block:: bash
+
+    # Install pytest-xdist
+    pip install pytest-xdist
+
+    # Run tests in parallel
+    pytest -n auto
+
+Python 3.10+ Features
+----------------------
+
+Leverage modern Python features:
+
+.. code-block:: python
+
+    # Union types with | syntax (Python 3.10+)
+    from ffbb_api_client_v2.models import GetOrganismeResponse
+
+    def process_organisme(org: GetOrganismeResponse | None) -> str:
+        return org.nom if org else "Unknown"
+
+Enhanced Type Safety
+--------------------
+
+Comprehensive type hints throughout the codebase:
+
+.. code-block:: python
+
+    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+    from typing import Optional
+
+    def safe_get_organisme(client: FFBBAPIClientV2, org_id: int) -> Optional[GetOrganismeResponse]:
+        """Safely get organisme with proper error handling."""
+        try:
+            return client.get_organisme(org_id)
+        except Exception:
+            return None
 
 Manual Token Configuration
 --------------------------
