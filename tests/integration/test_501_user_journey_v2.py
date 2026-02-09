@@ -218,7 +218,9 @@ class Test010UserJourneyIntegration(unittest.TestCase):
             else first_competition
         )
         print(
-            f"   Selected competition: {first_competition.get('nom') if isinstance(first_competition, dict) else 'Unknown'} (ID: {competition_id})"
+            f"   Selected competition: "
+            f"{first_competition.get('nom') if isinstance(first_competition, dict) else 'Unknown'}"
+            f" (ID: {competition_id})"
         )
 
         competition_details = self.api_client.api_ffbb_client.get_competition(

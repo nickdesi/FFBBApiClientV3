@@ -1,225 +1,278 @@
 # Test Strategy - FFBBApiClientV2_Python
 
-## 1. Pyramide des tests
+## 1. Test Pyramid
 
-### Niveau 1 : Unit - Edge cases `from_dict`
-Tests unitaires avec donnees limites (None, dict vide, erreurs API, types invalides).
-Pas d'appels reseau, execution instantanee.
+### Level 1: Unit - Models
+Tests for `from_dict`, `to_dict`, round-trips, edge cases (None, empty dict, invalid types).
+No network calls, instant execution.
 
-**Fichier** : `tests/test_021_raw_json_model_conversion.py` (Section C, tests 020-036)
+**Location**: `tests/unit/models/` (test_100 to test_123)
 
-### Niveau 1b : Unit - Round-trip `from_dict` -> `to_dict`
-Tests de stabilite double round-trip : `from_dict(to_dict(from_dict(data)))` doit etre stable.
-Couvre toutes les methodes `to_dict()` des modeles.
+### Level 2: Unit - Clients
+Tests for `FFBBAPIClientV2`, `ApiFFBBAppClient`, `MeilisearchFFBBClient` with mocked HTTP.
 
-**Fichier** : `tests/test_022_to_dict_round_trip.py` (38 tests, tous passing)
+**Location**: `tests/unit/clients/` (test_200 to test_206)
 
-### Niveau 2 : Unit - `from_dict` avec fixtures JSON statiques
-Tests avec fichiers JSON statiques captures depuis l'API reelle.
-Couverture champ par champ offline.
+### Level 3: Unit - Utils
+Tests for `cache_manager`, `retry_utils`, `secure_logging`, `converter_utils`, `config`, `token_manager`, `input_validation`.
 
-**Status** : A implementer (voir Recommandations futures)
+**Location**: `tests/unit/utils/` (test_300 to test_307)
 
-### Niveau 3 : Integration - API brute (raw HTTP + from_dict)
-Appels HTTP directs avec `requests` sans passer par les clients du projet.
-Validation de la conversion JSON brut -> modeles.
+### Level 4: Unit - Helpers
+Tests for `http_requests_helper`, `http_requests_utils`.
 
-**Fichier** : `tests/test_021_raw_json_model_conversion.py` (Sections A et B, tests 001-017)
+**Location**: `tests/unit/helpers/` (test_400)
 
-### Niveau 4 : Integration - Via clients du projet
-Tests des clients `ApiFFBBAppClient` et `MeilisearchFFBBClient`.
+### Level 5: Integration
+Real API calls (skipped if tokens not set), raw JSON conversion tests.
 
-**Fichiers** : `test_000` a `test_005`, `test_010`, `test_011`
+**Location**: `tests/integration/` (test_500 to test_506)
 
-### Niveau 5 : E2E - Parcours utilisateur complets
-Scenarios multi-etapes (recherche -> club -> equipes -> calendrier).
+### Level 6: E2E
+Multi-step user journeys (search -> club -> teams -> calendar).
 
-**Fichier** : `test_010_integration_user_journey.py`
+**Location**: `tests/e2e/` (currently empty, ready for future tests)
 
 ---
 
-## 2. Matrice de couverture
+## 2. Directory Structure
 
-| Modele | Niveau 1 (edge) | Niveau 3 (raw HTTP) | Niveau 4 (client) | Couverture |
-|--------|:---:|:---:|:---:|:---:|
-| `GetSaisonsResponse` | x | x | x | **100%** |
-| `GetCompetitionResponse` | x | x | x | 91% |
-| `GetOrganismeResponse` | x | x | x | 92% |
-| `GetPouleResponse` | x | x | x | **95%** |
-| `GetConfigurationResponse` | x | x | x | **100%** |
-| `GameStatsModel` | x | - | - | **100%** |
-| `TeamRanking` | x | x (via poule) | x | **100%** |
-| `RankingEngagement` | x | x (via poule) | x | **100%** |
-| `Live` / `Clock` | x | x | x | **93%** |
-| `NiveauExtractor` | x | - | - | **95%** |
-| `CompetitionsMultiSearchResult` | x | x | x | **92%** |
-| `OrganismesMultiSearchResult` | x | x | x | **91%** |
-| `SallesMultiSearchResult` | x | x | x | **92%** |
-| `TerrainsMultiSearchResult` | x | x | x | 71% (*) |
-| `RencontresMultiSearchResult` | x | x | x | 87% |
-| `PratiquesMultiSearchResult` | x | x | x | 75% |
-| `TournoisMultiSearchResult` | x | x | x | 83% |
-| `MultiSearchResults` | x | x | x | **98%** |
+```
+tests/
+    conftest.py                              # Shared fixtures (cache, env, fixture_loader)
+    unit/
+        conftest.py
+        models/
+            test_100_competition_id_categorie.py
+            test_101_competition_id_sexe.py
+            test_102_competition_id_type_competition.py
+            test_103_competition_id_type_competition_generique.py
+            test_104_competition_origine_categorie.py
+            test_105_competition_origine_type_competition_generique.py
+            test_106_competition_origine.py
+            test_107_id_engagement_equipe.py
+            test_108_id_organisme_equipe.py
+            test_109_id_organisme_equipe1_logo.py
+            test_110_labellisation.py
+            test_111_niveau_class.py
+            test_112_purple_logo.py
+            test_113_salle.py
+            test_114_tournoi_type_class.py
+            test_115_type_association_libelle.py
+            test_116_type_competition_generique.py
+            test_117_organisateur.py
+            test_118_competition_id.py
+            test_119_terrains_inner_models.py
+            test_120_pratiques_inner_models.py
+            test_121_to_dict_round_trip.py
+            test_122_coverage_gaps.py
+            test_123_missing_coverage.py
+        clients/
+            test_200_api_ffbb_app_client.py
+            test_201_unit_tests_core.py
+            test_202_meilisearch_client.py
+            test_203_meilisearch_client_extension.py
+            test_204_ffbb_api_client_v2.py
+            test_205_meilisearch_ffbb_client.py
+            test_206_coverage_gaps_clients.py
+        utils/
+            test_300_secure_logging.py
+            test_301_input_validation.py
+            test_302_retry_utils.py
+            test_303_cache_manager.py
+            test_304_config.py
+            test_305_token_manager.py
+            test_306_converter_utils.py
+            test_307_coverage_gaps_utils.py
+        helpers/
+            test_400_http_helpers.py
+    integration/
+        conftest.py
+        test_500_user_journey.py
+        test_501_user_journey_v2.py
+        test_502_enhanced_integration.py
+        test_503_secure_logging.py
+        test_504_input_validation.py
+        test_505_retry_timeout.py
+        test_506_raw_json_model_conversion.py
+    e2e/
+        conftest.py
+    fixtures/
+        *.json
+```
 
-(*) Bug DocumentFlyer corrige : `FacetStats.from_dict` levait `NotImplementedError` non capture par `from_union` → remplace par `assert False` (capture par `from_union`).
+### Numbering Convention
+
+| Range   | Category         |
+|---------|------------------|
+| 100-199 | Unit - Models    |
+| 200-299 | Unit - Clients   |
+| 300-399 | Unit - Utils     |
+| 400-499 | Unit - Helpers   |
+| 500-599 | Integration      |
+| 600-699 | E2E              |
 
 ---
 
-## 3. Analyse de couverture
+## 3. File Inventory
 
-### Avant ajout des tests (baseline)
-- **Couverture globale** : 62% (6062 stmts, 1635 miss)
-- **Tests** : 172
+### Unit - Models (tests/unit/models/)
 
-### Apres ajout test_021 (raw JSON conversion)
-- **Couverture globale** : 64% (6062 stmts, 1547 miss)
-- **Tests** : 204 (+32 nouveaux)
+| File | Scope | Tests |
+|------|-------|:-----:|
+| `test_100_competition_id_categorie.py` | CompetitionIDCategorie round-trip | 2 |
+| `test_101_competition_id_sexe.py` | CompetitionIDSexe round-trip | 2 |
+| `test_102_competition_id_type_competition.py` | CompetitionIDTypeCompetition round-trip | 2 |
+| `test_103_competition_id_type_competition_generique.py` | CompetitionIDTypeCompetitionGenerique round-trip | 2 |
+| `test_104_competition_origine_categorie.py` | CompetitionOrigineCategorie round-trip | 2 |
+| `test_105_competition_origine_type_competition_generique.py` | CompetitionOrigineTypeCompetitionGenerique round-trip | 2 |
+| `test_106_competition_origine.py` | CompetitionOrigine round-trip | 2 |
+| `test_107_id_engagement_equipe.py` | IDEngagementEquipe round-trip | 2 |
+| `test_108_id_organisme_equipe.py` | IDOrganismeEquipe round-trip | 2 |
+| `test_109_id_organisme_equipe1_logo.py` | IDOrganismeEquipe1Logo round-trip | 2 |
+| `test_110_labellisation.py` | Labellisation round-trip | 2 |
+| `test_111_niveau_class.py` | NiveauClass round-trip | 2 |
+| `test_112_purple_logo.py` | PurpleLogo round-trip | 2 |
+| `test_113_salle.py` | Salle round-trip | 2 |
+| `test_114_tournoi_type_class.py` | TournoiTypeClass round-trip | 2 |
+| `test_115_type_association_libelle.py` | TypeAssociationLibelle round-trip | 2 |
+| `test_116_type_competition_generique.py` | TypeCompetitionGenerique round-trip | 2 |
+| `test_117_organisateur.py` | Organisateur round-trip | 2 |
+| `test_118_competition_id.py` | CompetitionID round-trip | 2 |
+| `test_119_terrains_inner_models.py` | Terrains inner models (nested) | 6 |
+| `test_120_pratiques_inner_models.py` | Pratiques inner models (nested) | 8 |
+| `test_121_to_dict_round_trip.py` | Double round-trip from_dict/to_dict | 38 |
+| `test_122_coverage_gaps.py` | Model to_dict branches, MultiSearch, FacetDistribution | 46 |
+| `test_123_missing_coverage.py` | Enums, FacetStats/Distribution subclasses, model edge cases | 45 |
 
-### Apres ajout test_022 (round-trip to_dict)
-- **Couverture globale** : **81%** (6062 stmts, 782 miss)
-- **Tests** : 242 (+38 nouveaux, dont 2 skipped)
+### Unit - Clients (tests/unit/clients/)
 
-### Apres ajout test_023 a test_045 (modeles, client, helpers)
-- **Couverture globale** : **92%** (6062 stmts, 489 miss)
-- **Tests** : 346 (+104 nouveaux, 0 skipped)
-- Bugs corriges : FacetStats.from_dict (`assert False` au lieu de `raise NotImplementedError`), IDEngagementEquipe.to_dict (`to_class` au lieu de `from_dict`)
+| File | Scope | Tests |
+|------|-------|:-----:|
+| `test_200_api_ffbb_app_client.py` | ApiFFBBAppClient REST client | varies |
+| `test_201_unit_tests_core.py` | Core unit tests | varies |
+| `test_202_meilisearch_client.py` | MeilisearchClient | varies |
+| `test_203_meilisearch_client_extension.py` | MeilisearchClient extension | varies |
+| `test_204_ffbb_api_client_v2.py` | FFBBAPIClientV2 facade | varies |
+| `test_205_meilisearch_ffbb_client.py` | MeilisearchFFBBClient (mocked) | 21 |
+| `test_206_coverage_gaps_clients.py` | FFBBAPIClientV2 search/delegation branches | 5 |
 
-### Gains principaux (baseline 62% -> 92%)
-| Module | Baseline | Apres test_021 | Apres test_022 | Delta total |
-|--------|:--------:|:--------------:|:--------------:|:-----------:|
-| `game_stats_models.py` | 71% | **100%** | **100%** | +29 |
-| `rankings_models.py` | 83% | **100%** | **100%** | +17 |
-| `saisons_models.py` | 76% | **100%** | **100%** | +24 |
-| `niveau_models.py` | 36% | **95%** | **95%** | +59 |
-| `poules_models.py` | 86% | **95%** | **95%** | +9 |
-| `competitions_models.py` | 88% | 91% | 91% | +3 |
-| `organismes_models.py` | 86% | 92% | 92% | +6 |
-| `multi_search_result_competitions.py` | ~47% | ~47% | **92%** | +45 |
-| `multi_search_result_organismes.py` | ~54% | ~54% | **91%** | +37 |
-| `multi_search_result_salles.py` | ~55% | ~55% | **92%** | +37 |
-| `multi_search_result_rencontres.py` | ~54% | ~54% | 87% | +33 |
-| `multi_search_result_tournois.py` | ~56% | ~56% | 83% | +27 |
-| `multi_search_result_pratiques.py` | ~52% | ~52% | 75% | +23 |
-| `lives.py` | ~50% | ~50% | **93%** | +43 |
-| `affiche.py` | ~50% | ~50% | **98%** | +48 |
-| `nature_sol.py` | ~50% | ~50% | **91%** | +41 |
-| `multi_search_results_class.py` | ~56% | ~56% | **98%** | +42 |
+### Unit - Utils (tests/unit/utils/)
 
-### Objectif 90% atteint (92%)
-Tous les gaps identifies ont ete couverts :
+| File | Scope | Tests |
+|------|-------|:-----:|
+| `test_300_secure_logging.py` | SecureLogger | varies |
+| `test_301_input_validation.py` | Input validation | varies |
+| `test_302_retry_utils.py` | RetryUtils | varies |
+| `test_303_cache_manager.py` | CacheManager | varies |
+| `test_304_config.py` | Config | varies |
+| `test_305_token_manager.py` | TokenManager | varies |
+| `test_306_converter_utils.py` | from_TYPE helpers | 54 |
+| `test_307_coverage_gaps_utils.py` | SecureLogging, RetryUtils, CacheManager, __init__, converter_utils edge cases | 30 |
 
-1. **`document_flyer.py`** : 19% → couvert (bug FacetStats corrige, tests unskipped)
-2. **`meilisearch_ffbb_client.py`** : 32% → couvert (test_040 : 21 tests mocks)
-3. **`http_requests_helper.py`** / **`http_requests_utils.py`** : 36-63% → couvert (test_045 : 18 tests)
-4. **`multi_search_result_pratiques.py`** : 75% → couvert (test_042 : modeles imbriques)
-5. **`multi_search_result_terrains.py`** : 71% → couvert (test_041 : modeles imbriques)
+### Unit - Helpers (tests/unit/helpers/)
+
+| File | Scope | Tests |
+|------|-------|:-----:|
+| `test_400_http_helpers.py` | HTTP helpers (catch_result, etc.) | 18 |
+
+### Integration (tests/integration/)
+
+| File | Scope | Tests |
+|------|-------|:-----:|
+| `test_500_user_journey.py` | E2E user journey (requires tokens) | varies |
+| `test_501_user_journey_v2.py` | E2E user journey v2 (requires tokens) | varies |
+| `test_502_enhanced_integration.py` | Enhanced integration tests | varies |
+| `test_503_secure_logging.py` | SecureLogging integration | varies |
+| `test_504_input_validation.py` | Input validation integration | varies |
+| `test_505_retry_timeout.py` | Retry/timeout integration | varies |
+| `test_506_raw_json_model_conversion.py` | Raw JSON API responses -> from_dict | 32 |
 
 ---
 
-## 4. Preconisations CI/CD
+## 4. Coverage
 
-### Markers pytest
+### Current Status
+- **Global coverage**: **97%** (branch coverage enabled)
+- **Per-module minimum**: **>=90%**
+- **Total tests**: **532** (all passing, 0 skipped)
+
+### Coverage Targets
+
+| Category | Minimum | Target |
+|----------|---------|--------|
+| Models (`from_dict`/`to_dict`) | 90% | 100% |
+| Clients | 90% | 95% |
+| Utils | 90% | 95% |
+| Global | 90% | 97%+ |
+
+### Coverage History
+| Milestone | Coverage | Tests |
+|-----------|:--------:|:-----:|
+| Baseline | 62% | 172 |
+| + test_021 (raw JSON) | 64% | 204 |
+| + test_022 (round-trip) | 81% | 242 |
+| + test_023 to test_045 | 92% | 346 |
+| + test_046 (converter_utils) | 95% | 450 |
+| + test_047 + test_048 + dead code removal | **97%** | **532** |
+
+### Bugs Fixed During Coverage Work
+1. `facet_stats.py`: `raise NotImplementedError` -> `assert False` (from_union catches AssertionError)
+2. `id_engagement_equipe.py`: to_dict used `Logo.from_dict` instead of `to_class(Logo, x)`
+
+---
+
+## 5. CI/CD Recommendations
+
+### pytest Markers
 
 ```ini
 markers =
     integration: marks tests as integration tests
     unit: marks tests as unit tests
     slow: marks tests as slow running
+    e2e: marks tests as end-to-end tests
 ```
 
-### Pipelines recommandes
+### Recommended Pipelines
 
-| Pipeline | Commande | Frequence | Temps |
-|----------|----------|-----------|-------|
-| CI rapide (unit) | `pytest tests/ -m "not integration" -q -n auto` | Chaque push | ~10s |
-| Integration | `pytest tests/ -q -n auto` | Nightly / pre-release | ~40s |
-| Couverture | `pytest tests/ --cov=ffbb_api_client_v2 --cov-report=html -q -n auto` | Nightly | ~80s |
+| Pipeline | Command | Frequency | Time |
+|----------|---------|-----------|------|
+| Unit (fast) | `pytest tests/unit/ -x -q -n auto` | Every push | ~15s |
+| Integration | `pytest tests/integration/ -q` | Nightly / pre-release | ~40s |
+| Full suite | `pytest tests/ -x -q -n auto` | Nightly | ~60s |
+| Coverage | `pytest tests/ --cov=ffbb_api_client_v2 --cov-branch -q` | Nightly | ~80s |
 
-### Variables d'environnement requises
-- `API_FFBB_APP_BEARER_TOKEN` : Token pour api.ffbb.app
-- `MEILISEARCH_BEARER_TOKEN` : Token pour meilisearch-prod.ffbb.app
+### Required Environment Variables
+- `API_FFBB_APP_BEARER_TOKEN`: Token for api.ffbb.app
+- `MEILISEARCH_BEARER_TOKEN`: Token for meilisearch-prod.ffbb.app
 
-Les tests d'integration (Sections A et B) sont automatiquement ignores si les tokens ne sont pas definis (`@unittest.skipUnless`).
+Integration tests are automatically skipped if tokens are not set (`@unittest.skipUnless`).
 
 ---
 
-## 5. Recommandations futures
+## 6. Test Conventions
 
-### A. Fixtures JSON statiques (Niveau 2)
-Capturer les reponses API reelles dans `tests/fixtures/` :
-```
-tests/fixtures/
-    saisons_response.json
-    competition_12345.json
-    organisme_67890.json
-    meilisearch_organismes_paris.json
-    ...
-```
-Permet des tests offline rapides avec couverture complete des champs.
+Full conventions documented in `docs/testing_conventions.md`. Key points:
 
-### B. Snapshot testing
-Installer `pytest-snapshot` pour detecter les changements de structure API :
-```python
-def test_organisme_snapshot(snapshot):
-    result = GetOrganismeResponse.from_dict(fixture_data)
-    snapshot.assert_match(asdict(result), "organisme_snapshot")
-```
-
-### C. Contract testing
-Valider que les reponses API contiennent les champs attendus :
-- Verifier la presence des champs requis
-- Detecter les nouveaux champs non geres
-- Alerter sur les champs supprimes
-
-### D. Couverture to_dict() - FAIT
-Les methodes `to_dict()` sont couvertes par `test_022_to_dict_round_trip.py`.
-Technique : double round-trip `from_dict(to_dict(from_dict(data)))` stable.
-**Resultat** : couverture passee de 64% a 81% (+17 points).
-Bug DocumentFlyer corrige et tests unskipped (voir section 3).
-
-### E. Mocking pour tests offline
-Utiliser `responses` ou `pytest-httpserver` :
-```python
-@responses.activate
-def test_get_saisons_offline():
-    responses.get("https://api.ffbb.app/items/ffbbserver_saisons", json=fixture)
-    result = client.get_saisons()
-    assert len(result) > 0
-```
-
-### F. Objectif couverture 90% - FAIT
-Couverture globale passee de 81% a **92%** (+11 points) :
-1. Bug DocumentFlyer corrige (FacetStats `assert False`)
-2. Bug IDEngagementEquipe.to_dict corrige (`to_class` au lieu de `from_dict`)
-3. 23 nouveaux fichiers tests (test_023 a test_045) : modeles, client, helpers
-4. 0 tests skipped (2 unskipped grace au fix FacetStats)
+- **Style**: `unittest.TestCase` mandatory (no bare pytest classes)
+- **Runner**: pytest + pytest-xdist for parallel execution
+- **Naming**: `test_{XXX}_{module}.py` with numbered ranges by category
+- **Quality**: AAA pattern, one act per test, deterministic, no logic in tests
+- **Branch coverage**: `--cov-branch` required
 
 ---
 
-## 6. Structure des fichiers de test
+## 7. Future Recommendations
 
-| Fichier | Scope | Tests |
-|---------|-------|:-----:|
-| `test_000_api_ffbb_app_client.py` | Client API REST | varies |
-| `test_001_unit_tests_core.py` | Tests unitaires core | varies |
-| `test_002_meilisearch_client.py` | Client Meilisearch | varies |
-| `test_003_meilisearch_client_extension.py` | Extension Meilisearch | varies |
-| `test_004_ffbb_api_client_v2.py` | Client facade | varies |
-| `test_005_integration_user_journey.py` | E2E parcours | varies |
-| `test_010_integration_user_journey.py` | E2E parcours v2 | varies |
-| `test_011_enhanced_integration.py` | Integration avancee | varies |
-| `test_012-013` | Secure logging | varies |
-| `test_014-015` | Input validation | varies |
-| `test_016-017` | Retry/timeout | varies |
-| `test_018` | Cache manager | varies |
-| `test_019` | Config | varies |
-| `test_020` | Token manager | varies |
-| **`test_021_raw_json_model_conversion.py`** | **Raw JSON + from_dict** | **32** |
-| **`test_022_to_dict_round_trip.py`** | **Round-trip from_dict/to_dict** | **38** |
-| `test_023` a `test_039` | Round-trip modeles individuels | 34 |
-| `test_040_meilisearch_ffbb_client.py` | Client Meilisearch (mocks) | 21 |
-| `test_041_terrains_inner_models.py` | Modeles imbriques terrains | 6 |
-| `test_042_pratiques_inner_models.py` | Modeles imbriques pratiques | 8 |
-| `test_043_organisateur.py` | Organisateur round-trip | 2 |
-| `test_044_competition_id.py` | CompetitionID round-trip | 2 |
-| `test_045_http_helpers.py` | HTTP helpers (catch_result, etc.) | 18 |
+### A. JSON Fixtures (Level 2)
+Capture real API responses in `tests/fixtures/` for offline testing with complete field coverage.
+
+### B. Snapshot Testing
+Use `pytest-snapshot` to detect API structure changes automatically.
+
+### C. Contract Testing
+Validate API responses contain expected fields, detect new/removed fields.
+
+### D. VCR Pattern
+Consider `vcrpy` for recording/replaying API responses in integration tests.
