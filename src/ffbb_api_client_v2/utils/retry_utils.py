@@ -7,7 +7,8 @@ along with configurable timeout management.
 
 import random
 import time
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from typing import Any
 
 import requests
 from requests import Response, Session
@@ -39,8 +40,8 @@ class RetryConfig:
         max_delay: float = 60.0,
         backoff_factor: float = 2.0,
         jitter: bool = True,
-        retry_on_status_codes: Optional[list[int]] = None,
-        retry_on_exceptions: Optional[tuple[type[Exception], ...]] = None,
+        retry_on_status_codes: list[int] | None = None,
+        retry_on_exceptions: tuple[type[Exception], ...] | None = None,
     ) -> None:
         """
         Initialize retry configuration.
@@ -81,7 +82,7 @@ class TimeoutConfig:
         self,
         connect_timeout: float = 10.0,
         read_timeout: float = 30.0,
-        total_timeout: Optional[float] = None,
+        total_timeout: float | None = None,
     ) -> None:
         """
         Initialize timeout configuration.
@@ -126,8 +127,8 @@ def calculate_delay(attempt: int, config: RetryConfig) -> float:
 
 def should_retry(
     attempt: int,
-    response: Optional[Response],
-    exception: Optional[Exception],
+    response: Response | None,
+    exception: Exception | None,
     config: RetryConfig,
 ) -> bool:
     """
@@ -180,7 +181,7 @@ def execute_with_retry(
     Raises:
         Exception: The last exception if all retries are exhausted.
     """
-    last_exception: Optional[Exception] = None
+    last_exception: Exception | None = None
 
     # Update timeout in kwargs if not already set
     if "timeout" not in kwargs:
@@ -228,8 +229,8 @@ def make_http_request_with_retry(
     method: str,
     url: str,
     headers: dict[str, str],
-    data: Optional[dict[str, Any]] = None,
-    cached_session: Optional[CachedSession] = None,
+    data: dict[str, Any] | None = None,
+    cached_session: CachedSession | None = None,
     retry_config: RetryConfig = DEFAULT_RETRY_CONFIG,
     timeout_config: TimeoutConfig = DEFAULT_TIMEOUT_CONFIG,
     debug: bool = False,

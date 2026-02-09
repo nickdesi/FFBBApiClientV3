@@ -1,7 +1,7 @@
 exclude: '^docs/conf.py'
 
 default_language_version:
-    python: python3.9
+    python: python3.10
 
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -22,10 +22,10 @@ repos:
 
 # If you want to automatically "modernize" your Python code:
 - repo: https://github.com/asottile/pyupgrade
-  rev: v3.21.0
+  rev: v3.21.2
   hooks:
   - id: pyupgrade
-    args: ['--py39-plus']
+    args: ['--py310-plus']
 
 # If you want to avoid flake8 errors due to unused vars or imports:
 - repo: https://github.com/PyCQA/autoflake
@@ -39,12 +39,12 @@ repos:
     ]
 
 - repo: https://github.com/PyCQA/isort
-  rev: 6.0.1
+  rev: 7.0.0
   hooks:
   - id: isort
 
 - repo: https://github.com/psf/black
-  rev: 25.11.0
+  rev: 26.1.0
   hooks:
   - id: black
 

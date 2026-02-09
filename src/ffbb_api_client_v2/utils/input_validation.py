@@ -6,7 +6,7 @@ to ensure data integrity and prevent common errors.
 """
 
 import re
-from typing import Any, Optional, Union
+from typing import Any
 from urllib.parse import urlparse
 
 
@@ -94,7 +94,7 @@ def validate_url(url: str, field_name: str = "url") -> str:
     return url_stripped
 
 
-def validate_positive_integer(value: Union[int, str], field_name: str = "value") -> int:
+def validate_positive_integer(value: int | str, field_name: str = "value") -> int:
     """
     Validate a positive integer.
 
@@ -131,8 +131,8 @@ def validate_positive_integer(value: Union[int, str], field_name: str = "value")
 
 
 def validate_string_list(
-    values: Optional[list[str]], field_name: str = "values"
-) -> Optional[list[str]]:
+    values: list[str] | None, field_name: str = "values"
+) -> list[str] | None:
     """
     Validate a list of strings.
 
@@ -215,8 +215,8 @@ def validate_boolean(value: Any, field_name: str = "value") -> bool:
 
 
 def validate_deep_limit(
-    deep_limit: Optional[Union[str, int]], field_name: str = "deep_limit"
-) -> Optional[str]:
+    deep_limit: str | int | None, field_name: str = "deep_limit"
+) -> str | None:
     """
     Validate a deep limit parameter.
 
@@ -253,8 +253,8 @@ def validate_deep_limit(
 
 
 def validate_filter_criteria(
-    filter_criteria: Optional[str], field_name: str = "filter_criteria"
-) -> Optional[str]:
+    filter_criteria: str | None, field_name: str = "filter_criteria"
+) -> str | None:
     """
     Validate filter criteria (JSON string).
 
@@ -292,9 +292,7 @@ def validate_filter_criteria(
     return filter_stripped
 
 
-def validate_search_query(
-    query: Optional[str], field_name: str = "query"
-) -> Optional[str]:
+def validate_search_query(query: str | None, field_name: str = "query") -> str | None:
     """
     Validate a search query.
 
