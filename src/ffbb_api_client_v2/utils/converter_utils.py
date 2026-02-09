@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+import logging
 from collections.abc import Callable
-from datetime import datetime
+from datetime import datetime, time
 from enum import Enum
-from typing import Any, TypeVar, cast
+from typing import Any, TypeVar
 from uuid import UUID
 
 import dateutil.parser
@@ -11,137 +12,221 @@ import dateutil.parser
 T = TypeVar("T")
 EnumT = TypeVar("EnumT", bound=Enum)
 
-
-def from_none(x: Any) -> Any:
-    """
-    Convert None to Any.
-    """
-    assert x is None
-    return x
+logger = logging.getLogger(__name__)
 
 
-def from_str(x: Any) -> str:
+def from_officiels_list(x: Any) -> list | None:
     """
-    Convert string to str.
+    Handle officiels field which can be either:
+    - A comma-separated string (old format)
+    - A list of dicts (new format)
+    - None
     """
-    assert isinstance(x, str)
-    return x
+    if x is None:
+        return None
+    if isinstance(x, list):
+        return x  # Return as-is if already a list
+    if isinstance(x, str):
+        return [s.strip() for s in x.split(",")] if x else None
+    return None
 
 
-def from_union(fs, x) -> Any:
-    """
-    Convert union of functions to Any.
-    """
-    for f in fs:
+# ---------------------------------------------------------------------------
+# from_TYPE helpers — direct dict-key extraction with type coercion
+# ---------------------------------------------------------------------------
+
+
+def from_str(obj: dict, key: str) -> str | None:
+    x = obj.get(key)
+    if x is None:
+        return None
+    if isinstance(x, str):
+        return x
+    try:
+        return str(x)
+    except (TypeError, ValueError):
+        logger.warning(
+            "from_str(%r): cannot convert %s to str (value: %.100r)",
+            key,
+            type(x).__name__,
+            x,
+        )
+        return None
+
+
+def from_int(obj: dict, key: str) -> int | None:
+    x = obj.get(key)
+    if x is None:
+        return None
+    if isinstance(x, int) and not isinstance(x, bool):
+        return x
+    if isinstance(x, str):
+        if not x.strip():
+            return None
         try:
-            return f(x)
-        except AssertionError:
-            pass
-        except Exception:
-            # Silent failure is expected when trying different type conversions
-            pass
-    assert False
+            return int(x)
+        except ValueError:
+            logger.warning("from_int(%r): cannot parse %r as int", key, x)
+            return None
+    if isinstance(x, float):
+        return int(x)
+    logger.warning(
+        "from_int(%r): unexpected type %s (value: %.100r)",
+        key,
+        type(x).__name__,
+        x,
+    )
+    return None
 
 
-def from_float(x: Any) -> float:
-    """
-    Convert float or int to float.
-    """
-    assert isinstance(x, (float, int)) and not isinstance(x, bool)
-    return float(x)
+def from_float(obj: dict, key: str) -> float | None:
+    x = obj.get(key)
+    if x is None:
+        return None
+    if isinstance(x, (float, int)) and not isinstance(x, bool):
+        return float(x)
+    if isinstance(x, str):
+        try:
+            return float(x)
+        except ValueError:
+            logger.warning("from_float(%r): cannot parse %r as float", key, x)
+            return None
+    logger.warning(
+        "from_float(%r): unexpected type %s (value: %.100r)",
+        key,
+        type(x).__name__,
+        x,
+    )
+    return None
 
 
-def is_type(t: type[T], x: Any) -> T:
-    """
-    Check if x is of type t.
-    """
-    assert isinstance(x, t)
-    return x
+def from_bool(obj: dict, key: str) -> bool | None:
+    x = obj.get(key)
+    if x is None:
+        return None
+    if isinstance(x, bool):
+        return x
+    if isinstance(x, str):
+        if x.lower() == "true":
+            return True
+        if x.lower() == "false":
+            return False
+        logger.warning("from_bool(%r): cannot parse %r as bool", key, x)
+        return None
+    logger.warning(
+        "from_bool(%r): unexpected type %s (value: %.100r)",
+        key,
+        type(x).__name__,
+        x,
+    )
+    return None
 
 
-def to_float(x: Any) -> float:
-    """
-    Convert Any to float.
-    """
-    assert isinstance(x, float)
-    return x
+def from_datetime(obj: dict, key: str) -> datetime | None:
+    x = obj.get(key)
+    if not x:
+        return None
+    if isinstance(x, str):
+        try:
+            result: datetime = dateutil.parser.parse(x)
+            return result
+        except (ValueError, dateutil.parser.ParserError):
+            logger.warning("from_datetime(%r): cannot parse %r as datetime", key, x)
+            return None
+    logger.warning(
+        "from_datetime(%r): unexpected type %s (value: %.100r)",
+        key,
+        type(x).__name__,
+        x,
+    )
+    return None
 
 
-def from_int(x: Any) -> int:
-    """
-    Convert int to int.
-    """
-    assert isinstance(x, int) and not isinstance(x, bool)
-    return x
+def from_time(obj: dict, key: str) -> time | None:
+    x = obj.get(key)
+    if not x:
+        return None
+    if isinstance(x, str):
+        # Format HH:MM:SS (Meilisearch)
+        if ":" in x:
+            parts = x.split(":")
+            try:
+                return time(
+                    int(parts[0]), int(parts[1]), int(parts[2]) if len(parts) > 2 else 0
+                )
+            except (ValueError, IndexError):
+                logger.warning("from_time(%r): cannot parse %r as time", key, x)
+                return None
+        # Format HHMM (REST API, 4-digit)
+        if x.isdigit() and len(x) == 4:
+            try:
+                return time(int(x[:2]), int(x[2:]))
+            except ValueError:
+                logger.warning("from_time(%r): cannot parse %r as time", key, x)
+                return None
+        logger.warning("from_time(%r): cannot parse %r as time", key, x)
+        return None
+    if isinstance(x, time):
+        return x
+    logger.warning(
+        "from_time(%r): unexpected type %s (value: %.100r)",
+        key,
+        type(x).__name__,
+        x,
+    )
+    return None
 
 
-def from_stringified_bool(x: str) -> bool:
-    """
-    Convert stringified bool to bool.
-    """
-    if x == "true":
-        return True
-    if x == "false":
-        return False
-    assert False
+def from_enum(enum_class: type[EnumT], obj: dict, key: str) -> EnumT | None:
+    x = obj.get(key)
+    if x is None:
+        return None
+    try:
+        return enum_class(x)
+    except ValueError:
+        logger.warning(
+            "from_enum(%s, %r): unknown value %r",
+            enum_class.__name__,
+            key,
+            x,
+        )
+        return None
 
 
-def from_datetime(x: Any) -> datetime | None:
-    """
-    Convert string to datetime.
-    """
-    return dateutil.parser.parse(x) if x else None
+def from_obj(from_dict_fn: Callable[[Any], T], obj: dict, key: str) -> T | None:
+    x = obj.get(key)
+    if x is None:
+        return None
+    if isinstance(x, dict):
+        return from_dict_fn(x)
+    logger.warning(
+        "from_obj(%r): expected dict or None, got %s",
+        key,
+        type(x).__name__,
+    )
+    return None
 
 
-def to_class(c: type[T], x: Any) -> dict:
-    """
-    Convert Any to dictionary representation of class c.
-    """
-    assert isinstance(x, c)
-    return cast(Any, x).to_dict()
+def from_list(item_fn: Callable[[Any], T], obj: dict, key: str) -> list[T] | None:
+    x = obj.get(key)
+    if x is None:
+        return None
+    if isinstance(x, list):
+        return [item_fn(item) for item in x]
+    logger.warning(
+        "from_list(%r): expected list or None, got %s",
+        key,
+        type(x).__name__,
+    )
+    return None
 
 
-def from_bool(x: Any) -> bool:
-    """
-    Convert bool to bool.
-    """
-    assert isinstance(x, bool)
-    return x
-
-
-def from_list(f: Callable[[Any], T], x: Any) -> list[T]:
-    """
-    Convert list to list of type T.
-    """
-    assert isinstance(x, list)
-    return [f(y) for y in x]
-
-
-def from_dict(f: Callable[[Any], T], x: Any) -> dict[str, T]:
-    """
-    Convert dict to dict of type T.
-    """
-    assert isinstance(x, dict)
-    return {k: f(v) for (k, v) in x.items()}
-
-
-def to_enum(c: type[EnumT], x: Any) -> EnumT:
-    """
-    Convert Any to EnumT.
-    """
-    assert isinstance(x, c)
-    return x.value
-
-
-def from_uuid(x: Any) -> UUID | None:
-    """
-    Convert Any to UUID.
-    """
-    return UUID(x) if x else None
-
-
-def from_comma_separated_list(x: Any) -> list[str] | None:
-    """
-    Convert comma separated list to list of strings.
-    """
-    return [s.strip() for s in x.split(",")] if x else None
+def from_uuid(obj: dict, key: str) -> UUID | None:
+    x = obj.get(key)
+    if not x:
+        return None
+    try:
+        return UUID(x) if isinstance(x, str) else None
+    except ValueError:
+        logger.warning("from_uuid(%r): invalid UUID %r", key, x)
+        return None

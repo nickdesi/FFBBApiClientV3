@@ -1,118 +1,69 @@
 from __future__ import annotations
 
+from dataclasses import dataclass, field
 from typing import Any
 
-from ..utils.converter_utils import from_int, from_list, from_none, from_str, from_union
+from ..utils.converter_utils import (
+    from_int,
+    from_list,
+    from_str,
+)
 from .facet_distribution import FacetDistribution
 from .facet_stats import FacetStats
 from .hit import Hit
-from .multi_search_result_competitions import (
-    CompetitionsFacetDistribution,
-    CompetitionsFacetStats,
-    CompetitionsMultiSearchResult,
-)
-from .multi_search_result_organismes import (
-    OrganismesFacetDistribution,
-    OrganismesFacetStats,
-    OrganismesMultiSearchResult,
-)
-from .multi_search_result_pratiques import (
-    PratiquesFacetDistribution,
-    PratiquesFacetStats,
-    PratiquesMultiSearchResult,
-)
-from .multi_search_result_rencontres import (
-    RencontresFacetDistribution,
-    RencontresFacetStats,
-    RencontresMultiSearchResult,
-)
-from .multi_search_result_salles import (
-    SallesFacetDistribution,
-    SallesFacetStats,
-    SallesMultiSearchResult,
-)
-from .multi_search_result_terrains import (
-    TerrainsFacetDistribution,
-    TerrainsFacetStats,
-    TerrainsMultiSearchResult,
-)
-from .multi_search_result_tournois import (
-    TournoisFacetDistribution,
-    TournoisFacetStats,
-    TournoisMultiSearchResult,
-)
 from .multi_search_results import MultiSearchResult
 
 
+@dataclass
 class MultiSearchQuery:
     index_uid: str | None = None
     q: str | None = None
     facets: list[str] | None = None
-    limit: int | None = None
-    offset: int | None = None
+    limit: int | None = 10
+    offset: int | None = 0
     filter: list[Any] | None = None
     sort: list[Any] | None = None
+    lower_q: str | None = field(init=False, default=None, repr=False)
 
-    def __init__(
-        self,
-        index_uid: str | None,
-        q: str | None,
-        facets: list[str] | None = None,
-        limit: int | None = 10,
-        offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
-    ):
-        self.index_uid = index_uid
-        self.q = q
-        self.lower_q = q.lower() if q else None
-
-        self.facets = facets
-        self.limit = limit
-        self.offset = offset
-        self.filter = filter
-        self.sort = sort
+    def __post_init__(self) -> None:
+        self.lower_q = self.q.lower() if self.q else None
 
     @staticmethod
     def from_dict(obj: Any) -> MultiSearchQuery:
         assert isinstance(obj, dict)
-        index_uid = from_union([from_str, from_none], obj.get("indexUid"))
-        q = from_union([from_str, from_none], obj.get("q"))
-        facets = from_union(
-            [lambda x: from_list(from_str, x), from_none], obj.get("facets")
+        index_uid = from_str(obj, "indexUid")
+        q = from_str(obj, "q")
+        facets = from_list(str, obj, "facets")
+        limit = from_int(obj, "limit")
+        offset = from_int(obj, "offset")
+        filter = from_list(lambda x: x, obj, "filter")
+        sort = from_list(lambda x: x, obj, "sort")
+        return MultiSearchQuery(
+            index_uid=index_uid,
+            q=q,
+            facets=facets,
+            limit=limit,
+            offset=offset,
+            filter=filter,
+            sort=sort,
         )
-        limit = from_union([from_int, from_none], obj.get("limit"))
-        offset = from_union([from_int, from_none], obj.get("offset"))
-        filter = from_union(
-            [lambda x: from_list(lambda x: x, x), from_none], obj.get("filter")
-        )
-        sort = from_union(
-            [lambda x: from_list(lambda x: x, x), from_none], obj.get("sort")
-        )
-        return MultiSearchQuery(index_uid, q, facets, limit, filter, offset, sort)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.index_uid is not None:
-            result["indexUid"] = from_union([from_str, from_none], self.index_uid)
+            result["indexUid"] = self.index_uid
         if self.q is not None:
-            result["q"] = from_union([from_str, from_none], self.q)
+            result["q"] = self.q
         if self.facets is not None:
-            result["facets"] = from_union(
-                [lambda x: from_list(from_str, x), from_none], self.facets
-            )
+            result["facets"] = self.facets
         if self.limit is not None:
-            result["limit"] = from_union([from_int, from_none], self.limit)
+            result["limit"] = self.limit
         if self.offset is not None:
-            result["offset"] = from_union([from_int, from_none], self.offset)
+            result["offset"] = self.offset
         if self.filter is not None:
-            result["filter"] = from_union(
-                [lambda x: from_list(lambda x: x, x), from_none], self.filter
-            )
+            result["filter"] = self.filter
         if self.sort is not None:
-            result["sort"] = from_union(
-                [lambda x: from_list(lambda x: x, x), from_none], self.sort
-            )
+            result["sort"] = self.sort
         return result
 
     def is_valid_result(self, result: MultiSearchResult):
@@ -127,7 +78,7 @@ class MultiSearchQuery:
             )
         )
 
-    def is_valid_hit(self, hit: Hit):
+    def is_valid_hit(self, _hit: Hit):
         return True
 
     def filter_result(self, result: MultiSearchResult) -> MultiSearchResult:
@@ -137,250 +88,9 @@ class MultiSearchQuery:
             ]
 
             if invalid_hits:
-                result.estimated_total_hits -= len(invalid_hits)
+                if result.estimated_total_hits is not None:
+                    result.estimated_total_hits -= len(invalid_hits)
 
                 for hit in invalid_hits:
                     result.hits.remove(hit)
         return result
-
-
-class OrganismesMultiSearchQuery(MultiSearchQuery):
-    def __init__(
-        self,
-        q: str | None,
-        limit: int | None = 10,
-        offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
-    ):
-        super().__init__(
-            index_uid="ffbbserver_organismes",
-            q=q,
-            facets=[
-                "type_association.libelle",
-                "type",
-                "labellisation",
-                "offresPratiques",
-            ],
-            limit=limit,
-            offset=offset,
-            filter=filter,
-            sort=sort,
-        )
-
-    def is_valid_result(self, result: MultiSearchResult):
-        return result and (
-            isinstance(result, OrganismesMultiSearchResult)
-            and (
-                result.facet_distribution is None
-                or isinstance(result.facet_distribution, OrganismesFacetDistribution)
-            )
-            and (
-                result.facet_stats is None
-                or isinstance(result.facet_stats, OrganismesFacetStats)
-            )
-        )
-
-
-class RencontresMultiSearchQuery(MultiSearchQuery):
-    def __init__(
-        self,
-        q: str | None,
-        limit: int | None = 10,
-        offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
-    ):
-        super().__init__(
-            index_uid="ffbbserver_rencontres",
-            q=q,
-            facets=[
-                "competitionId.categorie.code",
-                "competitionId.typeCompetition",
-                "niveau",
-                "competitionId.sexe",
-                "organisateur.nom",
-                "organisateur.id",
-                "competitionId.nomExtended",
-            ],
-            limit=limit,
-            offset=offset,
-            filter=filter,
-            sort=sort,
-        )
-
-    def is_valid_result(self, result: MultiSearchResult):
-        return result and (
-            isinstance(result, RencontresMultiSearchResult)
-            and (
-                result.facet_distribution is None
-                or isinstance(result.facet_distribution, RencontresFacetDistribution)
-            )
-            and (
-                result.facet_stats is None
-                or isinstance(result.facet_stats, RencontresFacetStats)
-            )
-        )
-
-
-class TerrainsMultiSearchQuery(MultiSearchQuery):
-    def __init__(
-        self,
-        q: str | None,
-        facets: list[str] | None = None,
-        limit: int | None = 10,
-        offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
-    ):
-        super().__init__(
-            index_uid="ffbbserver_terrains",
-            q=q,
-            facets=facets,
-            limit=limit,
-            offset=offset,
-            filter=filter,
-            sort=sort,
-        )
-
-    def is_valid_result(self, result: MultiSearchResult):
-        return result and (
-            isinstance(result, TerrainsMultiSearchResult)
-            and (
-                result.facet_distribution is None
-                or isinstance(result.facet_distribution, TerrainsFacetDistribution)
-            )
-            and (
-                result.facet_stats is None
-                or isinstance(result.facet_stats, TerrainsFacetStats)
-            )
-        )
-
-
-class SallesMultiSearchQuery(MultiSearchQuery):
-    def __init__(
-        self,
-        q: str | None,
-        limit: int | None = 10,
-        offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
-    ):
-        super().__init__(
-            index_uid="ffbbserver_salles",
-            q=q,
-            limit=limit,
-            offset=offset,
-            filter=filter,
-            sort=sort,
-        )
-
-    def is_valid_result(self, result: MultiSearchResult):
-        return result and (
-            isinstance(result, SallesMultiSearchResult)
-            and (
-                result.facet_distribution is None
-                or isinstance(result.facet_distribution, SallesFacetDistribution)
-            )
-            and (
-                result.facet_stats is None
-                or isinstance(result.facet_stats, SallesFacetStats)
-            )
-        )
-
-
-class TournoisMultiSearchQuery(MultiSearchQuery):
-    def __init__(
-        self,
-        q: str | None,
-        limit: int | None = 10,
-        offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
-    ):
-        super().__init__(
-            index_uid="ffbbserver_tournois",
-            q=q,
-            facets=["sexe", "tournoiTypes3x3.libelle", "tournoiType"],
-            limit=limit,
-            offset=offset,
-            filter=filter,
-        )
-
-    def is_valid_result(self, result: MultiSearchResult):
-        return result and (
-            isinstance(result, TournoisMultiSearchResult)
-            and (
-                result.facet_distribution is None
-                or isinstance(result.facet_distribution, TournoisFacetDistribution)
-            )
-            and (
-                result.facet_stats is None
-                or isinstance(result.facet_stats, TournoisFacetStats)
-            )
-        )
-
-
-class CompetitionsMultiSearchQuery(MultiSearchQuery):
-    def __init__(
-        self,
-        q: str | None,
-        limit: int | None = 10,
-        offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
-    ):
-        super().__init__(
-            index_uid="ffbbserver_competitions",
-            q=q,
-            limit=limit,
-            offset=offset,
-            filter=filter,
-            sort=sort,
-        )
-
-    def is_valid_result(self, result: MultiSearchResult):
-        return result and (
-            isinstance(result, CompetitionsMultiSearchResult)
-            and (
-                result.facet_distribution is None
-                or isinstance(result.facet_distribution, CompetitionsFacetDistribution)
-            )
-            and (
-                result.facet_stats is None
-                or isinstance(result.facet_stats, CompetitionsFacetStats)
-            )
-        )
-
-
-class PratiquesMultiSearchQuery(MultiSearchQuery):
-    def __init__(
-        self,
-        q: str | None,
-        limit: int | None = 10,
-        offset: int | None = 0,
-        filter: list[str] = None,
-        sort: list[str] = None,
-    ):
-        super().__init__(
-            index_uid="ffbbnational_pratiques",
-            q=q,
-            facets=["label", "type"],
-            limit=limit,
-            offset=offset,
-            filter=filter,
-            sort=sort,
-        )
-
-    def is_valid_result(self, result: MultiSearchResult):
-        return result and (
-            isinstance(result, PratiquesMultiSearchResult)
-            and (
-                result.facet_distribution is None
-                or isinstance(result.facet_distribution, PratiquesFacetDistribution)
-            )
-            and (
-                result.facet_stats is None
-                or isinstance(result.facet_stats, PratiquesFacetStats)
-            )
-        )

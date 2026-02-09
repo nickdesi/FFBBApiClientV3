@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import json
 import time
-from typing import Any
+from typing import Any, cast
 from urllib.parse import urlencode
 
 import requests
@@ -12,6 +14,9 @@ from ..utils.retry_utils import (
     TimeoutConfig,
     make_http_request_with_retry,
 )
+from ..utils.secure_logging import get_secure_logger
+
+logger = get_secure_logger(__name__)
 
 
 def to_json_from_response(response: Response) -> dict[str, Any]:
@@ -27,9 +32,9 @@ def to_json_from_response(response: Response) -> dict[str, Any]:
     data_str = response.text.strip()
 
     try:
-        return json.loads(data_str)
+        return cast(dict[str, Any], json.loads(data_str))
     except json.JSONDecodeError as e:
-        print(f"Error in to_json_from_response: {e}")
+        logger.warning(f"Error in to_json_from_response: {e}")
 
     if data_str.endswith(","):
         data_str = data_str[:-1]
@@ -40,17 +45,17 @@ def to_json_from_response(response: Response) -> dict[str, Any]:
     if data_str.startswith('""'):
         data_str = data_str[2:]
 
-    return json.loads(data_str)
+    return cast(dict[str, Any], json.loads(data_str))
 
 
 def http_get(
     url: str,
     headers: dict[str, str],
     debug: bool = False,
-    cached_session: CachedSession = None,
+    cached_session: CachedSession | None = None,
     timeout: int = 20,
-    retry_config: RetryConfig = None,
-    timeout_config: TimeoutConfig = None,
+    retry_config: RetryConfig | None = None,
+    timeout_config: TimeoutConfig | None = None,
 ) -> Response:
     """
     Performs an HTTP GET request with retry logic.
@@ -67,8 +72,9 @@ def http_get(
     Returns:
         Response: The HTTP response.
     """
+    start_time: float = 0.0
     if debug:
-        print(f"Making GET request to {url}")
+        logger.debug(f"Making GET request to {url}")
         start_time = time.time()
 
     # Use retry logic if configured
@@ -91,8 +97,8 @@ def http_get(
 
     if debug:
         end_time = time.time()
-        print(f"GET request to {url} took {end_time - start_time} seconds.")
-        print(f"GET response: {response.text}")
+        logger.debug(f"GET request to {url} took {end_time - start_time} seconds.")
+        logger.debug(f"GET response: {response.text}")
 
     return response
 
@@ -100,12 +106,12 @@ def http_get(
 def http_post(
     url: str,
     headers: dict[str, str],
-    data: dict[str, Any] = None,
+    data: dict[str, Any] | None = None,
     debug: bool = False,
-    cached_session: CachedSession = None,
+    cached_session: CachedSession | None = None,
     timeout: int = 20,
-    retry_config: RetryConfig = None,
-    timeout_config: TimeoutConfig = None,
+    retry_config: RetryConfig | None = None,
+    timeout_config: TimeoutConfig | None = None,
 ) -> Response:
     """
     Performs an HTTP POST request with retry logic.
@@ -123,9 +129,11 @@ def http_post(
     Returns:
         Response: The HTTP response.
     """
+    start_time: float = 0.0
+    data_str: str = ""
     if debug:
         data_str = ", ".join([f"{k}:{v}" for k, v in data.items()]) if data else ""
-        print(f"Making POST request to {url} {data_str}")
+        logger.debug(f"Making POST request to {url} {data_str}")
         start_time = time.time()
 
     # Use retry logic if configured
@@ -151,8 +159,10 @@ def http_post(
 
     if debug:
         end_time = time.time()
-        print(f"POST request to {url} {data_str} took {end_time - start_time} seconds.")
-        print(f"POST response: {response.text}")
+        logger.debug(
+            f"POST request to {url} {data_str} took {end_time - start_time} seconds."
+        )
+        logger.debug(f"POST response: {response.text}")
 
     return response
 
@@ -161,10 +171,10 @@ def http_get_json(
     url: str,
     headers: dict[str, str],
     debug: bool = False,
-    cached_session: CachedSession = None,
+    cached_session: CachedSession | None = None,
     timeout: int = 20,
-    retry_config: RetryConfig = None,
-    timeout_config: TimeoutConfig = None,
+    retry_config: RetryConfig | None = None,
+    timeout_config: TimeoutConfig | None = None,
 ) -> dict[str, Any]:
     """
     Performs an HTTP GET request and returns the result in JSON format.
@@ -196,12 +206,12 @@ def http_get_json(
 def http_post_json(
     url: str,
     headers: dict[str, str],
-    data: dict[str, Any] = None,
+    data: dict[str, Any] | None = None,
     debug: bool = False,
-    cached_session: CachedSession = None,
+    cached_session: CachedSession | None = None,
     timeout: int = 20,
-    retry_config: RetryConfig = None,
-    timeout_config: TimeoutConfig = None,
+    retry_config: RetryConfig | None = None,
+    timeout_config: TimeoutConfig | None = None,
 ) -> dict[str, Any]:
     """
     Performs an HTTP POST request and returns the result in JSON format.

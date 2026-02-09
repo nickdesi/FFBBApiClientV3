@@ -65,31 +65,23 @@ Quick Start
 
 .. code-block:: python
 
-    import os
-    from ffbb_api_client_v2 import FFBBAPIClientV2
-    from dotenv import load_dotenv
+    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
 
-    # Load environment variables
-    load_dotenv()
-
-    # Retrieve API bearer tokens
-    MEILISEARCH_TOKEN = os.getenv("MEILISEARCH_BEARER_TOKEN")
-    API_TOKEN = os.getenv("API_FFBB_APP_BEARER_TOKEN")
-
-    # Create an instance of the API client
-    ffbb_api_client = FFBBAPIClientV2.create(
-        meilisearch_bearer_token=MEILISEARCH_TOKEN,
-        api_bearer_token=API_TOKEN
+    # Simplified method: automatic token retrieval
+    tokens = TokenManager.get_tokens()
+    client = FFBBAPIClientV2.create(
+        api_bearer_token=tokens.api_token,
+        meilisearch_bearer_token=tokens.meilisearch_token
     )
 
     # Search for organizations in Paris
-    organismes = ffbb_api_client.search_organismes("Paris")
+    organismes = client.search_organismes("Paris")
     print(f"Found {len(organismes.hits)} organizations in Paris")
 
     # Get detailed information about a specific organization
     if organismes.hits:
         organisme_id = int(organismes.hits[0].id)
-        organisme_details = ffbb_api_client.get_organisme(organisme_id)
+        organisme_details = client.get_organisme(organisme_id)
         print(f"Organization: {organisme_details.nom}")
         print(f"  - Type: {organisme_details.type}")
         print(f"  - Address: {organisme_details.adresse}")
@@ -100,11 +92,11 @@ Quick Start
     print(f"Current live matches: {len(lives)}")
 
     # Get current seasons
-    saisons = ffbb_api_client.get_saisons()
+    saisons = client.get_saisons()
     print(f"Available seasons: {len(saisons)}")
 
     # Search competitions
-    competitions = ffbb_api_client.search_competitions("Championnat")
+    competitions = client.search_competitions("Championnat")
     print(f"Found {len(competitions.hits)} competitions")
 
 Advanced Usage
@@ -164,16 +156,14 @@ The library is organized into the following packages:
 
 - **clients/**: API client classes for interacting with FFBB services
 
+  - ``FFBBAPIClientV2``: Main client combining all services
   - ``ApiFFBBAppClient``: Direct API client for FFBB App API
   - ``MeilisearchFFBBClient``: Client for search functionality
-  - ``FFBBAPIClientV2``: Main client combining both services
 
 - **models/**: Strongly-typed data models and response structures
 
-  - ``competitions_models.py``: Competition and match models
-  - ``organismes_models.py``: Organization and team models
-  - ``saisons_models.py``: Season models
-  - ``poules_models.py``: Pool/group models
+  - ``get_*_response.py``: Response models for API endpoints
+  - ``*_models.py``: Specialized models for competitions, organizations, etc.
   - ``query_fields.py``: Field management for API queries
 
 - **helpers/**: Extensions and utility helpers
@@ -185,7 +175,7 @@ The library is organized into the following packages:
     from ffbb_api_client_v2.clients import ApiFFBBAppClient, MeilisearchFFBBClient
 
     # Import data models
-    from ffbb_api_client_v2.models.organismes_models import GetOrganismeResponse
+    from ffbb_api_client_v2.models.get_organisme_response import GetOrganismeResponse
     from ffbb_api_client_v2.models.competitions_models import GetCompetitionResponse
     from ffbb_api_client_v2.models.saisons_models import GetSaisonsResponse
 
@@ -202,6 +192,51 @@ Create a ``.env`` file in your project root:
     # .env file
     API_FFBB_APP_BEARER_TOKEN=your_ffbb_api_token_here
     MEILISEARCH_BEARER_TOKEN=your_meilisearch_token_here
+
+Token Management
+================
+
+The library provides a ``TokenManager`` class for simplified token handling:
+
+**Automatic Token Resolution:**
+
+.. code-block:: python
+
+    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+
+    # Tokens are resolved automatically:
+    # 1. From environment variables (if set)
+    # 2. From FFBB API configuration endpoint (public)
+    tokens = TokenManager.get_tokens()
+
+    client = FFBBAPIClientV2.create(
+        api_bearer_token=tokens.api_token,
+        meilisearch_bearer_token=tokens.meilisearch_token
+    )
+
+**Environment Variables (Optional):**
+
+If you prefer to use environment variables, set these in your ``.env`` file:
+
+.. code-block:: bash
+
+    API_FFBB_APP_BEARER_TOKEN=your_token_here
+    MEILISEARCH_BEARER_TOKEN=your_token_here
+
+**Token Caching:**
+
+.. code-block:: python
+
+    # Tokens are cached by default
+    tokens = TokenManager.get_tokens()  # Fetched
+    tokens = TokenManager.get_tokens()  # From cache
+
+    # Force refresh (v1.2.0+)
+    tokens = TokenManager.get_tokens(use_cache=False)
+
+    # Clear cache (use CacheManager directly in v1.2.0+)
+    from ffbb_api_client_v2.utils.cache_manager import CacheManager
+    CacheManager().clear()
 
 API Reference
 =============
@@ -253,9 +288,6 @@ For more examples, check out the test files in the ``tests/`` directory, particu
 - ``test_001_unit_tests_core.py`` - Unit test examples showing all client methods
 - ``test_005_integration_user_journey.py`` - Complete user journey scenarios
 - ``test_010_integration_user_journey.py`` - Multi-city comparison examples
-
-Note
-====
 
 This project has been set up using PyScaffold 4.5. For details and usage
 information on PyScaffold see https://pyscaffold.org/.

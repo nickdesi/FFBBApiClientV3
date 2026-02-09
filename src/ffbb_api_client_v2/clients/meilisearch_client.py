@@ -1,12 +1,22 @@
+from __future__ import annotations
+
+from collections.abc import Sequence
+
 from requests_cache import CachedSession
 
-from ..helpers.http_requests_helper import catch_result, default_cached_session
+from ..config import (
+    DEFAULT_USER_AGENT,
+    MEILISEARCH_BASE_URL,
+    MEILISEARCH_ENDPOINT_MULTI_SEARCH,
+)
+from ..helpers.http_requests_helper import catch_result
 from ..helpers.http_requests_utils import http_post_json
 from ..models.multi_search_query import MultiSearchQuery
 from ..models.multi_search_results_class import (
     MultiSearchResults,
     multi_search_results_from_dict,
 )
+from ..utils.cache_manager import CacheManager
 from ..utils.retry_utils import (
     RetryConfig,
     TimeoutConfig,
@@ -20,11 +30,11 @@ class MeilisearchClient:
     def __init__(
         self,
         bearer_token: str,
-        url: str = "https://meilisearch-prod.ffbb.app/",
+        url: str = MEILISEARCH_BASE_URL,
         debug: bool = False,
-        cached_session: CachedSession = default_cached_session,
-        retry_config: RetryConfig = None,
-        timeout_config: TimeoutConfig = None,
+        cached_session: CachedSession | None = None,
+        retry_config: RetryConfig | None = None,
+        timeout_config: TimeoutConfig | None = None,
     ):
         """
         Initializes an instance of the MeilisearchClient class.
@@ -46,10 +56,13 @@ class MeilisearchClient:
         self._bearer_token = bearer_token
         self.url = url
         self.debug = debug
-        self.cached_session = cached_session
+        self.cached_session = (
+            cached_session if cached_session else CacheManager().session
+        )
         self.headers = {
             "Authorization": f"Bearer {self._bearer_token}",
             "Content-Type": "application/json",
+            "user-agent": DEFAULT_USER_AGENT,
         }
 
         # Configure retry and timeout settings
@@ -79,10 +92,10 @@ class MeilisearchClient:
 
     def multi_search(
         self,
-        queries: list[MultiSearchQuery] = None,
-        cached_session: CachedSession = None,
-    ) -> MultiSearchResults:
-        url = f"{self.url}multi-search"
+        queries: Sequence[MultiSearchQuery] | None = None,
+        cached_session: CachedSession | None = None,
+    ) -> MultiSearchResults | None:
+        url = f"{self.url}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}"
         params = {"queries": [query.to_dict() for query in queries] if queries else []}
         return catch_result(
             lambda: multi_search_results_from_dict(

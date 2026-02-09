@@ -58,17 +58,47 @@ python examples/team_ranking_analysis.py
    pip install ffbb_api_client_v2
    ```
 
-2. **Set up your environment:**
+2. **Token Configuration (Choose one):**
+
+   **Option A - Automatic (Recommended):**
+   No configuration needed! Tokens are fetched automatically from the FFBB API.
+
+   **Option B - Environment Variables:**
    Create a `.env` file in the project root:
    ```bash
    API_FFBB_APP_BEARER_TOKEN=your_ffbb_api_token_here
    MEILISEARCH_BEARER_TOKEN=your_meilisearch_token_here
    ```
 
-3. **Install python-dotenv** (if not already installed):
+3. **Install python-dotenv** (only if using Option B):
    ```bash
    pip install python-dotenv
    ```
+
+## Token Management
+
+The examples demonstrate two approaches for token handling:
+
+### Automatic (Recommended)
+```python
+from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+
+tokens = TokenManager.get_tokens()
+client = FFBBAPIClientV2.create(
+    api_bearer_token=tokens.api_token,
+    meilisearch_bearer_token=tokens.meilisearch_token
+)
+```
+
+### Manual (Environment Variables)
+```python
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+api_token = os.getenv("API_FFBB_APP_BEARER_TOKEN")
+meilisearch_token = os.getenv("MEILISEARCH_BEARER_TOKEN")
+```
 
 ## Key Features Demonstrated
 

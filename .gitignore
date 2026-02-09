@@ -54,5 +54,8 @@ MANIFEST
 .python-version
 .env
 http_cache.sqlite
+http_cache.db
 .claude*
 .hive-mind
+uv.lock
+data/type_discovery_raw.json

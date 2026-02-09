@@ -1,11 +1,11 @@
-=========
+========
 Migration
-=========
+========
 
-This guide helps you migrate from the old package structure to the new organized structure introduced in version 0.1.0.
+This guide helps you migrate from older versions to the latest version of the FFBB API Client V2.
 
 Public API Migration (No Changes Required)
-===========================================
+==========================================
 
 **Good News**: If you were using the public API, **no changes are required**!
 
@@ -22,227 +22,147 @@ The following imports continue to work exactly as before:
 
 Your existing code should work without any modifications!
 
-Internal Imports Migration
-===========================
+Migration from v1.0.x to v1.1.0
+=============================
 
-If you were importing directly from internal modules, you'll need to update your imports.
+**Breaking Changes**: API methods now return model objects instead of dictionaries.
 
-Client Imports
---------------
-
-**Before (v0.0.x):**
+**Before (v1.0.x):**
 
 .. code-block:: python
 
-    from ffbb_api_client_v2.api_ffbb_app_client import ApiFFBBAppClient
-    from ffbb_api_client_v2.meilisearch_client import MeilisearchClient
-    from ffbb_api_client_v2.meilisearch_ffbb_client import MeilisearchFFBBClient
-    from ffbb_api_client_v2.ffbb_api_client_v2 import FFBBAPIClientV2
+    from ffbb_api_client_v2 import FFBBAPIClientV2
 
-**After (v0.1.0+):**
+    client = FFBBAPIClientV2.create(api_token, meilisearch_token)
 
-.. code-block:: python
+    # Returns dictionary
+    organisme = client.get_organisme(123)
+    name = organisme['nom']  # Dictionary access
+    type_info = organisme['type']
 
-    # Option 1: Use public API (recommended)
-    from ffbb_api_client_v2 import ApiFFBBAppClient, MeilisearchClient
-    from ffbb_api_client_v2 import MeilisearchFFBBClient, FFBBAPIClientV2
-
-    # Option 2: Use new package structure
-    from ffbb_api_client_v2.clients import ApiFFBBAppClient, MeilisearchClient
-    from ffbb_api_client_v2.clients import MeilisearchFFBBClient, FFBBAPIClientV2
-
-Helper Imports
---------------
-
-**Before (v0.0.x):**
+**After (v1.1.0+):**
 
 .. code-block:: python
 
-    from ffbb_api_client_v2.meilisearch_client_extension import MeilisearchClientExtension
-    from ffbb_api_client_v2.http_requests_helper import catch_result, default_cached_session
-    from ffbb_api_client_v2.http_requests_utils import http_get_json, http_post_json
-    from ffbb_api_client_v2.multi_search_query_helper import generate_queries
+    from ffbb_api_client_v2 import FFBBAPIClientV2
 
-**After (v0.1.0+):**
+    client = FFBBAPIClientV2.create(api_token, meilisearch_token)
 
-.. code-block:: python
+    # Returns strongly-typed model object
+    organisme = client.get_organisme(123)
+    name = organisme.nom  # Object attribute access
+    type_info = organisme.type
 
-    # Option 1: Use public API (recommended)
-    from ffbb_api_client_v2 import MeilisearchClientExtension, generate_queries
+**Migration Steps:**
 
-    # Option 2: Use new package structure
-    from ffbb_api_client_v2.helpers import MeilisearchClientExtension
-    from ffbb_api_client_v2.helpers import catch_result, default_cached_session
-    from ffbb_api_client_v2.helpers import http_get_json, http_post_json
-    from ffbb_api_client_v2.helpers import generate_queries
+1. Replace dictionary access with object attributes
+2. Update error handling - methods return None on error instead of raising exceptions
+3. Import model types if you need type hints
 
-Model Imports
--------------
-
-**Before (v0.0.x):**
+**Common Patterns:**
 
 .. code-block:: python
 
-    from ffbb_api_client_v2.lives import Live, lives_from_dict
-    from ffbb_api_client_v2.external_id import ExternalID
-    from ffbb_api_client_v2.multi_search_query import MultiSearchQuery
-    from ffbb_api_client_v2.MultiSearchResults import MultiSearchResults
+    # Before
+    competitions = client.search_competitions("basketball")
+    for comp in competitions.hits:
+        comp_data = comp.source  # Dictionary
+        name = comp_data['nom']
+        season = comp_data['saison']
 
-**After (v0.1.0+):**
+    # After
+    competitions = client.search_competitions("basketball")
+    for comp in competitions.hits:
+        comp_data = comp.source  # Model object
+        name = comp_data.nom
+        season = comp_data.saison
 
-.. code-block:: python
+Migration from v1.1.x to v1.2.0 (Upcoming)
+=======================================
 
-    # Option 1: Use public API (recommended)
-    from ffbb_api_client_v2 import Live, ExternalID, MultiSearchQuery, MultiSearchResults
+**Breaking Changes**: TokenManager API updated for better caching control.
 
-    # Option 2: Use new package structure
-    from ffbb_api_client_v2.models import Live, lives_from_dict
-    from ffbb_api_client_v2.models import ExternalID, MultiSearchQuery
-    from ffbb_api_client_v2.models import MultiSearchResults
-
-Utility Imports
----------------
-
-**Before (v0.0.x):**
-
-.. code-block:: python
-
-    from ffbb_api_client_v2.converters import from_datetime, from_str, from_int
-
-**After (v0.1.0+):**
+**Before (v1.1.x):**
 
 .. code-block:: python
 
-    # Note: 'converters' renamed to 'converter_utils'
-    from ffbb_api_client_v2.utils.converter_utils import from_datetime, from_str, from_int
+    from ffbb_api_client_v2 import TokenManager
 
-Migration Steps
-===============
+    tokens = TokenManager.get_tokens(use_cache=False)
+    TokenManager.clear_cache()
 
-1. **Update Import Statements**
-
-   Replace old internal imports with public API imports where possible:
-
-   .. code-block:: python
-
-       # Before
-       from ffbb_api_client_v2.api_ffbb_app_client import ApiFFBBAppClient
-
-       # After
-       from ffbb_api_client_v2 import ApiFFBBAppClient
-
-2. **Update Converter Imports**
-
-   The ``converters`` module was renamed to ``converter_utils``:
-
-   .. code-block:: python
-
-       # Before
-       from ffbb_api_client_v2.converters import from_datetime
-
-       # After
-       from ffbb_api_client_v2.utils.converter_utils import from_datetime
-
-3. **Test Your Changes**
-
-   Run your tests to ensure everything works correctly:
-
-   .. code-block:: bash
-
-       python -m pytest your_tests/
-
-Common Migration Issues
-=======================
-
-Issue: Import Not Found
------------------------
-
-**Error:**
-``ModuleNotFoundError: No module named 'ffbb_api_client_v2.converters'``
-
-**Solution:**
-Update to use the new path:
+**After (v1.2.0+):**
 
 .. code-block:: python
 
-    # Replace this
-    from ffbb_api_client_v2.converters import from_datetime
+    from ffbb_api_client_v2 import TokenManager
+    from ffbb_api_client_v2.utils.cache_manager import CacheManager
 
-    # With this
-    from ffbb_api_client_v2.utils.converter_utils import from_datetime
+    # Updated signature
+    tokens = TokenManager.get_tokens(use_cache=False)
 
-Issue: Class Not Found in Module
----------------------------------
+    # Use CacheManager directly for cache operations
+    CacheManager().clear()
 
-**Error:**
-``ImportError: cannot import name 'SomeClass' from 'ffbb_api_client_v2.some_module'``
+**Migration Steps:**
 
-**Solution:**
-Use the public API instead:
+1. Update TokenManager.get_tokens() calls to use cache_config parameter
+2. Replace TokenManager.clear_cache() with CacheManager().clear()
+3. Import CacheManager from ffbb_api_client_v2.utils.cache_manager
 
-.. code-block:: python
+---
 
-    # Replace this
-    from ffbb_api_client_v2.some_module import SomeClass
+**Migration Guide from v1.0.x to v1.1.0**
 
-    # With this
-    from ffbb_api_client_v2 import SomeClass
-
-Migration Script
-================
-
-Here's a Python script to help identify imports that need updating:
+API Response Objects
+~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: python
 
-    #!/usr/bin/env python3
-    """
-    Script to find imports that need migration
-    """
-    import os
-    import re
+    # Before v1.1.0
+    organisme = client.get_organisme(123)
+    name = organisme['nom']  # Dictionary access
 
-    def find_old_imports(directory):
-        """Find old import patterns in Python files"""
-        old_patterns = [
-            r'from ffbb_api_client_v2\.converters import',
-            r'from ffbb_api_client_v2\.[a-z_]+_client import',
-            r'from ffbb_api_client_v2\.http_requests_',
-            r'from ffbb_api_client_v2\.multi_search_query_helper import',
-        ]
+    # After v1.1.0
+    organisme = client.get_organisme(123)
+    name = organisme.nom  # Object attribute access
 
-        for root, dirs, files in os.walk(directory):
-            for file in files:
-                if file.endswith('.py'):
-                    filepath = os.path.join(root, file)
-                    with open(filepath, 'r') as f:
-                        content = f.read()
-                        for i, line in enumerate(content.splitlines(), 1):
-                            for pattern in old_patterns:
-                                if re.search(pattern, line):
-                                    print(f"{filepath}:{i}: {line.strip()}")
+Field Selection
+~~~~~~~~~~~~~~~
 
-    if __name__ == "__main__":
-        find_old_imports(".")
+.. code-block:: python
 
-Benefits of Migration
-====================
+    # Before v1.1.0
+    fields = ["id", "nom", "code"]  # Manual field lists
 
-Migrating to the new package structure provides:
+    # After v1.1.0
+    from ffbb_api_client_v2.models.query_fields import QueryFieldsManager, FieldSet
+    fields = QueryFieldsManager.get_organisme_fields(FieldSet.BASIC)
 
-- **Better Code Organization**: Logical separation of clients, models, and utilities
-- **Improved Maintainability**: Clearer dependencies and relationships
-- **Enhanced Development**: Better IDE support and code navigation
-- **Future-Proof**: Foundation for future enhancements and extensions
+Error Handling
+~~~~~~~~~~~~~~
 
-Need Help?
-==========
+.. code-block:: python
 
-If you encounter issues during migration:
+    # After v1.1.0 - Models handle errors automatically
+    organisme = client.get_organisme(999999)  # Non-existent ID
+    if organisme is None:
+        print("Organization not found")
 
-1. Check that you're using the latest version (0.1.0+)
-2. Review the architecture documentation
-3. Look at the examples for usage patterns
-4. Check the test files for reference implementations
+---
 
-The public API remains stable, so most applications should require minimal changes.
+**Migration Guide from v1.1.x to v1.2.0 (Upcoming)**
+
+Token Management Updates
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    # Before v1.2.0
+    tokens = TokenManager.get_tokens(use_cache=False)
+    TokenManager.clear_cache()
+
+    # After v1.2.0
+    tokens = TokenManager.get_tokens(use_cache=False)
+    from ffbb_api_client_v2.utils.cache_manager import CacheManager
+    CacheManager().clear()

@@ -1,19 +1,30 @@
 from __future__ import annotations
 
+from typing import Any
+
 from requests_cache import CachedSession
 
+from ..config import (
+    API_FFBB_BASE_URL,
+    DEFAULT_USER_AGENT,
+    ENDPOINT_COMPETITIONS,
+    ENDPOINT_CONFIGURATION,
+    ENDPOINT_LIVES,
+    ENDPOINT_ORGANISMES,
+    ENDPOINT_POULES,
+    ENDPOINT_SAISONS,
+)
 from ..helpers.http_requests_helper import catch_result
 from ..helpers.http_requests_utils import http_get_json, url_with_params
-from ..models.competitions_models import GetCompetitionResponse
+from ..models.configuration_models import GetConfigurationResponse
+from ..models.field_set import FieldSet
+from ..models.get_competition_response import GetCompetitionResponse
+from ..models.get_organisme_response import GetOrganismeResponse
 from ..models.lives import Live, lives_from_dict
-from ..models.organismes_models import GetOrganismeResponse
 from ..models.poules_models import GetPouleResponse
-from ..models.query_fields import (
-    FieldSet,
-    QueryFieldsManager,
-)
+from ..models.query_fields_manager import QueryFieldsManager
 from ..models.saisons_models import GetSaisonsResponse
-from ..utils.cache_manager import CacheConfig, get_cache_manager
+from ..utils.cache_manager import CacheConfig, CacheManager
 from ..utils.retry_utils import (
     RetryConfig,
     TimeoutConfig,
@@ -27,12 +38,12 @@ class ApiFFBBAppClient:
     def __init__(
         self,
         bearer_token: str,
-        url: str = "https://api.ffbb.app/",
+        url: str = API_FFBB_BASE_URL,
         debug: bool = False,
-        cached_session: CachedSession = None,
-        retry_config: RetryConfig = None,
-        timeout_config: TimeoutConfig = None,
-        cache_config: CacheConfig = None,
+        cached_session: CachedSession | None = None,
+        retry_config: RetryConfig | None = None,
+        timeout_config: TimeoutConfig | None = None,
+        cache_config: CacheConfig | None = None,
     ):
         """
         Initializes an instance of the ApiFFBBAppClient class.
@@ -55,16 +66,19 @@ class ApiFFBBAppClient:
         self.url = url
         self.debug = debug
         self.cached_session = cached_session
-        self.headers = {"Authorization": f"Bearer {self._bearer_token}"}
+        self.headers = {
+            "Authorization": f"Bearer {self._bearer_token}",
+            "user-agent": DEFAULT_USER_AGENT,
+        }
 
         # Configure retry and timeout settings
         self.retry_config = retry_config or get_default_retry_config()
         self.timeout_config = timeout_config or get_default_timeout_config()
 
         # Configure cache manager
-        self.cache_manager = get_cache_manager(cache_config)
+        self.cache_manager = CacheManager(cache_config)
         if cached_session is None:
-            self.cached_session = self.cache_manager.get_session()
+            self.cached_session = self.cache_manager.session
         else:
             self.cached_session = cached_session
 
@@ -87,7 +101,9 @@ class ApiFFBBAppClient:
         """Get the bearer token."""
         return self._bearer_token
 
-    def get_lives(self, cached_session: CachedSession = None) -> list[Live]:
+    def get_lives(
+        self, cached_session: CachedSession | None = None
+    ) -> list[Live] | None:
         """
         Retrieves a list of live events with retry logic.
 
@@ -97,7 +113,7 @@ class ApiFFBBAppClient:
         Returns:
             List[Live]: A list of Live objects representing the live events.
         """
-        url = f"{self.url}json/lives.json"
+        url = f"{self.url}{ENDPOINT_LIVES}"
         return catch_result(
             lambda: lives_from_dict(
                 http_get_json(
@@ -116,8 +132,8 @@ class ApiFFBBAppClient:
         competition_id: int,
         deep_limit: str | None = "1000",
         fields: list[str] | None = None,
-        cached_session: CachedSession = None,
-    ) -> GetCompetitionResponse:
+        cached_session: CachedSession | None = None,
+    ) -> GetCompetitionResponse | None:
         """
         Retrieves detailed information about a competition.
 
@@ -133,9 +149,9 @@ class ApiFFBBAppClient:
             GetCompetitionResponse: Competition data with nested phases,
                 poules, and rencontres
         """
-        url = f"{self.url}items/ffbbserver_competitions/{competition_id}"
+        url = f"{self.url}{ENDPOINT_COMPETITIONS}/{competition_id}"
 
-        params = {}
+        params: dict[str, Any] = {}
         if deep_limit:
             params["deep[phases][poules][rencontres][_limit]"] = deep_limit
 
@@ -169,8 +185,8 @@ class ApiFFBBAppClient:
         poule_id: int,
         deep_limit: str | None = "1000",
         fields: list[str] | None = None,
-        cached_session: CachedSession = None,
-    ) -> GetPouleResponse:
+        cached_session: CachedSession | None = None,
+    ) -> GetPouleResponse | None:
         """
         Retrieves detailed information about a poule.
 
@@ -185,9 +201,9 @@ class ApiFFBBAppClient:
         Returns:
             GetPouleResponse: Poule data with rencontres
         """
-        url = f"{self.url}items/ffbbserver_poules/{poule_id}"
+        url = f"{self.url}{ENDPOINT_POULES}/{poule_id}"
 
-        params = {}
+        params: dict[str, Any] = {}
         if deep_limit:
             params["deep[rencontres][_limit]"] = deep_limit
             params["deep[classements][_limit]"] = deep_limit
@@ -216,7 +232,7 @@ class ApiFFBBAppClient:
         self,
         fields: list[str] | None = None,
         filter_criteria: str | None = '{"actif":{"_eq":true}}',
-        cached_session: CachedSession = None,
+        cached_session: CachedSession | None = None,
     ) -> list[GetSaisonsResponse]:
         """
         Retrieves list of seasons.
@@ -231,9 +247,9 @@ class ApiFFBBAppClient:
         Returns:
             List[GetSaisonsResponse]: List of season data
         """
-        url = f"{self.url}items/ffbbserver_saisons"
+        url = f"{self.url}{ENDPOINT_SAISONS}"
 
-        params = {}
+        params: dict[str, Any] = {}
         if fields:
             params["fields[]"] = fields
         else:
@@ -255,14 +271,16 @@ class ApiFFBBAppClient:
 
         # Extract the actual data from the response wrapper
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return GetSaisonsResponse.from_list(actual_data) if actual_data else []
+        if actual_data and isinstance(actual_data, list):
+            return GetSaisonsResponse.from_list(actual_data)
+        return []
 
     def get_organisme(
         self,
         organisme_id: int,
         fields: list[str] | None = None,
-        cached_session: CachedSession = None,
-    ) -> GetOrganismeResponse:
+        cached_session: CachedSession | None = None,
+    ) -> GetOrganismeResponse | None:
         """
         Retrieves detailed information about an organisme.
 
@@ -275,9 +293,9 @@ class ApiFFBBAppClient:
         Returns:
             GetOrganismeResponse: Organisme data with members, competitions, etc.
         """
-        url = f"{self.url}items/ffbbserver_organismes/{organisme_id}"
+        url = f"{self.url}{ENDPOINT_ORGANISMES}/{organisme_id}"
 
-        params = {}
+        params: dict[str, Any] = {}
         if fields:
             params["fields[]"] = fields
         else:
@@ -299,3 +317,79 @@ class ApiFFBBAppClient:
         # Extract the actual data from the response wrapper
         actual_data = data.get("data") if data and isinstance(data, dict) else data
         return GetOrganismeResponse.from_dict(actual_data) if actual_data else None
+
+    def list_competitions(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        cached_session: CachedSession | None = None,
+    ) -> list[GetCompetitionResponse | None]:
+        """
+        Lists competitions with optional field selection.
+
+        Args:
+            limit (int): Maximum number of competitions to return. Defaults to 10.
+            fields (List[str], optional): List of fields to retrieve.
+                If None, uses basic fields (id, nom).
+            cached_session (CachedSession, optional): The cached session to use
+
+        Returns:
+            list[GetCompetitionResponse]: List of competition data
+        """
+        url = f"{self.url}{ENDPOINT_COMPETITIONS}"
+
+        params: dict[str, Any] = {"limit": str(limit)}
+
+        if fields:
+            params["fields[]"] = fields
+        else:
+            params["fields[]"] = ["id", "nom"]
+
+        final_url = url_with_params(url, params)
+        data = catch_result(
+            lambda: http_get_json(
+                final_url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or self.cached_session,
+            )
+        )
+
+        # Extract the actual data from the response wrapper
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        if actual_data and isinstance(actual_data, list):
+            return [GetCompetitionResponse.from_dict(item) for item in actual_data]
+        return []
+
+    def get_configuration(
+        self,
+        cached_session: CachedSession | None = None,
+    ) -> GetConfigurationResponse | None:
+        """
+        Retrieves the API configuration including bearer tokens.
+
+        This endpoint returns configuration data including:
+        - key_dh: The API bearer token for api.ffbb.app
+        - key_ms: The Meilisearch bearer token for meilisearch-prod.ffbb.app
+
+        Args:
+            cached_session (CachedSession, optional): The cached session to use
+
+        Returns:
+            GetConfigurationResponse: Configuration data with tokens
+        """
+        url = f"{self.url}{ENDPOINT_CONFIGURATION}"
+        data = catch_result(
+            lambda: http_get_json(
+                url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or self.cached_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
+            )
+        )
+
+        # Extract the actual data from the response wrapper
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetConfigurationResponse.from_dict(actual_data) if actual_data else None

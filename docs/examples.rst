@@ -26,6 +26,145 @@ Simple Client Creation and Usage
     lives = client.get_lives()
     print(f"Found {len(lives)} live games")
 
+Token Management
+================
+
+The FFBB API Client V2 provides advanced token management features introduced in v1.2.0.
+
+Automatic Token Resolution (Recommended)
+-----------------------------------------
+
+The ``TokenManager`` class automatically resolves API tokens from multiple sources:
+
+.. code-block:: python
+
+    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+
+    # Automatic token resolution - no configuration needed!
+    tokens = TokenManager.get_tokens()
+
+    client = FFBBAPIClientV2.create(
+        api_bearer_token=tokens.api_token,
+        meilisearch_bearer_token=tokens.meilisearch_token
+    )
+
+Token Resolution Priority:
+
+1. **Environment Variables** (if set)
+2. **FFBB API Configuration Endpoint** (public, automatic fallback)
+
+Token Caching and Performance
+------------------------------
+
+Tokens are automatically cached for performance:
+
+.. code-block:: python
+
+    # First call fetches tokens
+    tokens = TokenManager.get_tokens()
+
+    # Subsequent calls use cached tokens (fast!)
+    tokens = TokenManager.get_tokens()
+
+    # Force refresh with new parameters (v1.2.0+)
+    tokens = TokenManager.get_tokens(use_cache=False)
+
+Cache Management
+~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    from ffbb_api_client_v2.utils.cache_manager import CacheManager
+
+    # Clear token cache
+    CacheManager().clear()
+
+Configuration Management (v1.2.0+)
+====================================
+
+Centralized configuration constants for better maintainability:
+
+.. code-block:: python
+
+    from ffbb_api_client_v2 import config
+
+    # API endpoints
+    print(f"API Base URL: {config.API_FFBB_BASE_URL}")
+    print(f"Meilisearch URL: {config.MEILISEARCH_BASE_URL}")
+
+    # Default headers
+    print(f"User Agent: {config.DEFAULT_USER_AGENT}")
+
+    # Endpoint paths
+    print(f"Configuration: {config.ENDPOINT_CONFIGURATION}")
+    print(f"Lives: {config.ENDPOINT_LIVES}")
+
+Advanced Features (v1.2.0+)
+============================
+
+Parallel Test Execution
+-----------------------
+
+Run tests in parallel for faster CI/CD:
+
+.. code-block:: bash
+
+    # Install pytest-xdist
+    pip install pytest-xdist
+
+    # Run tests in parallel
+    pytest -n auto
+
+Python 3.10+ Features
+----------------------
+
+Leverage modern Python features:
+
+.. code-block:: python
+
+    # Union types with | syntax (Python 3.10+)
+    from ffbb_api_client_v2.models import GetOrganismeResponse
+
+    def process_organisme(org: GetOrganismeResponse | None) -> str:
+        return org.nom if org else "Unknown"
+
+Enhanced Type Safety
+--------------------
+
+Comprehensive type hints throughout the codebase:
+
+.. code-block:: python
+
+    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+    from typing import Optional
+
+    def safe_get_organisme(client: FFBBAPIClientV2, org_id: int) -> Optional[GetOrganismeResponse]:
+        """Safely get organisme with proper error handling."""
+        try:
+            return client.get_organisme(org_id)
+        except Exception:
+            return None
+
+Manual Token Configuration
+--------------------------
+
+If you prefer to manage tokens manually:
+
+.. code-block:: python
+
+    import os
+    from dotenv import load_dotenv
+    from ffbb_api_client_v2 import FFBBAPIClientV2
+
+    load_dotenv()
+    api_token = os.getenv("API_FFBB_APP_BEARER_TOKEN")
+    meilisearch_token = os.getenv("MEILISEARCH_BEARER_TOKEN")
+
+    client = FFBBAPIClientV2.create(
+        api_bearer_token=api_token,
+        meilisearch_bearer_token=meilisearch_token
+    )
+
 Advanced Client Usage
 =====================
 

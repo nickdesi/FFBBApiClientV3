@@ -1,6 +1,133 @@
 # Release Notes - FFBB API Client V2
 
-## Version 1.1.0 (Next Release)
+## Version 1.2.0 (Next Release)
+
+### 🚀 Major Features & Improvements
+
+#### **Enhanced Token Management System**
+- **NEW**: `TokenManager` class for automatic token resolution and centralized management
+  - Fetches tokens from environment variables or FFBB API configuration endpoint
+  - Uses HTTP-level caching via `CacheManager` for configuration requests
+  - `FFBBTokens` dataclass for type-safe token handling
+- **IMPROVED**: Simplified authentication workflow - no manual token management required
+- **ADDED**: Automatic token validation and error handling
+
+#### **Centralized Configuration Management**
+- **NEW**: Centralized configuration module (`config.py`) with all API constants
+  - `API_FFBB_BASE_URL`, `MEILISEARCH_BASE_URL` constants
+  - `DEFAULT_USER_AGENT` for consistent API requests
+  - Endpoint path constants (`ENDPOINT_CONFIGURATION`, `ENDPOINT_LIVES`, etc.)
+  - Meilisearch endpoint path constants
+- **IMPROVED**: Better maintainability with single source of truth for API URLs
+
+#### **Enhanced Development Experience**
+- **NEW**: Parallel test execution with pytest-xdist for faster CI/CD
+- **IMPROVED**: Python 3.10 minimum requirement enabling modern language features
+- **ADDED**: Comprehensive type annotations throughout the codebase
+- **IMPROVED**: MyPy integration with strict type checking
+
+#### **Code Quality & Performance**
+- **IMPROVED**: Eliminated all MyPy errors and reduced Pylint warnings significantly
+- **ADDED**: MyPy/Pyright configuration and type stubs
+- **IMPROVED**: Code formatting and linting standards (Black, Ruff, Flake8)
+- **OPTIMIZED**: Reduced test coverage gaps and improved test reliability
+
+### 🔧 Technical Improvements
+
+#### **API Client Architecture**
+- **REFACTORED**: Clean separation between API clients and search clients
+- **IMPROVED**: Better error handling and logging throughout the codebase
+- **ADDED**: Secure logger usage in HTTP helpers (replacing print statements)
+- **REFACTORED**: Singleton pattern for CacheManager to prevent multiple instances
+
+#### **Testing Framework Enhancements**
+- **BOOSTED**: Test coverage from 81% to 92% with 346 comprehensive tests
+- **ADDED**: 51 missing coverage tests and removed 7 dead code functions
+- **REFACTORED**: Hierarchical test directory structure for better organization
+- **IMPROVED**: Dynamic competition IDs in tests to avoid 403 errors
+
+#### **Model Architecture Refactoring**
+- **REFACTORED**: Enforced 1 class = 1 file across all model modules
+- **IMPROVED**: Consistent model field types aligned with actual API data
+- **MIGRATED**: Models to use new converter_utils helpers (from_str, from_int, etc.)
+- **ELIMINATED**: All from_none usage by typing 45 properties across 13 models
+
+### 📚 Documentation & Examples
+
+#### **Enhanced Examples**
+- **NEW**: Advanced team ranking analysis example with real-world usage
+- **IMPROVED**: Complete usage example with all major features demonstration
+- **UPDATED**: Quick start example with modern TokenManager usage
+- **ADDED**: Comprehensive example README with usage instructions
+
+#### **Documentation Updates**
+- **FIXED**: Critical bugs in README.rst (variable names, package structure)
+- **UPDATED**: Migration guide for v1.1.0 and preparation for v1.2.0
+- **IMPROVED**: Package structure documentation reflecting current architecture
+- **STANDARDIZED**: TokenManager usage examples throughout documentation
+
+### 🐛 Bug Fixes & Stability
+
+- **FIXED**: Model field type mismatches with actual API responses
+- **FIXED**: Parsing errors in search results (rencontres, organismes)
+- **FIXED**: 403 errors from FFBB API by adding user-agent headers
+- **FIXED**: Test flakiness with dynamic competition ID resolution
+- **FIXED**: Niveau naming conflicts and dead code removal
+
+### ⚡ Performance Improvements
+
+- **OPTIMIZED**: Parallel test execution reducing CI/CD time
+- **IMPROVED**: Efficient model conversion and data parsing
+- **ENHANCED**: HTTP caching with CacheManager singleton
+- **STREAMLINED**: Codebase with removed dead code and unused imports
+
+### 🔄 Breaking Changes
+
+- **BREAKING**: `TokenManager.get_tokens()` signature changed: `use_cache` parameter replaced by `cache_config`
+- **BREAKING**: `TokenManager.clear_cache()` method removed - use `CacheManager().clear()` instead
+- **BREAKING**: Python 3.9 support dropped - minimum version now 3.10
+
+**Note**: These changes justify the minor version bump from v1.1.1 to v1.2.0
+
+### 📦 Dependencies
+
+- **UPDATED**: All tools to latest versions (pytest, black, ruff, mypy, etc.)
+- **MAINTAINED**: Core dependencies remain compatible
+- **IMPROVED**: Better Python 3.10+ compatibility and performance
+
+### 🧪 Testing
+
+- **ADDED**: 51 new test cases covering previously untested code
+- **IMPROVED**: Test framework with parallel execution capabilities
+- **ENHANCED**: Integration tests with real API validation
+- **STABILIZED**: Test suite with dynamic IDs and reduced flakiness
+
+---
+
+## Migration Guide from v1.1.x to v1.2.0
+
+### Token Management Updates
+```python
+# Before v1.2.0
+tokens = TokenManager.get_tokens(use_cache=False)
+TokenManager.clear_cache()
+
+# After v1.2.0
+tokens = TokenManager.get_tokens(use_cache=False)
+from ffbb_api_client_v2.utils.cache_manager import CacheManager
+CacheManager().clear()
+```
+
+### Python Version Requirement
+```bash
+# Before: Python 3.9+
+# After: Python 3.10+ (minimum)
+python3.10 --version
+```
+
+---
+
+## Version 1.1.0 (Previous Release)
 
 ### 🚀 Major Features & Improvements
 
@@ -161,4 +288,4 @@ if organisme is None:
 
 ## Version 1.0.x (Previous Releases)
 
-Previous releases focused on basic API functionality and package structure. This release represents a major evolution toward a production-ready, type-safe client library with comprehensive testing and documentation.
+Previous releases focused on basic API functionality and package structure. Version 1.1.0 represents a major evolution toward a production-ready, type-safe client library with comprehensive testing and documentation.

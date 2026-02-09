@@ -1,25 +1,25 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
+from datetime import datetime
 from typing import Any
 
 from ..utils.converter_utils import (
+    from_datetime,
     from_float,
-    from_none,
+    from_obj,
     from_str,
-    from_union,
-    is_type,
-    to_class,
-    to_float,
 )
 from .coordonnees import Coordonnees
 
 
+@dataclass
 class Cartographie:
     adresse: str | None = None
-    code_postal: int | None = None
+    code_postal: str | None = None
     coordonnees: Coordonnees | None = None
-    date_created: None
-    date_updated: None
+    date_created: datetime | None = None
+    date_updated: datetime | None = None
     cartographie_id: str | None = None
     latitude: float | None = None
     longitude: float | None = None
@@ -27,96 +27,56 @@ class Cartographie:
     ville: str | None = None
     status: str | None = None
 
-    def __init__(
-        self,
-        adresse: str | None,
-        code_postal: int | None,
-        coordonnees: Coordonnees | None,
-        date_created: None,
-        date_updated: None,
-        id: str | None,
-        latitude: float | None,
-        longitude: float | None,
-        title: str | None,
-        ville: str | None,
-        status: str | None,
-    ):
-        self.adresse = adresse
-        self.code_postal = code_postal
-        self.coordonnees = coordonnees
-        self.date_created = date_created
-        self.date_updated = date_updated
-        self.cartographie_id = id
-        self.latitude = latitude
-        self.longitude = longitude
-        self.title = title
-        self.ville = ville
-        self.status = status
-
     @staticmethod
     def from_dict(obj: Any) -> Cartographie:
         assert isinstance(obj, dict)
-        adresse = from_union([from_str, from_none], obj.get("adresse"))
-        code_postal = from_union(
-            [lambda x: int(from_str(x)), from_none], obj.get("codePostal")
-        )
-        coordonnees = from_union(
-            [Coordonnees.from_dict, from_none], obj.get("coordonnees")
-        )
-        date_created = from_none(obj.get("date_created"))
-        date_updated = from_none(obj.get("date_updated"))
-        cartographie_id = from_union([from_str, from_none], obj.get("id"))
-        latitude = from_union([from_float, from_none], obj.get("latitude"))
-        longitude = from_union([from_float, from_none], obj.get("longitude"))
-        title = from_union([from_str, from_none], obj.get("title"))
-        ville = from_union([from_str, from_none], obj.get("ville"))
-        status = from_union([from_str, from_none], obj.get("status"))
+        adresse = from_str(obj, "adresse")
+        code_postal = from_str(obj, "codePostal")
+        coordonnees = from_obj(Coordonnees.from_dict, obj, "coordonnees")
+        date_created = from_datetime(obj, "date_created")
+        date_updated = from_datetime(obj, "date_updated")
+        cartographie_id = from_str(obj, "id")
+        latitude = from_float(obj, "latitude")
+        longitude = from_float(obj, "longitude")
+        title = from_str(obj, "title")
+        ville = from_str(obj, "ville")
+        status = from_str(obj, "status")
         return Cartographie(
-            adresse,
-            code_postal,
-            coordonnees,
-            date_created,
-            date_updated,
-            cartographie_id,
-            latitude,
-            longitude,
-            title,
-            ville,
-            status,
+            adresse=adresse,
+            code_postal=code_postal,
+            coordonnees=coordonnees,
+            date_created=date_created,
+            date_updated=date_updated,
+            cartographie_id=cartographie_id,
+            latitude=latitude,
+            longitude=longitude,
+            title=title,
+            ville=ville,
+            status=status,
         )
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.adresse is not None:
-            result["adresse"] = from_union([from_str, from_none], self.adresse)
+            result["adresse"] = self.adresse
         if self.code_postal is not None:
-            result["codePostal"] = from_union(
-                [
-                    lambda x: from_none((lambda x: is_type(type(None), x))(x)),
-                    lambda x: from_str(
-                        (lambda x: str((lambda x: is_type(int, x))(x)))(x)
-                    ),
-                ],
-                self.code_postal,
-            )
+            result["codePostal"] = self.code_postal
         if self.coordonnees is not None:
-            result["coordonnees"] = from_union(
-                [lambda x: to_class(Coordonnees, x), from_none], self.coordonnees
-            )
+            result["coordonnees"] = self.coordonnees.to_dict()
         if self.date_created is not None:
-            result["date_created"] = from_none(self.date_created)
+            result["date_created"] = self.date_created.isoformat()
         if self.date_updated is not None:
-            result["date_updated"] = from_none(self.date_updated)
+            result["date_updated"] = self.date_updated.isoformat()
         if self.cartographie_id is not None:
-            result["id"] = from_union([from_str, from_none], self.cartographie_id)
+            result["id"] = self.cartographie_id
         if self.latitude is not None:
-            result["latitude"] = from_union([to_float, from_none], self.latitude)
+            result["latitude"] = self.latitude
         if self.longitude is not None:
-            result["longitude"] = from_union([to_float, from_none], self.longitude)
+            result["longitude"] = self.longitude
         if self.title is not None:
-            result["title"] = from_union([from_str, from_none], self.title)
+            result["title"] = self.title
         if self.ville is not None:
-            result["ville"] = from_union([from_str, from_none], self.ville)
+            result["ville"] = self.ville
         if self.status is not None:
-            result["status"] = from_union([from_str, from_none], self.status)
+            result["status"] = self.status
         return result

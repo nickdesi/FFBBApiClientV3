@@ -21,13 +21,12 @@ Configuration:
 
 import os
 from dataclasses import dataclass
-from typing import Optional, Union
 
 from dotenv import load_dotenv
 
 from ffbb_api_client_v2 import FFBBAPIClientV2
+from ffbb_api_client_v2.models.get_organisme_response import GetOrganismeResponse
 from ffbb_api_client_v2.models.niveau_models import NiveauType
-from ffbb_api_client_v2.models.organismes_models import GetOrganismeResponse
 from ffbb_api_client_v2.models.poules_models import GetPouleResponse
 from ffbb_api_client_v2.models.rankings_models import TeamRanking
 
@@ -35,7 +34,7 @@ from ffbb_api_client_v2.models.rankings_models import TeamRanking
 TEAM_NAME = "SENAS BASKET BALL"
 
 # Competition filters - customize for your search criteria
-RANKING_FILTERS: dict[str, Union[str, int]] = {
+RANKING_FILTERS: dict[str, str | int] = {
     "sexe": "M",  # "M" for Male, "F" for Female
     "zone": "regional",  # "departemental", "regional", "national", or "elite"
     "division": 2,  # Division number (1, 2, 3, etc.)
@@ -48,10 +47,10 @@ RANKING_FILTERS: dict[str, Union[str, int]] = {
 class TeamAnalysisResult:
     """Result of team analysis with ranking and match data."""
 
-    classement: Optional[TeamRanking]
+    classement: TeamRanking | None
     matches: list[GetPouleResponse.RencontresitemModel]
     total_matches: int
-    error_message: Optional[str] = None
+    error_message: str | None = None
 
     @property
     def has_error(self) -> bool:
@@ -65,7 +64,7 @@ def create_custom_filters(
     division: int = 2,
     niveau: str = "DIV",
     categorie: str = "SENIOR",
-) -> dict[str, Union[str, int]]:
+) -> dict[str, str | int]:
     """Create custom competition filters.
 
     Args:
@@ -89,7 +88,7 @@ def create_custom_filters(
 
 def filter_engagement_by_criteria(
     engagement: GetOrganismeResponse.EngagementsitemModel,
-    filters: dict[str, Union[str, int]],
+    filters: dict[str, str | int],
 ) -> bool:
     """Filter engagement based on competition criteria.
 
@@ -150,7 +149,7 @@ def filter_engagement_by_criteria(
     return True
 
 
-def find_organisme_by_name(client: FFBBAPIClientV2, team_name: str) -> Optional[int]:
+def find_organisme_by_name(client: FFBBAPIClientV2, team_name: str) -> int | None:
     """Find organisme ID by searching for team name.
 
     Args:
@@ -194,7 +193,7 @@ def find_organisme_by_name(client: FFBBAPIClientV2, team_name: str) -> Optional[
 def find_team_poule_id(
     client: FFBBAPIClientV2,
     team_name: str,
-    filters: Optional[dict[str, Union[str, int]]] = None,
+    filters: dict[str, str | int] | None = None,
 ) -> int:
     """Find the poule (pool) ID for a team using filtering criteria.
 
@@ -302,7 +301,7 @@ def find_team_poule_id(
 
 
 def load_team_data(
-    team_name: str, filters: Optional[dict[str, Union[str, int]]] = None
+    team_name: str, filters: dict[str, str | int] | None = None
 ) -> GetPouleResponse:
     """Load team ranking and match data from FFBB API.
 
@@ -369,7 +368,7 @@ def display_official_ranking(poule_response: GetPouleResponse) -> None:
 
 def find_team_by_name(
     poule_response: GetPouleResponse, team_name: str
-) -> Optional[TeamRanking]:
+) -> TeamRanking | None:
     """Find a team by name in the rankings."""
     if not poule_response.classements:
         return None

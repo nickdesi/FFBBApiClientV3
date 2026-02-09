@@ -1,66 +1,105 @@
-import sys
+"""
+FFBB API Client V2.
 
-from .clients.api_ffbb_app_client import ApiFFBBAppClient  # noqa
-from .clients.ffbb_api_client_v2 import FFBBAPIClientV2  # noqa
-from .clients.meilisearch_client import MeilisearchClient  # noqa
-from .clients.meilisearch_ffbb_client import MeilisearchFFBBClient  # noqa
-from .helpers.meilisearch_client_extension import MeilisearchClientExtension  # noqa
-from .helpers.multi_search_query_helper import generate_queries  # noqa
-from .models.multi_search_query import MultiSearchQuery  # noqa
-from .models.multi_search_result_competitions import (  # noqa
-    CompetitionsFacetDistribution,
-    CompetitionsFacetStats,
-    CompetitionsHit,
-    CompetitionsMultiSearchResult,
-)
-from .models.multi_search_result_organismes import (  # noqa
-    OrganismesFacetDistribution,
-    OrganismesFacetStats,
-    OrganismesHit,
-    OrganismesMultiSearchResult,
-)
-from .models.multi_search_result_pratiques import (  # noqa
-    PratiquesFacetDistribution,
-    PratiquesFacetStats,
-    PratiquesHit,
-    PratiquesMultiSearchResult,
-)
-from .models.multi_search_result_rencontres import (  # noqa
-    RencontresFacetDistribution,
-    RencontresFacetStats,
-    RencontresHit,
-    RencontresMultiSearchResult,
-)
-from .models.multi_search_result_salles import (  # noqa
-    SallesFacetDistribution,
-    SallesFacetStats,
-    SallesHit,
-    SallesMultiSearchResult,
-)
-from .models.multi_search_result_terrains import (  # noqa
-    TerrainsFacetDistribution,
-    TerrainsFacetStats,
-    TerrainsHit,
-    TerrainsMultiSearchResult,
-)
-from .models.multi_search_result_tournois import (  # noqa
-    TournoisFacetDistribution,
-    TournoisFacetStats,
-    TournoisHit,
-    TournoisMultiSearchResult,
-)
+A Python client library for the French Basketball Federation (FFBB) API,
+providing access to clubs, competitions, matches, and other basketball data.
+"""
 
-if sys.version_info[:2] >= (3, 8):
-    # TODO: Import directly (no need for conditional) when `python_requires = >= 3.9`
-    from importlib.metadata import PackageNotFoundError, version  # pragma: no cover
-else:
-    from importlib_metadata import PackageNotFoundError, version  # pragma: no cover
+from .clients.api_ffbb_app_client import ApiFFBBAppClient
+from .clients.ffbb_api_client_v2 import FFBBAPIClientV2
+from .clients.meilisearch_client import MeilisearchClient
+from .clients.meilisearch_ffbb_client import MeilisearchFFBBClient
+from .helpers.meilisearch_client_extension import MeilisearchClientExtension
+from .helpers.multi_search_query_helper import generate_queries
+from .models.competitions_facet_distribution import CompetitionsFacetDistribution
+from .models.competitions_facet_stats import CompetitionsFacetStats
+from .models.competitions_hit import CompetitionsHit
+from .models.multi_search_query import MultiSearchQuery
+from .models.multi_search_result_competitions import CompetitionsMultiSearchResult
+from .models.multi_search_result_organismes import OrganismesMultiSearchResult
+from .models.multi_search_result_pratiques import PratiquesMultiSearchResult
+from .models.multi_search_result_rencontres import RencontresMultiSearchResult
+from .models.multi_search_result_salles import SallesMultiSearchResult
+from .models.multi_search_result_terrains import TerrainsMultiSearchResult
+from .models.multi_search_result_tournois import TournoisMultiSearchResult
+from .models.organismes_facet_distribution import OrganismesFacetDistribution
+from .models.organismes_facet_stats import OrganismesFacetStats
+from .models.organismes_hit import OrganismesHit
+from .models.pratiques_facet_distribution import PratiquesFacetDistribution
+from .models.pratiques_facet_stats import PratiquesFacetStats
+from .models.pratiques_hit import PratiquesHit
+from .models.rencontres_facet_distribution import RencontresFacetDistribution
+from .models.rencontres_facet_stats import RencontresFacetStats
+from .models.rencontres_hit import RencontresHit
+from .models.salles_facet_distribution import SallesFacetDistribution
+from .models.salles_facet_stats import SallesFacetStats
+from .models.salles_hit import SallesHit
+from .models.terrains_facet_distribution import TerrainsFacetDistribution
+from .models.terrains_facet_stats import TerrainsFacetStats
+from .models.terrains_hit import TerrainsHit
+from .models.tournois_facet_distribution import TournoisFacetDistribution
+from .models.tournois_facet_stats import TournoisFacetStats
+from .models.tournois_hit import TournoisHit
+from .utils.token_manager import FFBBTokens, TokenManager
+
+# Public API exports
+__all__ = [
+    # Clients
+    "ApiFFBBAppClient",
+    "FFBBAPIClientV2",
+    "MeilisearchClient",
+    "MeilisearchFFBBClient",
+    # Helpers
+    "MeilisearchClientExtension",
+    "generate_queries",
+    # Query
+    "MultiSearchQuery",
+    # Competitions
+    "CompetitionsFacetDistribution",
+    "CompetitionsFacetStats",
+    "CompetitionsHit",
+    "CompetitionsMultiSearchResult",
+    # Organismes
+    "OrganismesFacetDistribution",
+    "OrganismesFacetStats",
+    "OrganismesHit",
+    "OrganismesMultiSearchResult",
+    # Pratiques
+    "PratiquesFacetDistribution",
+    "PratiquesFacetStats",
+    "PratiquesHit",
+    "PratiquesMultiSearchResult",
+    # Rencontres
+    "RencontresFacetDistribution",
+    "RencontresFacetStats",
+    "RencontresHit",
+    "RencontresMultiSearchResult",
+    # Salles
+    "SallesFacetDistribution",
+    "SallesFacetStats",
+    "SallesHit",
+    "SallesMultiSearchResult",
+    # Terrains
+    "TerrainsFacetDistribution",
+    "TerrainsFacetStats",
+    "TerrainsHit",
+    "TerrainsMultiSearchResult",
+    # Tournois
+    "TournoisFacetDistribution",
+    "TournoisFacetStats",
+    "TournoisHit",
+    "TournoisMultiSearchResult",
+    # Token management
+    "FFBBTokens",
+    "TokenManager",
+]
+
+from importlib.metadata import PackageNotFoundError, version
 
 try:
-    # Change here if project is renamed and does not equal the package name
-    dist_name = __name__
-    __version__ = version(dist_name)
-except PackageNotFoundError:  # pragma: no cover
+    DIST_NAME = __name__
+    __version__ = version(DIST_NAME)
+except PackageNotFoundError:
     __version__ = "unknown"
 finally:
     del version, PackageNotFoundError

@@ -1,31 +1,27 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import Any
 
-from ..utils.converter_utils import from_int, from_none, from_union
+from ..utils.converter_utils import from_int
 
 
+@dataclass
 class NiveauClass:
     départemental: int | None = None
     régional: int | None = None
 
-    def __init__(self, départemental: int | None, régional: int | None) -> None:
-        self.départemental = départemental
-        self.régional = régional
-
     @staticmethod
     def from_dict(obj: Any) -> NiveauClass:
         assert isinstance(obj, dict)
-        départemental = from_union([from_int, from_none], obj.get("Départemental"))
-        régional = from_union([from_int, from_none], obj.get("Régional"))
-        return NiveauClass(départemental, régional)
+        départemental = from_int(obj, "Départemental")
+        régional = from_int(obj, "Régional")
+        return NiveauClass(départemental=départemental, régional=régional)
 
     def to_dict(self) -> dict:
         result: dict = {}
         if self.départemental is not None:
-            result["Départemental"] = from_union(
-                [from_int, from_none], self.départemental
-            )
+            result["Départemental"] = self.départemental
         if self.régional is not None:
-            result["Régional"] = from_union([from_int, from_none], self.régional)
+            result["Régional"] = self.régional
         return result
