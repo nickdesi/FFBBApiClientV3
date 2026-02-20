@@ -90,23 +90,7 @@ class Test018CacheManager(unittest.TestCase):
         self.assertFalse(manager.is_enabled())
         self.assertIsNone(manager.get_session())
 
-    @patch("ffbb_api_client_v2.utils.cache_manager.CachedSession")
-    def test_cache_manager_initialization_redis(self, mock_cached_session):
-        """Test cache manager initialization with Redis backend."""
-        config = CacheConfig(backend="redis", redis_url="redis://localhost:6379")
-        manager = CacheManager(config)
 
-        self.assertTrue(manager.is_enabled())
-        mock_cached_session.assert_called_once()
-
-    def test_cache_manager_initialization_redis_no_url(self):
-        """Test cache manager initialization with Redis backend but no URL."""
-        config = CacheConfig(backend="redis")
-
-        with self.assertRaises(ValueError) as context:
-            CacheManager(config)
-
-        self.assertIn("Redis URL is required", str(context.exception))
 
     def test_cache_manager_initialization_invalid_backend(self):
         """Test cache manager initialization with invalid backend."""
@@ -161,7 +145,8 @@ class Test018CacheManager(unittest.TestCase):
         # Test clear cache
         manager.clear_cache()  # Should not raise an exception
 
-    def test_warm_cache(self):
+    @patch("ffbb_api_client_v2.utils.cache_manager.hishel.httpx.SyncCacheClient.get")
+    def test_warm_cache(self, mock_get):
         """Test cache warming functionality."""
         manager = CacheManager(self.config)
 
@@ -170,6 +155,8 @@ class Test018CacheManager(unittest.TestCase):
 
         # This should not raise an exception even if URLs are not reachable
         manager.warm_cache(urls, headers)
+        
+        self.assertEqual(mock_get.call_count, 2)
 
     def test_invalidate_pattern(self):
         """Test cache invalidation by pattern."""

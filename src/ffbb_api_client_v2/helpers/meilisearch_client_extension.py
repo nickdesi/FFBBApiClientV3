@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from requests_cache import CachedSession
+from httpx import Client
 
 from ..clients.meilisearch_client import MeilisearchClient
 from ..models.multi_search_query import MultiSearchQuery
@@ -16,7 +16,7 @@ class MeilisearchClientExtension(MeilisearchClient):
         bearer_token: str,
         url: str,
         debug: bool = False,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ):
         if cached_session is None:
             cached_session = CacheManager().session
@@ -25,7 +25,7 @@ class MeilisearchClientExtension(MeilisearchClient):
     def smart_multi_search(
         self,
         queries: Sequence[MultiSearchQuery] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> MultiSearchResults | None:
         results = self.multi_search(queries, cached_session)
 
@@ -43,7 +43,7 @@ class MeilisearchClientExtension(MeilisearchClient):
     def recursive_smart_multi_search(
         self,
         queries: Sequence[MultiSearchQuery] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> MultiSearchResults | None:
         result = self.smart_multi_search(queries, cached_session)
         if not result or not queries or not result.results:
@@ -79,7 +79,7 @@ class MeilisearchClientExtension(MeilisearchClient):
     def recursive_multi_search(
         self,
         queries: Sequence[MultiSearchQuery] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> MultiSearchResults | None:
         """Alias for recursive_smart_multi_search for backward compatibility."""
         return self.recursive_smart_multi_search(queries, cached_session)

@@ -6,7 +6,7 @@ import json
 from collections.abc import Callable
 from typing import TypeVar
 
-from requests import ReadTimeout
+from httpx import ReadTimeout
 
 __all__ = ["catch_result"]
 

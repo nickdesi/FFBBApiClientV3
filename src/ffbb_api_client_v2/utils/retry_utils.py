@@ -10,9 +10,8 @@ import time
 from collections.abc import Callable
 from typing import Any
 
-import requests
-from requests import Response, Session
-from requests_cache import CachedSession
+import httpx
+from httpx import Response, Client
 
 from .secure_logging import get_secure_logger
 
@@ -62,7 +61,7 @@ class RetryConfig:
         self.jitter = jitter
         self.retry_on_status_codes = retry_on_status_codes or [429, 500, 502, 503, 504]
         self.retry_on_exceptions = retry_on_exceptions or (
-            requests.RequestException,
+            httpx.RequestError,
             ConnectionError,
             TimeoutError,
         )
@@ -201,7 +200,7 @@ def execute_with_retry(
             return response
 
         except (
-            requests.RequestException,
+            httpx.RequestError,
             ConnectionError,
             TimeoutError,
             OSError,
@@ -230,7 +229,7 @@ def make_http_request_with_retry(
     url: str,
     headers: dict[str, str],
     data: dict[str, Any] | None = None,
-    cached_session: CachedSession | None = None,
+    cached_session: Client | None = None,
     retry_config: RetryConfig = DEFAULT_RETRY_CONFIG,
     timeout_config: TimeoutConfig = DEFAULT_TIMEOUT_CONFIG,
     debug: bool = False,
@@ -256,11 +255,11 @@ def make_http_request_with_retry(
         if debug:
             logger.debug(f"Making {method} request to {url}")
 
-        session: Session
+        session: Client
         if cached_session:
             session = cached_session
         else:
-            session = requests.Session()
+            session = httpx.Client()
 
         if method.upper() == "GET":
             return session.get(

@@ -201,11 +201,11 @@ class Test016RetryTimeout(unittest.TestCase):
         self.assertEqual(config.backoff_factor, 2.0)
         self.assertTrue(config.jitter)
         self.assertEqual(config.retry_on_status_codes, [429, 500, 502, 503, 504])
-        import requests
+        import httpx
 
         self.assertEqual(
             config.retry_on_exceptions,
-            (requests.RequestException, ConnectionError, TimeoutError),
+            (httpx.RequestError, ConnectionError, TimeoutError),
         )
 
 

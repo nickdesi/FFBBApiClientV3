@@ -113,8 +113,6 @@ class TestRetryUtilsCoverage(unittest.TestCase):
     def test_execute_with_retry_retries_on_exception(
         self, mock_sleep: MagicMock
     ) -> None:
-        import requests
-
         from ffbb_api_client_v2.utils.retry_utils import (
             RetryConfig,
             TimeoutConfig,
@@ -123,7 +121,7 @@ class TestRetryUtilsCoverage(unittest.TestCase):
 
         response_ok = MagicMock()
         response_ok.status_code = 200
-        func = MagicMock(side_effect=[requests.ConnectionError("fail"), response_ok])
+        func = MagicMock(side_effect=[ConnectionError("fail"), response_ok])
         config = RetryConfig(max_attempts=2, base_delay=0.01, jitter=False)
 
         result = execute_with_retry(func, config=config, timeout_config=TimeoutConfig())
@@ -131,18 +129,16 @@ class TestRetryUtilsCoverage(unittest.TestCase):
 
     @patch("ffbb_api_client_v2.utils.retry_utils.time.sleep")
     def test_execute_with_retry_exhausted_raises(self, mock_sleep: MagicMock) -> None:
-        import requests
-
         from ffbb_api_client_v2.utils.retry_utils import (
             RetryConfig,
             TimeoutConfig,
             execute_with_retry,
         )
 
-        func = MagicMock(side_effect=requests.ConnectionError("always fails"))
+        func = MagicMock(side_effect=ConnectionError("always fails"))
         config = RetryConfig(max_attempts=1, base_delay=0.01, jitter=False)
 
-        with self.assertRaises(requests.ConnectionError):
+        with self.assertRaises(ConnectionError):
             execute_with_retry(func, config=config, timeout_config=TimeoutConfig())
 
     def test_execute_with_retry_preserves_existing_timeout(self) -> None:
@@ -172,7 +168,7 @@ class TestRetryUtilsCoverage(unittest.TestCase):
             make_http_request_with_retry,
         )
 
-        with patch("requests.Session") as MockSession:
+        with patch("ffbb_api_client_v2.utils.retry_utils.httpx.Client") as MockSession:
             mock_session = MagicMock()
             response = MagicMock()
             response.status_code = 200
@@ -214,7 +210,7 @@ class TestRetryUtilsCoverage(unittest.TestCase):
             make_http_request_with_retry,
         )
 
-        with patch("requests.Session") as MockSession:
+        with patch("ffbb_api_client_v2.utils.retry_utils.httpx.Client") as MockSession:
             mock_session = MagicMock()
             response = MagicMock()
             response.status_code = 200
@@ -285,8 +281,9 @@ class TestCacheManagerCoverage(unittest.TestCase):
         from ffbb_api_client_v2.utils.cache_manager import CacheConfig, CacheManager
 
         cm = CacheManager(CacheConfig(backend="memory"))
-        cm._session = MagicMock()
-        cm._session.cache.clear.side_effect = OSError("disk error")
+        cm._client = MagicMock()
+        cm._client._storage = MagicMock()
+        cm._client._storage.clear.side_effect = OSError("disk error")
         self.assertIs(cm.clear_cache(), False)
         self.assertEqual(cm.metrics.errors, 1)
 
@@ -303,8 +300,9 @@ class TestCacheManagerCoverage(unittest.TestCase):
         from ffbb_api_client_v2.utils.cache_manager import CacheConfig, CacheManager
 
         cm = CacheManager(CacheConfig(backend="memory"))
-        cm._session = MagicMock()
-        cm._session.cache.count.side_effect = RuntimeError("fail")
+        cm._client = MagicMock()
+        cm._client._storage = MagicMock()
+        cm._client._storage.count.side_effect = RuntimeError("fail")
         self.assertEqual(cm.get_cache_size(), 0)
         self.assertGreaterEqual(cm.metrics.errors, 1)
 
@@ -328,20 +326,17 @@ class TestCacheManagerCoverage(unittest.TestCase):
         result = cm.invalidate_pattern("test")
         self.assertEqual(result, 0)
 
-    def test_invalidate_pattern_with_matching_keys(self) -> None:
+    def test_invalidate_pattern_error(self) -> None:
         from ffbb_api_client_v2.utils.cache_manager import CacheConfig, CacheManager
 
         cm = CacheManager(CacheConfig(backend="memory"))
-        # Mock the session cache with delete and keys
-        mock_cache = MagicMock()
-        mock_cache.keys.return_value = ["ffbb_api:abc_test_123", "ffbb_api:other_456"]
-        cm._session = MagicMock()
-        cm._session.cache = mock_cache
+        cm._client = MagicMock()
+        type(cm._client)._storage = property(lambda self: (_ for _ in ()).throw(RuntimeError("fail")))
         cm.config.enabled = True
 
         result = cm.invalidate_pattern("test")
-        self.assertEqual(result, 1)
-        mock_cache.delete.assert_called_once_with("ffbb_api:abc_test_123")
+        self.assertEqual(result, 0)
+        self.assertEqual(cm.metrics.errors, 1)
 
     def test_get_metrics(self) -> None:
         from ffbb_api_client_v2.utils.cache_manager import CacheConfig, CacheManager

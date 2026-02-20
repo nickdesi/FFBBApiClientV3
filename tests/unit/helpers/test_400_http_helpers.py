@@ -6,7 +6,7 @@ import json
 import unittest
 from unittest.mock import MagicMock, Mock, patch
 
-from requests import ReadTimeout
+from httpx import ReadTimeout
 
 from ffbb_api_client_v2.helpers.http_requests_helper import catch_result
 from ffbb_api_client_v2.helpers.http_requests_utils import (
@@ -108,7 +108,7 @@ class Test045HttpHelpers(unittest.TestCase):
 
     # -- http_get tests --
 
-    @patch("ffbb_api_client_v2.helpers.http_requests_utils.requests.get")
+    @patch("ffbb_api_client_v2.helpers.http_requests_utils.httpx.Client.get")
     def test_012_http_get_no_cache(self, mock_get: MagicMock) -> None:
         mock_resp = Mock()
         mock_resp.text = '{"ok": true}'
@@ -117,7 +117,7 @@ class Test045HttpHelpers(unittest.TestCase):
         self.assertEqual(response, mock_resp)
         mock_get.assert_called_once()
 
-    @patch("ffbb_api_client_v2.helpers.http_requests_utils.requests.get")
+    @patch("ffbb_api_client_v2.helpers.http_requests_utils.httpx.Client.get")
     def test_013_http_get_debug_mode(self, mock_get: MagicMock) -> None:
         mock_resp = Mock()
         mock_resp.text = '{"ok": true}'
@@ -129,7 +129,7 @@ class Test045HttpHelpers(unittest.TestCase):
 
     # -- http_post tests --
 
-    @patch("ffbb_api_client_v2.helpers.http_requests_utils.requests.post")
+    @patch("ffbb_api_client_v2.helpers.http_requests_utils.httpx.Client.post")
     def test_014_http_post_no_cache(self, mock_post: MagicMock) -> None:
         mock_resp = Mock()
         mock_resp.text = '{"ok": true}'
@@ -142,7 +142,7 @@ class Test045HttpHelpers(unittest.TestCase):
         self.assertEqual(response, mock_resp)
         mock_post.assert_called_once()
 
-    @patch("ffbb_api_client_v2.helpers.http_requests_utils.requests.post")
+    @patch("ffbb_api_client_v2.helpers.http_requests_utils.httpx.Client.post")
     def test_015_http_post_debug_mode(self, mock_post: MagicMock) -> None:
         mock_resp = Mock()
         mock_resp.text = '{"ok": true}'

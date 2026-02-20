@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
-from requests_cache import CachedSession
+from httpx import Client
 
 from ..config import (
     DEFAULT_USER_AGENT,
@@ -12,10 +12,7 @@ from ..config import (
 from ..helpers.http_requests_helper import catch_result
 from ..helpers.http_requests_utils import http_post_json
 from ..models.multi_search_query import MultiSearchQuery
-from ..models.multi_search_results_class import (
-    MultiSearchResults,
-    multi_search_results_from_dict,
-)
+from ..models.multi_search_results_class import MultiSearchResults
 from ..utils.cache_manager import CacheManager
 from ..utils.retry_utils import (
     RetryConfig,
@@ -32,7 +29,7 @@ class MeilisearchClient:
         bearer_token: str,
         url: str = MEILISEARCH_BASE_URL,
         debug: bool = False,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
         retry_config: RetryConfig | None = None,
         timeout_config: TimeoutConfig | None = None,
     ):
@@ -44,7 +41,7 @@ class MeilisearchClient:
             url (str, optional): The base URL.
                 Defaults to "https://meilisearch-prod.ffbb.app/".
             debug (bool, optional): Whether to enable debug mode. Defaults to False.
-            cached_session (CachedSession, optional): The cached session to use.
+            cached_session (Client, optional): The cached session to use.
             retry_config (RetryConfig, optional): Retry configuration. Defaults to None.
             timeout_config (TimeoutConfig, optional): Timeout configuration.
                 Defaults to None.
@@ -93,20 +90,22 @@ class MeilisearchClient:
     def multi_search(
         self,
         queries: Sequence[MultiSearchQuery] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> MultiSearchResults | None:
         url = f"{self.url}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}"
         params = {"queries": [query.to_dict() for query in queries] if queries else []}
-        return catch_result(
-            lambda: multi_search_results_from_dict(
-                http_post_json(
-                    url,
-                    self.headers,
-                    params,
-                    debug=self.debug,
-                    cached_session=cached_session or self.cached_session,
-                    retry_config=self.retry_config,
-                    timeout_config=self.timeout_config,
-                )
+        from pydantic import TypeAdapter
+        raw_data = catch_result(
+            lambda: http_post_json(
+                url,
+                self.headers,
+                params,
+                debug=self.debug,
+                cached_session=cached_session or self.cached_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
             )
         )
+        if raw_data:
+            return TypeAdapter(MultiSearchResults).validate_python(raw_data)
+        return None

@@ -5,9 +5,8 @@ import time
 from typing import Any, cast
 from urllib.parse import urlencode
 
-import requests
-from requests import Response
-from requests_cache import CachedSession
+import httpx
+from httpx import Response, Client
 
 from ..utils.retry_utils import (
     RetryConfig,
@@ -52,7 +51,7 @@ def http_get(
     url: str,
     headers: dict[str, str],
     debug: bool = False,
-    cached_session: CachedSession | None = None,
+    cached_session: Client | None = None,
     timeout: int = 20,
     retry_config: RetryConfig | None = None,
     timeout_config: TimeoutConfig | None = None,
@@ -93,7 +92,8 @@ def http_get(
         if cached_session:
             response = cached_session.get(url, headers=headers, timeout=timeout)
         else:
-            response = requests.get(url, headers=headers, timeout=timeout)
+            with httpx.Client() as client:
+                response = client.get(url, headers=headers, timeout=timeout)
 
     if debug:
         end_time = time.time()
@@ -108,7 +108,7 @@ def http_post(
     headers: dict[str, str],
     data: dict[str, Any] | None = None,
     debug: bool = False,
-    cached_session: CachedSession | None = None,
+    cached_session: Client | None = None,
     timeout: int = 20,
     retry_config: RetryConfig | None = None,
     timeout_config: TimeoutConfig | None = None,
@@ -155,7 +155,8 @@ def http_post(
                 url, headers=headers, json=data, timeout=timeout
             )
         else:
-            response = requests.post(url, headers=headers, json=data, timeout=timeout)
+            with httpx.Client() as client:
+                response = client.post(url, headers=headers, json=data, timeout=timeout)
 
     if debug:
         end_time = time.time()
@@ -171,7 +172,7 @@ def http_get_json(
     url: str,
     headers: dict[str, str],
     debug: bool = False,
-    cached_session: CachedSession | None = None,
+    cached_session: Client | None = None,
     timeout: int = 20,
     retry_config: RetryConfig | None = None,
     timeout_config: TimeoutConfig | None = None,
@@ -208,7 +209,7 @@ def http_post_json(
     headers: dict[str, str],
     data: dict[str, Any] | None = None,
     debug: bool = False,
-    cached_session: CachedSession | None = None,
+    cached_session: Client | None = None,
     timeout: int = 20,
     retry_config: RetryConfig | None = None,
     timeout_config: TimeoutConfig | None = None,

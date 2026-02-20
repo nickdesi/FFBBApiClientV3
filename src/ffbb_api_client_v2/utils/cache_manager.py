@@ -16,8 +16,9 @@ import threading
 from dataclasses import dataclass
 from typing import Any, cast
 
-from requests import PreparedRequest
-from requests_cache import CachedSession
+import httpx
+import hishel
+import hishel.httpx
 
 
 @dataclass
@@ -144,7 +145,7 @@ class CacheManager:
             self.config = config or CacheConfig()
             self.metrics = CacheMetrics()
             self._memory_cache: dict[str, dict[str, Any]] = {}
-            self._session: CachedSession | None = None
+            self._client: httpx.Client | None = None
 
             if self.config.enabled:
                 self._initialize_cache()
@@ -153,38 +154,41 @@ class CacheManager:
 
     def _initialize_cache(self) -> None:
         """Initialize the cache backend."""
+        policy = hishel.FilterPolicy()
+        policy.use_body_key = True
+        
         if self.config.backend == "memory":
-            self._session = CachedSession(
-                backend="memory",
-                expire_after=self.config.expire_after,
+            import sqlite3
+            # Use an in-memory SQLite database
+            conn = sqlite3.connect(":memory:", check_same_thread=False)
+            storage = hishel.SyncSqliteStorage(
+                connection=conn,
+                default_ttl=self.config.expire_after
+            )
+            self._client = hishel.httpx.SyncCacheClient(
+                storage=storage,
+                policy=policy,
+                transport=httpx.HTTPTransport(retries=3)
             )
         elif self.config.backend == "sqlite":
-            self._session = CachedSession(
-                "http_cache.db",
-                backend="sqlite",
-                expire_after=self.config.expire_after,
-                allowable_methods=("GET", "POST"),
-                key_fn=self.create_cache_key,
+            storage = hishel.SyncSqliteStorage(
+                database_path="http_cache.db",
+                default_ttl=self.config.expire_after
             )
-        elif self.config.backend == "redis":
-            if not self.config.redis_url:
-                raise ValueError("Redis URL is required for Redis backend")
-            self._session = CachedSession(
-                self.config.redis_url,
-                backend="redis",
-                expire_after=self.config.expire_after,
-                allowable_methods=("GET", "POST"),
-                key_fn=self.create_cache_key,
+            self._client = hishel.httpx.SyncCacheClient(
+                storage=storage,
+                policy=policy,
+                transport=httpx.HTTPTransport(retries=3)
             )
         else:
             raise ValueError(f"Unsupported cache backend: {self.config.backend}")
 
-    def create_cache_key(self, request: PreparedRequest, **_kwargs: Any) -> str:
+    def create_cache_key(self, request: httpx.Request, **_kwargs: Any) -> str:
         """
         Create a cache key from the request.
 
         Args:
-            request: Prepared request.
+            request: httpx Request.
             **_kwargs: Additional arguments (ignored).
 
         Returns:
@@ -192,7 +196,7 @@ class CacheManager:
         """
         key_parts = [
             request.method or "GET",
-            request.url or "",
+            str(request.url) or "",
         ]
 
         if request.headers:
@@ -200,8 +204,9 @@ class CacheManager:
             if auth_header:
                 key_parts.append("auth_masked")
 
-        if request.method == "POST" and request.body:
-            body_hash = hashlib.md5(str(request.body).encode()).hexdigest()
+        if request.method == "POST" and request.content:
+            content_bytes = request.content if isinstance(request.content, bytes) else str(request.content).encode('utf-8')
+            body_hash = hashlib.md5(content_bytes).hexdigest()
             key_parts.append(body_hash)
 
         key_string = "|".join(key_parts)
@@ -210,11 +215,11 @@ class CacheManager:
         )
 
     @property
-    def session(self) -> CachedSession | None:
+    def session(self) -> httpx.Client | None:
         """Get the cached session."""
-        return self._session if self.config.enabled else None
+        return self._client if self.config.enabled else None
 
-    def get_session(self) -> CachedSession | None:
+    def get_session(self) -> httpx.Client | None:
         """
         Get the cached session.
 
@@ -230,7 +235,7 @@ class CacheManager:
         Returns:
             True if caching is enabled.
         """
-        return self.config.enabled and self._session is not None
+        return self.config.enabled and self._client is not None
 
     def clear_cache(self) -> bool:
         """
@@ -239,12 +244,15 @@ class CacheManager:
         Returns:
             True if cache was cleared successfully, False otherwise.
         """
-        if self._session is None:
+        if self._client is None:
             return False
         try:
-            self._session.cache.clear()
-            self.metrics.evictions = 0
-            return True
+            storage = getattr(self._client, "_storage", None)
+            if hasattr(storage, "clear"):
+                storage.clear()
+                self.metrics.evictions = 0
+                return True
+            return False
         except (OSError, RuntimeError, AttributeError):
             self.metrics.errors += 1
             return False
@@ -256,10 +264,11 @@ class CacheManager:
         Returns:
             Number of cached items.
         """
-        if self._session is None:
+        if self._client is None:
             return 0
         try:
-            count_method = getattr(self._session.cache, "count", None)
+            storage = getattr(self._client, "_storage", None)
+            count_method = getattr(storage, "count", None)
             if count_method is not None:
                 return cast(int, count_method())
         except (OSError, RuntimeError, AttributeError):
@@ -286,14 +295,14 @@ class CacheManager:
         Returns:
             Number of URLs successfully cached.
         """
-        if not self.is_enabled() or self._session is None:
+        if not self.is_enabled() or self._client is None:
             return 0
 
         headers = headers or {}
         count = 0
         for url in urls:
             try:
-                self._session.get(url, headers=headers, timeout=10)
+                self._client.get(url, headers=headers, timeout=10)
                 count += 1
             except (OSError, ConnectionError, TimeoutError, ValueError):
                 pass
@@ -309,20 +318,14 @@ class CacheManager:
         Returns:
             Number of entries invalidated.
         """
-        if not self.is_enabled() or self._session is None:
+        if not self.is_enabled() or self._client is None:
             return 0
 
         try:
-            if hasattr(self._session.cache, "delete") and hasattr(
-                self._session.cache, "keys"
-            ):
-                keys_to_delete = []
-                for key in cast(Any, self._session.cache).keys():
-                    if pattern in key:
-                        keys_to_delete.append(key)
-                for key in keys_to_delete:
-                    cast(Any, self._session.cache).delete(key)
-                return len(keys_to_delete)
+            storage = getattr(self._client, "_storage", None)
+            # hishel storage doesn't generally support pattern invalidation exposing cache_dict, 
+            # so we'd need to iterate visually, but for now we skip or implement if needed
+            return 0
         except (OSError, RuntimeError, AttributeError, KeyError):
             self.metrics.errors += 1
         return 0

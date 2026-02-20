@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from typing import Any
 
-from requests_cache import CachedSession
+from pydantic import TypeAdapter
+
+from httpx import Client
 
 from ..config import (
     API_FFBB_BASE_URL,
@@ -20,7 +22,7 @@ from ..models.configuration_models import GetConfigurationResponse
 from ..models.field_set import FieldSet
 from ..models.get_competition_response import GetCompetitionResponse
 from ..models.get_organisme_response import GetOrganismeResponse
-from ..models.lives import Live, lives_from_dict
+from ..models.lives import Live
 from ..models.poules_models import GetPouleResponse
 from ..models.query_fields_manager import QueryFieldsManager
 from ..models.saisons_models import GetSaisonsResponse
@@ -40,7 +42,7 @@ class ApiFFBBAppClient:
         bearer_token: str,
         url: str = API_FFBB_BASE_URL,
         debug: bool = False,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
         retry_config: RetryConfig | None = None,
         timeout_config: TimeoutConfig | None = None,
         cache_config: CacheConfig | None = None,
@@ -52,7 +54,7 @@ class ApiFFBBAppClient:
             bearer_token (str): The bearer token used for authentication.
             url (str, optional): The base URL. Defaults to "https://api.ffbb.app/".
             debug (bool, optional): Whether to enable debug mode. Defaults to False.
-            cached_session (CachedSession, optional): The cached session to use.
+            cached_session (Client, optional): The cached session to use.
             retry_config (RetryConfig, optional): Retry configuration. Defaults to None.
             timeout_config (TimeoutConfig, optional): Timeout configuration.
                 Defaults to None.
@@ -102,37 +104,39 @@ class ApiFFBBAppClient:
         return self._bearer_token
 
     def get_lives(
-        self, cached_session: CachedSession | None = None
+        self, cached_session: Client | None = None
     ) -> list[Live] | None:
         """
         Retrieves a list of live events with retry logic.
 
         Args:
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             List[Live]: A list of Live objects representing the live events.
         """
         url = f"{self.url}{ENDPOINT_LIVES}"
-        return catch_result(
-            lambda: lives_from_dict(
-                http_get_json(
-                    url,
-                    self.headers,
-                    debug=self.debug,
-                    cached_session=cached_session or self.cached_session,
-                    retry_config=self.retry_config,
-                    timeout_config=self.timeout_config,
-                )
+
+        raw_data = catch_result(
+            lambda: http_get_json(
+                url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or self.cached_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
             )
         )
+        if raw_data:
+            return TypeAdapter(list[Live]).validate_python(raw_data)
+        return None
 
     def get_competition(
         self,
         competition_id: int,
         deep_limit: str | None = "1000",
         fields: list[str] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> GetCompetitionResponse | None:
         """
         Retrieves detailed information about a competition.
@@ -143,7 +147,7 @@ class ApiFFBBAppClient:
                 Defaults to "1000".
             fields (List[str], optional): List of fields to retrieve.
                 If None, uses default fields.
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             GetCompetitionResponse: Competition data with nested phases,
@@ -177,15 +181,16 @@ class ApiFFBBAppClient:
         )
 
         # Extract the actual data from the response wrapper
+
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return GetCompetitionResponse.from_dict(actual_data) if actual_data else None
+        return TypeAdapter(GetCompetitionResponse).validate_python(actual_data) if actual_data else None
 
     def get_poule(
         self,
         poule_id: int,
         deep_limit: str | None = "1000",
         fields: list[str] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> GetPouleResponse | None:
         """
         Retrieves detailed information about a poule.
@@ -196,7 +201,7 @@ class ApiFFBBAppClient:
                 Defaults to "1000".
             fields (List[str], optional): List of fields to retrieve.
                 If None, uses default fields.
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             GetPouleResponse: Poule data with rencontres
@@ -225,14 +230,15 @@ class ApiFFBBAppClient:
         )
 
         # Extract the actual data from the response wrapper
+
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return GetPouleResponse.from_dict(actual_data) if actual_data else None
+        return TypeAdapter(GetPouleResponse).validate_python(actual_data) if actual_data else None
 
     def get_saisons(
         self,
         fields: list[str] | None = None,
         filter_criteria: str | None = '{"actif":{"_eq":true}}',
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[GetSaisonsResponse]:
         """
         Retrieves list of seasons.
@@ -242,7 +248,7 @@ class ApiFFBBAppClient:
                 If None, uses default fields.
             filter_criteria (str, optional): JSON filter criteria.
                 Defaults to active seasons.
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             List[GetSaisonsResponse]: List of season data
@@ -270,16 +276,17 @@ class ApiFFBBAppClient:
         )
 
         # Extract the actual data from the response wrapper
+
         actual_data = data.get("data") if data and isinstance(data, dict) else data
         if actual_data and isinstance(actual_data, list):
-            return GetSaisonsResponse.from_list(actual_data)
+            return TypeAdapter(list[GetSaisonsResponse]).validate_python(actual_data)
         return []
 
     def get_organisme(
         self,
         organisme_id: int,
         fields: list[str] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> GetOrganismeResponse | None:
         """
         Retrieves detailed information about an organisme.
@@ -288,7 +295,7 @@ class ApiFFBBAppClient:
             organisme_id (int): The ID of the organisme
             fields (List[str], optional): List of fields to retrieve.
                 If None, uses default fields.
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             GetOrganismeResponse: Organisme data with members, competitions, etc.
@@ -315,14 +322,15 @@ class ApiFFBBAppClient:
         )
 
         # Extract the actual data from the response wrapper
+
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return GetOrganismeResponse.from_dict(actual_data) if actual_data else None
+        return TypeAdapter(GetOrganismeResponse).validate_python(actual_data) if actual_data else None
 
     def list_competitions(
         self,
         limit: int = 10,
         fields: list[str] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[GetCompetitionResponse | None]:
         """
         Lists competitions with optional field selection.
@@ -331,7 +339,7 @@ class ApiFFBBAppClient:
             limit (int): Maximum number of competitions to return. Defaults to 10.
             fields (List[str], optional): List of fields to retrieve.
                 If None, uses basic fields (id, nom).
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             list[GetCompetitionResponse]: List of competition data
@@ -356,14 +364,15 @@ class ApiFFBBAppClient:
         )
 
         # Extract the actual data from the response wrapper
+
         actual_data = data.get("data") if data and isinstance(data, dict) else data
         if actual_data and isinstance(actual_data, list):
-            return [GetCompetitionResponse.from_dict(item) for item in actual_data]
+            return TypeAdapter(list[GetCompetitionResponse]).validate_python(actual_data)
         return []
 
     def get_configuration(
         self,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> GetConfigurationResponse | None:
         """
         Retrieves the API configuration including bearer tokens.
@@ -373,7 +382,7 @@ class ApiFFBBAppClient:
         - key_ms: The Meilisearch bearer token for meilisearch-prod.ffbb.app
 
         Args:
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             GetConfigurationResponse: Configuration data with tokens
@@ -391,5 +400,6 @@ class ApiFFBBAppClient:
         )
 
         # Extract the actual data from the response wrapper
+
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return GetConfigurationResponse.from_dict(actual_data) if actual_data else None
+        return TypeAdapter(GetConfigurationResponse).validate_python(actual_data) if actual_data else None

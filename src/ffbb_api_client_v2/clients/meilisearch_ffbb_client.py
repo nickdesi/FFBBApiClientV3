@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import cast
 
-from requests_cache import CachedSession
+from httpx import Client
 
 from ..config import MEILISEARCH_BASE_URL
 from ..helpers.meilisearch_client_extension import MeilisearchClientExtension
@@ -28,14 +28,14 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         bearer_token: str,
         url: str = MEILISEARCH_BASE_URL,
         debug: bool = False,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ):
         super().__init__(bearer_token, url, debug, cached_session)
 
     def search_multiple_organismes(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[OrganismesMultiSearchResult] | None:
         if not names:
             return None
@@ -50,7 +50,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         )
 
     def search_organismes(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> OrganismesMultiSearchResult | None:
         results = self.search_multiple_organismes([name], cached_session)
         return results[0] if results else None
@@ -58,7 +58,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
     def search_multiple_rencontres(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[RencontresMultiSearchResult] | None:
         if not names:
             return None
@@ -73,7 +73,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         )
 
     def search_rencontres(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> RencontresMultiSearchResult | None:
         results = self.search_multiple_rencontres([name], cached_session)
         return results[0] if results else None
@@ -81,7 +81,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
     def search_multiple_terrains(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[TerrainsMultiSearchResult] | None:
         if not names:
             return None
@@ -94,7 +94,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         )
 
     def search_terrains(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> TerrainsMultiSearchResult | None:
         results = self.search_multiple_terrains([name], cached_session)
         return results[0] if results else None
@@ -102,7 +102,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
     def search_multiple_competitions(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[CompetitionsMultiSearchResult] | None:
         if not names:
             return None
@@ -117,7 +117,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         )
 
     def search_competitions(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> CompetitionsMultiSearchResult | None:
         results = self.search_multiple_competitions([name], cached_session)
         return results[0] if results else None
@@ -125,7 +125,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
     def search_multiple_salles(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[SallesMultiSearchResult] | None:
         if not names:
             return None
@@ -136,7 +136,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         return cast(list[SallesMultiSearchResult], results.results) if results else None
 
     def search_salles(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> SallesMultiSearchResult | None:
         results = self.search_multiple_salles([name], cached_session)
         return results[0] if results else None
@@ -144,7 +144,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
     def search_multiple_tournois(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[TournoisMultiSearchResult] | None:
         if not names:
             return None
@@ -157,7 +157,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         )
 
     def search_tournois(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> TournoisMultiSearchResult | None:
         results = self.search_multiple_tournois([name], cached_session)
         return results[0] if results else None
@@ -165,7 +165,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
     def search_multiple_pratiques(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[PratiquesMultiSearchResult] | None:
         if not names:
             return None
@@ -178,7 +178,7 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         )
 
     def search_pratiques(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> PratiquesMultiSearchResult | None:
         results = self.search_multiple_pratiques([name], cached_session)
         return results[0] if results else None

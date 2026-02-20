@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import cast
 
-from requests_cache import CachedSession
+from httpx import Client
 
 from ..helpers.multi_search_query_helper import generate_queries
 from ..models.competitions_multi_search_query import CompetitionsMultiSearchQuery
@@ -51,7 +51,7 @@ class FFBBAPIClientV2:
         meilisearch_bearer_token: str,
         api_bearer_token: str,
         debug: bool = False,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> FFBBAPIClientV2:
         """
         Create a new FFBB API Client V2 instance with comprehensive input validation.
@@ -60,7 +60,7 @@ class FFBBAPIClientV2:
             meilisearch_bearer_token (str): Bearer token for Meilisearch API
             api_bearer_token (str): Bearer token for FFBB API
             debug (bool, optional): Enable debug logging. Defaults to False.
-            cached_session (CachedSession, optional): HTTP cache session
+            cached_session (Client, optional): HTTP cache session
 
         Returns:
             FFBBAPIClientV2: Configured API client instance
@@ -97,7 +97,7 @@ class FFBBAPIClientV2:
         competition_id: int,
         deep_limit: str | None = "1000",
         fields: list[str] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> GetCompetitionResponse | None:
         """
         Retrieves detailed information about a competition.
@@ -107,7 +107,7 @@ class FFBBAPIClientV2:
             deep_limit (str, optional): Limit for nested rencontres.
                 Defaults to "1000".
             fields (List[str], optional): List of fields to retrieve
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             GetCompetitionResponse: Competition data with nested phases,
@@ -121,13 +121,13 @@ class FFBBAPIClientV2:
         )
 
     def get_lives(
-        self, cached_session: CachedSession | None = None
+        self, cached_session: Client | None = None
     ) -> list[Live] | None:
         """
         Retrieves a list of live events.
 
         Args:
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             list[Live]: A list of Live objects representing the live events.
@@ -138,7 +138,7 @@ class FFBBAPIClientV2:
         self,
         organisme_id: int,
         fields: list[str] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> GetOrganismeResponse | None:
         """
         Retrieves detailed information about an organisme.
@@ -146,7 +146,7 @@ class FFBBAPIClientV2:
         Args:
             organisme_id (int): The ID of the organisme
             fields (List[str], optional): List of fields to retrieve
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             GetOrganismeResponse: Organisme data with members, competitions, etc.
@@ -162,7 +162,7 @@ class FFBBAPIClientV2:
         poule_id: int,
         deep_limit: str | None = "1000",
         fields: list[str] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> GetPouleResponse | None:
         """
         Retrieves detailed information about a poule.
@@ -172,7 +172,7 @@ class FFBBAPIClientV2:
             deep_limit (str, optional): Limit for nested rencontres.
                 Defaults to "1000".
             fields (List[str], optional): List of fields to retrieve
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             GetPouleResponse: Poule data with rencontres
@@ -188,7 +188,7 @@ class FFBBAPIClientV2:
         self,
         fields: list[str] | None = None,
         filter_criteria: str | None = '{"actif":{"_eq":true}}',
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[GetSaisonsResponse] | None:
         """
         Retrieves list of seasons with comprehensive input validation.
@@ -198,7 +198,7 @@ class FFBBAPIClientV2:
                  Defaults to ["id"].
             filter_criteria (str, optional): JSON filter criteria.
                  Defaults to active seasons.
-            cached_session (CachedSession, optional): The cached session to use
+            cached_session (Client, optional): The cached session to use
 
         Returns:
             List[GetSaisonsResponse]: List of season data
@@ -216,14 +216,14 @@ class FFBBAPIClientV2:
         )
 
     def multi_search(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> list[MultiSearchResult] | None:
         """
         Perform multi-search across all resource types with input validation.
 
         Args:
             name (str, optional): Search query string
-            cached_session (CachedSession, optional): HTTP cache session
+            cached_session (Client, optional): HTTP cache session
 
         Returns:
             list[MultiSearchResult]: Search results across all resource types
@@ -240,7 +240,7 @@ class FFBBAPIClientV2:
         return results.results if results else None
 
     def search_competitions(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> CompetitionsMultiSearchResult | None:
         results = self.search_multiple_competitions([name], cached_session)
         return results[0] if results else None
@@ -248,7 +248,7 @@ class FFBBAPIClientV2:
     def search_multiple_competitions(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[CompetitionsMultiSearchResult] | None:
         if not names:
             return None
@@ -267,7 +267,7 @@ class FFBBAPIClientV2:
     def search_multiple_organismes(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[OrganismesMultiSearchResult] | None:
         if not names:
             return None
@@ -286,7 +286,7 @@ class FFBBAPIClientV2:
     def search_multiple_pratiques(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[PratiquesMultiSearchResult] | None:
         if not names:
             return None
@@ -303,7 +303,7 @@ class FFBBAPIClientV2:
     def search_multiple_rencontres(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[RencontresMultiSearchResult] | None:
         if not names:
             return None
@@ -322,7 +322,7 @@ class FFBBAPIClientV2:
     def search_multiple_salles(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[SallesMultiSearchResult] | None:
         if not names:
             return None
@@ -337,7 +337,7 @@ class FFBBAPIClientV2:
     def search_multiple_terrains(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[TerrainsMultiSearchResult] | None:
         if not names:
             return None
@@ -354,7 +354,7 @@ class FFBBAPIClientV2:
     def search_multiple_tournois(
         self,
         names: list[str | None] | None = None,
-        cached_session: CachedSession | None = None,
+        cached_session: Client | None = None,
     ) -> list[TournoisMultiSearchResult] | None:
         if not names:
             return None
@@ -369,37 +369,37 @@ class FFBBAPIClientV2:
         )
 
     def search_organismes(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> OrganismesMultiSearchResult | None:
         results = self.search_multiple_organismes([name], cached_session)
         return results[0] if results else None
 
     def search_pratiques(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> PratiquesMultiSearchResult | None:
         results = self.search_multiple_pratiques([name], cached_session)
         return results[0] if results else None
 
     def search_rencontres(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> RencontresMultiSearchResult | None:
         results = self.search_multiple_rencontres([name], cached_session)
         return results[0] if results else None
 
     def search_salles(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> SallesMultiSearchResult | None:
         results = self.search_multiple_salles([name], cached_session)
         return results[0] if results else None
 
     def search_terrains(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> TerrainsMultiSearchResult | None:
         results = self.search_multiple_terrains([name], cached_session)
         return results[0] if results else None
 
     def search_tournois(
-        self, name: str | None = None, cached_session: CachedSession | None = None
+        self, name: str | None = None, cached_session: Client | None = None
     ) -> TournoisMultiSearchResult | None:
         results = self.search_multiple_tournois([name], cached_session)
         return results[0] if results else None
