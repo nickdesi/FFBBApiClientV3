@@ -9,10 +9,10 @@ The FFBB API Client V2 library has been reorganized for better maintainability a
 
 .. code-block::
 
-    ffbb_api_client_v2/
+    ffbb_api_client_v3/
     ├── clients/          # API client classes
     │   ├── api_ffbb_app_client.py
-    │   ├── ffbb_api_client_v2.py
+    │   ├── ffbb_api_client_v3.py
     │   ├── meilisearch_client.py
     │   └── meilisearch_ffbb_client.py
     ├── helpers/          # Class extensions and utility helpers
@@ -35,7 +35,7 @@ Clients Package
 The **clients/** package contains all API client classes responsible for interacting with FFBB services:
 
 - **ApiFFBBAppClient**: Direct client for FFBB App API endpoints
-- **FFBBAPIClientV2**: Main aggregator client that combines multiple services
+- **FFBBAPIClientV3**: Main aggregator client that combines multiple services
 - **MeilisearchClient**: Base client for Meilisearch operations
 - **MeilisearchFFBBClient**: Specialized Meilisearch client for FFBB data
 
@@ -43,10 +43,10 @@ Usage:
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import FFBBAPIClientV2, ApiFFBBAppClient
+    from ffbb_api_client_v3 import FFBBAPIClientV3, ApiFFBBAppClient
 
     # Use the main aggregator client (recommended)
-    client = FFBBAPIClientV2.create(meilisearch_token, api_token)
+    client = FFBBAPIClientV3.create(meilisearch_token, api_token)
 
     # Or use specific clients directly
     api_client = ApiFFBBAppClient(api_token)
@@ -64,7 +64,7 @@ Usage:
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import Live, MultiSearchQuery, CompetitionType
+    from ffbb_api_client_v3 import Live, MultiSearchQuery, CompetitionType
 
     # Create search queries
     query = MultiSearchQuery("basketball")
@@ -87,7 +87,7 @@ Usage:
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import MeilisearchClientExtension
+    from ffbb_api_client_v3 import MeilisearchClientExtension
 
     # Use extended client with additional features
     extended_client = MeilisearchClientExtension(token, url)
@@ -104,7 +104,7 @@ Usage:
 
 .. code-block:: python
 
-    from ffbb_api_client_v2.utils import converter_utils
+    from ffbb_api_client_v3.utils import converter_utils
 
     # Convert data types (internal usage)
     date_obj = converter_utils.from_datetime(date_string)
@@ -117,13 +117,13 @@ If you were using internal imports from the old structure, update them as follow
 .. code-block:: python
 
     # Old imports (deprecated)
-    from ffbb_api_client_v2.api_ffbb_app_client import ApiFFBBAppClient
-    from ffbb_api_client_v2.converters import from_datetime
-    from ffbb_api_client_v2.meilisearch_client_extension import MeilisearchClientExtension
+    from ffbb_api_client_v3.api_ffbb_app_client import ApiFFBBAppClient
+    from ffbb_api_client_v3.converters import from_datetime
+    from ffbb_api_client_v3.meilisearch_client_extension import MeilisearchClientExtension
 
     # New imports (recommended)
-    from ffbb_api_client_v2 import ApiFFBBAppClient, MeilisearchClientExtension
-    from ffbb_api_client_v2.utils.converter_utils import from_datetime
+    from ffbb_api_client_v3 import ApiFFBBAppClient, MeilisearchClientExtension
+    from ffbb_api_client_v3.utils.converter_utils import from_datetime
 
 The main public API remains unchanged, so most existing code should continue to work without modifications.
 

@@ -111,7 +111,7 @@ class SecureLogger:
 
 
 # Global secure logger instance
-secure_logger = SecureLogger("ffbb_api_client_v2")
+secure_logger = SecureLogger("ffbb_api_client_v3")
 
 
 def get_secure_logger(name: str) -> SecureLogger:

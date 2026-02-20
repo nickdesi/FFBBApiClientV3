@@ -1,5 +1,5 @@
 """
-Setup file for ffbb_api_client_v2.
+Setup file for ffbb_api_client_v3.
 Use setup.cfg to configure your project.
 
 This file was generated with PyScaffold 4.6.

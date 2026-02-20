@@ -10,7 +10,10 @@ from ..config import (
     MEILISEARCH_ENDPOINT_MULTI_SEARCH,
 )
 from ..helpers.http_requests_helper import catch_result
-from ..helpers.http_requests_utils import http_post_json
+from ..helpers.http_requests_utils import (
+    http_post_json,
+    http_post_json_async,
+)
 from ..models.multi_search_query import MultiSearchQuery
 from ..models.multi_search_results_class import MultiSearchResults
 from ..utils.cache_manager import CacheManager
@@ -22,6 +25,8 @@ from ..utils.retry_utils import (
 )
 from ..utils.secure_logging import get_secure_logger, mask_token
 
+logger = get_secure_logger(__name__)
+
 
 class MeilisearchClient:
     def __init__(
@@ -30,6 +35,7 @@ class MeilisearchClient:
         url: str = MEILISEARCH_BASE_URL,
         debug: bool = False,
         cached_session: Client | None = None,
+        async_cached_session: httpx.AsyncClient | None = None,
         retry_config: RetryConfig | None = None,
         timeout_config: TimeoutConfig | None = None,
     ):
@@ -55,6 +61,9 @@ class MeilisearchClient:
         self.debug = debug
         self.cached_session = (
             cached_session if cached_session else CacheManager().session
+        )
+        self.async_cached_session = (
+            async_cached_session if async_cached_session else CacheManager().async_session
         )
         self.headers = {
             "Authorization": f"Bearer {self._bearer_token}",
@@ -107,5 +116,28 @@ class MeilisearchClient:
             )
         )
         if raw_data:
-            return TypeAdapter(MultiSearchResults).validate_python(raw_data)
+            return MultiSearchResults.from_dict(raw_data)
+        return None
+
+    async def multi_search_async(
+        self,
+        queries: Sequence[MultiSearchQuery] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> MultiSearchResults | None:
+        url = f"{self.url}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}"
+        params = {"queries": [query.to_dict() for query in queries] if queries else []}
+        try:
+            raw_data = await http_post_json_async(
+                url,
+                self.headers,
+                params,
+                debug=self.debug,
+                cached_session=cached_session or self.async_cached_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
+            )
+            if raw_data:
+                return MultiSearchResults.from_dict(raw_data)
+        except Exception:
+            pass
         return None

@@ -5,7 +5,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from ffbb_api_client_v2.models.type_association_libelle import TypeAssociationLibelle
+from ffbb_api_client_v3.models.type_association_libelle import TypeAssociationLibelle
 
 
 class Test038TypeAssociationLibelle(unittest.TestCase):

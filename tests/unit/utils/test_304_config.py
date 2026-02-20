@@ -4,7 +4,7 @@ Tests for centralized configuration.
 
 import unittest
 
-from ffbb_api_client_v2 import config
+from ffbb_api_client_v3 import config
 
 
 class Test019Config(unittest.TestCase):

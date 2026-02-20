@@ -1,8 +1,8 @@
 ====================
-ffbb_api_client_v2
+ffbb_api_client_v3
 ====================
 
-This is the documentation of **ffbb_api_client_v2**.
+This is the documentation of **ffbb_api_client_v3**.
 
 .. note::
 

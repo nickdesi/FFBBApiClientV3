@@ -5,7 +5,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from ffbb_api_client_v2.models.competition_id_sexe import CompetitionIDSexe
+from ffbb_api_client_v3.models.competition_id_sexe import CompetitionIDSexe
 
 
 class Test024CompetitionIdSexe(unittest.TestCase):

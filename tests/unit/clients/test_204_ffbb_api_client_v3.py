@@ -2,12 +2,12 @@ import os
 import unittest
 from typing import Any
 
-from ffbb_api_client_v2 import (
+from ffbb_api_client_v3 import (
     CompetitionsFacetDistribution,
     CompetitionsFacetStats,
     CompetitionsHit,
     CompetitionsMultiSearchResult,
-    FFBBAPIClientV2,
+    FFBBAPIClientV3,
     OrganismesFacetDistribution,
     OrganismesFacetStats,
     OrganismesHit,
@@ -62,7 +62,7 @@ class Test004FfbbApiClientV2(unittest.TestCase):
             self.skipTest("MEILISEARCH_BEARER_TOKEN environment variable not set")
 
         # NOTE: Set debug=True for detailed logging if needed during debugging
-        self.api_client = FFBBAPIClientV2.create(
+        self.api_client = FFBBAPIClientV3.create(
             meilisearch_bearer_token=mls_token,
             api_bearer_token=api_token,
             debug=False,

@@ -24,11 +24,11 @@ from dataclasses import dataclass
 
 from dotenv import load_dotenv
 
-from ffbb_api_client_v2 import FFBBAPIClientV2
-from ffbb_api_client_v2.models.get_organisme_response import GetOrganismeResponse
-from ffbb_api_client_v2.models.niveau_models import NiveauType
-from ffbb_api_client_v2.models.poules_models import GetPouleResponse
-from ffbb_api_client_v2.models.rankings_models import TeamRanking
+from ffbb_api_client_v3 import FFBBAPIClientV3
+from ffbb_api_client_v3.models.get_organisme_response import GetOrganismeResponse
+from ffbb_api_client_v3.models.niveau_models import NiveauType
+from ffbb_api_client_v3.models.poules_models import GetPouleResponse
+from ffbb_api_client_v3.models.rankings_models import TeamRanking
 
 # Example configuration - modify these values for your team
 TEAM_NAME = "SENAS BASKET BALL"
@@ -149,7 +149,7 @@ def filter_engagement_by_criteria(
     return True
 
 
-def find_organisme_by_name(client: FFBBAPIClientV2, team_name: str) -> int | None:
+def find_organisme_by_name(client: FFBBAPIClientV3, team_name: str) -> int | None:
     """Find organisme ID by searching for team name.
 
     Args:
@@ -191,7 +191,7 @@ def find_organisme_by_name(client: FFBBAPIClientV2, team_name: str) -> int | Non
 
 
 def find_team_poule_id(
-    client: FFBBAPIClientV2,
+    client: FFBBAPIClientV3,
     team_name: str,
     filters: dict[str, str | int] | None = None,
 ) -> int:
@@ -324,7 +324,7 @@ def load_team_data(
     if not meilisearch_token:
         raise ValueError("MEILISEARCH_BEARER_TOKEN environment variable not set")
 
-    client = FFBBAPIClientV2.create(
+    client = FFBBAPIClientV3.create(
         meilisearch_bearer_token=meilisearch_token,
         api_bearer_token=api_token,
         debug=False,

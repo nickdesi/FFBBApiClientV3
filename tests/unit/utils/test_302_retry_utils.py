@@ -5,7 +5,7 @@ Tests for retry and timeout functionality.
 import unittest
 from unittest.mock import patch
 
-from ffbb_api_client_v2.utils.retry_utils import (
+from ffbb_api_client_v3.utils.retry_utils import (
     RetryConfig,
     TimeoutConfig,
     calculate_delay,

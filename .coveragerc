@@ -1,7 +1,7 @@
 # .coveragerc to control coverage.py
 [run]
 branch = True
-source = ffbb_api_client_v2
+source = ffbb_api_client_v3
 # omit = bad_file.py
 
 [paths]

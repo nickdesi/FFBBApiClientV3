@@ -5,18 +5,18 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from ffbb_api_client_v2.models.affiche import Affiche
-from ffbb_api_client_v2.models.cartographie import Cartographie
-from ffbb_api_client_v2.models.coordonnees import Coordonnees
-from ffbb_api_client_v2.models.geo import Geo
-from ffbb_api_client_v2.models.multi_search_result_pratiques import (
+from ffbb_api_client_v3.models.affiche import Affiche
+from ffbb_api_client_v3.models.cartographie import Cartographie
+from ffbb_api_client_v3.models.coordonnees import Coordonnees
+from ffbb_api_client_v3.models.geo import Geo
+from ffbb_api_client_v3.models.multi_search_result_pratiques import (
     PratiquesMultiSearchResult,
 )
-from ffbb_api_client_v2.models.pratiques_facet_distribution import (
+from ffbb_api_client_v3.models.pratiques_facet_distribution import (
     PratiquesFacetDistribution,
 )
-from ffbb_api_client_v2.models.pratiques_hit import PratiquesHit
-from ffbb_api_client_v2.models.pratiques_type_class import (
+from ffbb_api_client_v3.models.pratiques_hit import PratiquesHit
+from ffbb_api_client_v3.models.pratiques_type_class import (
     PratiquesTypeClass as TypeClass,
 )
 

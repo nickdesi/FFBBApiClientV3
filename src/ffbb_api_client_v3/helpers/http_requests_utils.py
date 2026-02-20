@@ -245,6 +245,129 @@ def http_post_json(
     return to_json_from_response(response)
 
 
+async def http_get_async(
+    url: str,
+    headers: dict[str, str],
+    debug: bool = False,
+    cached_session: httpx.AsyncClient | None = None,
+    timeout: int = 20,
+    retry_config: RetryConfig | None = None,
+    timeout_config: TimeoutConfig | None = None,
+) -> Response:
+    """
+    Performs an HTTP GET request asynchroniously.
+    """
+    start_time: float = 0.0
+    if debug:
+        logger.debug(f"Making async GET request to {url}")
+        start_time = time.time()
+
+    if cached_session:
+        response = await cached_session.get(url, headers=headers, timeout=timeout)
+    else:
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url, headers=headers, timeout=timeout)
+
+    if debug:
+        end_time = time.time()
+        logger.debug(f"Async GET request to {url} took {end_time - start_time} seconds.")
+        logger.debug(f"Async GET response: {response.text}")
+
+    return response
+
+
+async def http_get_json_async(
+    url: str,
+    headers: dict[str, str],
+    debug: bool = False,
+    cached_session: httpx.AsyncClient | None = None,
+    timeout: int = 20,
+    retry_config: RetryConfig | None = None,
+    timeout_config: TimeoutConfig | None = None,
+) -> dict[str, Any]:
+    """
+    Performs an HTTP GET request and returns the result in JSON format asynchroniously.
+    """
+    response = await http_get_async(
+        url,
+        headers,
+        debug=debug,
+        cached_session=cached_session,
+        timeout=timeout,
+        retry_config=retry_config,
+        timeout_config=timeout_config,
+    )
+    return to_json_from_response(response)
+
+
+async def http_post_async(
+    url: str,
+    headers: dict[str, str],
+    data: dict[str, Any] | None = None,
+    debug: bool = False,
+    cached_session: httpx.AsyncClient | None = None,
+    timeout: int = 20,
+    retry_config: RetryConfig | None = None,
+    timeout_config: TimeoutConfig | None = None,
+) -> Response:
+    """
+    Performs an HTTP POST request asynchroniously.
+    """
+    start_time: float = 0.0
+    data_str: str = ""
+    if debug:
+        data_str = ", ".join([f"{k}:{v}" for k, v in data.items()]) if data else ""
+        logger.debug(f"Making async POST request to {url} {data_str}")
+        start_time = time.time()
+
+    filtered_data = {k: v for k, v in data.items() if v is not None} if data else None
+
+    if cached_session:
+        response = await cached_session.post(
+            url, headers=headers, json=filtered_data, timeout=timeout
+        )
+    else:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                url, headers=headers, json=filtered_data, timeout=timeout
+            )
+
+    if debug:
+        end_time = time.time()
+        logger.debug(
+            f"Async POST request to {url} {data_str} took {end_time - start_time} seconds."
+        )
+        logger.debug(f"Async POST response: {response.text}")
+
+    return response
+
+
+async def http_post_json_async(
+    url: str,
+    headers: dict[str, str],
+    data: dict[str, Any] | None = None,
+    debug: bool = False,
+    cached_session: httpx.AsyncClient | None = None,
+    timeout: int = 20,
+    retry_config: RetryConfig | None = None,
+    timeout_config: TimeoutConfig | None = None,
+) -> dict[str, Any]:
+    """
+    Performs an HTTP POST request and returns the result in JSON format asynchroniously.
+    """
+    response = await http_post_async(
+        url,
+        headers,
+        data,
+        debug=debug,
+        cached_session=cached_session,
+        timeout=timeout,
+        retry_config=retry_config,
+        timeout_config=timeout_config,
+    )
+    return to_json_from_response(response)
+
+
 def encode_params(params: dict[str, Any]) -> str:
     """
     Encodes the request parameters into a query string.

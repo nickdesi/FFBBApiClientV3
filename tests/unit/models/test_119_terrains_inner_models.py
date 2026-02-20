@@ -5,16 +5,16 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from ffbb_api_client_v2.models.multi_search_result_terrains import (
+from ffbb_api_client_v3.models.multi_search_result_terrains import (
     TerrainsMultiSearchResult,
 )
-from ffbb_api_client_v2.models.sexe_class import SexeClass
-from ffbb_api_client_v2.models.terrains_facet_distribution import (
+from ffbb_api_client_v3.models.sexe_class import SexeClass
+from ffbb_api_client_v3.models.terrains_facet_distribution import (
     TerrainsFacetDistribution,
 )
-from ffbb_api_client_v2.models.terrains_hit import TerrainsHit
-from ffbb_api_client_v2.models.tournoi_types_3x3 import TournoiTypes3X3
-from ffbb_api_client_v2.models.tournoi_types_3x3_libelle import TournoiTypes3X3Libelle
+from ffbb_api_client_v3.models.terrains_hit import TerrainsHit
+from ffbb_api_client_v3.models.tournoi_types_3x3 import TournoiTypes3X3
+from ffbb_api_client_v3.models.tournoi_types_3x3_libelle import TournoiTypes3X3Libelle
 
 
 class Test041TerrainsInnerModels(unittest.TestCase):

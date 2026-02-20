@@ -17,7 +17,13 @@ from ..config import (
     ENDPOINT_SAISONS,
 )
 from ..helpers.http_requests_helper import catch_result
-from ..helpers.http_requests_utils import http_get_json, url_with_params
+from ..helpers.http_requests_utils import (
+    http_get_json,
+    http_get_json_async,
+    http_post_json,
+    http_post_json_async,
+    url_with_params,
+)
 from ..models.configuration_models import GetConfigurationResponse
 from ..models.field_set import FieldSet
 from ..models.get_competition_response import GetCompetitionResponse
@@ -43,6 +49,7 @@ class ApiFFBBAppClient:
         url: str = API_FFBB_BASE_URL,
         debug: bool = False,
         cached_session: Client | None = None,
+        async_cached_session: httpx.AsyncClient | None = None,
         retry_config: RetryConfig | None = None,
         timeout_config: TimeoutConfig | None = None,
         cache_config: CacheConfig | None = None,
@@ -79,10 +86,16 @@ class ApiFFBBAppClient:
 
         # Configure cache manager
         self.cache_manager = CacheManager(cache_config)
+        
         if cached_session is None:
             self.cached_session = self.cache_manager.session
         else:
             self.cached_session = cached_session
+
+        if async_cached_session is None:
+            self.async_cached_session = self.cache_manager.async_session
+        else:
+            self.async_cached_session = async_cached_session
 
         # Initialize secure logger
         self.logger = get_secure_logger(f"{self.__class__.__name__}")
@@ -128,7 +141,33 @@ class ApiFFBBAppClient:
             )
         )
         if raw_data:
-            return TypeAdapter(list[Live]).validate_python(raw_data)
+            return [Live.from_dict(item) for item in raw_data] if isinstance(raw_data, list) else []
+        return None
+
+    async def get_lives_async(
+        self, cached_session: httpx.AsyncClient | None = None
+    ) -> list[Live] | None:
+        """
+        Retrieves a list of live events asynchroniously.
+        """
+        url = f"{self.url}{ENDPOINT_LIVES}"
+
+        # Note: catch_result is not async-friendly, but http_get_json_async handles some errors
+        # In a real async environment, we might want an async_catch_result
+        try:
+            raw_data = await http_get_json_async(
+                url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or self.async_cached_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
+            )
+            if raw_data:
+                return [Live.from_dict(item) for item in raw_data] if isinstance(raw_data, list) else []
+        except Exception as e:
+            if self.debug:
+                self.logger.error(f"Error in get_lives_async: {e}")
         return None
 
     def get_competition(
@@ -183,7 +222,46 @@ class ApiFFBBAppClient:
         # Extract the actual data from the response wrapper
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return TypeAdapter(GetCompetitionResponse).validate_python(actual_data) if actual_data else None
+        return GetCompetitionResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_competition_async(
+        self,
+        competition_id: int,
+        deep_limit: str | None = "1000",
+        fields: list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> GetCompetitionResponse | None:
+        """
+        Retrieves detailed information about a competition asynchroniously.
+        """
+        url = f"{self.url}{ENDPOINT_COMPETITIONS}/{competition_id}"
+
+        params: dict[str, Any] = {}
+        if deep_limit:
+            params["deep[phases][poules][rencontres][_limit]"] = deep_limit
+
+        if fields:
+            for field in fields:
+                if "fields[]" not in params:
+                    params["fields[]"] = []
+                params["fields[]"].append(field)
+        else:
+            params["fields[]"] = QueryFieldsManager.get_competition_fields(FieldSet.DEFAULT)
+
+        final_url = url_with_params(url, params)
+        try:
+            data = await http_get_json_async(
+                final_url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or CacheManager().async_session,
+            )
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetCompetitionResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug:
+                self.logger.error(f"Error in get_competition_async: {e}")
+            return None
 
     def get_poule(
         self,
@@ -232,7 +310,44 @@ class ApiFFBBAppClient:
         # Extract the actual data from the response wrapper
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return TypeAdapter(GetPouleResponse).validate_python(actual_data) if actual_data else None
+        return GetPouleResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_poule_async(
+        self,
+        poule_id: int,
+        deep_limit: str | None = "1000",
+        fields: list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> GetPouleResponse | None:
+        """
+        Retrieves detailed information about a poule asynchroniously.
+        """
+        url = f"{self.url}{ENDPOINT_POULES}/{poule_id}"
+
+        params: dict[str, Any] = {}
+        if deep_limit:
+            params["deep[rencontres][_limit]"] = deep_limit
+            params["deep[classements][_limit]"] = deep_limit
+
+        if fields:
+            params["fields[]"] = fields
+        else:
+            params["fields[]"] = QueryFieldsManager.get_poule_fields(FieldSet.DEFAULT)
+
+        final_url = url_with_params(url, params)
+        try:
+            data = await http_get_json_async(
+                final_url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or CacheManager().async_session,
+            )
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetPouleResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug:
+                self.logger.error(f"Error in get_poule_async: {e}")
+            return None
 
     def get_saisons(
         self,
@@ -279,7 +394,44 @@ class ApiFFBBAppClient:
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
         if actual_data and isinstance(actual_data, list):
-            return TypeAdapter(list[GetSaisonsResponse]).validate_python(actual_data)
+            return [GetSaisonsResponse.from_dict(item) for item in actual_data]
+        return []
+
+    async def get_saisons_async(
+        self,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = '{"actif":{"_eq":true}}',
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetSaisonsResponse]:
+        """
+        Retrieves list of seasons asynchroniously.
+        """
+        url = f"{self.url}{ENDPOINT_SAISONS}"
+
+        params: dict[str, Any] = {}
+        if fields:
+            params["fields[]"] = fields
+        else:
+            params["fields[]"] = QueryFieldsManager.get_saison_fields(FieldSet.DEFAULT)
+
+        if filter_criteria:
+            params["filter"] = filter_criteria
+
+        final_url = url_with_params(url, params)
+        try:
+            data = await http_get_json_async(
+                final_url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or CacheManager().async_session,
+            )
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            if actual_data and isinstance(actual_data, list):
+                return [GetSaisonsResponse.from_dict(item) for item in actual_data]
+        except Exception as e:
+            if self.debug:
+                self.logger.error(f"Error in get_saisons_async: {e}")
+            pass
         return []
 
     def get_organisme(
@@ -324,7 +476,39 @@ class ApiFFBBAppClient:
         # Extract the actual data from the response wrapper
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return TypeAdapter(GetOrganismeResponse).validate_python(actual_data) if actual_data else None
+        return GetOrganismeResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_organisme_async(
+        self,
+        organisme_id: int,
+        fields: list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> GetOrganismeResponse | None:
+        """
+        Retrieves detailed information about an organisme asynchroniously.
+        """
+        url = f"{self.url}{ENDPOINT_ORGANISMES}/{organisme_id}"
+
+        params: dict[str, Any] = {}
+        if fields:
+            params["fields[]"] = fields
+        else:
+            params["fields[]"] = QueryFieldsManager.get_organisme_fields(FieldSet.DEFAULT)
+
+        final_url = url_with_params(url, params)
+        try:
+            data = await http_get_json_async(
+                final_url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or CacheManager().async_session,
+            )
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetOrganismeResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug:
+                self.logger.error(f"Error in get_organisme_async: {e}")
+            return None
 
     def list_competitions(
         self,
@@ -367,7 +551,42 @@ class ApiFFBBAppClient:
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
         if actual_data and isinstance(actual_data, list):
-            return TypeAdapter(list[GetCompetitionResponse]).validate_python(actual_data)
+            return [GetCompetitionResponse.from_dict(item) for item in actual_data]
+        return []
+
+    async def list_competitions_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetCompetitionResponse | None]:
+        """
+        Lists competitions with optional field selection asynchroniously.
+        """
+        url = f"{self.url}{ENDPOINT_COMPETITIONS}"
+
+        params: dict[str, Any] = {"limit": str(limit)}
+
+        if fields:
+            params["fields[]"] = fields
+        else:
+            params["fields[]"] = ["id", "nom"]
+
+        final_url = url_with_params(url, params)
+        try:
+            data = await http_get_json_async(
+                final_url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or CacheManager().async_session,
+            )
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            if actual_data and isinstance(actual_data, list):
+                return [GetCompetitionResponse.from_dict(item) for item in actual_data]
+        except Exception as e:
+            if self.debug:
+                self.logger.error(f"Error in list_competitions_async: {e}")
+            pass
         return []
 
     def get_configuration(
@@ -402,4 +621,28 @@ class ApiFFBBAppClient:
         # Extract the actual data from the response wrapper
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return TypeAdapter(GetConfigurationResponse).validate_python(actual_data) if actual_data else None
+        return GetConfigurationResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_configuration_async(
+        self,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> GetConfigurationResponse | None:
+        """
+        Retrieves the API configuration including bearer tokens asynchroniously.
+        """
+        url = f"{self.url}{ENDPOINT_CONFIGURATION}"
+        try:
+            data = await http_get_json_async(
+                url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or CacheManager().async_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
+            )
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetConfigurationResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug:
+                self.logger.error(f"Error in get_configuration_async: {e}")
+            return None

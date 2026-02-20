@@ -8,7 +8,7 @@ from datetime import datetime, time
 from enum import Enum
 from uuid import UUID
 
-from ffbb_api_client_v2.utils.converter_utils import (
+from ffbb_api_client_v3.utils.converter_utils import (
     from_bool,
     from_datetime,
     from_enum,
@@ -23,7 +23,7 @@ from ffbb_api_client_v2.utils.converter_utils import (
 
 # --- Fixtures / helpers ---
 
-LOGGER_NAME = "ffbb_api_client_v2.utils.converter_utils"
+LOGGER_NAME = "ffbb_api_client_v3.utils.converter_utils"
 
 
 class Color(Enum):

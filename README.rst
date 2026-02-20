@@ -1,30 +1,30 @@
 .. These are examples of badges you might want to add to your README:
    please update the URLs accordingly
 
-    .. image:: https://api.cirrus-ci.com/github/<USER>/FFBBApiClientV2_Python.svg?branch=main
+    .. image:: https://api.cirrus-ci.com/github/<USER>/FFBBApiClientV3_Python.svg?branch=main
         :alt: Built Status
-        :target: https://cirrus-ci.com/github/<USER>/FFBBApiClientV2_Python
-    .. image:: https://readthedocs.org/projects/FFBBApiClientV2_Python/badge/?version=latest
+        :target: https://cirrus-ci.com/github/<USER>/FFBBApiClientV3_Python
+    .. image:: https://readthedocs.org/projects/FFBBApiClientV3_Python/badge/?version=latest
         :alt: ReadTheDocs
-        :target: https://FFBBApiClientV2_Python.readthedocs.io/en/stable/
-    .. image:: https://img.shields.io/coveralls/github/<USER>/FFBBApiClientV2_Python/main.svg
+        :target: https://FFBBApiClientV3_Python.readthedocs.io/en/stable/
+    .. image:: https://img.shields.io/coveralls/github/<USER>/FFBBApiClientV3_Python/main.svg
         :alt: Coveralls
-        :target: https://coveralls.io/r/<USER>/FFBBApiClientV2_Python
-    .. image:: https://img.shields.io/pypi/v/FFBBApiClientV2_Python.svg
+        :target: https://coveralls.io/r/<USER>/FFBBApiClientV3_Python
+    .. image:: https://img.shields.io/pypi/v/FFBBApiClientV3_Python.svg
         :alt: PyPI-Server
-        :target: https://pypi.org/project/FFBBApiClientV2_Python/
-    .. image:: https://img.shields.io/conda/vn/conda-forge/FFBBApiClientV2_Python.svg
+        :target: https://pypi.org/project/FFBBApiClientV3_Python/
+    .. image:: https://img.shields.io/conda/vn/conda-forge/FFBBApiClientV3_Python.svg
         :alt: Conda-Forge
-        :target: https://anaconda.org/conda-forge/FFBBApiClientV2_Python
-    .. image:: https://pepy.tech/badge/FFBBApiClientV2_Python/month
+        :target: https://anaconda.org/conda-forge/FFBBApiClientV3_Python
+    .. image:: https://pepy.tech/badge/FFBBApiClientV3_Python/month
         :alt: Monthly Downloads
-        :target: https://pepy.tech/project/FFBBApiClientV2_Python
+        :target: https://pepy.tech/project/FFBBApiClientV3_Python
     .. image:: https://img.shields.io/twitter/url/http/shields.io.svg?style=social&label=Twitter
         :alt: Twitter
-        :target: https://twitter.com/FFBBApiClientV2_Python
-.. image:: https://img.shields.io/pypi/v/ffbb_api_client_v2.svg
+        :target: https://twitter.com/FFBBApiClientV3_Python
+.. image:: https://img.shields.io/pypi/v/ffbb_api_client_v3.svg
     :alt: PyPI-Server
-    :target: https://pypi.org/project/ffbb_api_client_v2/
+    :target: https://pypi.org/project/ffbb_api_client_v3/
 
 .. image:: https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold
     :alt: Project generated with PyScaffold
@@ -33,14 +33,14 @@
 |
 
 ======================
-FFBBApiClientV2_Python
+FFBBApiClientV3_Python
 ======================
 
 
     Modern Python client library for FFBB (French Basketball Federation) APIs
 
 
-ffbb_api_client_v2 is a modern Python client library for interacting with the French Basketball Federation (FFBB) APIs.
+ffbb_api_client_v3 is a modern Python client library for interacting with the French Basketball Federation (FFBB) APIs.
 It provides a comprehensive interface to retrieve information about clubs, teams, competitions, matches, seasons, and more.
 
 **Key Features:**
@@ -58,18 +58,18 @@ Installation
 
 .. code-block:: bash
 
-    pip install ffbb_api_client_v2
+    pip install ffbb_api_client_v3
 
 Quick Start
 ===========
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+    from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
 
     # Simplified method: automatic token retrieval
     tokens = TokenManager.get_tokens()
-    client = FFBBAPIClientV2.create(
+    client = FFBBAPIClientV3.create(
         api_bearer_token=tokens.api_token,
         meilisearch_bearer_token=tokens.meilisearch_token
     )
@@ -106,7 +106,7 @@ Advanced Usage
 
 .. code-block:: python
 
-    from ffbb_api_client_v2.models.query_fields import QueryFieldsManager, FieldSet
+    from ffbb_api_client_v3.models.query_fields import QueryFieldsManager, FieldSet
 
     # Get organization with basic fields only
     basic_fields = QueryFieldsManager.get_organisme_fields(FieldSet.BASIC)
@@ -156,7 +156,7 @@ The library is organized into the following packages:
 
 - **clients/**: API client classes for interacting with FFBB services
 
-  - ``FFBBAPIClientV2``: Main client combining all services
+  - ``FFBBAPIClientV3``: Main client combining all services
   - ``ApiFFBBAppClient``: Direct API client for FFBB App API
   - ``MeilisearchFFBBClient``: Client for search functionality
 
@@ -172,15 +172,15 @@ The library is organized into the following packages:
 .. code-block:: python
 
     # Import specific clients
-    from ffbb_api_client_v2.clients import ApiFFBBAppClient, MeilisearchFFBBClient
+    from ffbb_api_client_v3.clients import ApiFFBBAppClient, MeilisearchFFBBClient
 
     # Import data models
-    from ffbb_api_client_v2.models.get_organisme_response import GetOrganismeResponse
-    from ffbb_api_client_v2.models.competitions_models import GetCompetitionResponse
-    from ffbb_api_client_v2.models.saisons_models import GetSaisonsResponse
+    from ffbb_api_client_v3.models.get_organisme_response import GetOrganismeResponse
+    from ffbb_api_client_v3.models.competitions_models import GetCompetitionResponse
+    from ffbb_api_client_v3.models.saisons_models import GetSaisonsResponse
 
     # Import field management
-    from ffbb_api_client_v2.models.query_fields import QueryFieldsManager, FieldSet
+    from ffbb_api_client_v3.models.query_fields import QueryFieldsManager, FieldSet
 
 Environment Configuration
 =========================
@@ -202,14 +202,14 @@ The library provides a ``TokenManager`` class for simplified token handling:
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+    from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
 
     # Tokens are resolved automatically:
     # 1. From environment variables (if set)
     # 2. From FFBB API configuration endpoint (public)
     tokens = TokenManager.get_tokens()
 
-    client = FFBBAPIClientV2.create(
+    client = FFBBAPIClientV3.create(
         api_bearer_token=tokens.api_token,
         meilisearch_bearer_token=tokens.meilisearch_token
     )
@@ -235,7 +235,7 @@ If you prefer to use environment variables, set these in your ``.env`` file:
     tokens = TokenManager.get_tokens(use_cache=False)
 
     # Clear cache (use CacheManager directly in v1.2.0+)
-    from ffbb_api_client_v2.utils.cache_manager import CacheManager
+    from ffbb_api_client_v3.utils.cache_manager import CacheManager
     CacheManager().clear()
 
 API Reference
@@ -295,7 +295,7 @@ information on PyScaffold see https://pyscaffold.org/.
 Licence
 =======
 
-ffbb_api_client_v2 is distributed under the Apache 2.0 license.
+ffbb_api_client_v3 is distributed under the Apache 2.0 license.
 
 Dev notes
 =========
@@ -304,4 +304,4 @@ Command used to create this project:
 
 .. code-block:: bash
 
-    putup FFBBApiClientV2_Python -p ffbb_api_client_v2 -l Apache-2.0 -d "Allow to interact with the new FFBB apis" -u "https://github.com/Rinzler78/FFBBApiClientV2_Python" -v --github-actions --venv .venv
+    putup FFBBApiClientV3_Python -p ffbb_api_client_v3 -l Apache-2.0 -d "Allow to interact with the new FFBB apis" -u "https://github.com/Rinzler78/FFBBApiClientV3_Python" -v --github-actions --venv .venv

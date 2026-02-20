@@ -5,7 +5,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from ffbb_api_client_v2.models.salle import Salle
+from ffbb_api_client_v3.models.salle import Salle
 
 
 class Test036Salle(unittest.TestCase):

@@ -6,7 +6,7 @@ This example shows the simplest way to use the FFBB API Client V2
 with automatic token management.
 
 Prerequisites:
-1. Install the package: pip install ffbb_api_client_v2
+1. Install the package: pip install ffbb_api_client_v3
 2. (Optional) Set up .env file for custom tokens
 
 Features demonstrated:
@@ -18,7 +18,7 @@ Features demonstrated:
 
 import sys
 
-from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
 
 
 def main():
@@ -35,7 +35,7 @@ def main():
 
         # Step 2: Create the API client
         print("\n🔧 Creating API client...")
-        client = FFBBAPIClientV2.create(
+        client = FFBBAPIClientV3.create(
             api_bearer_token=tokens.api_token,
             meilisearch_bearer_token=tokens.meilisearch_token,
         )

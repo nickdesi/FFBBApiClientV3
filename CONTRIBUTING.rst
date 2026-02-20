@@ -27,7 +27,7 @@
 Contributing
 ============
 
-Welcome to ``ffbb_api_client_v2`` contributor's guide.
+Welcome to ``ffbb_api_client_v3`` contributor's guide.
 
 This document focuses on getting any potential contributor familiarized
 with the development processes, but `other kinds of contributions`_ are also
@@ -46,7 +46,7 @@ guidelines.
 Issue Reports
 =============
 
-If you experience bugs or general issues with ``ffbb_api_client_v2``, please have a look
+If you experience bugs or general issues with ``ffbb_api_client_v3``, please have a look
 on the `issue tracker`_. If you don't see anything useful there, please feel
 free to fire an issue report.
 
@@ -65,10 +65,10 @@ you help us to identify the root cause of the issue.
 Documentation Improvements
 ==========================
 
-You can help improve ``ffbb_api_client_v2`` docs by making them more readable and coherent, or
+You can help improve ``ffbb_api_client_v3`` docs by making them more readable and coherent, or
 by adding missing information and correcting mistakes.
 
-``ffbb_api_client_v2`` documentation uses Sphinx_ as its main documentation compiler.
+``ffbb_api_client_v3`` documentation uses Sphinx_ as its main documentation compiler.
 This means that the docs are kept in the same repository as the project code, and
 that any documentation update is done in the same way was a code contribution.
 
@@ -80,7 +80,7 @@ that any documentation update is done in the same way was a code contribution.
 
    .. tip::
       Please notice that the `GitHub web interface`_ provides a quick way of
-      propose changes in ``ffbb_api_client_v2``'s files. While this mechanism can
+      propose changes in ``ffbb_api_client_v3``'s files. While this mechanism can
       be tricky for normal code contributions, it works perfectly fine for
       contributing to the docs, and can be quite handy.
 
@@ -131,8 +131,8 @@ This can easily be done via either |virtualenv|_::
 
 or Miniconda_::
 
-    conda create -n ffbb_api_client_v2 python=3 six virtualenv pytest pytest-cov
-    conda activate ffbb_api_client_v2
+    conda create -n ffbb_api_client_v3 python=3 six virtualenv pytest pytest-cov
+    conda activate ffbb_api_client_v3
 
 Clone the repository
 --------------------
@@ -142,8 +142,8 @@ Clone the repository
    page. This creates a copy of the code under your account on |the repository service|.
 #. Clone this copy to your local disk::
 
-    git clone git@github.com:YourLogin/ffbb_api_client_v2.git
-    cd ffbb_api_client_v2
+    git clone git@github.com:YourLogin/ffbb_api_client_v3.git
+    cd ffbb_api_client_v3
 
 #. You should run::
 
@@ -158,7 +158,7 @@ Clone the repository
     pip install pre-commit
     pre-commit install
 
-   ``ffbb_api_client_v2`` comes with a lot of hooks configured to automatically help the
+   ``ffbb_api_client_v3`` comes with a lot of hooks configured to automatically help the
    developer to check the code being written.
 
 Implement your changes
@@ -285,7 +285,7 @@ Releases
 
 If you are part of the group of maintainers and have correct user permissions
 on PyPI_, the following steps can be used to release a new version for
-``ffbb_api_client_v2``:
+``ffbb_api_client_v3``:
 
 #. Make sure all unit tests are successful.
 #. Tag the current commit on the main branch with a release tag, e.g., ``v1.2.3``.
@@ -314,8 +314,8 @@ on PyPI_, the following steps can be used to release a new version for
 .. |the repository service| replace:: GitHub
 .. |contribute button| replace:: "Create pull request"
 
-.. _repository: https://github.com/<USERNAME>/ffbb_api_client_v2
-.. _issue tracker: https://github.com/<USERNAME>/ffbb_api_client_v2/issues
+.. _repository: https://github.com/<USERNAME>/ffbb_api_client_v3
+.. _issue tracker: https://github.com/<USERNAME>/ffbb_api_client_v3/issues
 .. <-- end -->
 
 

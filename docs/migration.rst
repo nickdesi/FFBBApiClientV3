@@ -14,11 +14,11 @@ The following imports continue to work exactly as before:
 .. code-block:: python
 
     # These imports are unchanged and fully supported
-    from ffbb_api_client_v2 import FFBBAPIClientV2, ApiFFBBAppClient
-    from ffbb_api_client_v2 import MeilisearchClient, MeilisearchFFBBClient
-    from ffbb_api_client_v2 import MultiSearchQuery, Live
-    from ffbb_api_client_v2 import MeilisearchClientExtension
-    from ffbb_api_client_v2 import generate_queries
+    from ffbb_api_client_v3 import FFBBAPIClientV3, ApiFFBBAppClient
+    from ffbb_api_client_v3 import MeilisearchClient, MeilisearchFFBBClient
+    from ffbb_api_client_v3 import MultiSearchQuery, Live
+    from ffbb_api_client_v3 import MeilisearchClientExtension
+    from ffbb_api_client_v3 import generate_queries
 
 Your existing code should work without any modifications!
 
@@ -31,9 +31,9 @@ Migration from v1.0.x to v1.1.0
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import FFBBAPIClientV2
+    from ffbb_api_client_v3 import FFBBAPIClientV3
 
-    client = FFBBAPIClientV2.create(api_token, meilisearch_token)
+    client = FFBBAPIClientV3.create(api_token, meilisearch_token)
 
     # Returns dictionary
     organisme = client.get_organisme(123)
@@ -44,9 +44,9 @@ Migration from v1.0.x to v1.1.0
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import FFBBAPIClientV2
+    from ffbb_api_client_v3 import FFBBAPIClientV3
 
-    client = FFBBAPIClientV2.create(api_token, meilisearch_token)
+    client = FFBBAPIClientV3.create(api_token, meilisearch_token)
 
     # Returns strongly-typed model object
     organisme = client.get_organisme(123)
@@ -86,7 +86,7 @@ Migration from v1.1.x to v1.2.0 (Upcoming)
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import TokenManager
+    from ffbb_api_client_v3 import TokenManager
 
     tokens = TokenManager.get_tokens(use_cache=False)
     TokenManager.clear_cache()
@@ -95,8 +95,8 @@ Migration from v1.1.x to v1.2.0 (Upcoming)
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import TokenManager
-    from ffbb_api_client_v2.utils.cache_manager import CacheManager
+    from ffbb_api_client_v3 import TokenManager
+    from ffbb_api_client_v3.utils.cache_manager import CacheManager
 
     # Updated signature
     tokens = TokenManager.get_tokens(use_cache=False)
@@ -108,7 +108,7 @@ Migration from v1.1.x to v1.2.0 (Upcoming)
 
 1. Update TokenManager.get_tokens() calls to use cache_config parameter
 2. Replace TokenManager.clear_cache() with CacheManager().clear()
-3. Import CacheManager from ffbb_api_client_v2.utils.cache_manager
+3. Import CacheManager from ffbb_api_client_v3.utils.cache_manager
 
 ---
 
@@ -136,7 +136,7 @@ Field Selection
     fields = ["id", "nom", "code"]  # Manual field lists
 
     # After v1.1.0
-    from ffbb_api_client_v2.models.query_fields import QueryFieldsManager, FieldSet
+    from ffbb_api_client_v3.models.query_fields import QueryFieldsManager, FieldSet
     fields = QueryFieldsManager.get_organisme_fields(FieldSet.BASIC)
 
 Error Handling
@@ -164,5 +164,5 @@ Token Management Updates
 
     # After v1.2.0
     tokens = TokenManager.get_tokens(use_cache=False)
-    from ffbb_api_client_v2.utils.cache_manager import CacheManager
+    from ffbb_api_client_v3.utils.cache_manager import CacheManager
     CacheManager().clear()

@@ -5,7 +5,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from ffbb_api_client_v2.models.tournoi_type_class import TournoiTypeClass
+from ffbb_api_client_v3.models.tournoi_type_class import TournoiTypeClass
 
 
 class Test037TournoiTypeClass(unittest.TestCase):

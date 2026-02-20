@@ -1,4 +1,4 @@
-# Test Strategy - FFBBApiClientV2_Python
+# Test Strategy - FFBBApiClientV3_Python
 
 ## 1. Test Pyramid
 
@@ -9,7 +9,7 @@ No network calls, instant execution.
 **Location**: `tests/unit/models/` (test_100 to test_123)
 
 ### Level 2: Unit - Clients
-Tests for `FFBBAPIClientV2`, `ApiFFBBAppClient`, `MeilisearchFFBBClient` with mocked HTTP.
+Tests for `FFBBAPIClientV3`, `ApiFFBBAppClient`, `MeilisearchFFBBClient` with mocked HTTP.
 
 **Location**: `tests/unit/clients/` (test_200 to test_206)
 
@@ -72,7 +72,7 @@ tests/
             test_201_unit_tests_core.py
             test_202_meilisearch_client.py
             test_203_meilisearch_client_extension.py
-            test_204_ffbb_api_client_v2.py
+            test_204_ffbb_api_client_v3.py
             test_205_meilisearch_ffbb_client.py
             test_206_coverage_gaps_clients.py
         utils/
@@ -153,9 +153,9 @@ tests/
 | `test_201_unit_tests_core.py` | Core unit tests | varies |
 | `test_202_meilisearch_client.py` | MeilisearchClient | varies |
 | `test_203_meilisearch_client_extension.py` | MeilisearchClient extension | varies |
-| `test_204_ffbb_api_client_v2.py` | FFBBAPIClientV2 facade | varies |
+| `test_204_ffbb_api_client_v3.py` | FFBBAPIClientV3 facade | varies |
 | `test_205_meilisearch_ffbb_client.py` | MeilisearchFFBBClient (mocked) | 21 |
-| `test_206_coverage_gaps_clients.py` | FFBBAPIClientV2 search/delegation branches | 5 |
+| `test_206_coverage_gaps_clients.py` | FFBBAPIClientV3 search/delegation branches | 5 |
 
 ### Unit - Utils (tests/unit/utils/)
 
@@ -241,7 +241,7 @@ markers =
 | Unit (fast) | `pytest tests/unit/ -x -q -n auto` | Every push | ~15s |
 | Integration | `pytest tests/integration/ -q` | Nightly / pre-release | ~40s |
 | Full suite | `pytest tests/ -x -q -n auto` | Nightly | ~60s |
-| Coverage | `pytest tests/ --cov=ffbb_api_client_v2 --cov-branch -q` | Nightly | ~80s |
+| Coverage | `pytest tests/ --cov=ffbb_api_client_v3 --cov-branch -q` | Nightly | ~80s |
 
 ### Required Environment Variables
 - `API_FFBB_APP_BEARER_TOKEN`: Token for api.ffbb.app

@@ -37,7 +37,7 @@ from .api_ffbb_app_client import ApiFFBBAppClient
 from .meilisearch_ffbb_client import MeilisearchFFBBClient
 
 
-class FFBBAPIClientV2:
+class FFBBAPIClientV3:
     def __init__(
         self,
         api_ffbb_client: ApiFFBBAppClient,
@@ -45,6 +45,8 @@ class FFBBAPIClientV2:
     ):
         self.api_ffbb_client = api_ffbb_client
         self.meilisearch_ffbb_client = meilisearch_ffbb_client
+        self.cached_session = api_ffbb_client.cached_session
+        self.async_cached_session = api_ffbb_client.async_cached_session
 
     @staticmethod
     def create(
@@ -52,7 +54,8 @@ class FFBBAPIClientV2:
         api_bearer_token: str,
         debug: bool = False,
         cached_session: Client | None = None,
-    ) -> FFBBAPIClientV2:
+        async_cached_session: httpx.AsyncClient | None = None,
+    ) -> FFBBAPIClientV3:
         """
         Create a new FFBB API Client V2 instance with comprehensive input validation.
 
@@ -63,7 +66,7 @@ class FFBBAPIClientV2:
             cached_session (Client, optional): HTTP cache session
 
         Returns:
-            FFBBAPIClientV2: Configured API client instance
+            FFBBAPIClientV3: Configured API client instance
 
         Raises:
             ValidationError: If any input parameter is invalid
@@ -76,21 +79,29 @@ class FFBBAPIClientV2:
         validated_debug = validate_boolean(debug, "debug")
 
         # Use singleton session if not provided
+        cache_manager = CacheManager()
         if cached_session is None:
-            cached_session = CacheManager().session
+            cached_session = cache_manager.session
+        
+        if async_cached_session is None:
+            async_cached_session = cache_manager.async_session
 
         # Create API clients with validated parameters
         api_ffbb_client = ApiFFBBAppClient(
-            validated_api_token, debug=validated_debug, cached_session=cached_session
+            validated_api_token,
+            debug=validated_debug,
+            cached_session=cached_session,
+            async_cached_session=async_cached_session,
         )
 
         meilisearch_ffbb_client: MeilisearchFFBBClient = MeilisearchFFBBClient(
             validated_meilisearch_token,
             debug=validated_debug,
             cached_session=cached_session,
+            async_cached_session=async_cached_session,
         )
 
-        return FFBBAPIClientV2(api_ffbb_client, meilisearch_ffbb_client)
+        return FFBBAPIClientV3(api_ffbb_client, meilisearch_ffbb_client)
 
     def get_competition(
         self,

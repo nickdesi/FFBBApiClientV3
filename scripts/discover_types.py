@@ -28,7 +28,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from ffbb_api_client_v2.config import (  # noqa: E402
+from ffbb_api_client_v3.config import (  # noqa: E402
     API_FFBB_BASE_URL,
     DEFAULT_USER_AGENT,
     ENDPOINT_COMPETITIONS,
@@ -39,12 +39,12 @@ from ffbb_api_client_v2.config import (  # noqa: E402
     MEILISEARCH_BASE_URL,
     MEILISEARCH_ENDPOINT_MULTI_SEARCH,
 )
-from ffbb_api_client_v2.helpers.http_requests_utils import (  # noqa: E402
+from ffbb_api_client_v3.helpers.http_requests_utils import (  # noqa: E402
     http_get_json,
     http_post_json,
     url_with_params,
 )
-from ffbb_api_client_v2.utils.token_manager import TokenManager  # noqa: E402
+from ffbb_api_client_v3.utils.token_manager import TokenManager  # noqa: E402
 
 logging.basicConfig(
     level=logging.INFO,
@@ -619,7 +619,7 @@ class ReportGenerator:
 
             corrections.append(
                 {
-                    "file": f"src/ffbb_api_client_v2/models/{file_name}",
+                    "file": f"src/ffbb_api_client_v3/models/{file_name}",
                     "class": class_name,
                     "property": py_name,
                     "json_key": json_key,

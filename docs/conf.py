@@ -34,7 +34,7 @@ except ImportError:
     from sphinx import apidoc
 
 output_dir = os.path.join(__location__, "api")
-module_dir = os.path.join(__location__, "../src/ffbb_api_client_v2")
+module_dir = os.path.join(__location__, "../src/ffbb_api_client_v3")
 try:
     shutil.rmtree(output_dir)
 except FileNotFoundError:
@@ -87,7 +87,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "ffbb_api_client_v2"
+project = "ffbb_api_client_v3"
 copyright = "2025, Rinzler78"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -99,7 +99,7 @@ copyright = "2025, Rinzler78"
 # If you don’t need the separation provided between version and release,
 # just set them both to the same value.
 try:
-    from ffbb_api_client_v2 import __version__ as version
+    from ffbb_api_client_v3 import __version__ as version
 except ImportError:
     version = ""
 
@@ -229,7 +229,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "ffbb_api_client_v2-doc"
+htmlhelp_basename = "ffbb_api_client_v3-doc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -246,7 +246,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ("index", "user_guide.tex", "ffbb_api_client_v2 Documentation", "Rinzler78", "manual")
+    ("index", "user_guide.tex", "ffbb_api_client_v3 Documentation", "Rinzler78", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

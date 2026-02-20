@@ -131,7 +131,7 @@ python -c "from setuptools_scm import get_version; print(get_version())"
 
 # Test d'import
 export PYTHONPATH="${PWD}/src:${PWD}"
-python -c "import ffbb_api_client_v2; print('Import successful')"
+python -c "import ffbb_api_client_v3; print('Import successful')"
 ```
 
 ## ❌ Problèmes Fréquents et Solutions

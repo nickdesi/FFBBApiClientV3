@@ -4,12 +4,12 @@ import os
 import time
 import unittest
 
-from ffbb_api_client_v2 import FFBBAPIClientV2
-from ffbb_api_client_v2.models.field_set import FieldSet
-from ffbb_api_client_v2.models.get_competition_response import GetCompetitionResponse
-from ffbb_api_client_v2.models.get_organisme_response import GetOrganismeResponse
-from ffbb_api_client_v2.models.query_fields_manager import QueryFieldsManager
-from ffbb_api_client_v2.models.saisons_models import GetSaisonsResponse
+from ffbb_api_client_v3 import FFBBAPIClientV3
+from ffbb_api_client_v3.models.field_set import FieldSet
+from ffbb_api_client_v3.models.get_competition_response import GetCompetitionResponse
+from ffbb_api_client_v3.models.get_organisme_response import GetOrganismeResponse
+from ffbb_api_client_v3.models.query_fields_manager import QueryFieldsManager
+from ffbb_api_client_v3.models.saisons_models import GetSaisonsResponse
 
 
 class Test011EnhancedIntegration(unittest.TestCase):
@@ -30,7 +30,7 @@ class Test011EnhancedIntegration(unittest.TestCase):
             raise unittest.SkipTest("MEILISEARCH_BEARER_TOKEN environment variable not set")
 
         # NOTE: Set debug=True for detailed logging if needed during debugging
-        cls.api_client = FFBBAPIClientV2.create(
+        cls.api_client = FFBBAPIClientV3.create(
             meilisearch_bearer_token=mls_token,
             api_bearer_token=api_token,
             debug=False,

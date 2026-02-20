@@ -5,7 +5,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from ffbb_api_client_v2.models.niveau_class import NiveauClass
+from ffbb_api_client_v3.models.niveau_class import NiveauClass
 
 
 class Test034NiveauClass(unittest.TestCase):

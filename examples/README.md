@@ -55,7 +55,7 @@ python examples/team_ranking_analysis.py
 
 1. **Install the package:**
    ```bash
-   pip install ffbb_api_client_v2
+   pip install ffbb_api_client_v3
    ```
 
 2. **Token Configuration (Choose one):**
@@ -81,10 +81,10 @@ The examples demonstrate two approaches for token handling:
 
 ### Automatic (Recommended)
 ```python
-from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
 
 tokens = TokenManager.get_tokens()
-client = FFBBAPIClientV2.create(
+client = FFBBAPIClientV3.create(
     api_bearer_token=tokens.api_token,
     meilisearch_bearer_token=tokens.meilisearch_token
 )

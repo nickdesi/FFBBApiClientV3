@@ -103,7 +103,7 @@ required_files=(
     "tox.ini"
     ".pre-commit-config.yaml"
     ".github/workflows/ci.yml"
-    "src/ffbb_api_client_v2/__init__.py"
+    "src/ffbb_api_client_v3/__init__.py"
     "tests/"
 )
 
@@ -190,7 +190,7 @@ else
 fi
 
 # Test package import
-if python3 -c "import ffbb_api_client_v2" 2>/dev/null; then
+if python3 -c "import ffbb_api_client_v3" 2>/dev/null; then
     print_check "Package import works"
 else
     print_issue "Package import failed (this is expected if package is not installed)"

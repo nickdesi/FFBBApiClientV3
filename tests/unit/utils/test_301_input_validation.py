@@ -4,7 +4,7 @@ Tests for input validation functionality.
 
 import unittest
 
-from ffbb_api_client_v2.utils.input_validation import (
+from ffbb_api_client_v3.utils.input_validation import (
     ValidationError,
     validate_boolean,
     validate_deep_limit,

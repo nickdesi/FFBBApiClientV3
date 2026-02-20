@@ -5,7 +5,7 @@ Tests for advanced cache management functionality.
 import unittest
 from unittest.mock import MagicMock, patch
 
-from ffbb_api_client_v2.utils.cache_manager import (
+from ffbb_api_client_v3.utils.cache_manager import (
     CacheConfig,
     CacheManager,
     CacheMetrics,
@@ -145,7 +145,7 @@ class Test018CacheManager(unittest.TestCase):
         # Test clear cache
         manager.clear_cache()  # Should not raise an exception
 
-    @patch("ffbb_api_client_v2.utils.cache_manager.hishel.httpx.SyncCacheClient.get")
+    @patch("ffbb_api_client_v3.utils.cache_manager.hishel.httpx.SyncCacheClient.get")
     def test_warm_cache(self, mock_get):
         """Test cache warming functionality."""
         manager = CacheManager(self.config)

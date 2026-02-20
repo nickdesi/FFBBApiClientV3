@@ -64,7 +64,7 @@ class CacheConfig:
         self,
         enabled: bool = True,
         backend: str = "sqlite",
-        expire_after: int = 1800,  # 30 minutes
+        expire_after: int = 3600,  # 1 hour
         max_size: int = 1000,
         redis_url: str | None = None,
         key_prefix: str = "ffbb_api",
@@ -146,6 +146,7 @@ class CacheManager:
             self.metrics = CacheMetrics()
             self._memory_cache: dict[str, dict[str, Any]] = {}
             self._client: httpx.Client | None = None
+            self._async_client: httpx.AsyncClient | None = None
 
             if self.config.enabled:
                 self._initialize_cache()
@@ -170,6 +171,16 @@ class CacheManager:
                 policy=policy,
                 transport=httpx.HTTPTransport(retries=3)
             )
+            # Async version
+            async_storage = hishel.AsyncSqliteStorage(
+                connection=conn,
+                default_ttl=self.config.expire_after
+            )
+            self._async_client = hishel.httpx.AsyncCacheClient(
+                storage=async_storage,
+                policy=policy,
+                transport=httpx.AsyncHTTPTransport(retries=3)
+            )
         elif self.config.backend == "sqlite":
             storage = hishel.SyncSqliteStorage(
                 database_path="http_cache.db",
@@ -179,6 +190,16 @@ class CacheManager:
                 storage=storage,
                 policy=policy,
                 transport=httpx.HTTPTransport(retries=3)
+            )
+            # Async version
+            async_storage = hishel.AsyncSqliteStorage(
+                database_path="http_cache.db",
+                default_ttl=self.config.expire_after
+            )
+            self._async_client = hishel.httpx.AsyncCacheClient(
+                storage=async_storage,
+                policy=policy,
+                transport=httpx.AsyncHTTPTransport(retries=3)
             )
         else:
             raise ValueError(f"Unsupported cache backend: {self.config.backend}")
@@ -219,13 +240,23 @@ class CacheManager:
         """Get the cached session."""
         return self._client if self.config.enabled else None
 
-    def get_session(self) -> httpx.Client | None:
+    @property
+    def async_session(self) -> httpx.AsyncClient | None:
+        """Get the cached async session."""
+        return self._async_client if self.config.enabled else None
+
+    def get_session(self, async_mode: bool = False) -> httpx.Client | httpx.AsyncClient | None:
         """
         Get the cached session.
+
+        Args:
+            async_mode: Whether to return the async session.
 
         Returns:
             The cached session or None if caching is disabled.
         """
+        if async_mode:
+            return self.async_session
         return self.session
 
     def is_enabled(self) -> bool:

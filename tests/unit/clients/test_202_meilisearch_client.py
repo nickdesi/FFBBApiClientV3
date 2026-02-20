@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from ffbb_api_client_v2 import MeilisearchClient, MultiSearchQuery, generate_queries
+from ffbb_api_client_v3 import MeilisearchClient, MultiSearchQuery, generate_queries
 
 
 class Test002MeilisearchClient(unittest.TestCase):

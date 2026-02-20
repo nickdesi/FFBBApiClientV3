@@ -36,7 +36,7 @@ class TokenManager:
 
     Example:
         tokens = TokenManager.get_tokens()
-        client = FFBBAPIClientV2.create(
+        client = FFBBAPIClientV3.create(
             api_bearer_token=tokens.api_token,
             meilisearch_bearer_token=tokens.meilisearch_token
         )

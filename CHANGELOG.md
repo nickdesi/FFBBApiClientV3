@@ -139,7 +139,7 @@ name = organisme.nom  # Object attribute access
 fields = ["id", "nom", "code"]
 
 # After
-from ffbb_api_client_v2.models.query_fields import QueryFieldsManager, FieldSet
+from ffbb_api_client_v3.models.query_fields import QueryFieldsManager, FieldSet
 fields = QueryFieldsManager.get_organisme_fields(FieldSet.BASIC)
 ```
 

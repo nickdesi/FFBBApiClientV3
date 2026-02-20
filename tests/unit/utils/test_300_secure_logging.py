@@ -5,7 +5,7 @@ Tests for secure logging functionality.
 import unittest
 from unittest.mock import MagicMock, patch
 
-from ffbb_api_client_v2.utils.secure_logging import (
+from ffbb_api_client_v3.utils.secure_logging import (
     SecureLogger,
     get_secure_logger,
     mask_token,
@@ -81,7 +81,7 @@ class Test012SecureLogging(unittest.TestCase):
         self.assertIsInstance(logger, SecureLogger)
         self.assertEqual(logger.logger.name, "test_component")
 
-    @patch("ffbb_api_client_v2.utils.secure_logging.logging")
+    @patch("ffbb_api_client_v3.utils.secure_logging.logging")
     def test_secure_logger_debug(self, mock_logging):
         """Test debug logging with sensitive data masking."""
         mock_logger = MagicMock()
@@ -96,7 +96,7 @@ class Test012SecureLogging(unittest.TestCase):
         self.assertIn("***MASKED***", call_args[0])
         self.assertNotIn("token123", call_args[0])
 
-    @patch("ffbb_api_client_v2.utils.secure_logging.logging")
+    @patch("ffbb_api_client_v3.utils.secure_logging.logging")
     def test_secure_logger_info(self, mock_logging):
         """Test info logging with sensitive data masking."""
         mock_logger = MagicMock()

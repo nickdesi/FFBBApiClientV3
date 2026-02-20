@@ -6,7 +6,7 @@
   },
   "corrections": [
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "charset",
       "json_key": "charset",
@@ -20,7 +20,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "duration",
       "json_key": "duration",
@@ -45,7 +45,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "embed",
       "json_key": "embed",
@@ -59,7 +59,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "description",
       "json_key": "description",
@@ -84,7 +84,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "location",
       "json_key": "location",
@@ -98,7 +98,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "tags",
       "json_key": "tags",
@@ -112,7 +112,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "credits",
       "json_key": "credits",
@@ -126,7 +126,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "newsbridge_media_id",
       "json_key": "newsbridge_media_id",
@@ -140,7 +140,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "newsbridge_metadatas",
       "json_key": "newsbridge_metadatas",
@@ -154,7 +154,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "newsbridge_name",
       "json_key": "newsbridge_name",
@@ -168,7 +168,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "newsbridge_recorded_at",
       "json_key": "newsbridge_recorded_at",
@@ -182,7 +182,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "focal_point_x",
       "json_key": "focal_point_x",
@@ -196,7 +196,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "focal_point_y",
       "json_key": "focal_point_y",
@@ -210,7 +210,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "uploaded_by",
       "json_key": "uploaded_by",
@@ -235,7 +235,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "modified_by",
       "json_key": "modified_by",
@@ -260,7 +260,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/document_flyer.py",
+      "file": "src/ffbb_api_client_v3/models/document_flyer.py",
       "class": "DocumentFlyer",
       "property": "newsbridge_mission",
       "json_key": "newsbridge_mission",
@@ -274,7 +274,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/organisateur.py",
+      "file": "src/ffbb_api_client_v3/models/organisateur.py",
       "class": "Organisateur",
       "property": "adresse_club_pro",
       "json_key": "adresseClubPro",
@@ -288,7 +288,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/organisateur.py",
+      "file": "src/ffbb_api_client_v3/models/organisateur.py",
       "class": "Organisateur",
       "property": "commune_club_pro",
       "json_key": "communeClubPro",
@@ -313,7 +313,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/organisateur.py",
+      "file": "src/ffbb_api_client_v3/models/organisateur.py",
       "class": "Organisateur",
       "property": "salle",
       "json_key": "salle",
@@ -338,7 +338,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/organisateur.py",
+      "file": "src/ffbb_api_client_v3/models/organisateur.py",
       "class": "Organisateur",
       "property": "type_association",
       "json_key": "type_association",
@@ -363,7 +363,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/organisateur.py",
+      "file": "src/ffbb_api_client_v3/models/organisateur.py",
       "class": "Organisateur",
       "property": "date_affiliation",
       "json_key": "dateAffiliation",
@@ -377,7 +377,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/organisateur.py",
+      "file": "src/ffbb_api_client_v3/models/organisateur.py",
       "class": "Organisateur",
       "property": "logo_base64",
       "json_key": "logo_base64",
@@ -402,7 +402,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/organisme_id_pere.py",
+      "file": "src/ffbb_api_client_v3/models/organisme_id_pere.py",
       "class": "OrganismeIDPere",
       "property": "adresse_club_pro",
       "json_key": "adresseClubPro",
@@ -416,7 +416,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/organisme_id_pere.py",
+      "file": "src/ffbb_api_client_v3/models/organisme_id_pere.py",
       "class": "OrganismeIDPere",
       "property": "commune_club_pro",
       "json_key": "communeClubPro",
@@ -441,7 +441,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/organisme_id_pere.py",
+      "file": "src/ffbb_api_client_v3/models/organisme_id_pere.py",
       "class": "OrganismeIDPere",
       "property": "salle",
       "json_key": "salle",
@@ -466,7 +466,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/organisme_id_pere.py",
+      "file": "src/ffbb_api_client_v3/models/organisme_id_pere.py",
       "class": "OrganismeIDPere",
       "property": "type_association",
       "json_key": "type_association",
@@ -491,7 +491,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/organisme_id_pere.py",
+      "file": "src/ffbb_api_client_v3/models/organisme_id_pere.py",
       "class": "OrganismeIDPere",
       "property": "date_affiliation",
       "json_key": "dateAffiliation",
@@ -505,7 +505,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/cartographie.py",
+      "file": "src/ffbb_api_client_v3/models/cartographie.py",
       "class": "Cartographie",
       "property": "date_created",
       "json_key": "date_created",
@@ -530,7 +530,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/cartographie.py",
+      "file": "src/ffbb_api_client_v3/models/cartographie.py",
       "class": "Cartographie",
       "property": "date_updated",
       "json_key": "date_updated",
@@ -555,7 +555,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/commune.py",
+      "file": "src/ffbb_api_client_v3/models/commune.py",
       "class": "Commune",
       "property": "code_insee",
       "json_key": "codeInsee",
@@ -569,7 +569,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/folder.py",
+      "file": "src/ffbb_api_client_v3/models/folder.py",
       "class": "Folder",
       "property": "parent",
       "json_key": "parent",
@@ -583,7 +583,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_organismes.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_organismes.py",
       "class": "OrganismesHit",
       "property": "adresse_club_pro",
       "json_key": "adresseClubPro",
@@ -597,7 +597,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_terrains.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_terrains.py",
       "class": "TerrainsHit",
       "property": "nb_participant_prevu",
       "json_key": "nbParticipantPrevu",
@@ -611,7 +611,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_terrains.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_terrains.py",
       "class": "TerrainsHit",
       "property": "adresse_complement",
       "json_key": "adresseComplement",
@@ -636,7 +636,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_terrains.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_terrains.py",
       "class": "TerrainsHit",
       "property": "thumbnail",
       "json_key": "thumbnail",
@@ -661,7 +661,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_rencontres.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_rencontres.py",
       "class": "RencontresHit",
       "property": "thumbnail",
       "json_key": "thumbnail",
@@ -686,7 +686,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_competitions.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_competitions.py",
       "class": "CompetitionsHit",
       "property": "id_competition_pere",
       "json_key": "idCompetitionPere",
@@ -711,7 +711,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_pratiques.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_pratiques.py",
       "class": "PratiquesHit",
       "property": "date_created",
       "json_key": "date_created",
@@ -736,7 +736,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_pratiques.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_pratiques.py",
       "class": "PratiquesHit",
       "property": "date_updated",
       "json_key": "date_updated",
@@ -761,7 +761,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_pratiques.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_pratiques.py",
       "class": "PratiquesHit",
       "property": "facebook",
       "json_key": "facebook",
@@ -775,7 +775,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_pratiques.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_pratiques.py",
       "class": "PratiquesHit",
       "property": "twitter",
       "json_key": "twitter",
@@ -789,7 +789,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_pratiques.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_pratiques.py",
       "class": "PratiquesHit",
       "property": "latitude",
       "json_key": "latitude",
@@ -814,7 +814,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_pratiques.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_pratiques.py",
       "class": "PratiquesHit",
       "property": "longitude",
       "json_key": "longitude",
@@ -839,7 +839,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_salles.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_salles.py",
       "class": "SallesHit",
       "property": "thumbnail",
       "json_key": "thumbnail",
@@ -864,7 +864,7 @@
       }
     },
     {
-      "file": "src/ffbb_api_client_v2/models/multi_search_result_tournois.py",
+      "file": "src/ffbb_api_client_v3/models/multi_search_result_tournois.py",
       "class": "TournoisHit",
       "property": "thumbnail",
       "json_key": "thumbnail",

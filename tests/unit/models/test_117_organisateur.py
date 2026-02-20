@@ -5,7 +5,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from ffbb_api_client_v2.models.organisateur import Organisateur
+from ffbb_api_client_v3.models.organisateur import Organisateur
 
 
 class Test043Organisateur(unittest.TestCase):

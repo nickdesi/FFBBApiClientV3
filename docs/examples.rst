@@ -13,14 +13,14 @@ Simple Client Creation and Usage
 .. code-block:: python
 
     import os
-    from ffbb_api_client_v2 import FFBBAPIClientV2
+    from ffbb_api_client_v3 import FFBBAPIClientV3
 
     # Load environment variables
     MEILISEARCH_TOKEN = os.getenv("MEILISEARCH_BEARER_TOKEN")
     API_TOKEN = os.getenv("API_FFBB_APP_BEARER_TOKEN")
 
     # Create the main client
-    client = FFBBAPIClientV2.create(MEILISEARCH_TOKEN, API_TOKEN)
+    client = FFBBAPIClientV3.create(MEILISEARCH_TOKEN, API_TOKEN)
 
     # Get live games
     lives = client.get_lives()
@@ -38,12 +38,12 @@ The ``TokenManager`` class automatically resolves API tokens from multiple sourc
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+    from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
 
     # Automatic token resolution - no configuration needed!
     tokens = TokenManager.get_tokens()
 
-    client = FFBBAPIClientV2.create(
+    client = FFBBAPIClientV3.create(
         api_bearer_token=tokens.api_token,
         meilisearch_bearer_token=tokens.meilisearch_token
     )
@@ -74,7 +74,7 @@ Cache Management
 
 .. code-block:: python
 
-    from ffbb_api_client_v2.utils.cache_manager import CacheManager
+    from ffbb_api_client_v3.utils.cache_manager import CacheManager
 
     # Clear token cache
     CacheManager().clear()
@@ -86,7 +86,7 @@ Centralized configuration constants for better maintainability:
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import config
+    from ffbb_api_client_v3 import config
 
     # API endpoints
     print(f"API Base URL: {config.API_FFBB_BASE_URL}")
@@ -123,7 +123,7 @@ Leverage modern Python features:
 .. code-block:: python
 
     # Union types with | syntax (Python 3.10+)
-    from ffbb_api_client_v2.models import GetOrganismeResponse
+    from ffbb_api_client_v3.models import GetOrganismeResponse
 
     def process_organisme(org: GetOrganismeResponse | None) -> str:
         return org.nom if org else "Unknown"
@@ -135,10 +135,10 @@ Comprehensive type hints throughout the codebase:
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
+    from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
     from typing import Optional
 
-    def safe_get_organisme(client: FFBBAPIClientV2, org_id: int) -> Optional[GetOrganismeResponse]:
+    def safe_get_organisme(client: FFBBAPIClientV3, org_id: int) -> Optional[GetOrganismeResponse]:
         """Safely get organisme with proper error handling."""
         try:
             return client.get_organisme(org_id)
@@ -154,13 +154,13 @@ If you prefer to manage tokens manually:
 
     import os
     from dotenv import load_dotenv
-    from ffbb_api_client_v2 import FFBBAPIClientV2
+    from ffbb_api_client_v3 import FFBBAPIClientV3
 
     load_dotenv()
     api_token = os.getenv("API_FFBB_APP_BEARER_TOKEN")
     meilisearch_token = os.getenv("MEILISEARCH_BEARER_TOKEN")
 
-    client = FFBBAPIClientV2.create(
+    client = FFBBAPIClientV3.create(
         api_bearer_token=api_token,
         meilisearch_bearer_token=meilisearch_token
     )
@@ -173,7 +173,7 @@ Using Specific Clients
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import ApiFFBBAppClient, MeilisearchFFBBClient
+    from ffbb_api_client_v3 import ApiFFBBAppClient, MeilisearchFFBBClient
 
     # Use individual clients for specific needs
     api_client = ApiFFBBAppClient(API_TOKEN)
@@ -193,13 +193,13 @@ Creating Custom Search Queries
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import MultiSearchQuery, generate_queries
+    from ffbb_api_client_v3 import MultiSearchQuery, generate_queries
 
     # Generate default queries for all entity types
     queries = generate_queries("basketball", limit=10)
 
     # Create custom queries
-    from ffbb_api_client_v2 import OrganismesMultiSearchQuery
+    from ffbb_api_client_v3 import OrganismesMultiSearchQuery
 
     custom_query = OrganismesMultiSearchQuery(
         q="Paris",
@@ -218,7 +218,7 @@ Working with Live Games
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import Live
+    from ffbb_api_client_v3 import Live
 
     # Get live games
     lives = client.get_lives()
@@ -274,7 +274,7 @@ Using Client Extensions
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import MeilisearchClientExtension
+    from ffbb_api_client_v3 import MeilisearchClientExtension
 
     # Create extended client with additional features
     extended_client = MeilisearchClientExtension(
@@ -296,11 +296,11 @@ Robust Error Handling
 
 .. code-block:: python
 
-    from ffbb_api_client_v2 import FFBBAPIClientV2
+    from ffbb_api_client_v3 import FFBBAPIClientV3
     import requests
 
     try:
-        client = FFBBAPIClientV2.create(MEILISEARCH_TOKEN, API_TOKEN)
+        client = FFBBAPIClientV3.create(MEILISEARCH_TOKEN, API_TOKEN)
 
         # Perform searches with error handling
         lives = client.get_lives()
@@ -321,7 +321,7 @@ Using Cached Sessions
 .. code-block:: python
 
     from requests_cache import CachedSession
-    from ffbb_api_client_v2 import FFBBAPIClientV2
+    from ffbb_api_client_v3 import FFBBAPIClientV3
 
     # Create custom cached session
     cached_session = CachedSession(
@@ -342,7 +342,7 @@ Using Cached Sessions
     )
 
     # Create main client
-    client = FFBBAPIClientV2(api_client, meilisearch_client)
+    client = FFBBAPIClientV3(api_client, meilisearch_client)
 
 Data Export and Processing
 ==========================
@@ -391,7 +391,7 @@ Here's a complete example that demonstrates various features:
     import os
     import json
     from dotenv import load_dotenv
-    from ffbb_api_client_v2 import FFBBAPIClientV2
+    from ffbb_api_client_v3 import FFBBAPIClientV3
 
     def main():
         # Load environment
@@ -405,7 +405,7 @@ Here's a complete example that demonstrates various features:
             return
 
         # Create client
-        client = FFBBAPIClientV2.create(MEILISEARCH_TOKEN, API_TOKEN, debug=True)
+        client = FFBBAPIClientV3.create(MEILISEARCH_TOKEN, API_TOKEN, debug=True)
 
         try:
             # Get live games

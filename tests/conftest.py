@@ -53,7 +53,7 @@ def configure_cache_for_worker(
     Yields:
         None - fixture runs setup, yields control, then runs teardown.
     """
-    from ffbb_api_client_v2.utils.cache_manager import CacheConfig, CacheManager
+    from ffbb_api_client_v3.utils.cache_manager import CacheConfig, CacheManager
 
     CacheManager.reset_instance()
 

@@ -6,7 +6,7 @@ providing access to clubs, competitions, matches, and other basketball data.
 """
 
 from .clients.api_ffbb_app_client import ApiFFBBAppClient
-from .clients.ffbb_api_client_v2 import FFBBAPIClientV2
+from .clients.ffbb_api_client_v3 import FFBBAPIClientV3
 from .clients.meilisearch_client import MeilisearchClient
 from .clients.meilisearch_ffbb_client import MeilisearchFFBBClient
 from .helpers.meilisearch_client_extension import MeilisearchClientExtension
@@ -46,7 +46,7 @@ from .utils.token_manager import FFBBTokens, TokenManager
 __all__ = [
     # Clients
     "ApiFFBBAppClient",
-    "FFBBAPIClientV2",
+    "FFBBAPIClientV3",
     "MeilisearchClient",
     "MeilisearchFFBBClient",
     # Helpers
