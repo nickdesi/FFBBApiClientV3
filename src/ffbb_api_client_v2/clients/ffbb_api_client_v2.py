@@ -215,6 +215,43 @@ class FFBBAPIClientV2:
             cached_session=cached_session,
         )
 
+    async def get_lives_async(self) -> list[Live] | None:
+        """Retrieves a list of live events asynchronously."""
+        return await self.api_ffbb_client.get_lives_async()
+
+    async def get_saisons_async(
+        self, active_only: bool = True
+    ) -> list[GetSaisonsResponse]:
+        """Retrieves list of seasons asynchronously."""
+        filter_criteria = '{"actif":{"_eq":true}}' if active_only else None
+        return await self.api_ffbb_client.get_saisons_async(filter_criteria=filter_criteria)
+
+    async def get_competition_async(
+        self,
+        competition_id: int,
+        deep_limit: str | None = "1000",
+    ) -> GetCompetitionResponse | None:
+        """Retrieves detailed information about a competition asynchronously."""
+        return await self.api_ffbb_client.get_competition_async(
+            competition_id, deep_limit=deep_limit
+        )
+
+    async def get_organisme_async(self, organisme_id: int) -> GetOrganismeResponse | None:
+        """Retrieves detailed information about an organisme asynchronously."""
+        return await self.api_ffbb_client.get_organisme_async(organisme_id)
+
+    async def get_poule_async(
+        self, poule_id: int, deep_limit: str | None = "1000"
+    ) -> GetPouleResponse | None:
+        """Retrieves detailed information about a poule asynchronously."""
+        return await self.api_ffbb_client.get_poule_async(poule_id, deep_limit=deep_limit)
+
+    async def multi_search_async(
+        self, queries: Sequence[MultiSearchQuery] | None = None
+    ) -> MultiSearchResults | None:
+        """Performs a smart multi-search asynchronously."""
+        return await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
+
     def multi_search(
         self, name: str | None = None, cached_session: Client | None = None
     ) -> list[MultiSearchResult] | None:
@@ -403,3 +440,73 @@ class FFBBAPIClientV2:
     ) -> TournoisMultiSearchResult | None:
         results = self.search_multiple_tournois([name], cached_session)
         return results[0] if results else None
+
+    async def search_competitions_async(
+        self, name: str | None = None
+    ) -> CompetitionsMultiSearchResult | None:
+        """Search for competitions asynchronously."""
+        if not name:
+            return None
+        queries = [CompetitionsMultiSearchQuery(name)]
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
+        return cast(CompetitionsMultiSearchResult, results.results[0]) if results and results.results else None
+
+    async def search_organismes_async(
+        self, name: str | None = None
+    ) -> OrganismesMultiSearchResult | None:
+        """Search for organismes asynchronously."""
+        if not name:
+            return None
+        queries = [OrganismesMultiSearchQuery(name)]
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
+        return cast(OrganismesMultiSearchResult, results.results[0]) if results and results.results else None
+
+    async def search_rencontres_async(
+        self, name: str | None = None
+    ) -> RencontresMultiSearchResult | None:
+        """Search for rencontres asynchronously."""
+        if not name:
+            return None
+        queries = [RencontresMultiSearchQuery(name)]
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
+        return cast(RencontresMultiSearchResult, results.results[0]) if results and results.results else None
+
+    async def search_salles_async(
+        self, name: str | None = None
+    ) -> SallesMultiSearchResult | None:
+        """Search for salles asynchronously."""
+        if not name:
+            return None
+        queries = [SallesMultiSearchQuery(name)]
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
+        return cast(SallesMultiSearchResult, results.results[0]) if results and results.results else None
+
+    async def search_tournois_async(
+        self, name: str | None = None
+    ) -> TournoisMultiSearchResult | None:
+        """Search for tournois asynchronously."""
+        if not name:
+            return None
+        queries = [TournoisMultiSearchQuery(name)]
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
+        return cast(TournoisMultiSearchResult, results.results[0]) if results and results.results else None
+
+    async def search_terrains_async(
+        self, name: str | None = None
+    ) -> TerrainsMultiSearchResult | None:
+        """Search for terrains asynchronously."""
+        if not name:
+            return None
+        queries = [TerrainsMultiSearchQuery(name)]
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
+        return cast(TerrainsMultiSearchResult, results.results[0]) if results and results.results else None
+
+    async def search_pratiques_async(
+        self, name: str | None = None
+    ) -> PratiquesMultiSearchResult | None:
+        """Search for pratiques asynchronously."""
+        if not name:
+            return None
+        queries = [PratiquesMultiSearchQuery(name)]
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
+        return cast(PratiquesMultiSearchResult, results.results[0]) if results and results.results else None
