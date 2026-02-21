@@ -214,6 +214,32 @@ class OrganismeFields:
         ]
 
     @classmethod
+    def get_engagements_fields(cls) -> list[str]:
+        """Get engagements-only fields for lightweight team listing queries."""
+        return [
+            cls.ID,
+            cls.NOM,
+            cls.CODE,
+            # Engagements
+            cls.ENGAGEMENTS_ID,
+            cls.ENGAGEMENTS_ID_COMPETITION_ID,
+            cls.ENGAGEMENTS_ID_COMPETITION_NOM,
+            cls.ENGAGEMENTS_ID_COMPETITION_CODE,
+            cls.ENGAGEMENTS_ID_COMPETITION_SEXE,
+            cls.ENGAGEMENTS_ID_COMPETITION_COMPETITION_ORIGINE,
+            cls.ENGAGEMENTS_ID_COMPETITION_COMPETITION_ORIGINE_NOM,
+            cls.ENGAGEMENTS_ID_COMPETITION_COMPETITION_ORIGINE_NIVEAU,
+            cls.ENGAGEMENTS_ID_COMPETITION_TYPE_COMPETITION,
+            cls.ENGAGEMENTS_ID_COMPETITION_LOGO_ID,
+            cls.ENGAGEMENTS_ID_COMPETITION_SAISON_ID,
+            cls.ENGAGEMENTS_ID_COMPETITION_ORGANISATEUR_TYPE,
+            cls.ENGAGEMENTS_ID_COMPETITION_CATEGORIE_CODE,
+            cls.ENGAGEMENTS_ID_COMPETITION_CATEGORIE_ORDRE,
+            cls.ENGAGEMENTS_ID_POULE_ID,
+            cls.ENGAGEMENTS_ID_POULE_NOM,
+        ]
+
+    @classmethod
     def get_basic_fields(cls) -> list[str]:
         """Get basic fields for simple organisme queries."""
         return [

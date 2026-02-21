@@ -5,6 +5,7 @@ This module provides retry logic with exponential backoff for HTTP requests,
 along with configurable timeout management.
 """
 
+import asyncio
 import random
 import time
 from collections.abc import Callable
@@ -273,6 +274,136 @@ def make_http_request_with_retry(
             raise ValueError(f"Unsupported HTTP method: {method}")
 
     return execute_with_retry(
+        _make_request, config=retry_config, timeout_config=timeout_config
+    )
+
+
+async def execute_with_retry_async(
+    func: Callable[..., Any],
+    *args: Any,
+    config: RetryConfig = DEFAULT_RETRY_CONFIG,
+    timeout_config: TimeoutConfig = DEFAULT_TIMEOUT_CONFIG,
+    **kwargs: Any,
+) -> Any:
+    """
+    Execute an async function with retry logic.
+
+    Args:
+        func: Async function to execute.
+        *args: Positional arguments for the function.
+        config: Retry configuration.
+        timeout_config: Timeout configuration.
+        **kwargs: Keyword arguments for the function.
+
+    Returns:
+        The result of the function.
+
+    Raises:
+        Exception: The last exception if all retries are exhausted.
+    """
+    last_exception: Exception | None = None
+
+    # Update timeout in kwargs if not already set
+    if "timeout" not in kwargs:
+        kwargs["timeout"] = timeout_config.total_timeout
+
+    for attempt in range(config.max_attempts + 1):
+        try:
+            response = await func(*args, **kwargs)
+
+            # Check if we should retry based on response
+            if should_retry(
+                attempt,
+                response if isinstance(response, Response) else None,
+                None,
+                config,
+            ):
+                if attempt < config.max_attempts:
+                    delay = calculate_delay(attempt, config)
+                    await asyncio.sleep(delay)
+                    continue
+
+            return response
+
+        except (
+            httpx.RequestError,
+            ConnectionError,
+            TimeoutError,
+            OSError,
+        ) as e:
+            last_exception = e
+
+            # Check if we should retry based on exception
+            if should_retry(attempt, None, e, config):
+                if attempt < config.max_attempts:
+                    delay = calculate_delay(attempt, config)
+                    await asyncio.sleep(delay)
+                    continue
+            # Don't retry this type of exception
+            raise
+
+    # All retries exhausted
+    if last_exception:
+        raise last_exception
+
+    # This should never happen, but just in case
+    raise RuntimeError("Retry logic failed unexpectedly")
+
+
+async def make_http_request_with_retry_async(
+    method: str,
+    url: str,
+    headers: dict[str, str],
+    data: dict[str, Any] | None = None,
+    cached_session: httpx.AsyncClient | None = None,
+    retry_config: RetryConfig = DEFAULT_RETRY_CONFIG,
+    timeout_config: TimeoutConfig = DEFAULT_TIMEOUT_CONFIG,
+    debug: bool = False,
+) -> Response:
+    """
+    Make an async HTTP request with retry logic.
+
+    Args:
+        method: HTTP method ('GET', 'POST', etc.).
+        url: Request URL.
+        headers: Request headers.
+        data: Request data (for POST requests).
+        cached_session: Async cached session to use.
+        retry_config: Retry configuration.
+        timeout_config: Timeout configuration.
+        debug: Whether to enable debug logging.
+
+    Returns:
+        HTTP response.
+    """
+
+    async def _make_request(**_kwargs: Any) -> Response:
+        if debug:
+            logger.debug(f"Making async {method} request to {url}")
+
+        session: httpx.AsyncClient
+        if cached_session:
+            session = cached_session
+        else:
+            session = httpx.AsyncClient()
+
+        try:
+            if method.upper() == "GET":
+                return await session.get(
+                    url, headers=headers, timeout=timeout_config.total_timeout
+                )
+            elif method.upper() == "POST":
+                return await session.post(
+                    url, headers=headers, json=data, timeout=timeout_config.total_timeout
+                )
+            else:
+                raise ValueError(f"Unsupported HTTP method: {method}")
+        finally:
+            # If we created a new session, close it
+            if not cached_session:
+                await session.aclose()
+
+    return await execute_with_retry_async(
         _make_request, config=retry_config, timeout_config=timeout_config
     )
 

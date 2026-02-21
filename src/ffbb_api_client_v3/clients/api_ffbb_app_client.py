@@ -43,6 +43,15 @@ from ..utils.secure_logging import get_secure_logger, mask_token
 
 
 class ApiFFBBAppClient:
+    bearer_token: str = ""
+    url: str = ""
+    debug: bool = False
+    headers: dict[str, str] = {}
+    cached_session: Client | None = None
+    async_cached_session: httpx.AsyncClient | None = None
+    retry_config: RetryConfig | None = None
+    timeout_config: TimeoutConfig | None = None
+
     def __init__(
         self,
         bearer_token: str,
@@ -50,6 +59,7 @@ class ApiFFBBAppClient:
         debug: bool = False,
         cached_session: Client | None = None,
         async_cached_session: httpx.AsyncClient | None = None,
+        *,
         retry_config: RetryConfig | None = None,
         timeout_config: TimeoutConfig | None = None,
         cache_config: CacheConfig | None = None,
@@ -141,7 +151,15 @@ class ApiFFBBAppClient:
             )
         )
         if raw_data:
-            return [Live.from_dict(item) for item in raw_data] if isinstance(raw_data, list) else []
+            # data might be a list or a dict with "lives" key
+            if isinstance(raw_data, dict) and "lives" in raw_data:
+                raw_data = raw_data["lives"]
+            
+            if not isinstance(raw_data, list):
+                return []
+                
+            adapter = TypeAdapter(list[Live])
+            return adapter.validate_python(raw_data)
         return None
 
     async def get_lives_async(
@@ -163,8 +181,16 @@ class ApiFFBBAppClient:
                 retry_config=self.retry_config,
                 timeout_config=self.timeout_config,
             )
-            if raw_data:
-                return [Live.from_dict(item) for item in raw_data] if isinstance(raw_data, list) else []
+            if raw_data is not None:
+                # data might be a list or a dict with "lives" key
+                if isinstance(raw_data, dict) and "lives" in raw_data:
+                    raw_data = raw_data["lives"]
+                
+                if not isinstance(raw_data, list):
+                    return []
+                    
+                adapter = TypeAdapter(list[Live])
+                return adapter.validate_python(raw_data)
         except Exception as e:
             if self.debug:
                 self.logger.error(f"Error in get_lives_async: {e}")
@@ -222,7 +248,10 @@ class ApiFFBBAppClient:
         # Extract the actual data from the response wrapper
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return GetCompetitionResponse.from_dict(actual_data) if actual_data else None
+        if actual_data:
+            adapter = TypeAdapter(GetCompetitionResponse)
+            return adapter.validate_python(actual_data)
+        return None
 
     async def get_competition_async(
         self,
@@ -257,7 +286,10 @@ class ApiFFBBAppClient:
                 cached_session=cached_session or CacheManager().async_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
-            return GetCompetitionResponse.from_dict(actual_data) if actual_data else None
+            if actual_data:
+                adapter = TypeAdapter(GetCompetitionResponse)
+                return adapter.validate_python(actual_data)
+            return None
         except Exception as e:
             if self.debug:
                 self.logger.error(f"Error in get_competition_async: {e}")
@@ -310,7 +342,9 @@ class ApiFFBBAppClient:
         # Extract the actual data from the response wrapper
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return GetPouleResponse.from_dict(actual_data) if actual_data else None
+        if actual_data:
+            return GetPouleResponse.from_dict(actual_data)
+        return None
 
     async def get_poule_async(
         self,
@@ -343,11 +377,43 @@ class ApiFFBBAppClient:
                 cached_session=cached_session or CacheManager().async_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
-            return GetPouleResponse.from_dict(actual_data) if actual_data else None
+            if actual_data:
+                return GetPouleResponse.from_dict(actual_data)
+            return None
         except Exception as e:
             if self.debug:
                 self.logger.error(f"Error in get_poule_async: {e}")
             return None
+
+    def get_classement(
+        self,
+        poule_id: int,
+        cached_session: Client | None = None,
+    ) -> GetPouleResponse | None:
+        """
+        Retrieves ONLY the ranking (classement) for a specific poule.
+        """
+        return self.get_poule(
+            poule_id=poule_id,
+            deep_limit="1000",
+            fields=QueryFieldsManager.get_classement_fields(),
+            cached_session=cached_session,
+        )
+
+    async def get_classement_async(
+        self,
+        poule_id: int,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> GetPouleResponse | None:
+        """
+        Asynchronously retrieves ONLY the ranking (classement) for a specific poule.
+        """
+        return await self.get_poule_async(
+            poule_id=poule_id,
+            deep_limit="1000",
+            fields=QueryFieldsManager.get_classement_fields(),
+            cached_session=cached_session,
+        )
 
     def get_saisons(
         self,
@@ -394,7 +460,8 @@ class ApiFFBBAppClient:
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
         if actual_data and isinstance(actual_data, list):
-            return [GetSaisonsResponse.from_dict(item) for item in actual_data]
+            adapter = TypeAdapter(list[GetSaisonsResponse])
+            return adapter.validate_python(actual_data)
         return []
 
     async def get_saisons_async(
@@ -427,7 +494,8 @@ class ApiFFBBAppClient:
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data and isinstance(actual_data, list):
-                return [GetSaisonsResponse.from_dict(item) for item in actual_data]
+                adapter = TypeAdapter(list[GetSaisonsResponse])
+                return adapter.validate_python(actual_data)
         except Exception as e:
             if self.debug:
                 self.logger.error(f"Error in get_saisons_async: {e}")
@@ -476,7 +544,9 @@ class ApiFFBBAppClient:
         # Extract the actual data from the response wrapper
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return GetOrganismeResponse.from_dict(actual_data) if actual_data else None
+        if actual_data:
+            return GetOrganismeResponse.from_dict(actual_data)
+        return None
 
     async def get_organisme_async(
         self,
@@ -504,11 +574,41 @@ class ApiFFBBAppClient:
                 cached_session=cached_session or CacheManager().async_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
-            return GetOrganismeResponse.from_dict(actual_data) if actual_data else None
+            if actual_data:
+                return GetOrganismeResponse.from_dict(actual_data)
+            return None
         except Exception as e:
             if self.debug:
                 self.logger.error(f"Error in get_organisme_async: {e}")
             return None
+
+    def get_equipes(
+        self,
+        organisme_id: int,
+        cached_session: Client | None = None,
+    ) -> GetOrganismeResponse | None:
+        """
+        Retrieves ONLY the team commitments (engagements) for a specific club.
+        """
+        return self.get_organisme(
+            organisme_id=organisme_id,
+            fields=QueryFieldsManager.get_equipes_fields(),
+            cached_session=cached_session,
+        )
+
+    async def get_equipes_async(
+        self,
+        organisme_id: int,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> GetOrganismeResponse | None:
+        """
+        Asynchronously retrieves ONLY the team commitments (engagements) for a specific club.
+        """
+        return await self.get_organisme_async(
+            organisme_id=organisme_id,
+            fields=QueryFieldsManager.get_equipes_fields(),
+            cached_session=cached_session,
+        )
 
     def list_competitions(
         self,
@@ -551,7 +651,8 @@ class ApiFFBBAppClient:
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
         if actual_data and isinstance(actual_data, list):
-            return [GetCompetitionResponse.from_dict(item) for item in actual_data]
+            adapter = TypeAdapter(list[GetCompetitionResponse])
+            return adapter.validate_python(actual_data)
         return []
 
     async def list_competitions_async(
@@ -582,7 +683,8 @@ class ApiFFBBAppClient:
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data and isinstance(actual_data, list):
-                return [GetCompetitionResponse.from_dict(item) for item in actual_data]
+                adapter = TypeAdapter(list[GetCompetitionResponse])
+                return adapter.validate_python(actual_data)
         except Exception as e:
             if self.debug:
                 self.logger.error(f"Error in list_competitions_async: {e}")
@@ -621,7 +723,10 @@ class ApiFFBBAppClient:
         # Extract the actual data from the response wrapper
 
         actual_data = data.get("data") if data and isinstance(data, dict) else data
-        return GetConfigurationResponse.from_dict(actual_data) if actual_data else None
+        if actual_data:
+            adapter = TypeAdapter(GetConfigurationResponse)
+            return adapter.validate_python(actual_data)
+        return None
 
     async def get_configuration_async(
         self,
@@ -641,7 +746,10 @@ class ApiFFBBAppClient:
                 timeout_config=self.timeout_config,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
-            return GetConfigurationResponse.from_dict(actual_data) if actual_data else None
+            if actual_data:
+                adapter = TypeAdapter(GetConfigurationResponse)
+                return adapter.validate_python(actual_data)
+            return None
         except Exception as e:
             if self.debug:
                 self.logger.error(f"Error in get_configuration_async: {e}")

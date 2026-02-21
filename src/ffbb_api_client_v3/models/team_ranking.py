@@ -9,19 +9,19 @@ from .ranking_engagement import RankingEngagement
 class TeamRanking:
     """Modèle pour un classement d'équipe."""
 
-    # Required fields first
-    id: str
-    id_engagement: RankingEngagement | None
-    position: int
-    points: int
-    match_joues: int
-    gagnes: int
-    perdus: int
-    nombre_forfaits: int
-    paniers_marques: int
-    paniers_encaisses: int
-    difference: int
-    quotient: float
+    # Fields with defaults for lightweight API responses
+    id: str = ""
+    id_engagement: RankingEngagement | None = None
+    position: int = 0
+    points: int = 0
+    match_joues: int = 0
+    gagnes: int = 0
+    perdus: int = 0
+    nombre_forfaits: int = 0
+    paniers_marques: int = 0
+    paniers_encaisses: int = 0
+    difference: int = 0
+    quotient: float = 0.0
     # Optional fields with defaults
     nuls: int | None = None
     nombre_defauts: int | None = None

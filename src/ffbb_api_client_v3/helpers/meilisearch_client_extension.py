@@ -17,9 +17,16 @@ class MeilisearchClientExtension(MeilisearchClient):
         url: str,
         debug: bool = False,
         cached_session: Client | None = None,
+        *,
         async_cached_session: httpx.AsyncClient | None = None,
     ):
-        super().__init__(bearer_token, url, debug, cached_session, async_cached_session)
+        super().__init__(
+            bearer_token,
+            url,
+            debug,
+            cached_session,
+            async_cached_session=async_cached_session,
+        )
 
     def smart_multi_search(
         self,

@@ -257,6 +257,28 @@ class FFBBAPIClientV3:
         """Retrieves detailed information about a poule asynchronously."""
         return await self.api_ffbb_client.get_poule_async(poule_id, deep_limit=deep_limit)
 
+    def get_classement(
+        self, poule_id: int, cached_session: Client | None = None
+    ) -> GetPouleResponse | None:
+        """Retrieves ONLY the ranking (classement) for a specific poule."""
+        return self.api_ffbb_client.get_classement(poule_id, cached_session=cached_session)
+
+    async def get_classement_async(self, poule_id: int) -> GetPouleResponse | None:
+        """Retrieves ONLY the ranking (classement) for a specific poule asynchronously."""
+        return await self.api_ffbb_client.get_classement_async(poule_id)
+
+    def get_equipes(
+        self, organisme_id: int, cached_session: Client | None = None
+    ) -> GetOrganismeResponse | None:
+        """Retrieves ONLY the team commitments (engagements) for a specific club."""
+        return self.api_ffbb_client.get_equipes(
+            organisme_id, cached_session=cached_session
+        )
+
+    async def get_equipes_async(self, organisme_id: int) -> GetOrganismeResponse | None:
+        """Retrieves ONLY the team commitments (engagements) for a specific club asynchronously."""
+        return await self.api_ffbb_client.get_equipes_async(organisme_id)
+
     async def multi_search_async(
         self, queries: Sequence[MultiSearchQuery] | None = None
     ) -> MultiSearchResults | None:
@@ -351,6 +373,7 @@ class FFBBAPIClientV3:
     def search_multiple_rencontres(
         self,
         names: list[str | None] | None = None,
+        categorie: str | None = None,
         cached_session: Client | None = None,
     ) -> list[RencontresMultiSearchResult] | None:
         if not names:
@@ -361,11 +384,65 @@ class FFBBAPIClientV3:
             queries, cached_session
         )
 
-        return (
-            cast(list[RencontresMultiSearchResult], results.results)
-            if results
-            else None
+        if not results or not results.results:
+            return None
+
+        rencontres_results = cast(list[RencontresMultiSearchResult], results.results)
+
+        if categorie:
+            for res in rencontres_results:
+                if res.hits:
+                    filtered_hits = [
+                        hit
+                        for hit in res.hits
+                        if hit.competition_id
+                        and hit.competition_id.categorie
+                        and (
+                            hit.competition_id.categorie.code == categorie
+                            or hit.competition_id.categorie.libelle == categorie
+                        )
+                    ]
+                    res.hits = filtered_hits
+                    res.estimated_total_hits = len(filtered_hits)
+
+        return rencontres_results
+
+    async def search_multiple_rencontres_async(
+        self,
+        names: list[str | None] | None = None,
+        categorie: str | None = None,
+    ) -> list[RencontresMultiSearchResult] | None:
+        """Search for multiple rencontres asynchronously."""
+        if not names:
+            return None
+
+        queries = [RencontresMultiSearchQuery(name) for name in names]
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(
+            queries
         )
+
+        if not results or not results.results:
+            return None
+
+        rencontres_results = cast(list[RencontresMultiSearchResult], results.results)
+
+        if categorie:
+            for res in rencontres_results:
+                if res.hits:
+                    filtered_hits = [
+                        hit
+                        for hit in res.hits
+                        if hit.competition_id
+                        and hit.competition_id.categorie
+                        and (
+                            hit.competition_id.categorie.code == categorie
+                            or hit.competition_id.categorie.libelle == categorie
+                        )
+                    ]
+                    res.hits = filtered_hits
+                    res.estimated_total_hits = len(filtered_hits)
+
+        return rencontres_results
 
     def search_multiple_salles(
         self,
@@ -429,9 +506,12 @@ class FFBBAPIClientV3:
         return results[0] if results else None
 
     def search_rencontres(
-        self, name: str | None = None, cached_session: Client | None = None
+        self,
+        name: str | None = None,
+        categorie: str | None = None,
+        cached_session: Client | None = None,
     ) -> RencontresMultiSearchResult | None:
-        results = self.search_multiple_rencontres([name], cached_session)
+        results = self.search_multiple_rencontres([name], categorie, cached_session)
         return results[0] if results else None
 
     def search_salles(
@@ -473,14 +553,13 @@ class FFBBAPIClientV3:
         return cast(OrganismesMultiSearchResult, results.results[0]) if results and results.results else None
 
     async def search_rencontres_async(
-        self, name: str | None = None
+        self, name: str | None = None, categorie: str | None = None
     ) -> RencontresMultiSearchResult | None:
         """Search for rencontres asynchronously."""
         if not name:
             return None
-        queries = [RencontresMultiSearchQuery(name)]
-        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
-        return cast(RencontresMultiSearchResult, results.results[0]) if results and results.results else None
+        results = await self.search_multiple_rencontres_async([name], categorie)
+        return results[0] if results else None
 
     async def search_salles_async(
         self, name: str | None = None

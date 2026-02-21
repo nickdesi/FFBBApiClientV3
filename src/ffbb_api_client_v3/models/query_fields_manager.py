@@ -39,6 +39,16 @@ class QueryFieldsManager:
             return PouleFields.get_default_fields()
 
     @staticmethod
+    def get_classement_fields() -> list[str]:
+        """Get only classement fields for lightweight queries."""
+        return PouleFields.get_classement_fields()
+
+    @staticmethod
+    def get_equipes_fields() -> list[str]:
+        """Get only engagement fields for lightweight queries."""
+        return OrganismeFields.get_engagements_fields()
+
+    @staticmethod
     def get_saison_fields(field_set: FieldSet = FieldSet.DEFAULT) -> list[str]:
         """Get saison fields based on field set."""
         if field_set == FieldSet.DETAILED:

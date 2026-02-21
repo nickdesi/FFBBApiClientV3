@@ -12,6 +12,7 @@ from ..utils.retry_utils import (
     RetryConfig,
     TimeoutConfig,
     make_http_request_with_retry,
+    make_http_request_with_retry_async,
 )
 from ..utils.secure_logging import get_secure_logger
 
@@ -262,11 +263,24 @@ async def http_get_async(
         logger.debug(f"Making async GET request to {url}")
         start_time = time.time()
 
-    if cached_session:
-        response = await cached_session.get(url, headers=headers, timeout=timeout)
+    # Use retry logic if configured
+    if retry_config and timeout_config:
+        response = await make_http_request_with_retry_async(
+            "GET",
+            url,
+            headers,
+            cached_session=cached_session,
+            retry_config=retry_config,
+            timeout_config=timeout_config,
+            debug=debug,
+        )
     else:
-        async with httpx.AsyncClient() as client:
-            response = await client.get(url, headers=headers, timeout=timeout)
+        # Fallback to original behavior
+        if cached_session:
+            response = await cached_session.get(url, headers=headers, timeout=timeout)
+        else:
+            async with httpx.AsyncClient() as client:
+                response = await client.get(url, headers=headers, timeout=timeout)
 
     if debug:
         end_time = time.time()
@@ -322,15 +336,29 @@ async def http_post_async(
 
     filtered_data = {k: v for k, v in data.items() if v is not None} if data else None
 
-    if cached_session:
-        response = await cached_session.post(
-            url, headers=headers, json=filtered_data, timeout=timeout
+    # Use retry logic if configured
+    if retry_config and timeout_config:
+        response = await make_http_request_with_retry_async(
+            "POST",
+            url,
+            headers,
+            data=filtered_data,
+            cached_session=cached_session,
+            retry_config=retry_config,
+            timeout_config=timeout_config,
+            debug=debug,
         )
     else:
-        async with httpx.AsyncClient() as client:
-            response = await client.post(
+        # Fallback to original behavior
+        if cached_session:
+            response = await cached_session.post(
                 url, headers=headers, json=filtered_data, timeout=timeout
             )
+        else:
+            async with httpx.AsyncClient() as client:
+                response = await client.post(
+                    url, headers=headers, json=filtered_data, timeout=timeout
+                )
 
     if debug:
         end_time = time.time()

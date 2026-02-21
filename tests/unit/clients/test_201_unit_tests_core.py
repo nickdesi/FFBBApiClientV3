@@ -225,7 +225,7 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         result = self.client.get_lives()
 
         mock_http_get.assert_called_once()
-        mock_type_adapter.return_value.validate_python.assert_called_once_with(mock_data)
+        mock_type_adapter.return_value.validate_python.assert_called_once_with(mock_data["lives"])
         self.assertEqual(result, mock_lives)
 
     @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.TypeAdapter")
@@ -306,16 +306,16 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         mock_type_adapter.return_value.validate_python.assert_called_once_with(mock_inner_data)
         self.assertEqual(result, mock_competition_obj)
 
-    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.TypeAdapter")
+    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.GetPouleResponse.from_dict")
     @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.http_get_json")
-    def test_007_get_poule_with_default_fields(self, mock_http_get, mock_type_adapter):
+    def test_007_get_poule_with_default_fields(self, mock_http_get, mock_from_dict):
         """Test get_poule without fields uses default fields."""
         mock_inner_data = {"id": 456, "nom": "Test Poule"}
         mock_data = {"data": mock_inner_data}
         mock_http_get.return_value = mock_data
 
         mock_poule_obj = Mock()
-        mock_type_adapter.return_value.validate_python.return_value = mock_poule_obj
+        mock_from_dict.return_value = mock_poule_obj
 
         # Test without fields (should use defaults)
         result = self.client.get_poule(poule_id=456)
@@ -324,19 +324,19 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         # Verify that fields are in the URL
         call_args = mock_http_get.call_args
         self.assertIn("fields%5B%5D", call_args[0][0])
-        mock_type_adapter.return_value.validate_python.assert_called_once_with(mock_inner_data)
+        mock_from_dict.assert_called_once_with(mock_inner_data)
         self.assertEqual(result, mock_poule_obj)
 
-    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.TypeAdapter")
+    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.GetPouleResponse.from_dict")
     @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.http_get_json")
-    def test_007b_get_poule_with_custom_fields(self, mock_http_get, mock_type_adapter):
+    def test_007b_get_poule_with_custom_fields(self, mock_http_get, mock_from_dict):
         """Test get_poule with custom fields."""
         mock_inner_data = {"id": 456, "nom": "Test Poule", "rencontres": []}
         mock_data = {"data": mock_inner_data}
         mock_http_get.return_value = mock_data
 
         mock_poule_obj = Mock()
-        mock_type_adapter.return_value.validate_python.return_value = mock_poule_obj
+        mock_from_dict.return_value = mock_poule_obj
 
         # Use custom fields
         custom_fields = ["id", "nom", "rencontres.id", "rencontres.numero"]
@@ -347,7 +347,7 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         call_args = mock_http_get.call_args
         url = call_args[0][0]
         self.assertIn("rencontres.id", url)
-        mock_type_adapter.return_value.validate_python.assert_called_once_with(mock_inner_data)
+        mock_from_dict.assert_called_once_with(mock_inner_data)
         self.assertEqual(result, mock_poule_obj)
 
     @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.TypeAdapter")
@@ -370,9 +370,9 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         )  # Should be called with inner data
         self.assertEqual(result, mock_saisons_list)
 
-    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.TypeAdapter")
+    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.GetOrganismeResponse.from_dict")
     @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.http_get_json")
-    def test_009_get_organisme_with_default_fields(self, mock_http_get, mock_type_adapter):
+    def test_009_get_organisme_with_default_fields(self, mock_http_get, mock_from_dict):
         """Test get_organisme without fields uses default fields."""
         mock_inner_data = {
             "id": 789,
@@ -383,7 +383,7 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         mock_http_get.return_value = mock_data
 
         mock_organisme_obj = Mock()
-        mock_type_adapter.return_value.validate_python.return_value = mock_organisme_obj
+        mock_from_dict.return_value = mock_organisme_obj
 
         # Test without fields (should use defaults)
         result = self.client.get_organisme(organisme_id=789)
@@ -392,19 +392,19 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         # Verify default fields in URL
         call_args = mock_http_get.call_args
         self.assertIn("fields%5B%5D", call_args[0][0])
-        mock_type_adapter.return_value.validate_python.assert_called_once_with(mock_inner_data)
+        mock_from_dict.assert_called_once_with(mock_inner_data)
         self.assertEqual(result, mock_organisme_obj)
 
-    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.TypeAdapter")
+    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.GetOrganismeResponse.from_dict")
     @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.http_get_json")
-    def test_009b_get_organisme_with_basic_fields(self, mock_http_get, mock_type_adapter):
+    def test_009b_get_organisme_with_basic_fields(self, mock_http_get, mock_from_dict):
         """Test get_organisme with basic fields."""
         mock_inner_data = {"id": 789, "nom": "Test Club", "code": "TEST"}
         mock_data = {"data": mock_inner_data}
         mock_http_get.return_value = mock_data
 
         mock_organisme_obj = Mock()
-        mock_type_adapter.return_value.validate_python.return_value = mock_organisme_obj
+        mock_from_dict.return_value = mock_organisme_obj
 
         # Use basic fields
         from ffbb_api_client_v3.models.field_set import FieldSet
@@ -419,13 +419,13 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         url = call_args[0][0]
         self.assertIn("nom", url)
         self.assertIn("code", url)
-        mock_type_adapter.return_value.validate_python.assert_called_once_with(mock_inner_data)
+        mock_from_dict.assert_called_once_with(mock_inner_data)
         self.assertEqual(result, mock_organisme_obj)
 
-    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.TypeAdapter")
+    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.GetOrganismeResponse.from_dict")
     @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.http_get_json")
     def test_009c_get_organisme_with_detailed_fields(
-        self, mock_http_get, mock_type_adapter
+        self, mock_http_get, mock_from_dict
     ):
         """Test get_organisme with detailed fields."""
         mock_inner_data = {
@@ -437,7 +437,7 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         mock_http_get.return_value = mock_data
 
         mock_organisme_obj = Mock()
-        mock_type_adapter.return_value.validate_python.return_value = mock_organisme_obj
+        mock_from_dict.return_value = mock_organisme_obj
 
         # Use detailed fields
         from ffbb_api_client_v3.models.organisme_fields import OrganismeFields
@@ -451,7 +451,7 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         call_args = mock_http_get.call_args
         url = call_args[0][0]
         self.assertIn("engagements.idCompetition.id", url)
-        mock_type_adapter.return_value.validate_python.assert_called_once_with(mock_inner_data)
+        mock_from_dict.assert_called_once_with(mock_inner_data)
         self.assertEqual(result, mock_organisme_obj)
 
 
@@ -813,6 +813,7 @@ class Test001MeilisearchFfbbCore(unittest.TestCase):
                 "https://meilisearch-prod.ffbb.app/",
                 False,
                 unittest.mock.ANY,
+                async_cached_session=None,
             )
 
     def test_002_init_with_custom_url(self):
@@ -825,7 +826,7 @@ class Test001MeilisearchFfbbCore(unittest.TestCase):
         with patch(mock_path) as mock_super_init:
             MeilisearchFFBBClient(bearer_token=self.bearer_token, url=custom_url)
             mock_super_init.assert_called_once_with(
-                self.bearer_token, custom_url, False, unittest.mock.ANY
+                self.bearer_token, custom_url, False, unittest.mock.ANY, async_cached_session=None
             )
 
 

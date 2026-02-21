@@ -14,6 +14,8 @@ from .helpers.multi_search_query_helper import generate_queries
 from .models.competitions_facet_distribution import CompetitionsFacetDistribution
 from .models.competitions_facet_stats import CompetitionsFacetStats
 from .models.competitions_hit import CompetitionsHit
+from .models.get_competition_response import GetCompetitionResponse
+from .models.get_organisme_response import GetOrganismeResponse
 from .models.multi_search_query import MultiSearchQuery
 from .models.multi_search_result_competitions import CompetitionsMultiSearchResult
 from .models.multi_search_result_organismes import OrganismesMultiSearchResult
@@ -25,9 +27,13 @@ from .models.multi_search_result_tournois import TournoisMultiSearchResult
 from .models.organismes_facet_distribution import OrganismesFacetDistribution
 from .models.organismes_facet_stats import OrganismesFacetStats
 from .models.organismes_hit import OrganismesHit
+from .models.field_set import FieldSet
+from .models.query_fields_manager import QueryFieldsManager
+from .models.poules_models import GetPouleResponse
 from .models.pratiques_facet_distribution import PratiquesFacetDistribution
 from .models.pratiques_facet_stats import PratiquesFacetStats
 from .models.pratiques_hit import PratiquesHit
+from .models.rankings_models import RankingEngagement, TeamRanking
 from .models.rencontres_facet_distribution import RencontresFacetDistribution
 from .models.rencontres_facet_stats import RencontresFacetStats
 from .models.rencontres_hit import RencontresHit
@@ -52,8 +58,17 @@ __all__ = [
     # Helpers
     "MeilisearchClientExtension",
     "generate_queries",
+    "QueryFieldsManager",
     # Query
     "MultiSearchQuery",
+    "FieldSet",
+    # Responses
+    "GetCompetitionResponse",
+    "GetOrganismeResponse",
+    "GetPouleResponse",
+    # Rankings
+    "RankingEngagement",
+    "TeamRanking",
     # Competitions
     "CompetitionsFacetDistribution",
     "CompetitionsFacetStats",

@@ -64,7 +64,7 @@ class CacheConfig:
         self,
         enabled: bool = True,
         backend: str = "sqlite",
-        expire_after: int = 3600,  # 1 hour
+        expire_after: int = 1800,  # 30 minutes
         max_size: int = 1000,
         redis_url: str | None = None,
         key_prefix: str = "ffbb_api",

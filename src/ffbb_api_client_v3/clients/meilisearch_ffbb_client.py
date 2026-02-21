@@ -29,9 +29,12 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         url: str = MEILISEARCH_BASE_URL,
         debug: bool = False,
         cached_session: Client | None = None,
+        *,
         async_cached_session: httpx.AsyncClient | None = None,
     ):
-        super().__init__(bearer_token, url, debug, cached_session, async_cached_session)
+        super().__init__(
+            bearer_token, url, debug, cached_session, async_cached_session=async_cached_session
+        )
 
     def search_multiple_organismes(
         self,

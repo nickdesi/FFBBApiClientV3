@@ -206,6 +206,52 @@ class PouleFields:
         return cls.get_default_fields()
 
     @classmethod
+    def get_classement_fields(cls) -> list[str]:
+        """Get classement-only fields (no rencontres) for lightweight ranking queries."""
+        return [
+            # Basic fields
+            cls.ID,
+            cls.NOM,
+            cls.LOGO_ID,
+            # ID Competition fields
+            cls.ID_COMPETITION_ORGANISATEUR_CODE,
+            cls.ID_COMPETITION_ORGANISATEUR_NOM,
+            # Classements - all fields
+            cls.CLASSEMENTS_ID,
+            cls.CLASSEMENTS_ID_ENGAGEMENT_NOM,
+            cls.CLASSEMENTS_ID_ENGAGEMENT_NOM_USUEL,
+            cls.CLASSEMENTS_ID_ENGAGEMENT_ID,
+            cls.CLASSEMENTS_ID_ENGAGEMENT_LOGO_ID,
+            cls.CLASSEMENTS_ID_ENGAGEMENT_LOGO_GRADIENT,
+            cls.CLASSEMENTS_ID_ENGAGEMENT_CODE_ABREGE,
+            "classements.idEngagement.numeroEquipe",
+            cls.CLASSEMENTS_ORGANISME_ID,
+            cls.CLASSEMENTS_ORGANISME_NOM,
+            cls.CLASSEMENTS_ORGANISME_LOGO_ID,
+            cls.CLASSEMENTS_ORGANISME_NOM_SIMPLE,
+            cls.CLASSEMENTS_ID_COMPETITION,
+            cls.CLASSEMENTS_ID_POULE,
+            cls.CLASSEMENTS_ID_POULE_ID,
+            cls.CLASSEMENTS_MATCH_JOUES,
+            cls.CLASSEMENTS_POINTS,
+            cls.CLASSEMENTS_POSITION,
+            cls.CLASSEMENTS_GAGNES,
+            cls.CLASSEMENTS_PERDUS,
+            cls.CLASSEMENTS_NULS,
+            cls.CLASSEMENTS_POINT_INITIAUX,
+            cls.CLASSEMENTS_PENALITES_ARBITRAGE,
+            cls.CLASSEMENTS_PENALITES_ENTRAINEUR,
+            cls.CLASSEMENTS_PENALITES_DIVERSES,
+            cls.CLASSEMENTS_NOMBRE_FORFAITS,
+            cls.CLASSEMENTS_NOMBRE_DEFAUTS,
+            cls.CLASSEMENTS_PANIERS_MARQUES,
+            cls.CLASSEMENTS_PANIERS_ENCAISSES,
+            cls.CLASSEMENTS_DIFFERENCE,
+            cls.CLASSEMENTS_QUOTIENT,
+            cls.CLASSEMENTS_HORS_CLASSEMENT,
+        ]
+
+    @classmethod
     def get_basic_fields(cls) -> list[str]:
         """Get basic fields for simple poule queries."""
         return [

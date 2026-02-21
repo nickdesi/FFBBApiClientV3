@@ -29,12 +29,21 @@ logger = get_secure_logger(__name__)
 
 
 class MeilisearchClient:
+    bearer_token: str = ""
+    url: str = ""
+    debug: bool = False
+    cached_session: Client | None = None
+    async_cached_session: httpx.AsyncClient | None = None
+    retry_config: RetryConfig | None = None
+    timeout_config: TimeoutConfig | None = None
+
     def __init__(
         self,
         bearer_token: str,
         url: str = MEILISEARCH_BASE_URL,
         debug: bool = False,
         cached_session: Client | None = None,
+        *,
         async_cached_session: httpx.AsyncClient | None = None,
         retry_config: RetryConfig | None = None,
         timeout_config: TimeoutConfig | None = None,

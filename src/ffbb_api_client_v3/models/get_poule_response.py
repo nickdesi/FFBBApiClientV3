@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Any
 
@@ -15,7 +15,7 @@ class GetPouleResponse:
     # Keep nested alias for backward compatibility
     RencontresitemModel = PouleRencontreItemModel
 
-    rencontres: list[PouleRencontreItemModel]
+    rencontres: list[PouleRencontreItemModel] = field(default_factory=list)
     classements: list[TeamRanking] | None = None
 
     @classmethod

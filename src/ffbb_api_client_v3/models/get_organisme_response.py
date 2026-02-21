@@ -15,11 +15,11 @@ class GetOrganismeResponse:
     telephone: str
     adresse: str
     mail: str
-    type: str
-    nom_simple: Any | None
-    urlSiteWeb: str
-    nomClubPro: str
-    adresseClubPro: Any | None
+    type: str = ""
+    nom_simple: Any | None = None
+    urlSiteWeb: str = ""
+    nomClubPro: str = ""
+    adresseClubPro: Any | None = None
 
     @dataclass
     class CommuneModel:
