@@ -30,6 +30,7 @@ from ..models.get_competition_response import GetCompetitionResponse
 from ..models.get_organisme_response import GetOrganismeResponse
 from ..models.lives import Live
 from ..models.poules_models import GetPouleResponse
+from ..models.team_ranking import TeamRanking
 from ..models.query_fields_manager import QueryFieldsManager
 from ..models.saisons_models import GetSaisonsResponse
 from ..utils.cache_manager import CacheConfig, CacheManager
@@ -389,31 +390,33 @@ class ApiFFBBAppClient:
         self,
         poule_id: int,
         cached_session: Client | None = None,
-    ) -> GetPouleResponse | None:
+    ) -> list[TeamRanking] | None:
         """
         Retrieves ONLY the ranking (classement) for a specific poule.
         """
-        return self.get_poule(
+        res = self.get_poule(
             poule_id=poule_id,
             deep_limit="1000",
             fields=QueryFieldsManager.get_classement_fields(),
             cached_session=cached_session,
         )
+        return res.classements if res else None
 
     async def get_classement_async(
         self,
         poule_id: int,
         cached_session: httpx.AsyncClient | None = None,
-    ) -> GetPouleResponse | None:
+    ) -> list[TeamRanking] | None:
         """
         Asynchronously retrieves ONLY the ranking (classement) for a specific poule.
         """
-        return await self.get_poule_async(
+        res = await self.get_poule_async(
             poule_id=poule_id,
             deep_limit="1000",
             fields=QueryFieldsManager.get_classement_fields(),
             cached_session=cached_session,
         )
+        return res.classements if res else None
 
     def get_saisons(
         self,
@@ -586,29 +589,31 @@ class ApiFFBBAppClient:
         self,
         organisme_id: int,
         cached_session: Client | None = None,
-    ) -> GetOrganismeResponse | None:
+    ) -> list[GetOrganismeResponse.EngagementsitemModel] | None:
         """
         Retrieves ONLY the team commitments (engagements) for a specific club.
         """
-        return self.get_organisme(
+        res = self.get_organisme(
             organisme_id=organisme_id,
             fields=QueryFieldsManager.get_equipes_fields(),
             cached_session=cached_session,
         )
+        return res.engagements if res else None
 
     async def get_equipes_async(
         self,
         organisme_id: int,
         cached_session: httpx.AsyncClient | None = None,
-    ) -> GetOrganismeResponse | None:
+    ) -> list[GetOrganismeResponse.EngagementsitemModel] | None:
         """
         Asynchronously retrieves ONLY the team commitments (engagements) for a specific club.
         """
-        return await self.get_organisme_async(
+        res = await self.get_organisme_async(
             organisme_id=organisme_id,
             fields=QueryFieldsManager.get_equipes_fields(),
             cached_session=cached_session,
         )
+        return res.engagements if res else None
 
     def list_competitions(
         self,

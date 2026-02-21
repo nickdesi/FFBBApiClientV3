@@ -19,6 +19,7 @@ from ..models.multi_search_result_tournois import TournoisMultiSearchResult
 from ..models.multi_search_results import MultiSearchResult
 from ..models.organismes_multi_search_query import OrganismesMultiSearchQuery
 from ..models.poules_models import GetPouleResponse
+from ..models.team_ranking import TeamRanking
 from ..models.pratiques_multi_search_query import PratiquesMultiSearchQuery
 from ..models.rencontres_multi_search_query import RencontresMultiSearchQuery
 from ..models.saisons_models import GetSaisonsResponse
@@ -259,23 +260,23 @@ class FFBBAPIClientV3:
 
     def get_classement(
         self, poule_id: int, cached_session: Client | None = None
-    ) -> GetPouleResponse | None:
+    ) -> list[TeamRanking] | None:
         """Retrieves ONLY the ranking (classement) for a specific poule."""
         return self.api_ffbb_client.get_classement(poule_id, cached_session=cached_session)
 
-    async def get_classement_async(self, poule_id: int) -> GetPouleResponse | None:
+    async def get_classement_async(self, poule_id: int) -> list[TeamRanking] | None:
         """Retrieves ONLY the ranking (classement) for a specific poule asynchronously."""
         return await self.api_ffbb_client.get_classement_async(poule_id)
 
     def get_equipes(
         self, organisme_id: int, cached_session: Client | None = None
-    ) -> GetOrganismeResponse | None:
+    ) -> list[GetOrganismeResponse.EngagementsitemModel] | None:
         """Retrieves ONLY the team commitments (engagements) for a specific club."""
         return self.api_ffbb_client.get_equipes(
             organisme_id, cached_session=cached_session
         )
 
-    async def get_equipes_async(self, organisme_id: int) -> GetOrganismeResponse | None:
+    async def get_equipes_async(self, organisme_id: int) -> list[GetOrganismeResponse.EngagementsitemModel] | None:
         """Retrieves ONLY the team commitments (engagements) for a specific club asynchronously."""
         return await self.api_ffbb_client.get_equipes_async(organisme_id)
 

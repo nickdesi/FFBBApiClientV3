@@ -22,6 +22,7 @@ class OrganismeFields:
 
     # Engagements fields
     ENGAGEMENTS_ID = "engagements.id"
+    ENGAGEMENTS_NUMERO_EQUIPE = "engagements.numeroEquipe"
     ENGAGEMENTS_ID_COMPETITION_ID = "engagements.idCompetition.id"
     ENGAGEMENTS_ID_COMPETITION_NOM = "engagements.idCompetition.nom"
     ENGAGEMENTS_ID_COMPETITION_CODE = "engagements.idCompetition.code"
@@ -185,6 +186,7 @@ class OrganismeFields:
             cls.COMPETITIONS_NOM,
             # Engagements
             cls.ENGAGEMENTS_ID,
+            cls.ENGAGEMENTS_NUMERO_EQUIPE,
             cls.ENGAGEMENTS_ID_COMPETITION_ID,
             cls.ENGAGEMENTS_ID_COMPETITION_NOM,
             cls.ENGAGEMENTS_ID_COMPETITION_CODE,
@@ -222,6 +224,7 @@ class OrganismeFields:
             cls.CODE,
             # Engagements
             cls.ENGAGEMENTS_ID,
+            cls.ENGAGEMENTS_NUMERO_EQUIPE,
             cls.ENGAGEMENTS_ID_COMPETITION_ID,
             cls.ENGAGEMENTS_ID_COMPETITION_NOM,
             cls.ENGAGEMENTS_ID_COMPETITION_CODE,

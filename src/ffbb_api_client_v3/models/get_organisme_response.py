@@ -56,6 +56,22 @@ class GetOrganismeResponse:
     @dataclass
     class EngagementsitemModel:
         id: str
+        numeroEquipe: str | None = None
+
+        @property
+        def poule_id(self) -> str | None:
+            """Convenience property to access nested poule ID."""
+            return self.idPoule.id if self.idPoule else None
+
+        @property
+        def competition_nom(self) -> str | None:
+            """Convenience property to access nested competition name."""
+            return self.idCompetition.nom if self.idCompetition else None
+
+        @property
+        def numero_equipe(self) -> str | None:
+            """Convenience alias for .numeroEquipe."""
+            return self.numeroEquipe
 
         @dataclass
         class IdpouleModel:
@@ -331,6 +347,7 @@ class GetOrganismeResponse:
 
                 engagement = cls.EngagementsitemModel(
                     id=str(engagement_data.get("id", "")),
+                    numeroEquipe=engagement_data.get("numeroEquipe"),
                     idPoule=id_poule,
                     idCompetition=id_competition,
                 )

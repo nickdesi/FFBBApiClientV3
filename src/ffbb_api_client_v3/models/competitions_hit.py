@@ -66,6 +66,11 @@ class CompetitionsHit(Hit):
         init=False, default=None, repr=False
     )
 
+    @property
+    def name(self) -> str | None:
+        """Alias for .nom — unified name accessor across all Hit types."""
+        return self.nom
+
     def __post_init__(self) -> None:
         self.lower_nom = self.nom.lower() if self.nom else None
         self.lower_code = self.code.lower() if self.code else None

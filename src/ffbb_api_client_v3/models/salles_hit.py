@@ -40,6 +40,11 @@ class SallesHit(Hit):
     lower_adresse_complement: str | None = field(init=False, default=None, repr=False)
     lower_libelle2: str | None = field(init=False, default=None, repr=False)
 
+    @property
+    def name(self) -> str | None:
+        """Alias for .libelle — unified name accessor across all Hit types."""
+        return self.libelle
+
     def __post_init__(self) -> None:
         self.lower_libelle = self.libelle.lower() if self.libelle else None
         self.lower_addresse = self.adresse.lower() if self.adresse else None

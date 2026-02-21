@@ -62,6 +62,23 @@ class RencontresHit(Hit):
     lower_gs_id: str | None = field(init=False, default=None, repr=False)
     lower_officiels: list[str] | None = field(init=False, default=None, repr=False)
 
+    @property
+    def name(self) -> str | None:
+        """Alias for convenience — returns 'Team A vs Team B'."""
+        if self.nom_equipe1 and self.nom_equipe2:
+            return f"{self.nom_equipe1} vs {self.nom_equipe2}"
+        return self.nom_equipe1 or self.nom_equipe2
+
+    @property
+    def team1_name(self) -> str | None:
+        """Alias for .nom_equipe1 for DX consistency."""
+        return self.nom_equipe1
+
+    @property
+    def team2_name(self) -> str | None:
+        """Alias for .nom_equipe2 for DX consistency."""
+        return self.nom_equipe2
+
     def __post_init__(self) -> None:
         self.lower_id = self.id.lower() if self.id else None
         self.lower_nom_equipe1 = self.nom_equipe1.lower() if self.nom_equipe1 else None

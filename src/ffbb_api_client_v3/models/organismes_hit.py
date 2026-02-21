@@ -50,6 +50,11 @@ class OrganismesHit(Hit):
     lower_nom: str | None = field(init=False, default=None, repr=False)
     lower_engagements_noms: str | None = field(init=False, default=None, repr=False)
 
+    @property
+    def name(self) -> str | None:
+        """Alias for .nom — unified name accessor across all Hit types."""
+        return self.nom
+
     def __post_init__(self) -> None:
         self.lower_nom_club_pro = (
             self.nom_club_pro.lower() if self.nom_club_pro else None

@@ -45,10 +45,9 @@ async def test_get_classement_async():
 
         result = await client.get_classement_async(poule_id)
         assert result is not None
-        assert result.id == str(poule_id)
-        assert len(result.classements) == 1
-        assert result.classements[0].position == 1
-        assert result.classements[0].points == 10
+        assert len(result) == 1
+        assert result[0].position == 1
+        assert result[0].points == 10
 
 
 # ---------------------------------------------------------------------------
@@ -96,10 +95,9 @@ async def test_get_equipes_async():
 
         result = await client.get_equipes_async(organisme_id)
         assert result is not None
-        assert result.id == str(organisme_id)
-        assert len(result.engagements) == 1
-        assert result.engagements[0].idCompetition is not None
-        assert result.engagements[0].idCompetition.nom == "Division 1"
+        assert len(result) == 1
+        assert result[0].idCompetition is not None
+        assert result[0].idCompetition.nom == "Division 1"
 
 
 # ---------------------------------------------------------------------------
