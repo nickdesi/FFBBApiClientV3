@@ -110,6 +110,27 @@ class Live:
             team_engagement_out=team_engagement_out,
         )
 
+    @classmethod
+    def __get_pydantic_core_schema__(
+        cls, _source_type: Any, handler: Any
+    ) -> Any:
+        from pydantic_core import core_schema
+
+        return core_schema.no_info_before_validator_function(
+            cls._parse_pydantic,
+            handler(_source_type),
+        )
+
+    @classmethod
+    def _parse_pydantic(cls, value: Any) -> Any:
+        if isinstance(value, dict):
+            try:
+                # Use our own custom dict logic so key mappings apply naturally
+                return cls.from_dict(value)
+            except Exception:
+                pass
+        return value
+
     def to_dict(self) -> dict:
         result: dict = {}
         if self.match_id is not None:
