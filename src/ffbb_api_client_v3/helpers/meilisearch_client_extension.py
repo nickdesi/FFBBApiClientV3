@@ -7,7 +7,6 @@ from httpx import Client
 from ..clients.meilisearch_client import MeilisearchClient
 from ..models.multi_search_query import MultiSearchQuery
 from ..models.multi_search_results_class import MultiSearchResults
-from ..utils.cache_manager import CacheManager
 
 
 class MeilisearchClientExtension(MeilisearchClient):

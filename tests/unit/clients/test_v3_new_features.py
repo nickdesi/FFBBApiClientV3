@@ -1,11 +1,9 @@
 """Tests for new API features: classement, equipes, categorie filtering, retry."""
 import pytest
 import respx
-import httpx
 from ffbb_api_client_v3.clients.api_ffbb_app_client import ApiFFBBAppClient
 from ffbb_api_client_v3.clients.ffbb_api_client_v3 import FFBBAPIClientV3
 from ffbb_api_client_v3.clients.meilisearch_ffbb_client import MeilisearchFFBBClient
-from ffbb_api_client_v3.utils.retry_utils import RetryConfig, TimeoutConfig
 
 
 # ---------------------------------------------------------------------------

@@ -23,7 +23,6 @@ import os
 from dataclasses import dataclass
 
 from dotenv import load_dotenv
-
 from ffbb_api_client_v3 import FFBBAPIClientV3
 from ffbb_api_client_v3.models.get_organisme_response import GetOrganismeResponse
 from ffbb_api_client_v3.models.niveau_models import NiveauType

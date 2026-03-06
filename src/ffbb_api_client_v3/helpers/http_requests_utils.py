@@ -6,7 +6,7 @@ from typing import Any, cast
 from urllib.parse import urlencode
 
 import httpx
-from httpx import Response, Client
+from httpx import Client, Response
 
 from ..utils.retry_utils import (
     RetryConfig,

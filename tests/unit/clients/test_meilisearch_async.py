@@ -1,14 +1,15 @@
 import pytest
 import respx
-import httpx
-from ffbb_api_client_v3.helpers.meilisearch_client_extension import MeilisearchClientExtension
-from ffbb_api_client_v3.models.multi_search_query import MultiSearchQuery
-from ffbb_api_client_v3.models.multi_search_results_class import MultiSearchResults
 from ffbb_api_client_v3.config import (
-    MEILISEARCH_BASE_URL, 
+    MEILISEARCH_BASE_URL,
     MEILISEARCH_ENDPOINT_MULTI_SEARCH,
-    MEILISEARCH_INDEX_ORGANISMES
+    MEILISEARCH_INDEX_ORGANISMES,
 )
+from ffbb_api_client_v3.helpers.meilisearch_client_extension import (
+    MeilisearchClientExtension,
+)
+from ffbb_api_client_v3.models.multi_search_query import MultiSearchQuery
+
 
 @pytest.mark.asyncio
 async def test_smart_multi_search_async():

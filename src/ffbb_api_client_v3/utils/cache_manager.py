@@ -16,9 +16,9 @@ import threading
 from dataclasses import dataclass
 from typing import Any, cast
 
-import httpx
 import hishel
 import hishel.httpx
+import httpx
 
 
 @dataclass

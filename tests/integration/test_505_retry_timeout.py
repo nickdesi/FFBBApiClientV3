@@ -142,23 +142,22 @@ class Test017RetryTimeoutIntegration(unittest.TestCase):
         ]
 
         for retry_config, timeout_config in configs:
-            with self.subTest():
-                with patch(
-                    "ffbb_api_client_v3.clients.api_ffbb_app_client.get_secure_logger"
-                ):
-                    client = ApiFFBBAppClient(
-                        bearer_token=self.valid_token,
-                        retry_config=retry_config,
-                        timeout_config=timeout_config,
-                    )
+            with self.subTest(), patch(
+                "ffbb_api_client_v3.clients.api_ffbb_app_client.get_secure_logger"
+            ):
+                client = ApiFFBBAppClient(
+                    bearer_token=self.valid_token,
+                    retry_config=retry_config,
+                    timeout_config=timeout_config,
+                )
 
-                    self.assertEqual(
-                        client.retry_config.max_attempts, retry_config.max_attempts
-                    )
-                    self.assertEqual(
-                        client.timeout_config.connect_timeout,
-                        timeout_config.connect_timeout,
-                    )
+                self.assertEqual(
+                    client.retry_config.max_attempts, retry_config.max_attempts
+                )
+                self.assertEqual(
+                    client.timeout_config.connect_timeout,
+                    timeout_config.connect_timeout,
+                )
 
     def test_config_immutability(self):
         """Test that configuration objects are not modified after client creation."""

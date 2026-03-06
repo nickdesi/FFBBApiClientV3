@@ -6,8 +6,6 @@ import json
 import unittest
 from unittest.mock import MagicMock, Mock, patch
 
-from httpx import ReadTimeout
-
 from ffbb_api_client_v3.helpers.http_requests_helper import catch_result
 from ffbb_api_client_v3.helpers.http_requests_utils import (
     encode_params,
@@ -16,6 +14,7 @@ from ffbb_api_client_v3.helpers.http_requests_utils import (
     to_json_from_response,
     url_with_params,
 )
+from httpx import ReadTimeout
 
 
 class Test045HttpHelpers(unittest.TestCase):

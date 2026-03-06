@@ -112,7 +112,6 @@ class MeilisearchClient:
     ) -> MultiSearchResults | None:
         url = f"{self.url}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}"
         params = {"queries": [query.to_dict() for query in queries] if queries else []}
-        from pydantic import TypeAdapter
         raw_data = catch_result(
             lambda: http_post_json(
                 url,

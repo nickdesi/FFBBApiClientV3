@@ -3,11 +3,10 @@
 import unittest
 from unittest.mock import Mock, patch
 
-from requests_cache import CachedSession
-
 from ffbb_api_client_v3 import FFBBAPIClientV3
 from ffbb_api_client_v3.clients.api_ffbb_app_client import ApiFFBBAppClient
 from ffbb_api_client_v3.clients.meilisearch_ffbb_client import MeilisearchFFBBClient
+from requests_cache import CachedSession
 
 
 class Test001FfbbApiClientV2Core(unittest.TestCase):

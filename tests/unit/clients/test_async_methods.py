@@ -1,8 +1,7 @@
 import pytest
-import httpx
 import respx
 from ffbb_api_client_v3.clients.api_ffbb_app_client import ApiFFBBAppClient
-from ffbb_api_client_v3.models.live import Live
+
 
 @pytest.mark.asyncio
 async def test_get_lives_async():

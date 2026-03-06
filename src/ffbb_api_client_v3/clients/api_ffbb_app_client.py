@@ -2,9 +2,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from pydantic import TypeAdapter
-
 from httpx import Client
+from pydantic import TypeAdapter
 
 from ..config import (
     API_FFBB_BASE_URL,
@@ -20,8 +19,6 @@ from ..helpers.http_requests_helper import catch_result
 from ..helpers.http_requests_utils import (
     http_get_json,
     http_get_json_async,
-    http_post_json,
-    http_post_json_async,
     url_with_params,
 )
 from ..models.configuration_models import GetConfigurationResponse
@@ -30,9 +27,9 @@ from ..models.get_competition_response import GetCompetitionResponse
 from ..models.get_organisme_response import GetOrganismeResponse
 from ..models.lives import Live
 from ..models.poules_models import GetPouleResponse
-from ..models.team_ranking import TeamRanking
 from ..models.query_fields_manager import QueryFieldsManager
 from ..models.saisons_models import GetSaisonsResponse
+from ..models.team_ranking import TeamRanking
 from ..utils.cache_manager import CacheConfig, CacheManager
 from ..utils.retry_utils import (
     RetryConfig,

@@ -19,11 +19,11 @@ from ..models.multi_search_result_tournois import TournoisMultiSearchResult
 from ..models.multi_search_results import MultiSearchResult
 from ..models.organismes_multi_search_query import OrganismesMultiSearchQuery
 from ..models.poules_models import GetPouleResponse
-from ..models.team_ranking import TeamRanking
 from ..models.pratiques_multi_search_query import PratiquesMultiSearchQuery
 from ..models.rencontres_multi_search_query import RencontresMultiSearchQuery
 from ..models.saisons_models import GetSaisonsResponse
 from ..models.salles_multi_search_query import SallesMultiSearchQuery
+from ..models.team_ranking import TeamRanking
 from ..models.terrains_multi_search_query import TerrainsMultiSearchQuery
 from ..models.tournois_multi_search_query import TournoisMultiSearchQuery
 from ..utils.cache_manager import CacheManager

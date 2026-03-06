@@ -12,7 +12,7 @@ from collections.abc import Callable
 from typing import Any
 
 import httpx
-from httpx import Response, Client
+from httpx import Client, Response
 
 from .secure_logging import get_secure_logger
 
