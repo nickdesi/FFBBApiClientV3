@@ -232,7 +232,15 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
 **Conseils de production :**
 
 - Utilisez `FFBBAPIClientV3.create()` avec un jeu de token fixes via le `TokenManager` pour éviter d'appeler l'endpoint de configuration FFBB à chaque boot du serveur.
-- Laissez le `CacheManager` par défaut de la librairie faire son travail (ou surchargez-le avec `redis` ou autre si vous utilisez `hishel` pour persister le cache sur des pods multi-instances).
+- Laissez la gestion s'exécuter via le `CacheManager` par défaut de la librairie (ou surchargez-le avec `redis` ou un équivalent si vous utilisez `hishel` pour persister le cache sur des pods multi-instances).
+
+---
+
+## 🤖 Intégration IA / MCP Server
+
+Vous construisez un agent IA et vous voulez qu'il accède directement aux données de la FFBB ?  
+Découvrez le [FFBB MCP Server](https://github.com/nickdesi/FFBB-MCP-Server.git), le wrapper officiel utilisant le protocole **Model Context Protocol (MCP)** construit au-dessus de cette API cliente.  
+Il est prêt à l'emploi avec Claude Desktop, Cursor, et d'autres agents compatibles MCP !
 
 ---
 
