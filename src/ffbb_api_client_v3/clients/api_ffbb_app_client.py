@@ -281,7 +281,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or CacheManager().async_session,
+                cached_session=cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data:
@@ -372,7 +372,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or CacheManager().async_session,
+                cached_session=cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data:
@@ -490,7 +490,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or CacheManager().async_session,
+                cached_session=cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data and isinstance(actual_data, list):
@@ -571,7 +571,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or CacheManager().async_session,
+                cached_session=cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data:
@@ -681,7 +681,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or CacheManager().async_session,
+                cached_session=cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data and isinstance(actual_data, list):
@@ -743,7 +743,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or CacheManager().async_session,
+                cached_session=cached_session or self.async_cached_session,
                 retry_config=self.retry_config,
                 timeout_config=self.timeout_config,
             )

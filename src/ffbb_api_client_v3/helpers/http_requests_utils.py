@@ -19,7 +19,7 @@ from ..utils.secure_logging import get_secure_logger
 logger = get_secure_logger(__name__)
 
 
-def to_json_from_response(response: Response) -> dict[str, Any]:
+def to_json_from_response(response: Response) -> Any:
     """
     Converts the HTTP response to a JSON dictionary.
 
@@ -27,12 +27,12 @@ def to_json_from_response(response: Response) -> dict[str, Any]:
         response (Response): The HTTP response.
 
     Returns:
-        Dict[str, Any]: The JSON dictionary extracted from the response.
+        Any: Parsed JSON payload (dict, list, etc.).
     """
     data_str = response.text.strip()
 
     try:
-        return cast(dict[str, Any], json.loads(data_str))
+        return json.loads(data_str)
     except json.JSONDecodeError as e:
         logger.warning(f"Error in to_json_from_response: {e}")
 
@@ -45,7 +45,7 @@ def to_json_from_response(response: Response) -> dict[str, Any]:
     if data_str.startswith('""'):
         data_str = data_str[2:]
 
-    return cast(dict[str, Any], json.loads(data_str))
+    return json.loads(data_str)
 
 
 def http_get(
@@ -177,7 +177,7 @@ def http_get_json(
     timeout: int = 20,
     retry_config: RetryConfig | None = None,
     timeout_config: TimeoutConfig | None = None,
-) -> dict[str, Any]:
+) -> Any:
     """
     Performs an HTTP GET request and returns the result in JSON format.
 
@@ -202,6 +202,7 @@ def http_get_json(
         retry_config=retry_config,
         timeout_config=timeout_config,
     )
+    response.raise_for_status()
     return to_json_from_response(response)
 
 
@@ -214,7 +215,7 @@ def http_post_json(
     timeout: int = 20,
     retry_config: RetryConfig | None = None,
     timeout_config: TimeoutConfig | None = None,
-) -> dict[str, Any]:
+) -> Any:
     """
     Performs an HTTP POST request and returns the result in JSON format.
 
@@ -243,6 +244,7 @@ def http_post_json(
         retry_config=retry_config,
         timeout_config=timeout_config,
     )
+    response.raise_for_status()
     return to_json_from_response(response)
 
 
@@ -298,7 +300,7 @@ async def http_get_json_async(
     timeout: int = 20,
     retry_config: RetryConfig | None = None,
     timeout_config: TimeoutConfig | None = None,
-) -> dict[str, Any]:
+) -> Any:
     """
     Performs an HTTP GET request and returns the result in JSON format asynchroniously.
     """
@@ -311,6 +313,7 @@ async def http_get_json_async(
         retry_config=retry_config,
         timeout_config=timeout_config,
     )
+    response.raise_for_status()
     return to_json_from_response(response)
 
 
@@ -379,7 +382,7 @@ async def http_post_json_async(
     timeout: int = 20,
     retry_config: RetryConfig | None = None,
     timeout_config: TimeoutConfig | None = None,
-) -> dict[str, Any]:
+) -> Any:
     """
     Performs an HTTP POST request and returns the result in JSON format asynchroniously.
     """
@@ -393,6 +396,7 @@ async def http_post_json_async(
         retry_config=retry_config,
         timeout_config=timeout_config,
     )
+    response.raise_for_status()
     return to_json_from_response(response)
 
 

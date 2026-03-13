@@ -256,22 +256,32 @@ def make_http_request_with_retry(
         if debug:
             logger.debug(f"Making {method} request to {url}")
 
-        session: Client
         if cached_session:
-            session = cached_session
+            if method.upper() == "GET":
+                return cached_session.get(
+                    url, headers=headers, timeout=timeout_config.total_timeout
+                )
+            elif method.upper() == "POST":
+                return cached_session.post(
+                    url, headers=headers, json=data, timeout=timeout_config.total_timeout
+                )
+            else:
+                raise ValueError(f"Unsupported HTTP method: {method}")
         else:
-            session = httpx.Client()
-
-        if method.upper() == "GET":
-            return session.get(
-                url, headers=headers, timeout=timeout_config.total_timeout
-            )
-        elif method.upper() == "POST":
-            return session.post(
-                url, headers=headers, json=data, timeout=timeout_config.total_timeout
-            )
-        else:
-            raise ValueError(f"Unsupported HTTP method: {method}")
+            with httpx.Client() as session:
+                if method.upper() == "GET":
+                    return session.get(
+                        url, headers=headers, timeout=timeout_config.total_timeout
+                    )
+                elif method.upper() == "POST":
+                    return session.post(
+                        url,
+                        headers=headers,
+                        json=data,
+                        timeout=timeout_config.total_timeout,
+                    )
+                else:
+                    raise ValueError(f"Unsupported HTTP method: {method}")
 
     return execute_with_retry(
         _make_request, config=retry_config, timeout_config=timeout_config

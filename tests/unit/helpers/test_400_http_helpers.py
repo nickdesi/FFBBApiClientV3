@@ -10,7 +10,9 @@ from ffbb_api_client_v3.helpers.http_requests_helper import catch_result
 from ffbb_api_client_v3.helpers.http_requests_utils import (
     encode_params,
     http_get,
+    http_get_json,
     http_post,
+    http_post_json,
     to_json_from_response,
     url_with_params,
 )
@@ -154,19 +156,47 @@ class Test045HttpHelpers(unittest.TestCase):
         )
         self.assertEqual(response, mock_resp)
 
+    @patch("ffbb_api_client_v3.helpers.http_requests_utils.httpx.Client.get")
+    def test_016_http_get_json_calls_raise_for_status(self, mock_get: MagicMock) -> None:
+        mock_resp = Mock()
+        mock_resp.text = '{"ok": true}'
+        mock_resp.raise_for_status = Mock()
+        mock_get.return_value = mock_resp
+
+        result = http_get_json("https://example.com", {"Authorization": "Bearer test"})
+
+        self.assertEqual(result, {"ok": True})
+        mock_resp.raise_for_status.assert_called_once()
+
+    @patch("ffbb_api_client_v3.helpers.http_requests_utils.httpx.Client.post")
+    def test_017_http_post_json_calls_raise_for_status(self, mock_post: MagicMock) -> None:
+        mock_resp = Mock()
+        mock_resp.text = '{"ok": true}'
+        mock_resp.raise_for_status = Mock()
+        mock_post.return_value = mock_resp
+
+        result = http_post_json(
+            "https://example.com",
+            {"Authorization": "Bearer test"},
+            data={"key": "value"},
+        )
+
+        self.assertEqual(result, {"ok": True})
+        mock_resp.raise_for_status.assert_called_once()
+
     # -- encode_params / url_with_params --
 
-    def test_016_encode_params_array(self) -> None:
+    def test_018_encode_params_array(self) -> None:
         result = encode_params({"fields[]": ["id", "nom"], "limit": 10})
         self.assertIn("fields%5B%5D=id", result)
         self.assertIn("fields%5B%5D=nom", result)
         self.assertIn("limit=10", result)
 
-    def test_017_url_with_params_empty(self) -> None:
+    def test_019_url_with_params_empty(self) -> None:
         result = url_with_params("https://api.ffbb.app/items", {})
         self.assertEqual(result, "https://api.ffbb.app/items")
 
-    def test_018_url_with_params_none_values(self) -> None:
+    def test_020_url_with_params_none_values(self) -> None:
         result = url_with_params("https://api.ffbb.app/items", {"key": None})
         self.assertEqual(result, "https://api.ffbb.app/items")
 
