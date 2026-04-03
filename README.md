@@ -210,7 +210,7 @@ tests/
 ### Exemple d'intégration `requirements.txt`
 
 ```text
-ffbb_api_client_v3>=1.0.0
+ffbb_api_client_v3>=1.4.0
 ```
 
 ### Exemple dans un `Dockerfile` (FastAPI)
