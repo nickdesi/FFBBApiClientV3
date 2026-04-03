@@ -17,7 +17,7 @@ class Commune:
     code_postal: str | None = None
     date_created: datetime | None = None
     date_updated: datetime | None = None
-    commune_id: int | None = None
+    commune_id: str | None = None
     libelle: str | None = None
     departement: str | None = None
     lower_libelle: str | None = field(init=False, default=None, repr=False)

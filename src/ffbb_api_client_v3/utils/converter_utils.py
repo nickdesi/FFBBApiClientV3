@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Callable
-from datetime import datetime, time
+from datetime import datetime, time, timedelta, timezone
 from enum import Enum
 from typing import Any, TypeVar
 from uuid import UUID
@@ -199,8 +199,11 @@ def from_obj(from_dict_fn: Callable[[Any], T], obj: dict, key: str) -> T | None:
         return None
     if isinstance(x, dict):
         return from_dict_fn(x)
-    logger.warning(
-        "from_obj(%r): expected dict or None, got %s",
+    # Directus returns FK (str/int) when field depth is shallow (*),
+    # and the full object when depth is deep (*.*).
+    # Return None gracefully instead of warning for scalar FK values.
+    logger.debug(
+        "from_obj(%r): expected dict or None, got %s (scalar FK?)",
         key,
         type(x).__name__,
     )
@@ -230,3 +233,91 @@ def from_uuid(obj: dict, key: str) -> UUID | None:
     except ValueError:
         logger.warning("from_uuid(%r): invalid UUID %r", key, x)
         return None
+
+
+def from_duration(obj: dict, key: str) -> timedelta | None:
+    """Parse a duration string like '37h00' or '6h55' into a timedelta.
+
+    Also handles numeric values (int/float) interpreted as hours,
+    and plain numeric strings.
+    """
+    x = obj.get(key)
+    if x is None:
+        return None
+    if isinstance(x, timedelta):
+        return x
+    if isinstance(x, (int, float)):
+        return timedelta(hours=int(x), minutes=int((x % 1) * 60))
+    if isinstance(x, str):
+        x = x.strip()
+        if not x:
+            return None
+        # Format "37h00", "6h55", "10h50"
+        if "h" in x.lower():
+            parts = x.lower().split("h", 1)
+            try:
+                hours = int(parts[0])
+                minutes = int(parts[1]) if parts[1] else 0
+                return timedelta(hours=hours, minutes=minutes)
+            except ValueError:
+                logger.warning("from_duration(%r): cannot parse %r", key, x)
+                return None
+        # Plain numeric string → interpret as hours
+        try:
+            val = float(x)
+            return timedelta(hours=int(val), minutes=int((val % 1) * 60))
+        except ValueError:
+            logger.warning("from_duration(%r): cannot parse %r", key, x)
+            return None
+    logger.warning(
+        "from_duration(%r): unexpected type %s (value: %.100r)",
+        key,
+        type(x).__name__,
+        x,
+    )
+    return None
+
+
+def from_timestamp(obj: dict, key: str) -> datetime | None:
+    """Parse a Unix timestamp (int or numeric string) into a datetime (UTC)."""
+    x = obj.get(key)
+    if x is None:
+        return None
+    if isinstance(x, (int, float)) and not isinstance(x, bool):
+        return datetime.fromtimestamp(x, tz=timezone.utc)
+    if isinstance(x, str):
+        x = x.strip()
+        if not x:
+            return None
+        try:
+            return datetime.fromtimestamp(int(x), tz=timezone.utc)
+        except (ValueError, OverflowError, OSError):
+            logger.warning("from_timestamp(%r): cannot parse %r as timestamp", key, x)
+            return None
+    logger.warning(
+        "from_timestamp(%r): unexpected type %s (value: %.100r)",
+        key,
+        type(x).__name__,
+        x,
+    )
+    return None
+
+
+def from_phone(obj: dict, key: str) -> str | None:
+    """Parse a phone number string (normalized format)."""
+    x = obj.get(key)
+    if x is None:
+        return None
+    if isinstance(x, str):
+        if not x.strip():
+            return None
+        return x
+    if isinstance(x, (int, float)) and not isinstance(x, bool):
+        return str(int(x))
+    logger.warning(
+        "from_phone(%r): unexpected type %s (value: %.100r)",
+        key,
+        type(x).__name__,
+        x,
+    )
+    return None

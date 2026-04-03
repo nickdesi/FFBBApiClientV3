@@ -12,6 +12,15 @@ class OrganismeFields:
     NOM_SIMPLE = "nom_simple"
     URL_SITE_WEB = "urlSiteWeb"
 
+    # Additional fields from upstream
+    DATE_AFFILIATION = "dateAffiliation"
+    ENTREPRISE = "entreprise"
+    HANDIBASKET = "handibasket"
+    HORS_ASSOCIATION = "horsAssociation"
+    LOGO_BASE64 = "logo_base64"
+    OMNISPORT = "omnisport"
+    SAISON_EN_COURS = "saison_en_cours"
+    URL_COMPETITION = "url_competition"
     # Commune fields
     COMMUNE_CODE_POSTAL = "commune.codePostal"
     COMMUNE_LIBELLE = "commune.libelle"
@@ -145,6 +154,14 @@ class OrganismeFields:
             cls.TYPE,
             cls.NOM_SIMPLE,
             cls.URL_SITE_WEB,
+            cls.DATE_AFFILIATION,
+            cls.ENTREPRISE,
+            cls.HANDIBASKET,
+            cls.HORS_ASSOCIATION,
+            cls.LOGO_BASE64,
+            cls.OMNISPORT,
+            cls.SAISON_EN_COURS,
+            cls.URL_COMPETITION,
             # Cartographie
             cls.CARTOGRAPHIE_LATITUDE,
             cls.CARTOGRAPHIE_LONGITUDE,
