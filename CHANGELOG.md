@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-04-03
+
+### Added
+- **NEW**: Sync with upstream v1.4.0 model updates (`organisme_fields`, `team_ranking`, `commune`)
+
+### Improved
+- **PERFORMANCE**: Improved async session reuse and HTTP robustness in the main client
+- Enhanced data conversion utilities (`converter_utils`) to safely handle edge cases
+- Better HTTP fallback logic and session management
+
+### Fixed
+- Cherry-picked critical fixes from upstream for Data Models to prevent deserialization errors on null/missing fields
+- Type mismatches and formatting edge cases affecting data ingestion
+
 ## [1.2.0] - 2025-02-05
 
 ### Added

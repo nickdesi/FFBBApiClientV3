@@ -1,6 +1,29 @@
 # Release Notes - FFBB API Client V2
 
-## Version 1.2.0 (Next Release)
+## Version 1.4.0 (Latest Release)
+
+### 🚀 Major Features & Improvements
+
+#### **Upstream Alignment (v1.4.0)**
+- **NEW**: Cherry-picked model fixes and performance patches from upstream v1.4.0
+- **IMPROVED**: `TeamRanking` and `OrganismeFields` models have been updated to reflect the latest state of the FFBB API schema
+
+### ⚡ Performance Improvements
+
+#### **HTTP & Session Management**
+- **OPTIMIZED**: Drastically improved async session reuse in `_client.py` main client
+- **ENHANCED**: Better connection pooling and HTTP robustness for high-throughput MCP usage
+- **IMPROVED**: Utilities in `converter_utils.py` and `methods.py` optimized for faster parsing
+
+### 🐛 Bug Fixes & Stability
+
+- **FIXED**: Deserialization issues on missing or unexpected types across fields
+- **FIXED**: Communes mapping and helper stability patches
+- **HARDENED**: Better typing and safety when encountering undocumented JSON fields from the FFBB API
+
+---
+
+## Version 1.2.0 (Previous Release)
 
 ### 🚀 Major Features & Improvements
 
