@@ -173,6 +173,8 @@ class TestRetryUtilsCoverage(unittest.TestCase):
             response = MagicMock()
             response.status_code = 200
             mock_session.post.return_value = response
+            mock_session.__enter__ = MagicMock(return_value=mock_session)
+            mock_session.__exit__ = MagicMock(return_value=False)
             MockSession.return_value = mock_session
 
             result = make_http_request_with_retry(

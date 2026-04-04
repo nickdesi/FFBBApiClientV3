@@ -35,7 +35,7 @@ class Test040MeilisearchFfbbClient(unittest.TestCase):
 
     def setUp(self) -> None:
         with patch(
-            "ffbb_api_client_v3.helpers.meilisearch_client_extension.CacheManager"
+            "ffbb_api_client_v3.clients.meilisearch_client.CacheManager"
         ):
             self.client = MeilisearchFFBBClient(bearer_token="test-token")
 

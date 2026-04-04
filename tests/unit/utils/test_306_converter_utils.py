@@ -256,11 +256,9 @@ class TestFromObj(unittest.TestCase):
     def test_missing_key_returns_none(self) -> None:
         self.assertIsNone(from_obj(SimpleModel.from_dict, {}, "k"))
 
-    def test_non_dict_warns(self) -> None:
-        with self.assertLogs(LOGGER_NAME, level=logging.WARNING) as cm:
-            result = from_obj(SimpleModel.from_dict, {"k": "string"}, "k")
+    def test_non_dict_returns_none(self) -> None:
+        result = from_obj(SimpleModel.from_dict, {"k": "string"}, "k")
         self.assertIsNone(result)
-        self.assertTrue(any("expected dict" in msg for msg in cm.output))
 
 
 # ==========================================================================

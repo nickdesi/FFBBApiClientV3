@@ -87,9 +87,9 @@ class Test016RetryTimeout(unittest.TestCase):
 
     def test_should_retry_success_response(self):
         """Test should_retry with successful response."""
-        from requests import Response
+        from unittest.mock import MagicMock
 
-        response = Response()
+        response = MagicMock()
         response.status_code = 200
 
         should = should_retry(0, response, None, self.retry_config)

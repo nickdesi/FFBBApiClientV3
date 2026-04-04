@@ -30,7 +30,13 @@ async def test_get_competition_async():
     with respx.mock:
         # Use a regex match to handle the complex query parameters
         route = respx.get(url__startswith="https://api.ffbb.app/items/ffbbserver_competitions/123").respond(
-            json={"data": {"id": "123", "nom": "Coupe de France"}}
+            json={"data": {
+                "id": "123", "nom": "Coupe de France",
+                "sexe": "M", "saison": "2025-2026", "code": "CF",
+                "typeCompetition": "Coupe", "liveStat": 0,
+                "competition_origine": "123", "competition_origine_nom": "CF",
+                "publicationInternet": "O"
+            }}
         )
         
         comp = await client.get_competition_async(123)

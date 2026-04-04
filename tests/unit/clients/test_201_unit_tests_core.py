@@ -6,7 +6,7 @@ from unittest.mock import Mock, patch
 from ffbb_api_client_v3 import FFBBAPIClientV3
 from ffbb_api_client_v3.clients.api_ffbb_app_client import ApiFFBBAppClient
 from ffbb_api_client_v3.clients.meilisearch_ffbb_client import MeilisearchFFBBClient
-from requests_cache import CachedSession
+from httpx import Client
 
 
 class Test001FfbbApiClientV2Core(unittest.TestCase):
@@ -129,7 +129,9 @@ class Test001FfbbApiClientV2Core(unittest.TestCase):
 
             result = self.client.search_organismes("Paris")
 
-            mock_search_multiple.assert_called_once_with(["Paris"], None)
+            mock_search_multiple.assert_called_once_with(
+                ["Paris"], filter=None, sort=None, limit=10, cached_session=None
+            )
             self.assertEqual(result, mock_result)
 
     def test_009_search_organismes_no_results(self):
@@ -162,7 +164,7 @@ class Test001FfbbApiClientV2Core(unittest.TestCase):
 
     def test_012_cached_session_parameter_propagation(self):
         """Test cached_session parameter is propagated correctly."""
-        custom_session = Mock(spec=CachedSession)
+        custom_session = Mock(spec=Client)
 
         self.client.get_lives(cached_session=custom_session)
 
@@ -466,8 +468,8 @@ class Test001QueryFieldsCounts(unittest.TestCase):
         detailed = OrganismeFields.get_detailed_fields()
 
         self.assertEqual(len(basic), 6)
-        self.assertEqual(len(default), 68)
-        self.assertEqual(len(detailed), 76)
+        self.assertEqual(len(default), 77)
+        self.assertEqual(len(detailed), 85)
         self.assertGreater(len(default), len(basic))
         self.assertGreater(len(detailed), len(default))
         # No duplicates
