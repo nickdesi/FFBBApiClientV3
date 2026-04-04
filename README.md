@@ -11,9 +11,11 @@ Elle fournit une interface complète et typée (via Pydantic) pour récupérer l
 
 - 🏀 **Couverture Complète de l'API** : Accédez à tous les services de la FFBB (compétitions, organismes, saisons, matchs en direct, recherche globale).
 - 🔧 **Modèles Typés (Type-Safe)** : Modèles de données fortement typés avec validation automatique et gestion d'erreurs (via Pydantic).
-- 🎯 **Sélection Dynamique des Champs** : Personnalisez vos requêtes pour obtenir les champs essentiels (BASIC), standards (DEFAULT) ou complets (DETAILED) pour des appels API optimisés.
+- 🔍 **9 Index Meilisearch** : Recherchez dans organismes, compétitions, rencontres, salles, pratiques, terrains, tournois, **engagements** et **formations**.
+- 🎛️ **Filtrage & Tri Natif** : Paramètres `filter`, `sort` et `limit` sur toutes les méthodes de recherche pour exploiter la puissance native de Meilisearch.
 - 📦 **Architecture Moderne** : Un code propre et modulaire, pensé pour une grande facilité de maintenance et d'évolution.
 - ⚡ **Mise en Cache Intégrée** : Support de cache asynchrone natif (`hishel`, `requests-cache`) pour améliorer les performances de façon drastique.
+- 🔄 **Sync + Async** : Chaque méthode de recherche est disponible en version synchrone et asynchrone.
 - 🧪 **Excellente Couverture de Tests** : Des tests unitaires et d'intégration complets garantissant une très haute fiabilité.
 
 ---
@@ -120,25 +122,37 @@ src/
 
 #### Gestion Personnalisée des Champs (Fields)
 
-Afin d'éviter d'interroger la base de données FFBB pour des données inutiles, vous pouvez piloter les champs exacts à récupérer :
+Le `QueryFieldsManager` (basé sur ABC) permet de piloter les champs exacts à récupérer. Depuis la v1.5.0, `FieldSet.BASIC`, `FieldSet.DEFAULT` et `FieldSet.DETAILED` sont unifiés en un jeu de champs unique :
 
 ```python
 from ffbb_api_client_v3.models.query_fields import QueryFieldsManager, FieldSet
 
-# Charger le modèle uniquement avec les informations de base
-basic_fields = QueryFieldsManager.get_organisme_fields(FieldSet.BASIC)
+# Tous les FieldSet retournent le même jeu de champs (unification v1.5.0)
+fields = QueryFieldsManager.get_organisme_fields(FieldSet.DEFAULT)
 organisme = client.get_organisme(
     organisme_id=12345,
-    fields=basic_fields
+    fields=fields
 )
 ```
 
 #### Moteur de Recherche Multi-ressources
 
-L'API de recherche FFBB est propulsée par un Meilisearch distant extrêmement rapide :
+L'API de recherche FFBB est propulsée par un Meilisearch distant extrêmement rapide couvrant **9 index** :
+
+| Index | Méthode | Description |
+| --- | --- | --- |
+| `ffbbserver_organismes` | `search_organismes()` | Clubs, comités, ligues |
+| `ffbbserver_competitions` | `search_competitions()` | Compétitions officielles |
+| `ffbbserver_rencontres` | `search_rencontres()` | Matchs et rencontres |
+| `ffbbserver_salles` | `search_salles()` | Salles et gymnases |
+| `ffbbserver_pratiques` | `search_pratiques()` | Lieux de pratique |
+| `ffbbserver_terrains` | `search_terrains()` | Terrains de basket |
+| `ffbbserver_tournois` | `search_tournois()` | Tournois |
+| `ffbbserver_engagements` | `search_engagements()` | **Engagements d'équipes** (nouveau v1.5.0) |
+| `ffbbserver_formations` | `search_formations()` | **Formations et stages** (nouveau v1.5.0) |
 
 ```python
-# Recherche unifiée sur tous les sujets relatifs à 'Lyon' (Clubs, Salles, Matchs, etc.)
+# Recherche unifiée sur tous les 9 index en une seule requête
 results = client.multi_search("Lyon")
 for result in results:
     print(f"Trouvé : {result.query} (Type : {type(result).__name__})")
@@ -146,17 +160,26 @@ for result in results:
 
 #### Recherche avec filtres et tri natifs Meilisearch
 
+Toutes les méthodes `search_*` acceptent les paramètres `filter`, `sort` et `limit` pour exploiter la puissance native de Meilisearch :
+
 ```python
-# Recherche d'organismes filtrés par code postal
+# Filtrage par code postal — ne retourne que les organismes du 63000
 result = client.search_organismes("Clermont", filter=['codePostal = "63000"'], limit=5)
 
-# Recherche de compétitions triées par libellé
+# Tri alphabétique par libellé
 result = client.search_competitions("championnat", sort=["libelle:asc"], limit=10)
 
-# Recherche dans les nouveaux index engagements & formations
+# Nouveaux index : engagements d'équipes et formations
 engagements = client.search_engagements("Clermont")
 formations = client.search_formations("coach")
+
+# Version asynchrone (pour FastAPI, MCP Server, etc.)
+import asyncio
+result = asyncio.run(client.search_engagements_async("Clermont"))
 ```
+
+> 💡 Chaque méthode `search_*` existe aussi en version `search_*_async` (7 index originaux + engagements + formations).
+> Les versions `search_multiple_*` permettent de lancer plusieurs recherches en un seul appel réseau.
 
 ---
 
