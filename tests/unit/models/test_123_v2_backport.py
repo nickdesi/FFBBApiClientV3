@@ -257,14 +257,14 @@ class TestOrganismesQueryFilterSortLimit(unittest.TestCase):
         assert d["sort"] == ["nom:asc"]
 
 
-class TestFieldSetAliases(unittest.TestCase):
-    """Test that FieldSet BASIC and DETAILED are aliased to DEFAULT."""
+class TestFieldSetValues(unittest.TestCase):
+    """Test that FieldSet members have distinct values."""
 
-    def test_basic_equals_default(self) -> None:
-        assert FieldSet.BASIC == FieldSet.DEFAULT
+    def test_basic_distinct_from_default(self) -> None:
+        assert FieldSet.BASIC != FieldSet.DEFAULT
 
-    def test_detailed_equals_default(self) -> None:
-        assert FieldSet.DETAILED == FieldSet.DEFAULT
+    def test_detailed_distinct_from_default(self) -> None:
+        assert FieldSet.DETAILED != FieldSet.DEFAULT
 
     def test_minimal_distinct(self) -> None:
         assert FieldSet.MINIMAL != FieldSet.DEFAULT

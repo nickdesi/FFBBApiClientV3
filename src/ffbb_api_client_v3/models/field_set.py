@@ -2,13 +2,9 @@ from enum import Enum
 
 
 class FieldSet(Enum):
-    """Enum for different field sets.
+    """Enum for different field sets."""
 
-    Since v1.4.0, BASIC and DETAILED are aliases for DEFAULT.
-    All queries use the comprehensive DEFAULT field list.
-    """
-
-    BASIC = "default"
+    BASIC = "basic"
     DEFAULT = "default"
-    DETAILED = "default"
+    DETAILED = "detailed"
     MINIMAL = "minimal"
