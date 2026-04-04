@@ -1,3 +1,5 @@
+from abc import ABC, abstractmethod
+
 from .competition_fields import CompetitionFields
 from .field_set import FieldSet
 from .organisme_fields import OrganismeFields
@@ -5,8 +7,17 @@ from .poule_fields import PouleFields
 from .saison_fields import SaisonFields
 
 
-class QueryFieldsManager:
-    """Manager class for handling query fields across different entity types."""
+class QueryFieldsManager(ABC):
+    """Abstract base class for handling query fields across different entity types.
+
+    Subclasses must implement get_fields() to return the appropriate field list.
+    Static helper methods remain available for direct use.
+    """
+
+    @abstractmethod
+    def get_fields(self) -> list[str]:
+        """Return the list of fields for this query."""
+        ...
 
     @staticmethod
     def get_organisme_fields(field_set: FieldSet = FieldSet.DEFAULT) -> list[str]:

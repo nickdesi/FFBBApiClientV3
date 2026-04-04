@@ -144,6 +144,20 @@ for result in results:
     print(f"Trouvé : {result.query} (Type : {type(result).__name__})")
 ```
 
+#### Recherche avec filtres et tri natifs Meilisearch
+
+```python
+# Recherche d'organismes filtrés par code postal
+result = client.search_organismes("Clermont", filter=['codePostal = "63000"'], limit=5)
+
+# Recherche de compétitions triées par libellé
+result = client.search_competitions("championnat", sort=["libelle:asc"], limit=10)
+
+# Recherche dans les nouveaux index engagements & formations
+engagements = client.search_engagements("Clermont")
+formations = client.search_formations("coach")
+```
+
 ---
 
 ## 🔐 Variables d'Environnement
@@ -210,7 +224,7 @@ tests/
 ### Exemple d'intégration `requirements.txt`
 
 ```text
-ffbb_api_client_v3>=1.4.0
+ffbb_api_client_v3>=1.5.0
 ```
 
 ### Exemple dans un `Dockerfile` (FastAPI)

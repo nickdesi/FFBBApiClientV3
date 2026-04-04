@@ -14,11 +14,19 @@ from .helpers.multi_search_query_helper import generate_queries
 from .models.competitions_facet_distribution import CompetitionsFacetDistribution
 from .models.competitions_facet_stats import CompetitionsFacetStats
 from .models.competitions_hit import CompetitionsHit
+from .models.engagements_facet_distribution import EngagementsFacetDistribution
+from .models.engagements_facet_stats import EngagementsFacetStats
+from .models.engagements_hit import EngagementsHit
 from .models.field_set import FieldSet
+from .models.formations_facet_distribution import FormationsFacetDistribution
+from .models.formations_facet_stats import FormationsFacetStats
+from .models.formations_hit import FormationsHit
 from .models.get_competition_response import GetCompetitionResponse
 from .models.get_organisme_response import GetOrganismeResponse
 from .models.multi_search_query import MultiSearchQuery
 from .models.multi_search_result_competitions import CompetitionsMultiSearchResult
+from .models.multi_search_result_engagements import EngagementsMultiSearchResult
+from .models.multi_search_result_formations import FormationsMultiSearchResult
 from .models.multi_search_result_organismes import OrganismesMultiSearchResult
 from .models.multi_search_result_pratiques import PratiquesMultiSearchResult
 from .models.multi_search_result_rencontres import RencontresMultiSearchResult
@@ -74,6 +82,16 @@ __all__ = [
     "CompetitionsFacetStats",
     "CompetitionsHit",
     "CompetitionsMultiSearchResult",
+    # Engagements
+    "EngagementsFacetDistribution",
+    "EngagementsFacetStats",
+    "EngagementsHit",
+    "EngagementsMultiSearchResult",
+    # Formations
+    "FormationsFacetDistribution",
+    "FormationsFacetStats",
+    "FormationsHit",
+    "FormationsMultiSearchResult",
     # Organismes
     "OrganismesFacetDistribution",
     "OrganismesFacetStats",

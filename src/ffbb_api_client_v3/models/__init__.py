@@ -28,6 +28,10 @@ from .coordonnees import Coordonnees
 from .coordonnees_type import CoordonneesType
 from .document_flyer import DocumentFlyer
 from .document_flyer_type import DocumentFlyerType
+from .engagements_facet_distribution import EngagementsFacetDistribution
+from .engagements_facet_stats import EngagementsFacetStats
+from .engagements_hit import EngagementsHit
+from .engagements_multi_search_query import EngagementsMultiSearchQuery
 from .etat import Etat
 from .external_competition_id import ExternalCompetitionID
 from .external_id import ExternalID
@@ -35,6 +39,11 @@ from .facet_distribution import FacetDistribution
 from .facet_stats import FacetStats
 from .field_set import FieldSet
 from .folder import Folder
+from .formation_session import FormationSession
+from .formations_facet_distribution import FormationsFacetDistribution
+from .formations_facet_stats import FormationsFacetStats
+from .formations_hit import FormationsHit
+from .formations_multi_search_query import FormationsMultiSearchQuery
 from .game_stats_model import GameStatsModel
 from .geo import Geo
 from .get_competition_response import GetCompetitionResponse
@@ -56,6 +65,8 @@ from .logo import Logo
 from .multi_search_queries import MultiSearchQueries
 from .multi_search_query import MultiSearchQuery
 from .multi_search_result_competitions import CompetitionsMultiSearchResult
+from .multi_search_result_engagements import EngagementsMultiSearchResult
+from .multi_search_result_formations import FormationsMultiSearchResult
 from .multi_search_result_organismes import OrganismesMultiSearchResult
 from .multi_search_result_pratiques import PratiquesMultiSearchResult
 from .multi_search_result_rencontres import RencontresMultiSearchResult
@@ -134,12 +145,23 @@ __all__ = [
     "CoordonneesType",
     "DocumentFlyer",
     "DocumentFlyerType",
+    "EngagementsFacetDistribution",
+    "EngagementsFacetStats",
+    "EngagementsHit",
+    "EngagementsMultiSearchQuery",
+    "EngagementsMultiSearchResult",
     "Etat",
     "ExternalCompetitionID",
     "ExternalID",
     "FacetDistribution",
     "FacetStats",
     "Folder",
+    "FormationSession",
+    "FormationsFacetDistribution",
+    "FormationsFacetStats",
+    "FormationsHit",
+    "FormationsMultiSearchQuery",
+    "FormationsMultiSearchResult",
     "GameStatsModel",
     "Geo",
     "GetCompetitionResponse",

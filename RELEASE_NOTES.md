@@ -1,6 +1,22 @@
 # Release Notes - FFBB API Client V2
 
-## Version 1.4.0 (Latest Release)
+## Version 1.5.0 (Latest Release)
+
+### 🚀 Major Features & Improvements
+
+#### **V2 Backport — New Meilisearch Indexes**
+- **NEW**: `search_engagements()` and `search_formations()` methods (sync + async) search the `ffbbserver_engagements` and `ffbbserver_formations` Meilisearch indexes
+- **NEW**: Full model coverage: `EngagementsHit`, `FormationsHit`, `FormationSession`, facet distributions, facet stats, query classes, and result types
+- **NEW**: `filter`, `sort`, and `limit` parameters on **all** search methods — enables native Meilisearch filtering and sorting (e.g. `filter=['codePostal = "63000"']`, `sort=['libelle:asc']`)
+
+#### **Architecture Improvements**
+- **CHANGED**: `QueryFieldsManager` is now an ABC with abstract `get_fields()` — extensible for custom field strategies
+- **SIMPLIFIED**: `FieldSet.BASIC` and `FieldSet.DETAILED` are now aliases for `FieldSet.DEFAULT` — single unified field set
+- **EXTENDED**: `multi_search` now covers 9 indexes (added engagements + formations)
+
+---
+
+## Version 1.4.0
 
 ### 🚀 Major Features & Improvements
 

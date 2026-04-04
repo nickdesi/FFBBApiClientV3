@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-04-04
+
+### Added
+- **NEW**: `search_engagements` / `search_formations` — two new Meilisearch search methods (sync + async) covering the `ffbbserver_engagements` and `ffbbserver_formations` indexes
+- **NEW**: `EngagementsHit`, `FormationsHit`, `FormationSession` models with full field mapping
+- **NEW**: `EngagementsMultiSearchQuery`, `FormationsMultiSearchQuery` query classes
+- **NEW**: `EngagementsMultiSearchResult`, `FormationsMultiSearchResult` result types
+- **NEW**: Facet distribution and stats classes for engagements and formations
+- **NEW**: `filter`, `sort`, and `limit` parameters on all `search_*` and `search_multiple_*` methods (Meilisearch native filtering)
+- **NEW**: Unit tests for search_engagements, search_formations, filter/sort/limit params (`test_v2_backport_search.py`, `test_123_v2_backport.py`)
+
+### Changed
+- `QueryFieldsManager` now inherits from `ABC` with abstract `get_fields()` method
+- `FieldSet.BASIC` and `FieldSet.DETAILED` are now aliases for `FieldSet.DEFAULT` (simplified to a single field set)
+- `generate_queries()` in `multi_search_query_helper.py` now includes engagements and formations (9 indexes total)
+
 ## [1.4.0] - 2026-04-03
 
 ### Added

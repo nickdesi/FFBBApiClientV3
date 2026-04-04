@@ -29,6 +29,8 @@ MEILISEARCH_INDEX_TERRAINS = "ffbbserver_terrains"
 MEILISEARCH_INDEX_SALLES = "ffbbserver_salles"
 MEILISEARCH_INDEX_TOURNOIS = "ffbbserver_tournois"
 MEILISEARCH_INDEX_COMPETITIONS = "ffbbserver_competitions"
+MEILISEARCH_INDEX_ENGAGEMENTS = "ffbbserver_engagements"
+MEILISEARCH_INDEX_FORMATIONS = "ffbbserver_formations"
 MEILISEARCH_INDEX_PRATIQUES = "ffbbnational_pratiques"
 
 MEILISEARCH_INDEX_UIDS = [
@@ -38,6 +40,8 @@ MEILISEARCH_INDEX_UIDS = [
     MEILISEARCH_INDEX_SALLES,
     MEILISEARCH_INDEX_TOURNOIS,
     MEILISEARCH_INDEX_COMPETITIONS,
+    MEILISEARCH_INDEX_ENGAGEMENTS,
+    MEILISEARCH_INDEX_FORMATIONS,
     MEILISEARCH_INDEX_PRATIQUES,
 ]
 
@@ -64,5 +68,28 @@ MEILISEARCH_FACETS_TOURNOIS = [
 ]
 MEILISEARCH_FACETS_PRATIQUES = [
     "label",
+    "type",
+]
+MEILISEARCH_FACETS_ENGAGEMENTS = [
+    "clubPro",
+    "idCompetition.categorie.code",
+    "idCompetition.categorie.libelle",
+    "idCompetition.code",
+    "idCompetition.nom",
+    "idCompetition.sexe",
+    "idPoule.nom",
+    "niveau.code",
+    "niveau.libelle",
+]
+MEILISEARCH_FACETS_FORMATIONS = [
+    "date_end_formatted",
+    "date_start_formatted",
+    "domain",
+    "mode",
+    "place",
+    "places",
+    "postal_code",
+    "postal_codes",
+    "theme",
     "type",
 ]
