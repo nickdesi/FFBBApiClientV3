@@ -2,10 +2,15 @@
 
 <!-- Badges existants (à mettre à jour avec vos URLs exactes si nécessaire) -->
 [![PyPI-Server](https://img.shields.io/pypi/v/ffbb_api_client_v3.svg)](https://pypi.org/project/ffbb_api_client_v3/)
+[![Downloads](https://static.pepy.tech/badge/ffbb_api_client_v3)](https://pepy.tech/project/ffbb_api_client_v3)
+[![Python Versions](https://img.shields.io/pypi/pyversions/ffbb_api_client_v3.svg)](https://pypi.org/project/ffbb_api_client_v3/)
+[![License](https://img.shields.io/pypi/l/ffbb_api_client_v3.svg)](https://github.com/nickdesi/FFBBApiClientV3/blob/main/LICENSE.txt)
 [![Project generated with PyScaffold](https://img.shields.io/badge/-PyScaffold-005CA0?logo=pyscaffold)](https://pyscaffold.org/)
 
 **FFBBApiClientV3_Python** est une librairie client moderne en Python destinée à interagir de façon transparente avec les nouvelles API de la Fédération Française de Basketball (FFBB).
 Elle fournit une interface complète et typée (via Pydantic) pour récupérer les informations concernant les clubs, les équipes, les compétitions, les matchs, les saisons, et bien plus encore.
+
+> **English summary:** Modern Python SDK for the French Basketball Federation (FFBB) public APIs. Retrieves clubs, teams, competitions, live scores and more via type-safe Pydantic models, native async/sync support, Meilisearch full-text search across 9 indexes, and built-in caching. MCP-ready for AI agents.
 
 ## Fonctionnalités Principales
 

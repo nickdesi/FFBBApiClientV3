@@ -2,4 +2,4 @@
 Contributors
 ============
 
-* Rinzler78 <Borisleclere@gmail.com>
+* nickdesi <nicolas.desimone@gmail.com>
