@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Sequence, cast
+from collections.abc import Sequence
+from typing import cast
 
 import httpx
 from httpx import Client
@@ -12,6 +13,7 @@ from ..models.formations_multi_search_query import FormationsMultiSearchQuery
 from ..models.get_competition_response import GetCompetitionResponse
 from ..models.get_organisme_response import GetOrganismeResponse
 from ..models.lives import Live
+from ..models.multi_search_query import MultiSearchQuery
 from ..models.multi_search_result_competitions import CompetitionsMultiSearchResult
 from ..models.multi_search_result_engagements import EngagementsMultiSearchResult
 from ..models.multi_search_result_formations import FormationsMultiSearchResult
@@ -21,7 +23,6 @@ from ..models.multi_search_result_rencontres import RencontresMultiSearchResult
 from ..models.multi_search_result_salles import SallesMultiSearchResult
 from ..models.multi_search_result_terrains import TerrainsMultiSearchResult
 from ..models.multi_search_result_tournois import TournoisMultiSearchResult
-from ..models.multi_search_query import MultiSearchQuery
 from ..models.multi_search_results import MultiSearchResult
 from ..models.multi_search_results_class import MultiSearchResults
 from ..models.organismes_multi_search_query import OrganismesMultiSearchQuery

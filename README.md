@@ -280,8 +280,8 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
 
 ## 🤖 Intégration IA / MCP Server
 
-Vous construisez un agent IA et vous voulez qu'il accède directement aux données de la FFBB ?  
-Découvrez le [FFBB MCP Server](https://github.com/nickdesi/FFBB-MCP-Server.git), le wrapper officiel utilisant le protocole **Model Context Protocol (MCP)** construit au-dessus de cette API cliente.  
+Vous construisez un agent IA et vous voulez qu'il accède directement aux données de la FFBB ?
+Découvrez le [FFBB MCP Server](https://github.com/nickdesi/FFBB-MCP-Server.git), le wrapper officiel utilisant le protocole **Model Context Protocol (MCP)** construit au-dessus de cette API cliente.
 Il est prêt à l'emploi avec Claude Desktop, Cursor, et d'autres agents compatibles MCP !
 
 ---
