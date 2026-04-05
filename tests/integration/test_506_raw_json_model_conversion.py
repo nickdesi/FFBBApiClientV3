@@ -13,6 +13,7 @@ import unittest
 from typing import Any
 
 import requests
+
 from ffbb_api_client_v3.config import (
     API_FFBB_BASE_URL,
     DEFAULT_USER_AGENT,

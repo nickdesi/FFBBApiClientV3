@@ -38,7 +38,11 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         async_cached_session: httpx.AsyncClient | None = None,
     ):
         super().__init__(
-            bearer_token, url, debug, cached_session, async_cached_session=async_cached_session
+            bearer_token,
+            url,
+            debug,
+            cached_session,
+            async_cached_session=async_cached_session,
         )
 
     def search_multiple_organismes(
@@ -73,7 +77,10 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         cached_session: Client | None = None,
     ) -> OrganismesMultiSearchResult | None:
         results = self.search_multiple_organismes(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -110,7 +117,10 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         cached_session: Client | None = None,
     ) -> RencontresMultiSearchResult | None:
         results = self.search_multiple_rencontres(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -145,7 +155,10 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         cached_session: Client | None = None,
     ) -> TerrainsMultiSearchResult | None:
         results = self.search_multiple_terrains(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -182,7 +195,10 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         cached_session: Client | None = None,
     ) -> CompetitionsMultiSearchResult | None:
         results = self.search_multiple_competitions(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -215,7 +231,10 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         cached_session: Client | None = None,
     ) -> SallesMultiSearchResult | None:
         results = self.search_multiple_salles(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -250,7 +269,10 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         cached_session: Client | None = None,
     ) -> TournoisMultiSearchResult | None:
         results = self.search_multiple_tournois(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -285,7 +307,10 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         cached_session: Client | None = None,
     ) -> PratiquesMultiSearchResult | None:
         results = self.search_multiple_pratiques(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -322,7 +347,10 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         cached_session: Client | None = None,
     ) -> EngagementsMultiSearchResult | None:
         results = self.search_multiple_engagements(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -359,7 +387,10 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         cached_session: Client | None = None,
     ) -> FormationsMultiSearchResult | None:
         results = self.search_multiple_formations(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None

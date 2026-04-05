@@ -157,51 +157,44 @@ class CacheManager:
         """Initialize the cache backend."""
         policy = hishel.FilterPolicy()
         policy.use_body_key = True
-        
+
         if self.config.backend == "memory":
             import sqlite3
+
             # Use separate in-memory SQLite connections for sync and async:
             # sharing one connection across threads (sync vs asyncio) is not safe.
             sync_conn = sqlite3.connect(":memory:", check_same_thread=False)
             async_conn = sqlite3.connect(":memory:", check_same_thread=False)
             storage = hishel.SyncSqliteStorage(
-                connection=sync_conn,
-                default_ttl=self.config.expire_after
+                connection=sync_conn, default_ttl=self.config.expire_after
             )
             self._client = hishel.httpx.SyncCacheClient(
-                storage=storage,
-                policy=policy,
-                transport=httpx.HTTPTransport(retries=3)
+                storage=storage, policy=policy, transport=httpx.HTTPTransport(retries=3)
             )
             # Async version uses its own connection
             async_storage = hishel.AsyncSqliteStorage(
-                connection=async_conn,
-                default_ttl=self.config.expire_after
+                connection=async_conn, default_ttl=self.config.expire_after
             )
             self._async_client = hishel.httpx.AsyncCacheClient(
                 storage=async_storage,
                 policy=policy,
-                transport=httpx.AsyncHTTPTransport(retries=3)
+                transport=httpx.AsyncHTTPTransport(retries=3),
             )
         elif self.config.backend == "sqlite":
             storage = hishel.SyncSqliteStorage(
-                database_path="http_cache.db",
-                default_ttl=self.config.expire_after
+                database_path="http_cache.db", default_ttl=self.config.expire_after
             )
             self._client = hishel.httpx.SyncCacheClient(
-                storage=storage,
-                policy=policy,
-                transport=httpx.HTTPTransport(retries=3)
+                storage=storage, policy=policy, transport=httpx.HTTPTransport(retries=3)
             )
             # Async version
             async_storage = hishel.AsyncSqliteStorage(
-                database_path="http_cache.db",
-                default_ttl=self.config.expire_after
+                database_path="http_cache.db", default_ttl=self.config.expire_after
             )
             self._async_client = hishel.httpx.AsyncCacheClient(
                 storage=async_storage,
                 policy=policy,
-                transport=httpx.AsyncHTTPTransport(retries=3)
+                transport=httpx.AsyncHTTPTransport(retries=3),
             )
         else:
             raise ValueError(f"Unsupported cache backend: {self.config.backend}")
@@ -228,7 +221,11 @@ class CacheManager:
                 key_parts.append("auth_masked")
 
         if request.method == "POST" and request.content:
-            content_bytes = request.content if isinstance(request.content, bytes) else str(request.content).encode('utf-8')
+            content_bytes = (
+                request.content
+                if isinstance(request.content, bytes)
+                else str(request.content).encode("utf-8")
+            )
             body_hash = hashlib.md5(content_bytes).hexdigest()
             key_parts.append(body_hash)
 
@@ -247,7 +244,9 @@ class CacheManager:
         """Get the cached async session."""
         return self._async_client if self.config.enabled else None
 
-    def get_session(self, async_mode: bool = False) -> httpx.Client | httpx.AsyncClient | None:
+    def get_session(
+        self, async_mode: bool = False
+    ) -> httpx.Client | httpx.AsyncClient | None:
         """
         Get the cached session.
 
@@ -356,8 +355,8 @@ class CacheManager:
             return 0
 
         try:
-            storage = getattr(self._client, "_storage", None)
-            # hishel storage doesn't generally support pattern invalidation exposing cache_dict, 
+            getattr(self._client, "_storage", None)
+            # hishel storage doesn't generally support pattern invalidation exposing cache_dict,
             # so we'd need to iterate visually, but for now we skip or implement if needed
             return 0
         except (OSError, RuntimeError, AttributeError, KeyError):

@@ -42,7 +42,6 @@ from ..utils.secure_logging import get_secure_logger, mask_token
 
 
 class ApiFFBBAppClient:
-    bearer_token: str = ""
     url: str = ""
     debug: bool = False
     headers: dict[str, str] = {}
@@ -95,7 +94,7 @@ class ApiFFBBAppClient:
 
         # Configure cache manager
         self.cache_manager = CacheManager(cache_config)
-        
+
         if cached_session is None:
             self.cached_session = self.cache_manager.session
         else:
@@ -125,9 +124,7 @@ class ApiFFBBAppClient:
         """Get the bearer token."""
         return self._bearer_token
 
-    def get_lives(
-        self, cached_session: Client | None = None
-    ) -> list[Live] | None:
+    def get_lives(self, cached_session: Client | None = None) -> list[Live] | None:
         """
         Retrieves a list of live events with retry logic.
 
@@ -153,10 +150,10 @@ class ApiFFBBAppClient:
             # data might be a list or a dict with "lives" key
             if isinstance(raw_data, dict) and "lives" in raw_data:
                 raw_data = raw_data["lives"]
-            
+
             if not isinstance(raw_data, list):
                 return []
-                
+
             adapter = TypeAdapter(list[Live])
             return adapter.validate_python(raw_data)
         return None
@@ -184,10 +181,10 @@ class ApiFFBBAppClient:
                 # data might be a list or a dict with "lives" key
                 if isinstance(raw_data, dict) and "lives" in raw_data:
                     raw_data = raw_data["lives"]
-                
+
                 if not isinstance(raw_data, list):
                     return []
-                    
+
                 adapter = TypeAdapter(list[Live])
                 return adapter.validate_python(raw_data)
         except Exception as e:
@@ -274,7 +271,9 @@ class ApiFFBBAppClient:
                     params["fields[]"] = []
                 params["fields[]"].append(field)
         else:
-            params["fields[]"] = QueryFieldsManager.get_competition_fields(FieldSet.DEFAULT)
+            params["fields[]"] = QueryFieldsManager.get_competition_fields(
+                FieldSet.DEFAULT
+            )
 
         final_url = url_with_params(url, params)
         try:
@@ -500,7 +499,6 @@ class ApiFFBBAppClient:
         except Exception as e:
             if self.debug:
                 self.logger.error(f"Error in get_saisons_async: {e}")
-            pass
         return []
 
     def get_organisme(
@@ -564,7 +562,9 @@ class ApiFFBBAppClient:
         if fields:
             params["fields[]"] = fields
         else:
-            params["fields[]"] = QueryFieldsManager.get_organisme_fields(FieldSet.DEFAULT)
+            params["fields[]"] = QueryFieldsManager.get_organisme_fields(
+                FieldSet.DEFAULT
+            )
 
         final_url = url_with_params(url, params)
         try:
@@ -691,7 +691,6 @@ class ApiFFBBAppClient:
         except Exception as e:
             if self.debug:
                 self.logger.error(f"Error in list_competitions_async: {e}")
-            pass
         return []
 
     def get_configuration(

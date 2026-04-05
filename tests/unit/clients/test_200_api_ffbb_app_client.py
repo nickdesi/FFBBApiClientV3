@@ -2,6 +2,7 @@ import os
 import unittest
 
 from dotenv import load_dotenv
+
 from ffbb_api_client_v3 import ApiFFBBAppClient
 
 

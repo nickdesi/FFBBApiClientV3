@@ -1,5 +1,6 @@
 import pytest
 import respx
+
 from ffbb_api_client_v3.config import (
     MEILISEARCH_BASE_URL,
     MEILISEARCH_ENDPOINT_MULTI_SEARCH,
@@ -13,12 +14,14 @@ from ffbb_api_client_v3.models.multi_search_query import MultiSearchQuery
 
 @pytest.mark.asyncio
 async def test_smart_multi_search_async():
-    client = MeilisearchClientExtension(bearer_token="test-token", url=MEILISEARCH_BASE_URL, debug=True)
-    
+    client = MeilisearchClientExtension(
+        bearer_token="test-token", url=MEILISEARCH_BASE_URL, debug=True
+    )
+
     query_str = "paris"
     queries = [MultiSearchQuery(index_uid=MEILISEARCH_INDEX_ORGANISMES, q=query_str)]
     url = f"{MEILISEARCH_BASE_URL}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}"
-    
+
     mock_response = {
         "results": [
             {
@@ -27,14 +30,14 @@ async def test_smart_multi_search_async():
                 "query": query_str,
                 "limit": 20,
                 "offset": 0,
-                "estimatedTotalHits": 1
+                "estimatedTotalHits": 1,
             }
         ]
     }
-    
+
     with respx.mock:
         respx.post(url).respond(json=mock_response)
-        
+
         results = await client.smart_multi_search_async(queries)
         assert results is not None
         assert len(results.results) == 1

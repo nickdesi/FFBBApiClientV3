@@ -6,6 +6,8 @@ import json
 import unittest
 from unittest.mock import MagicMock, Mock, patch
 
+from httpx import ReadTimeout
+
 from ffbb_api_client_v3.helpers.http_requests_helper import catch_result
 from ffbb_api_client_v3.helpers.http_requests_utils import (
     encode_params,
@@ -16,7 +18,6 @@ from ffbb_api_client_v3.helpers.http_requests_utils import (
     to_json_from_response,
     url_with_params,
 )
-from httpx import ReadTimeout
 
 
 class Test045HttpHelpers(unittest.TestCase):
@@ -157,7 +158,9 @@ class Test045HttpHelpers(unittest.TestCase):
         self.assertEqual(response, mock_resp)
 
     @patch("ffbb_api_client_v3.helpers.http_requests_utils.httpx.Client.get")
-    def test_016_http_get_json_calls_raise_for_status(self, mock_get: MagicMock) -> None:
+    def test_016_http_get_json_calls_raise_for_status(
+        self, mock_get: MagicMock
+    ) -> None:
         mock_resp = Mock()
         mock_resp.text = '{"ok": true}'
         mock_resp.raise_for_status = Mock()
@@ -169,7 +172,9 @@ class Test045HttpHelpers(unittest.TestCase):
         mock_resp.raise_for_status.assert_called_once()
 
     @patch("ffbb_api_client_v3.helpers.http_requests_utils.httpx.Client.post")
-    def test_017_http_post_json_calls_raise_for_status(self, mock_post: MagicMock) -> None:
+    def test_017_http_post_json_calls_raise_for_status(
+        self, mock_post: MagicMock
+    ) -> None:
         mock_resp = Mock()
         mock_resp.text = '{"ok": true}'
         mock_resp.raise_for_status = Mock()

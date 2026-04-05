@@ -111,9 +111,7 @@ class Live:
         )
 
     @classmethod
-    def __get_pydantic_core_schema__(
-        cls, _source_type: Any, handler: Any
-    ) -> Any:
+    def __get_pydantic_core_schema__(cls, _source_type: Any, handler: Any) -> Any:
         from pydantic_core import core_schema
 
         return core_schema.no_info_before_validator_function(

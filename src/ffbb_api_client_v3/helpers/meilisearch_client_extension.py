@@ -126,7 +126,9 @@ class MeilisearchClientExtension(MeilisearchClient):
                 next_queries.append(querie)
 
         if next_queries:
-            new_result = await self.recursive_smart_multi_search_async(next_queries, cached_session)
+            new_result = await self.recursive_smart_multi_search_async(
+                next_queries, cached_session
+            )
 
             if new_result and new_result.results:
                 for i in range(len(new_result.results)):

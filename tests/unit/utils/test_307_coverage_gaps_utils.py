@@ -333,7 +333,9 @@ class TestCacheManagerCoverage(unittest.TestCase):
 
         cm = CacheManager(CacheConfig(backend="memory"))
         cm._client = MagicMock()
-        type(cm._client)._storage = property(lambda self: (_ for _ in ()).throw(RuntimeError("fail")))
+        type(cm._client)._storage = property(
+            lambda self: (_ for _ in ()).throw(RuntimeError("fail"))
+        )
         cm.config.enabled = True
 
         result = cm.invalidate_pattern("test")

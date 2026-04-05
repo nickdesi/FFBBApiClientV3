@@ -7,6 +7,8 @@ from .multi_search_results import MultiSearchResult
 
 
 class EngagementsMultiSearchResult(
-    MultiSearchResult[EngagementsHit, EngagementsFacetDistribution, EngagementsFacetStats]
+    MultiSearchResult[
+        EngagementsHit, EngagementsFacetDistribution, EngagementsFacetStats
+    ]
 ):
     """MultiSearchResult for Engagements."""

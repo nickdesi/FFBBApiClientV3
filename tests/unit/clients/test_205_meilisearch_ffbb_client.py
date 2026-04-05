@@ -34,9 +34,7 @@ class Test040MeilisearchFfbbClient(unittest.TestCase):
     """Tests for MeilisearchFFBBClient search_multiple_* and search_* methods."""
 
     def setUp(self) -> None:
-        with patch(
-            "ffbb_api_client_v3.clients.meilisearch_client.CacheManager"
-        ):
+        with patch("ffbb_api_client_v3.clients.meilisearch_client.CacheManager"):
             self.client = MeilisearchFFBBClient(bearer_token="test-token")
 
     def _make_mock_results(self, result_mock: MagicMock) -> MultiSearchResults:

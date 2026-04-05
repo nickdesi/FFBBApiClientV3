@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import time
-from typing import Any, cast
+from typing import Any
 from urllib.parse import urlencode
 
 import httpx
@@ -286,7 +286,9 @@ async def http_get_async(
 
     if debug:
         end_time = time.time()
-        logger.debug(f"Async GET request to {url} took {end_time - start_time} seconds.")
+        logger.debug(
+            f"Async GET request to {url} took {end_time - start_time} seconds."
+        )
         logger.debug(f"Async GET response: {response.text}")
 
     return response

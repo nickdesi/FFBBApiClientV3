@@ -126,7 +126,9 @@ class TestFormationsHit(unittest.TestCase):
         assert d1 == d2
 
     def test_is_valid_for_query(self) -> None:
-        hit = FormationsHit.from_dict({"id": "1", "title": "Coach Niveau 1", "domain": "Coaching"})
+        hit = FormationsHit.from_dict(
+            {"id": "1", "title": "Coach Niveau 1", "domain": "Coaching"}
+        )
         assert hit.is_valid_for_query("coach")
         assert hit.is_valid_for_query("coaching")
         assert not hit.is_valid_for_query("arbitre")
@@ -140,7 +142,12 @@ class TestFormationSession(unittest.TestCase):
     """Test FormationSession model."""
 
     def test_from_dict(self) -> None:
-        data = {"id": "s-1", "title": "Session A", "place": "Lyon", "postal_code": "69000"}
+        data = {
+            "id": "s-1",
+            "title": "Session A",
+            "place": "Lyon",
+            "postal_code": "69000",
+        }
         session = FormationSession.from_dict(data)
         assert session.id == "s-1"
         assert session.place == "Lyon"
@@ -185,7 +192,10 @@ class TestFormationsFacets(unittest.TestCase):
     """Test Formations facet distribution and stats."""
 
     def test_facet_distribution_from_dict(self) -> None:
-        data = {"domain": {"Coaching": 10}, "mode": {"presentiel": 40, "distanciel": 20}}
+        data = {
+            "domain": {"Coaching": 10},
+            "mode": {"presentiel": 40, "distanciel": 20},
+        }
         fd = FormationsFacetDistribution.from_dict(data)
         assert fd.domain == {"Coaching": 10}
         assert fd.mode == {"presentiel": 40, "distanciel": 20}

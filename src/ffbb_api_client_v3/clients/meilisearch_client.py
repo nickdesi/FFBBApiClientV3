@@ -30,7 +30,6 @@ logger = get_secure_logger(__name__)
 
 
 class MeilisearchClient:
-    bearer_token: str = ""
     url: str = ""
     debug: bool = False
     cached_session: Client | None = None
@@ -73,7 +72,9 @@ class MeilisearchClient:
             cached_session if cached_session else CacheManager().session
         )
         self.async_cached_session = (
-            async_cached_session if async_cached_session else CacheManager().async_session
+            async_cached_session
+            if async_cached_session
+            else CacheManager().async_session
         )
         self.headers = {
             "Authorization": f"Bearer {self._bearer_token}",

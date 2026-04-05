@@ -90,8 +90,6 @@ class Test018CacheManager(unittest.TestCase):
         self.assertFalse(manager.is_enabled())
         self.assertIsNone(manager.get_session())
 
-
-
     def test_cache_manager_initialization_invalid_backend(self):
         """Test cache manager initialization with invalid backend."""
         config = CacheConfig(backend="invalid")
@@ -155,7 +153,7 @@ class Test018CacheManager(unittest.TestCase):
 
         # This should not raise an exception even if URLs are not reachable
         manager.warm_cache(urls, headers)
-        
+
         self.assertEqual(mock_get.call_count, 2)
 
     def test_invalidate_pattern(self):

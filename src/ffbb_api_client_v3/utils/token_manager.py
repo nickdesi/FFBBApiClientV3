@@ -111,4 +111,5 @@ class TokenManager:
             raise RuntimeError("Failed to fetch configuration from FFBB API")
 
         from pydantic import TypeAdapter
+
         return TypeAdapter(GetConfigurationResponse).validate_python(actual_data)

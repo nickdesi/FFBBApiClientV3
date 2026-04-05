@@ -263,7 +263,10 @@ def make_http_request_with_retry(
                 )
             elif method.upper() == "POST":
                 return cached_session.post(
-                    url, headers=headers, json=data, timeout=timeout_config.total_timeout
+                    url,
+                    headers=headers,
+                    json=data,
+                    timeout=timeout_config.total_timeout,
                 )
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
@@ -404,7 +407,10 @@ async def make_http_request_with_retry_async(
                 )
             elif method.upper() == "POST":
                 return await session.post(
-                    url, headers=headers, json=data, timeout=timeout_config.total_timeout
+                    url,
+                    headers=headers,
+                    json=data,
+                    timeout=timeout_config.total_timeout,
                 )
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import cast
+from typing import Sequence, cast
 
 import httpx
 from httpx import Client
@@ -21,7 +21,9 @@ from ..models.multi_search_result_rencontres import RencontresMultiSearchResult
 from ..models.multi_search_result_salles import SallesMultiSearchResult
 from ..models.multi_search_result_terrains import TerrainsMultiSearchResult
 from ..models.multi_search_result_tournois import TournoisMultiSearchResult
+from ..models.multi_search_query import MultiSearchQuery
 from ..models.multi_search_results import MultiSearchResult
+from ..models.multi_search_results_class import MultiSearchResults
 from ..models.organismes_multi_search_query import OrganismesMultiSearchQuery
 from ..models.poules_models import GetPouleResponse
 from ..models.pratiques_multi_search_query import PratiquesMultiSearchQuery
@@ -88,7 +90,7 @@ class FFBBAPIClientV3:
         cache_manager = CacheManager()
         if cached_session is None:
             cached_session = cache_manager.session
-        
+
         if async_cached_session is None:
             async_cached_session = cache_manager.async_session
 
@@ -137,9 +139,7 @@ class FFBBAPIClientV3:
             cached_session=cached_session,
         )
 
-    def get_lives(
-        self, cached_session: Client | None = None
-    ) -> list[Live] | None:
+    def get_lives(self, cached_session: Client | None = None) -> list[Live] | None:
         """
         Retrieves a list of live events.
 
@@ -241,7 +241,9 @@ class FFBBAPIClientV3:
     ) -> list[GetSaisonsResponse]:
         """Retrieves list of seasons asynchronously."""
         filter_criteria = '{"actif":{"_eq":true}}' if active_only else None
-        return await self.api_ffbb_client.get_saisons_async(filter_criteria=filter_criteria)
+        return await self.api_ffbb_client.get_saisons_async(
+            filter_criteria=filter_criteria
+        )
 
     async def get_competition_async(
         self,
@@ -253,7 +255,9 @@ class FFBBAPIClientV3:
             competition_id, deep_limit=deep_limit
         )
 
-    async def get_organisme_async(self, organisme_id: int) -> GetOrganismeResponse | None:
+    async def get_organisme_async(
+        self, organisme_id: int
+    ) -> GetOrganismeResponse | None:
         """Retrieves detailed information about an organisme asynchronously."""
         return await self.api_ffbb_client.get_organisme_async(organisme_id)
 
@@ -261,13 +265,17 @@ class FFBBAPIClientV3:
         self, poule_id: int, deep_limit: str | None = "1000"
     ) -> GetPouleResponse | None:
         """Retrieves detailed information about a poule asynchronously."""
-        return await self.api_ffbb_client.get_poule_async(poule_id, deep_limit=deep_limit)
+        return await self.api_ffbb_client.get_poule_async(
+            poule_id, deep_limit=deep_limit
+        )
 
     def get_classement(
         self, poule_id: int, cached_session: Client | None = None
     ) -> list[TeamRanking] | None:
         """Retrieves ONLY the ranking (classement) for a specific poule."""
-        return self.api_ffbb_client.get_classement(poule_id, cached_session=cached_session)
+        return self.api_ffbb_client.get_classement(
+            poule_id, cached_session=cached_session
+        )
 
     async def get_classement_async(self, poule_id: int) -> list[TeamRanking] | None:
         """Retrieves ONLY the ranking (classement) for a specific poule asynchronously."""
@@ -281,7 +289,9 @@ class FFBBAPIClientV3:
             organisme_id, cached_session=cached_session
         )
 
-    async def get_equipes_async(self, organisme_id: int) -> list[GetOrganismeResponse.EngagementsitemModel] | None:
+    async def get_equipes_async(
+        self, organisme_id: int
+    ) -> list[GetOrganismeResponse.EngagementsitemModel] | None:
         """Retrieves ONLY the team commitments (engagements) for a specific club asynchronously."""
         return await self.api_ffbb_client.get_equipes_async(organisme_id)
 
@@ -289,7 +299,9 @@ class FFBBAPIClientV3:
         self, queries: Sequence[MultiSearchQuery] | None = None
     ) -> MultiSearchResults | None:
         """Performs a smart multi-search asynchronously."""
-        return await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
+        return await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(
+            queries
+        )
 
     def multi_search(
         self, name: str | None = None, cached_session: Client | None = None
@@ -324,7 +336,10 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> CompetitionsMultiSearchResult | None:
         results = self.search_multiple_competitions(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -558,7 +573,10 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> OrganismesMultiSearchResult | None:
         results = self.search_multiple_organismes(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -572,7 +590,10 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> PratiquesMultiSearchResult | None:
         results = self.search_multiple_pratiques(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -587,7 +608,11 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> RencontresMultiSearchResult | None:
         results = self.search_multiple_rencontres(
-            [name], categorie, filter=filter, sort=sort, limit=limit,
+            [name],
+            categorie,
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -601,7 +626,10 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> SallesMultiSearchResult | None:
         results = self.search_multiple_salles(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -615,7 +643,10 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> TerrainsMultiSearchResult | None:
         results = self.search_multiple_terrains(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -629,7 +660,10 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> TournoisMultiSearchResult | None:
         results = self.search_multiple_tournois(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -668,7 +702,10 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> EngagementsMultiSearchResult | None:
         results = self.search_multiple_engagements(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -707,7 +744,10 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> FormationsMultiSearchResult | None:
         results = self.search_multiple_formations(
-            [name], filter=filter, sort=sort, limit=limit,
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
             cached_session=cached_session,
         )
         return results[0] if results else None
@@ -719,8 +759,14 @@ class FFBBAPIClientV3:
         if not name:
             return None
         queries = [CompetitionsMultiSearchQuery(name)]
-        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
-        return cast(CompetitionsMultiSearchResult, results.results[0]) if results and results.results else None
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(
+            queries
+        )
+        return (
+            cast(CompetitionsMultiSearchResult, results.results[0])
+            if results and results.results
+            else None
+        )
 
     async def search_organismes_async(
         self, name: str | None = None
@@ -729,8 +775,14 @@ class FFBBAPIClientV3:
         if not name:
             return None
         queries = [OrganismesMultiSearchQuery(name)]
-        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
-        return cast(OrganismesMultiSearchResult, results.results[0]) if results and results.results else None
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(
+            queries
+        )
+        return (
+            cast(OrganismesMultiSearchResult, results.results[0])
+            if results and results.results
+            else None
+        )
 
     async def search_rencontres_async(
         self, name: str | None = None, categorie: str | None = None
@@ -748,8 +800,14 @@ class FFBBAPIClientV3:
         if not name:
             return None
         queries = [SallesMultiSearchQuery(name)]
-        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
-        return cast(SallesMultiSearchResult, results.results[0]) if results and results.results else None
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(
+            queries
+        )
+        return (
+            cast(SallesMultiSearchResult, results.results[0])
+            if results and results.results
+            else None
+        )
 
     async def search_tournois_async(
         self, name: str | None = None
@@ -758,8 +816,14 @@ class FFBBAPIClientV3:
         if not name:
             return None
         queries = [TournoisMultiSearchQuery(name)]
-        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
-        return cast(TournoisMultiSearchResult, results.results[0]) if results and results.results else None
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(
+            queries
+        )
+        return (
+            cast(TournoisMultiSearchResult, results.results[0])
+            if results and results.results
+            else None
+        )
 
     async def search_terrains_async(
         self, name: str | None = None
@@ -768,8 +832,14 @@ class FFBBAPIClientV3:
         if not name:
             return None
         queries = [TerrainsMultiSearchQuery(name)]
-        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
-        return cast(TerrainsMultiSearchResult, results.results[0]) if results and results.results else None
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(
+            queries
+        )
+        return (
+            cast(TerrainsMultiSearchResult, results.results[0])
+            if results and results.results
+            else None
+        )
 
     async def search_pratiques_async(
         self, name: str | None = None
@@ -778,8 +848,14 @@ class FFBBAPIClientV3:
         if not name:
             return None
         queries = [PratiquesMultiSearchQuery(name)]
-        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
-        return cast(PratiquesMultiSearchResult, results.results[0]) if results and results.results else None
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(
+            queries
+        )
+        return (
+            cast(PratiquesMultiSearchResult, results.results[0])
+            if results and results.results
+            else None
+        )
 
     async def search_engagements_async(
         self, name: str | None = None
@@ -788,8 +864,14 @@ class FFBBAPIClientV3:
         if not name:
             return None
         queries = [EngagementsMultiSearchQuery(name)]
-        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
-        return cast(EngagementsMultiSearchResult, results.results[0]) if results and results.results else None
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(
+            queries
+        )
+        return (
+            cast(EngagementsMultiSearchResult, results.results[0])
+            if results and results.results
+            else None
+        )
 
     async def search_formations_async(
         self, name: str | None = None
@@ -798,5 +880,11 @@ class FFBBAPIClientV3:
         if not name:
             return None
         queries = [FormationsMultiSearchQuery(name)]
-        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(queries)
-        return cast(FormationsMultiSearchResult, results.results[0]) if results and results.results else None
+        results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(
+            queries
+        )
+        return (
+            cast(FormationsMultiSearchResult, results.results[0])
+            if results and results.results
+            else None
+        )

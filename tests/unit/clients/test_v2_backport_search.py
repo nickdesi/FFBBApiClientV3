@@ -5,9 +5,12 @@ from __future__ import annotations
 import unittest
 from unittest.mock import MagicMock, patch
 
-from ffbb_api_client_v3.clients.ffbb_api_client_v3 import FFBBAPIClientV3
 from ffbb_api_client_v3.clients.api_ffbb_app_client import ApiFFBBAppClient
+from ffbb_api_client_v3.clients.ffbb_api_client_v3 import FFBBAPIClientV3
 from ffbb_api_client_v3.clients.meilisearch_ffbb_client import MeilisearchFFBBClient
+from ffbb_api_client_v3.models.multi_search_result_competitions import (
+    CompetitionsMultiSearchResult,
+)
 from ffbb_api_client_v3.models.multi_search_result_engagements import (
     EngagementsMultiSearchResult,
 )
@@ -17,9 +20,6 @@ from ffbb_api_client_v3.models.multi_search_result_formations import (
 from ffbb_api_client_v3.models.multi_search_result_organismes import (
     OrganismesMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_competitions import (
-    CompetitionsMultiSearchResult,
-)
 from ffbb_api_client_v3.models.multi_search_results_class import MultiSearchResults
 
 
@@ -27,9 +27,7 @@ class TestV2BackportSearch(unittest.TestCase):
     """Tests for new search_engagements/formations + filter/sort params."""
 
     def setUp(self) -> None:
-        with patch(
-            "ffbb_api_client_v3.clients.meilisearch_client.CacheManager"
-        ):
+        with patch("ffbb_api_client_v3.clients.meilisearch_client.CacheManager"):
             api_client = MagicMock(spec=ApiFFBBAppClient)
             api_client.cached_session = None
             api_client.async_cached_session = None
