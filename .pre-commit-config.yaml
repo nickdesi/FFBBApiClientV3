@@ -1,4 +1,4 @@
-exclude: '^docs/conf.py'
+exclude: '^(docs/conf\.py|\.agent/)'
 
 default_language_version:
     python: python3.10
