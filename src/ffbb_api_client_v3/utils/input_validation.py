@@ -1,5 +1,5 @@
 """
-Input validation utilities for FFBB API Client V2.
+Input validation utilities for FFBB API Client V3.
 
 This module provides comprehensive validation functions for all input parameters
 to ensure data integrity and prevent common errors.

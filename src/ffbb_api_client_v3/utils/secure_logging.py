@@ -1,5 +1,5 @@
 """
-Secure logging utilities for FFBB API Client V2.
+Secure logging utilities for FFBB API Client V3.
 
 This module provides logging utilities that automatically mask sensitive information
 like API tokens and authentication credentials.

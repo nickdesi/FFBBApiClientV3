@@ -1,5 +1,5 @@
 """
-FFBB API Client V2.
+FFBB API Client V3.
 
 A Python client library for the French Basketball Federation (FFBB) API,
 providing access to clubs, competitions, matches, and other basketball data.

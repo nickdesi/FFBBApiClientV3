@@ -1,5 +1,5 @@
 """
-Advanced cache management for FFBB API Client V2.
+Advanced cache management for FFBB API Client V3.
 
 This module provides sophisticated caching strategies including:
 - Multi-level caching (memory, disk, Redis)
@@ -279,8 +279,9 @@ class CacheManager:
             return False
         try:
             storage = getattr(self._client, "_storage", None)
-            if hasattr(storage, "clear"):
-                storage.clear()
+            clear_fn = getattr(storage, "clear", None)
+            if callable(clear_fn):
+                clear_fn()
                 self.metrics.evictions = 0
                 return True
             return False

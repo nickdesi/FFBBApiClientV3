@@ -62,7 +62,7 @@ class FFBBAPIClientV3:
         async_cached_session: httpx.AsyncClient | None = None,
     ) -> FFBBAPIClientV3:
         """
-        Create a new FFBB API Client V2 instance with comprehensive input validation.
+        Create a new FFBB API Client V3 instance with comprehensive input validation.
 
         Args:
             meilisearch_bearer_token (str): Bearer token for Meilisearch API
