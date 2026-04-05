@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import cast
 
+import httpx
 from httpx import Client
 
 from ..helpers.multi_search_query_helper import generate_queries

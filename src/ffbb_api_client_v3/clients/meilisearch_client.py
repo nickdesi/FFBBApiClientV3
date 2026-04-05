@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+import httpx
 from httpx import Client
 
 from ..config import (
@@ -146,6 +147,8 @@ class MeilisearchClient:
             )
             if raw_data:
                 return MultiSearchResults.from_dict(raw_data)
-        except Exception:
-            pass
+        except (httpx.HTTPStatusError, httpx.RequestError) as e:
+            self.logger.warning("multi_search_async request failed: %s", e)
+        except Exception as e:
+            self.logger.error("multi_search_async unexpected error: %s", e)
         return None

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+import httpx
 from httpx import Client
 
 from ..clients.meilisearch_client import MeilisearchClient

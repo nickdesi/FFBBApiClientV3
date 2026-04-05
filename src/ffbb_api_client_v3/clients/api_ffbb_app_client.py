@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
+import httpx
 from httpx import Client
 from pydantic import TypeAdapter
 

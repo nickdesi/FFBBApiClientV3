@@ -160,10 +160,12 @@ class CacheManager:
         
         if self.config.backend == "memory":
             import sqlite3
-            # Use an in-memory SQLite database
-            conn = sqlite3.connect(":memory:", check_same_thread=False)
+            # Use separate in-memory SQLite connections for sync and async:
+            # sharing one connection across threads (sync vs asyncio) is not safe.
+            sync_conn = sqlite3.connect(":memory:", check_same_thread=False)
+            async_conn = sqlite3.connect(":memory:", check_same_thread=False)
             storage = hishel.SyncSqliteStorage(
-                connection=conn,
+                connection=sync_conn,
                 default_ttl=self.config.expire_after
             )
             self._client = hishel.httpx.SyncCacheClient(
@@ -171,9 +173,9 @@ class CacheManager:
                 policy=policy,
                 transport=httpx.HTTPTransport(retries=3)
             )
-            # Async version
+            # Async version uses its own connection
             async_storage = hishel.AsyncSqliteStorage(
-                connection=conn,
+                connection=async_conn,
                 default_ttl=self.config.expire_after
             )
             self._async_client = hishel.httpx.AsyncCacheClient(

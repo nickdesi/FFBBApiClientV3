@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import cast
 
+import httpx
 from httpx import Client
 
 from ..config import MEILISEARCH_BASE_URL
