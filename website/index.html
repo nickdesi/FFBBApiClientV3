@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="FFBBApiClientV3 est le SDK Python officiel et non-officiel pour exploiter les APIs de la Fédération Française de BasketBall (FFBB). Types Pydantic, Meilisearch, et prêt pour les IAs.">
+    <meta name="keywords" content="FFBB API, Python SDK, Basketball API, FFBB MCP, Pydantic, Meilisearch, Scraping Basket, Sports Data, AI Agents">
+    <meta name="author" content="nickdesi">
+    <meta name="robots" content="index, follow">
+    
+    <title>FFBBApiClientV3 | Le SDK Python pour l'API FFBB</title>
+
+    <!-- Open Graph Data -->
+    <meta property="og:title" content="FFBBApiClientV3 | Python SDK pour la FFBB">
+    <meta property="og:description" content="Type-safe, async, cache implicite et recherche multi-index. L'outil ultime pour manipuler les données du basketball français.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ffbb.nickdesi.dev/"> <!-- Replace with true URL if needed -->
+    <meta property="og:image" content="assets/logo.webp">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "FFBBApiClientV3",
+      "applicationCategory": "DeveloperApplication",
+      "developer": {
+        "@type": "Person",
+        "name": "nickdesi"
+      },
+      "description": "Le SDK Python complet pour interagir avec les APIs de la Fédération Française de BasketBall (FFBB), incluant Pydantic, Meilisearch et un support natif pour les Agents IA via MCP.",
+      "operatingSystem": "All",
+      "softwareVersion": "1.5.4",
+      "url": "https://github.com/nickdesi/FFBBApiClientV3",
+      "offers": {
+        "@type": "Offer",
+        "price": "0.00",
+        "priceCurrency": "EUR"
+      }
+    }
+    </script>
+</head>
+<body>
+    <div class="background-effects">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <header class="glass-header">
+        <div class="container header-container">
+            <div class="logo-area">
+                <img src="assets/logo.webp" alt="FFBBApiClientV3 Logo" class="brand-logo" width="48" height="48">
+                <span class="brand-text">FFBBApiClientV3</span>
+            </div>
+            <nav class="main-nav">
+                <a href="#features">Fonctionnalités</a>
+                <a href="#code">Documentation</a>
+                <a href="https://github.com/nickdesi/FFBB-MCP-Server" target="_blank" class="nav-glow">✨ MCP IA</a>
+                <a href="https://github.com/nickdesi/FFBBApiClientV3" class="btn btn-outline" target="_blank">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Les données <span class="text-gradient">FFBB</span>.<br>
+                    Maintenant accessibles.
+                </h1>
+                <p class="hero-subtitle">
+                    La FFBB expose des APIs modernes, mais personne n'avait fait le SDK. 
+                    <strong>Ne gérez plus les tokens manuellement.</strong> Découvrez le client Python asynchrone, type-safe via Pydantic et 100% prêt pour la production.
+                </p>
+                <div class="hero-ctas">
+                    <div class="terminal-install">
+                        <span class="prompt">$</span> pip install ffbb_api_client_v3
+                        <button class="copy-btn" onclick="navigator.clipboard.writeText('pip install ffbb_api_client_v3')">Copier</button>
+                    </div>
+                    <a href="#code" class="btn btn-primary">Explorer le code</a>
+                </div>
+                <div class="badges">
+                    <img src="https://img.shields.io/pypi/v/ffbb_api_client_v3?color=blue&label=PyPI&logo=python" alt="PyPI version">
+                    <img src="https://img.shields.io/pypi/dm/ffbb_api_client_v3?label=downloads%2Fmonth&color=orange" alt="Downloads">
+                    <img src="https://img.shields.io/github/stars/nickdesi/FFBBApiClientV3?style=social" alt="Github Stars">
+                </div>
+            </div>
+            <div class="hero-visual">
+                <img src="assets/logo.webp" alt="Visuel FFBBApiClientV3" class="floating-logo" loading="lazy">
+            </div>
+        </section>
+
+        <section id="features" class="container features-section">
+            <div class="section-heading text-center">
+                <h2>Oubliez les <code>dict</code> bruts.</h2>
+                <p>Un SDK conçu pour le confort des développeurs, l'intégrité de la donnée et l'efficience.</p>
+            </div>
+            
+            <div class="grid features-grid">
+                <article class="feature-card glass-panel">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Zéro Erreur de Type</h3>
+                    <p>Validation Pydantic v2 complète. Plus de 60 modèles garantissant des autocomplétions parfaites dans votre IDE. Dites adieu aux KeyError.</p>
+                </article>
+                <article class="feature-card glass-panel">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Meilisearch Multi-Index</h3>
+                    <p>Un seul appel réseau pour interroger 9 index (Clubs, Rencontres, Terrains, Salles...). Filtres <code>filter</code>, <code>sort</code>, <code>limit</code> natifs intégrés.</p>
+                </article>
+                <article class="feature-card glass-panel">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Async First & Cache</h3>
+                    <p>Conçu pour FastAPI et les charges intenses. Routines asynchrones (`async/await`) et cache HTTP automatique optimisé via Hishel.</p>
+                </article>
+                <article class="feature-card glass-panel">
+                    <div class="feature-icon">🤖</div>
+                    <h3>Prêt pour les Agents IA</h3>
+                    <p>Compatible nativement avec le standard MCP. FFBBApiClientV3 propulse le serveur officiel <strong>FFBB MCP Server</strong> pour Claude, Cursor et Copilot.</p>
+                </article>
+            </div>
+        </section>
+
+        <section id="code" class="code-section container">
+            <div class="code-wrapper glass-panel">
+                <div class="code-header">
+                    <div class="mac-buttons">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="file-name">example.py</div>
+                </div>
+                <pre><code class="language-python">from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
+import asyncio
+
+# Les tokens publics FFBB sont générés & renouvelés automatiquement
+tokens = TokenManager.get_tokens()
+client = FFBBAPIClientV3.create(
+    api_bearer_token=tokens.api_token,
+    meilisearch_bearer_token=tokens.meilisearch_token,
+)
+
+async def detect_talents():
+    # Retourne des objets typés (Models Pydantic), fini les dicts !
+    clubs = await client.search_organismes_async("Pau")
+    print(f"Club trouvé : {clubs.hits[0].nom}")
+
+    # Recherche ultra rapide avec filtre MeiliSearch natif
+    comps = await client.search_competitions_async(
+        "Pro A", sort=["libelle:asc"], limit=5
+    )
+
+asyncio.run(detect_talents())</code></pre>
+            </div>
+            <div class="code-content text-left">
+                <h2>L'expérience développeur ultime</h2>
+                <p>Créer un script ne prend plus que 30 secondes. Ne perdez plus de temps à faire la rétro-ingénierie des endpoints, nous l'avons fait pour vous.</p>
+                <ul class="check-list">
+                    <li>✔️ Autocomplétion (IntelliSense)</li>
+                    <li>✔️ Gestion des erreurs HTTP packagée</li>
+                    <li>✔️ Support complet des matchs en direct (Lives)</li>
+                </ul>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container text-center">
+            <p>Conçu pour la communauté basketball française par les passionnés, pour les développeurs.</p>
+            <p><small>Non affilié officiellement à la Fédération Française de BasketBall.</small></p>
+            <div class="footer-links">
+                <a href="https://pypi.org/project/ffbb_api_client_v3/">PyPI</a>
+                <a href="https://github.com/nickdesi/FFBBApiClientV3">GitHub FFBBApiClientV3</a>
+                <a href="https://github.com/nickdesi/FFBB-MCP-Server">FFBB MCP Server</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script for minimal interaction -->
+    <script>
+        // Smooth reveal on scroll
+        const observerOptions = { root: null, threshold: 0.1, rootMargin: '0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section, .feature-card').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

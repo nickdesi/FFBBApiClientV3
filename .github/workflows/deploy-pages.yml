@@ -1,0 +1,45 @@
+name: Deploy landing page to Pages
+
+on:
+  # Déclenchement à chaque push sur master/main si on modifie le dossier website
+  push:
+    branches: ["master", "main"]
+    paths:
+      - "website/**"
+      - ".github/workflows/deploy-pages.yml"
+  # Permet de lancer manuellement depuis l'onglet Actions
+  workflow_dispatch:
+
+# Permissions nécessaires pour GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Permet d'annuler les déploiements obsolètes
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Point vital : on choisit le dossier "website"
+          path: './website'
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
