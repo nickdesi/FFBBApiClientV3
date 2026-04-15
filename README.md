@@ -301,4 +301,3 @@ Fait pour la communauté basketball française et les développeurs qui n'ont pa
 [![GitHub forks](https://img.shields.io/github/forks/nickdesi/FFBBApiClientV3?style=social)](https://github.com/nickdesi/FFBBApiClientV3/network/members)
 
 </div>
-
