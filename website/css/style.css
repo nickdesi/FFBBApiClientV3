@@ -8,14 +8,14 @@
     --brand-primary: #FF5A00; /* Orange Basketball */
     --brand-gradient: linear-gradient(135deg, #FF5A00 0%, #FFA800 100%);
     --glow-color: rgba(255, 90, 0, 0.15);
-    
+
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
-    
+
     --radius-md: 12px;
     --radius-lg: 24px;
     --radius-pill: 999px;
-    
+
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --glass-border: 1px solid rgba(255,255,255, 0.08);
 }
@@ -130,7 +130,7 @@ body {
 }
 
 .brand-logo {
-    border-radius: 50%; 
+    border-radius: 50%;
     box-shadow: 0 0 15px var(--glow-color);
 }
 
@@ -467,11 +467,11 @@ pre {
         padding-top: 6rem;
         text-align: center;
     }
-    
+
     .hero-subtitle {
         margin: 0 auto 2.5rem;
     }
-    
+
     .hero-ctas {
         justify-content: center;
     }
@@ -479,11 +479,11 @@ pre {
     .badges {
         justify-content: center;
     }
-    
+
     .code-section {
         flex-direction: column;
     }
-    
+
     .main-nav {
         display: none; /* simple mobile nav approach */
     }
