@@ -80,23 +80,35 @@ class RencontresHit(Hit):
         return self.nom_equipe2
 
     def __post_init__(self) -> None:
+        self._normalize_string_fields()
+        self._normalize_officiels()
+
+    def _normalize_string_fields(self) -> None:
+        """Normalize string fields to lowercase."""
         self.lower_id = self.id.lower() if self.id else None
         self.lower_nom_equipe1 = self.nom_equipe1.lower() if self.nom_equipe1 else None
         self.lower_nom_equipe2 = self.nom_equipe2.lower() if self.nom_equipe2 else None
         self.lower_gs_id = self.gs_id.lower() if self.gs_id else None
-        # Handle both old format (list of strings) and new format (list of dicts)
-        if self.officiels:
-            lower_officiels = []
-            for o in self.officiels:
-                if isinstance(o, str):
-                    lower_officiels.append(o.lower())
-                elif isinstance(o, dict):
-                    off = o.get("officiel", {})
-                    name = f"{off.get('nom', '')} {off.get('prenom', '')}".strip()
-                    lower_officiels.append(name.lower() if name else "")
-            self.lower_officiels = lower_officiels if lower_officiels else None
-        else:
+
+    def _normalize_officiels(self) -> None:
+        """Normalize the officiels list for search and consistency.
+
+        Handles both old format (list of strings) and new format (list of dicts).
+        """
+        if not self.officiels:
             self.lower_officiels = None
+            return
+
+        lower_officiels = []
+        for o in self.officiels:
+            if isinstance(o, str):
+                lower_officiels.append(o.lower())
+            elif isinstance(o, dict):
+                off = o.get("officiel", {})
+                name = f"{off.get('nom', '')} {off.get('prenom', '')}".strip()
+                lower_officiels.append(name.lower() if name else "")
+
+        self.lower_officiels = lower_officiels if lower_officiels else None
 
     @staticmethod
     def from_dict(obj: Any) -> RencontresHit:
