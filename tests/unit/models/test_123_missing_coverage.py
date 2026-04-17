@@ -451,6 +451,19 @@ class TestOrganismesHit(unittest.TestCase):
         self.assertIsInstance(obj, OrganismesHit)
         self.assertEqual(obj.to_dict(), {})
 
+    def test_from_dict_malformed_dict_raises_value_error(self) -> None:
+        from ffbb_api_client_v3.models.organismes_hit import OrganismesHit
+
+        class BadObject:
+            def __str__(self) -> str:
+                raise RuntimeError("cannot convert to string")
+
+        # By passing a BadObject to a field like 'nom' which is expected to be a string,
+        # from_str will call str() on it and trigger our RuntimeError,
+        # which from_dict catches and re-raises as a ValueError.
+        with self.assertRaises(ValueError):
+            OrganismesHit.from_dict({"nom": BadObject()})
+
 
 class TestLive(unittest.TestCase):
     """Cover to_dict branches for OT scores, external_id, team_engagements."""
