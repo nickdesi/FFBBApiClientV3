@@ -90,7 +90,7 @@ class MultiSearchQuery:
 
             if len(valid_hits) < len(result.hits):
                 if result.estimated_total_hits is not None:
-                    result.estimated_total_hits -= (len(result.hits) - len(valid_hits))
+                    result.estimated_total_hits -= len(result.hits) - len(valid_hits)
 
                 result.hits = valid_hits
         return result
