@@ -72,6 +72,18 @@ class TestFFBBAPIClientV3Coverage(unittest.TestCase):
         result = client.get_poule(poule_id=789)
         self.assertEqual(result, "poule_result")
 
+    def test_get_classement_delegates(self) -> None:
+        from ffbb_api_client_v3.clients.ffbb_api_client_v3 import FFBBAPIClientV3
+
+        api_client = MagicMock()
+        api_client.get_classement.return_value = "classement_result"
+        meili_client = MagicMock()
+        client = FFBBAPIClientV3(api_client, meili_client)
+
+        result = client.get_classement(poule_id=123)
+        self.assertEqual(result, "classement_result")
+        api_client.get_classement.assert_called_once_with(123, cached_session=None)
+
 
 if __name__ == "__main__":
     unittest.main()
