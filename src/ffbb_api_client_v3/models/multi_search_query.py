@@ -83,14 +83,14 @@ class MultiSearchQuery:
 
     def filter_result(self, result: MultiSearchResult) -> MultiSearchResult:
         if self.lower_q and result.hits:
-            invalid_hits = [
-                hit for hit in result.hits if not hit.is_valid_for_query(self.lower_q)
+            # ⚡ Bolt optimization: Replace O(n²) list.remove in a loop with O(n) list comprehension for filtering hits.
+            valid_hits = [
+                hit for hit in result.hits if hit.is_valid_for_query(self.lower_q)
             ]
 
-            if invalid_hits:
+            if len(valid_hits) < len(result.hits):
                 if result.estimated_total_hits is not None:
-                    result.estimated_total_hits -= len(invalid_hits)
+                    result.estimated_total_hits -= len(result.hits) - len(valid_hits)
 
-                for hit in invalid_hits:
-                    result.hits.remove(hit)
+                result.hits = valid_hits
         return result
