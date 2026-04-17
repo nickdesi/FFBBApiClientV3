@@ -886,5 +886,39 @@ class TestEmptyToDictBranches(unittest.TestCase):
             MultiSearchResult.from_dict({"indexUid": "test"})
 
 
+class TestMultiSearchResultsExceptions(unittest.TestCase):
+    """Cover the try/except block in result_from_list."""
+
+    def test_multi_search_results_invalid_elements(self) -> None:
+        from ffbb_api_client_v3.models.multi_search_results_class import (
+            result_from_list,
+        )
+
+        data = [
+            # Missing indexUid -> KeyError
+            {"hits": []},
+            # Unsupported indexUid -> KeyError on index_uids_converters[index_uid]
+            {"indexUid": "unsupported_index", "hits": []},
+            # Valid index, valid data (should be processed successfully)
+            {
+                "indexUid": "ffbbserver_organismes",
+                "hits": [],
+                "query": "test",
+                "processingTimeMs": 2,
+                "limit": 20,
+                "offset": 0,
+                "estimatedTotalHits": 0,
+            },
+            # Valid index, invalid data -> ValueError in from_dict_func
+            {"indexUid": "ffbbserver_organismes", "hits": ["invalid_hit_element"]},
+        ]
+
+        results = result_from_list(data)
+
+        # We expect only the 3rd element to be successfully processed
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].index_uid, "ffbbserver_organismes")
+
+
 if __name__ == "__main__":
     unittest.main()
