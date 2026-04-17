@@ -146,7 +146,7 @@ class NiveauExtractor:
         # Si aucune catégorie spécifique n'est trouvée, essayer de déduire SENIOR
         if not detected_categorie:
             # Si pas de catégorie jeune détectée et que c'est une compétition, on assume SENIOR
-            if not any(re.search(r"\bU\d+\b", name_upper) for _ in [1]):
+            if not re.search(r"\bU\d+\b", name_upper):
                 detected_categorie = CategorieType.SENIOR
 
         # Déterminer la zone géographique
