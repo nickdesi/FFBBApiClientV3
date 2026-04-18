@@ -128,11 +128,17 @@ def from_datetime(obj: dict, key: str) -> datetime | None:
         return None
     if isinstance(x, str):
         try:
-            result: datetime = dateutil.parser.parse(x)
-            return result
-        except (ValueError, dateutil.parser.ParserError):
-            logger.warning("from_datetime(%r): cannot parse %r as datetime", key, x)
-            return None
+            # ⚡ Bolt optimization: datetime.fromisoformat is ~10x faster than dateutil.parser.parse
+            # We try the fast native ISO parsing first, then fallback to dateutil for complex formats
+            clean_str = x.replace("Z", "+00:00") if x.endswith("Z") else x
+            return datetime.fromisoformat(clean_str)
+        except ValueError:
+            try:
+                result: datetime = dateutil.parser.parse(x)
+                return result
+            except (ValueError, dateutil.parser.ParserError):
+                logger.warning("from_datetime(%r): cannot parse %r as datetime", key, x)
+                return None
     logger.warning(
         "from_datetime(%r): unexpected type %s (value: %.100r)",
         key,
