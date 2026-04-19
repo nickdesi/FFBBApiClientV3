@@ -59,3 +59,4 @@ http_cache.db
 .hive-mind
 uv.lock
 data/type_discovery_raw.json
+prof/
