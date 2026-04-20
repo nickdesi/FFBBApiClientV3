@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.5] - 2026-04-20
+
+### Added
+- **NEW**: SEO-optimized landing page, `sitemap.xml`, `robots.txt` and updated `og:url`
+- **NEW**: Added test coverage for `result_from_list` exceptions and `get_classement` delegation
+
+### Changed
+- **PERFORMANCE**: Pre-compile regex patterns and optimize SENIOR category deduction in `NiveauExtractor`
+- **PERFORMANCE**: Replace O(n²) list operations with O(n) comprehensions in `filter_result` (`MultiSearchQuery`)
+- **PERFORMANCE**: Optimize URL parameter encoding and datetime parsing
+- Extracted normalization logic from `RencontresHit.__post_init__`
+- Rewrote README with PAS framework and content strategy
+
+### Fixed
+- Error path in `OrganismesHit.from_dict`
+- Trailing whitespace and end-of-file formatting
+- CI action failures related to date validation
+
 ## [1.5.0] - 2026-04-04
 
 ### Added
