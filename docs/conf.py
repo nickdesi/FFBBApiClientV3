@@ -87,10 +87,10 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "FFBB API Client V3"
+project = "FFBB API Python Client V3"
 copyright = "2026, nickdesi"
-html_title = "FFBB API Client V3 — Python client for French Basketball Federation"
-html_short_title = "FFBB API Client V3"
+html_title = "FFBB API Python - Client SDK (V3) | Statistiques Basket France"
+html_short_title = "FFBB API SDK V3"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
