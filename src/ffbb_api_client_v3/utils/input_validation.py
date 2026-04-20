@@ -9,6 +9,10 @@ import re
 from typing import Any
 from urllib.parse import urlparse
 
+# Pre-compile regex patterns for performance (avoid redundant compilation in loops)
+_TOKEN_INVALID_CHARS_RE = re.compile(r'[<>"\';&]')
+_QUERY_INVALID_CHARS_RE = re.compile(r"[<>]")
+
 
 class ValidationError(ValueError):
     """Exception raised when input validation fails."""
@@ -47,7 +51,8 @@ def validate_token(token: str, field_name: str = "token") -> str:
         raise ValidationError(f"{field_name} cannot be longer than 1000 characters")
 
     # Check for potentially dangerous characters
-    if re.search(r'[<>"\';&]', token_stripped):
+    # ⚡ Bolt optimization: using pre-compiled regex avoids recompilation overhead
+    if _TOKEN_INVALID_CHARS_RE.search(token_stripped):
         raise ValidationError(f"{field_name} contains invalid characters")
 
     return token_stripped
@@ -322,7 +327,8 @@ def validate_search_query(query: str | None, field_name: str = "query") -> str |
         raise ValidationError(f"{field_name} is too long (max 200 characters)")
 
     # Check for potentially dangerous characters in search queries
-    if re.search(r"[<>]", query_stripped):
+    # ⚡ Bolt optimization: using pre-compiled regex avoids recompilation overhead
+    if _QUERY_INVALID_CHARS_RE.search(query_stripped):
         raise ValidationError(f"{field_name} contains invalid characters")
 
     return query_stripped
