@@ -26,7 +26,7 @@
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
 
-    <!-- Schema.org JSON-LD -->
+    <!-- Software Schema.org JSON-LD -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -35,8 +35,10 @@
       "applicationCategory": "DeveloperApplication",
       "developer": {
         "@type": "Person",
-        "name": "nickdesi"
+        "name": "Nicolas",
+        "url": "https://github.com/nickdesi"
       },
+      "dateModified": "2026-04-20T17:00:00+00:00",
       "description": "La refonte totale et moderne pour interagir avec les APIs de la Fédération Française de BasketBall (FFBB), incluant Pydantic, support asynchrone natif, et Serveur MCP pour l'IA.",
       "operatingSystem": "All",
       "softwareVersion": "1.5.6",
@@ -46,6 +48,36 @@
         "price": "0.00",
         "priceCurrency": "EUR"
       }
+    }
+    </script>
+
+    <!-- FAQ Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Qu'est-ce que FFBBApiClientV3 ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "C'est le SDK Python moderne, asynchrone et activement maintenu pour s'interfacer avec les API publiques de la Fédération Française de BasketBall (FFBB). La refonte totale permet de récupérer salles, calendriers, classements et statistiques avec une fiabilité totale."
+        }
+      }, {
+        "@type": "Question",
+        "name": "Est-ce que FFBBApiClientV3 supporte l'asynchrone (asyncio) ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. Absolument toutes les fonctions exposent un équivalent _async() optimisé pour asyncio et FastAPI."
+        }
+      }, {
+        "@type": "Question",
+        "name": "FFBBApiClientV3 est-il compatible avec l'IA et les Agents (MCP) ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Oui. Son architecture type-safe via Pydantic v2 a été pensée pour piloter le FFBB MCP Server officiel, exploitable par Claude, Cursor ou Copilot."
+        }
+      }]
     }
     </script>
 </head>
@@ -171,6 +203,27 @@ asyncio.run(detect_talents())</code></pre>
         </section>
 
     </main>
+
+    <section id="faq" class="container features-section" style="padding-top: 1rem;">
+        <div class="section-heading text-center">
+            <h2>Foire Aux Questions (FAQ)</h2>
+            <p>Les réponses techniques pour comprendre la révolution de cette V3.</p>
+        </div>
+        <div class="grid features-grid" style="grid-template-columns: 1fr; max-width: 800px; margin: 0 auto; gap: 1.5rem;">
+            <article class="feature-card glass-panel" style="padding: 1.5rem; text-align: left;">
+                <h3 style="margin-bottom: 0.5rem; font-size: 1.2rem;">Qu'est-ce que FFBBApiClientV3 ?</h3>
+                <p style="opacity: 0.8; font-size: 0.95rem;">C'est le SDK Python moderne, asynchrone et activement maintenu pour s'interfacer avec les API publiques de la FFBB. Il remplace de A à Z l'ancienne V2 devenue obsolète.</p>
+            </article>
+            <article class="feature-card glass-panel" style="padding: 1.5rem; text-align: left;">
+                <h3 style="margin-bottom: 0.5rem; font-size: 1.2rem;">Est-ce que le client supporte l'asynchrone (asyncio) ?</h3>
+                <p style="opacity: 0.8; font-size: 0.95rem;">Oui. Absolument toutes les fonctions synchrones exposent un équivalent asynchrone <code>_async()</code>, idéal pour FastAPI et haut débit.</p>
+            </article>
+            <article class="feature-card glass-panel" style="padding: 1.5rem; text-align: left;">
+                <h3 style="margin-bottom: 0.5rem; font-size: 1.2rem;">Est-il compatible avec l'IA et les Agents (MCP) ?</h3>
+                <p style="opacity: 0.8; font-size: 0.95rem;">Oui, c'est sa force majeure. Son architecture strict via Pydantic v2 a été créée sur mesure pour propulser le Serveur MCP officiel pour Claude, Copilot et Cursor.</p>
+            </article>
+        </div>
+    </section>
 
     <footer class="footer">
         <div class="container text-center">
