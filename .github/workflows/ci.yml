@@ -80,8 +80,6 @@ jobs:
         run: >-
           pipx run --python '${{ steps.setup-python.outputs.python-path }}'
           tox --installpkg '${{ needs.prepare.outputs.wheel-distribution }}'
-      - name: Generate coverage report
-        run: pipx run coverage lcov -o coverage.lcov
       - name: Upload partial coverage report
         uses: coverallsapp/github-action@v2
         with:
