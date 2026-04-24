@@ -452,10 +452,7 @@ class FFBBAPIClientV3:
                         for hit in res.hits
                         if (comp := hit.competition_id)
                         and (cat := comp.categorie)
-                        and (
-                            cat.code == categorie
-                            or cat.libelle == categorie
-                        )
+                        and (cat.code == categorie or cat.libelle == categorie)
                     ]
                     res.hits = filtered_hits
                     res.estimated_total_hits = len(filtered_hits)
@@ -490,10 +487,7 @@ class FFBBAPIClientV3:
                         for hit in res.hits
                         if (comp := hit.competition_id)
                         and (cat := comp.categorie)
-                        and (
-                            cat.code == categorie
-                            or cat.libelle == categorie
-                        )
+                        and (cat.code == categorie or cat.libelle == categorie)
                     ]
                     res.hits = filtered_hits
                     res.estimated_total_hits = len(filtered_hits)
