@@ -825,9 +825,7 @@ class FFBBAPIClientV3:
         results = await self.meilisearch_ffbb_client.recursive_smart_multi_search_async(
             queries
         )
-        return (
-            cast(list[SallesMultiSearchResult], results.results) if results else None
-        )
+        return cast(list[SallesMultiSearchResult], results.results) if results else None
 
     # -------------------------------------------------------------------------
     # Meilisearch — terrains
