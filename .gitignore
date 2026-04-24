@@ -60,3 +60,4 @@ http_cache.db
 uv.lock
 data/type_discovery_raw.json
 prof/
+.agent/
