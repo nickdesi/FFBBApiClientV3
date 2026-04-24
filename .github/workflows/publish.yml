@@ -70,3 +70,17 @@ jobs:
         with:
           files: dist/*
           generate_release_notes: true
+
+  notify-mcp-server:
+    name: Notify FFBB-MCP-Server
+    needs: publish-pypi
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Dispatch bump event to FFBB-MCP-Server
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.MCP_SERVER_PAT }}
+          repository: nickdesi/FFBB-MCP-Server
+          event-type: ffbb-client-released
+          client-payload: '{"version": "${{ github.ref_name }}"}'
