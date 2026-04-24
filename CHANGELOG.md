@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-04-24
+
+### Added
+- **NEW**: `get_configuration()` / `get_configuration_async()` exposed in `FFBBAPIClientV3` wrapper
+- **NEW**: `list_competitions()` / `list_competitions_async()` exposed in `FFBBAPIClientV3` wrapper
+- **NEW**: `search_multiple_competitions_async()` exposed in `FFBBAPIClientV3` wrapper
+- **NEW**: `search_multiple_organismes_async()` exposed in `FFBBAPIClientV3` wrapper
+- **NEW**: `search_multiple_pratiques_async()` exposed in `FFBBAPIClientV3` wrapper
+- **NEW**: `search_multiple_salles_async()` exposed in `FFBBAPIClientV3` wrapper
+- **NEW**: `search_multiple_terrains_async()` exposed in `FFBBAPIClientV3` wrapper
+- **NEW**: `search_multiple_tournois_async()` exposed in `FFBBAPIClientV3` wrapper
+- **NEW**: `search_multiple_engagements_async()` exposed in `FFBBAPIClientV3` wrapper
+- **NEW**: `search_multiple_formations_async()` exposed in `FFBBAPIClientV3` wrapper
+- **NEW**: GitHub Actions workflow `check_wrapper_parity.yml` — automated weekly CI check (every Monday 06:00 UTC) that fails if any public method from inner clients is missing from the wrapper
+- **NEW**: `.github/scripts/check_wrapper_parity.py` — AST-based parity script with `@property` exclusion and GitHub Step Summary output
+
+### Fixed
+- Wrapper `FFBBAPIClientV3` was silently missing 10 methods previously only accessible via inner clients directly
+
 ## [1.5.5] - 2026-04-20
 
 ### Added
@@ -127,17 +146,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Cache files and temporary directories (`http_cache/`, `http_cache.db`, etc.)
 - Redundant documentation files (Pelissanne analysis docs, duplicate parameters files)
 - Duplicate CHANGELOG.rst file in favor of unified CHANGELOG.md
-- Field parameter handling in API method calls
-- Pre-commit hook configuration issues
-- Import statements and module organization
-- Test reliability and deterministic behavior
-
-### Improved
-- Code quality with strict Python standards adherence
-- Type hints throughout the codebase
-- Performance with smart field selection
-- Request caching for better performance
-- Documentation with real-world usage scenarios
 
 ## [1.0.1] - 2025-08-12
 
