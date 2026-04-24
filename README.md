@@ -7,6 +7,7 @@
 [![PyPI](https://img.shields.io/pypi/v/ffbb_api_client_v3?color=blue&label=PyPI&logo=python)](https://pypi.org/project/ffbb_api_client_v3/)
 [![Python](https://img.shields.io/pypi/pyversions/ffbb_api_client_v3?logo=python)](https://pypi.org/project/ffbb_api_client_v3/)
 [![CI](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/ci.yml/badge.svg)](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/ci.yml)
+[![Publish](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/publish.yml/badge.svg)](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/publish.yml)
 [![Downloads](https://img.shields.io/pypi/dm/ffbb_api_client_v3?label=downloads%2Fmonth&color=orange)](https://pypi.org/project/ffbb_api_client_v3/)
 [![License](https://img.shields.io/pypi/l/ffbb_api_client_v3?color=green)](LICENSE.txt)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.rst)
@@ -15,6 +16,7 @@
 [🚀 Quick Start](#-démarrage-en-30-secondes) •
 [🔍 9 Index Meilisearch](#-les-9-index-meilisearch) •
 [🤖 MCP / IA](#-intégration-ia--mcp-server) •
+[🚢 Releases](#-pipeline-de-release) •
 [🤝 Contribuer](#-contribuer) •
 [📋 Changelog](CHANGELOG.md)
 
@@ -148,6 +150,34 @@ pip install ffbb-mcp-server
 
 ---
 
+## 🚢 Pipeline de Release
+
+Chaque release est entièrement automatisée via GitHub Actions.
+
+```
+git tag v1.x.x && git push origin v1.x.x
+        │
+        ▼
+  publish.yml (55s)
+  ├── Build wheel + sdist
+  ├── Publish → PyPI (OIDC Trusted Publisher)
+  ├── Create GitHub Release (assets attachés)
+  └── Notify → FFBB-MCP-Server
+              └── PR auto bump uv.lock
+```
+
+### Créer une release
+
+```bash
+git tag v1.x.x
+git push origin v1.x.x
+# → PyPI + GitHub Release + MCP Server bump en ~55s
+```
+
+> Le MCP Server se synchronise automatiquement via `repository_dispatch` dès que la publication PyPI est confirmée. Un fallback quotidien (07:00 UTC) assure la cohérence si la notification échoue.
+
+---
+
 ## 🏗 Architecture
 
 ```text
@@ -195,7 +225,7 @@ async def clubs(ville: str, request: Request):
 ```dockerfile
 FROM python:3.12-slim
 WORKDIR /app
-RUN pip install "ffbb_api_client_v3>=1.5.4"
+RUN pip install "ffbb_api_client_v3>=1.6.0"
 COPY . .
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
 ```
@@ -304,6 +334,8 @@ Tout PR avec tests est accepté en revue dans les 48h.
 ## 📋 Changelog
 
 Voir [CHANGELOG.md](CHANGELOG.md) pour l'historique complet.
+
+**v1.6.0 —** Pipeline de release automatisé (PyPI Trusted Publisher OIDC, GitHub Release, synchronisation automatique avec FFBB-MCP-Server via `repository_dispatch`).
 
 **v1.5.x —** `search_engagements()` + `search_formations()`, filtrage `filter/sort/limit` natif, logging sécurisé, +150 tests.
 
