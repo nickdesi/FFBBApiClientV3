@@ -290,8 +290,8 @@ CacheManager().clear()
 
 ## 🤝 Contribuer
 
-**Signaler un bug** → [ouvrir une issue](https://github.com/nickdesi/FFBBApiClientV3/issues)  
-**Proposer une feature** → [discussions](https://github.com/nickdesi/FFBBApiClientV3/discussions)  
+**Signaler un bug** → [ouvrir une issue](https://github.com/nickdesi/FFBBApiClientV3/issues)
+**Proposer une feature** → [discussions](https://github.com/nickdesi/FFBBApiClientV3/discussions)
 **Soumettre un PR** → [guide de contribution](CONTRIBUTING.rst)
 
 ```bash
