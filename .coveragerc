@@ -7,8 +7,8 @@ parallel = True
 
 [paths]
 source =
-    src/
-    */site-packages/
+    src/ffbb_api_client_v3
+    */ffbb_api_client_v3
 
 [report]
 # Regexes for lines to exclude from consideration

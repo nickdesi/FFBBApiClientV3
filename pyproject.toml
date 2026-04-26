@@ -44,7 +44,3 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "-v --tb=short"
 
-[tool.coverage.run]
-source = ["ffbb_api_client_v3"]
-branch = true
-parallel = true
