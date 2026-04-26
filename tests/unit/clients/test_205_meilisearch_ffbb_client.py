@@ -142,13 +142,17 @@ class Test040MeilisearchFfbbClient(unittest.TestCase):
         self.assertIsInstance(mock_rms.call_args[0][0][0], TerrainsMultiSearchQuery)
 
     @patch.object(MeilisearchFFBBClient, "recursive_multi_search")
-    def test_011_search_multiple_competitions_results(self, mock_rms: MagicMock) -> None:
+    def test_011_search_multiple_competitions_results(
+        self, mock_rms: MagicMock
+    ) -> None:
         mock_result = MagicMock(spec=CompetitionsMultiSearchResult)
         mock_rms.return_value = self._make_mock_results(mock_result)
         result = self.client.search_multiple_competitions(["Paris"])
         self.assertIsNotNone(result)
         self.assertEqual(len(result), 1)  # type: ignore[arg-type]
-        self.assertIsInstance(mock_rms.call_args[0][0][0], CompetitionsMultiSearchQuery)
+        self.assertIsInstance(
+            mock_rms.call_args[0][0][0], CompetitionsMultiSearchQuery
+        )
 
     @patch.object(MeilisearchFFBBClient, "recursive_multi_search")
     def test_012_search_multiple_salles_results(self, mock_rms: MagicMock) -> None:
@@ -178,22 +182,30 @@ class Test040MeilisearchFfbbClient(unittest.TestCase):
         self.assertIsInstance(mock_rms.call_args[0][0][0], PratiquesMultiSearchQuery)
 
     @patch.object(MeilisearchFFBBClient, "recursive_multi_search")
-    def test_014a_search_multiple_engagements_results(self, mock_rms: MagicMock) -> None:
+    def test_014a_search_multiple_engagements_results(
+        self, mock_rms: MagicMock
+    ) -> None:
         mock_result = MagicMock(spec=EngagementsMultiSearchResult)
         mock_rms.return_value = self._make_mock_results(mock_result)
         result = self.client.search_multiple_engagements(["Paris"])
         self.assertIsNotNone(result)
         self.assertEqual(len(result), 1)  # type: ignore[arg-type]
-        self.assertIsInstance(mock_rms.call_args[0][0][0], EngagementsMultiSearchQuery)
+        self.assertIsInstance(
+            mock_rms.call_args[0][0][0], EngagementsMultiSearchQuery
+        )
 
     @patch.object(MeilisearchFFBBClient, "recursive_multi_search")
-    def test_014b_search_multiple_formations_results(self, mock_rms: MagicMock) -> None:
+    def test_014b_search_multiple_formations_results(
+        self, mock_rms: MagicMock
+    ) -> None:
         mock_result = MagicMock(spec=FormationsMultiSearchResult)
         mock_rms.return_value = self._make_mock_results(mock_result)
         result = self.client.search_multiple_formations(["Paris"])
         self.assertIsNotNone(result)
         self.assertEqual(len(result), 1)  # type: ignore[arg-type]
-        self.assertIsInstance(mock_rms.call_args[0][0][0], FormationsMultiSearchQuery)
+        self.assertIsInstance(
+            mock_rms.call_args[0][0][0], FormationsMultiSearchQuery
+        )
 
     # -- Singular delegate tests -----------------------------------------
 
