@@ -6,9 +6,15 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from ffbb_api_client_v3.clients.meilisearch_ffbb_client import MeilisearchFFBBClient
-from ffbb_api_client_v3.models.competitions_multi_search_query import CompetitionsMultiSearchQuery
-from ffbb_api_client_v3.models.engagements_multi_search_query import EngagementsMultiSearchQuery
-from ffbb_api_client_v3.models.formations_multi_search_query import FormationsMultiSearchQuery
+from ffbb_api_client_v3.models.competitions_multi_search_query import (
+    CompetitionsMultiSearchQuery,
+)
+from ffbb_api_client_v3.models.engagements_multi_search_query import (
+    EngagementsMultiSearchQuery,
+)
+from ffbb_api_client_v3.models.formations_multi_search_query import (
+    FormationsMultiSearchQuery,
+)
 from ffbb_api_client_v3.models.multi_search_result_competitions import (
     CompetitionsMultiSearchResult,
 )
@@ -37,12 +43,22 @@ from ffbb_api_client_v3.models.multi_search_result_tournois import (
     TournoisMultiSearchResult,
 )
 from ffbb_api_client_v3.models.multi_search_results_class import MultiSearchResults
-from ffbb_api_client_v3.models.organismes_multi_search_query import OrganismesMultiSearchQuery
-from ffbb_api_client_v3.models.pratiques_multi_search_query import PratiquesMultiSearchQuery
-from ffbb_api_client_v3.models.rencontres_multi_search_query import RencontresMultiSearchQuery
+from ffbb_api_client_v3.models.organismes_multi_search_query import (
+    OrganismesMultiSearchQuery,
+)
+from ffbb_api_client_v3.models.pratiques_multi_search_query import (
+    PratiquesMultiSearchQuery,
+)
+from ffbb_api_client_v3.models.rencontres_multi_search_query import (
+    RencontresMultiSearchQuery,
+)
 from ffbb_api_client_v3.models.salles_multi_search_query import SallesMultiSearchQuery
-from ffbb_api_client_v3.models.terrains_multi_search_query import TerrainsMultiSearchQuery
-from ffbb_api_client_v3.models.tournois_multi_search_query import TournoisMultiSearchQuery
+from ffbb_api_client_v3.models.terrains_multi_search_query import (
+    TerrainsMultiSearchQuery,
+)
+from ffbb_api_client_v3.models.tournois_multi_search_query import (
+    TournoisMultiSearchQuery,
+)
 
 
 class Test040MeilisearchFfbbClient(unittest.TestCase):
@@ -164,7 +180,9 @@ class Test040MeilisearchFfbbClient(unittest.TestCase):
         self.assertIsInstance(mock_rms.call_args[0][0][0], PratiquesMultiSearchQuery)
 
     @patch.object(MeilisearchFFBBClient, "recursive_multi_search")
-    def test_014a_search_multiple_engagements_results(self, mock_rms: MagicMock) -> None:
+    def test_014a_search_multiple_engagements_results(
+        self, mock_rms: MagicMock
+    ) -> None:
         mock_result = MagicMock(spec=EngagementsMultiSearchResult)
         mock_rms.return_value = self._make_mock_results(mock_result)
         result = self.client.search_multiple_engagements(["Paris"])
@@ -173,7 +191,9 @@ class Test040MeilisearchFfbbClient(unittest.TestCase):
         self.assertIsInstance(mock_rms.call_args[0][0][0], EngagementsMultiSearchQuery)
 
     @patch.object(MeilisearchFFBBClient, "recursive_multi_search")
-    def test_014b_search_multiple_formations_results(self, mock_rms: MagicMock) -> None:
+    def test_014b_search_multiple_formations_results(
+        self, mock_rms: MagicMock
+    ) -> None:
         mock_result = MagicMock(spec=FormationsMultiSearchResult)
         mock_rms.return_value = self._make_mock_results(mock_result)
         result = self.client.search_multiple_formations(["Paris"])
