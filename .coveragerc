@@ -2,6 +2,7 @@
 [run]
 branch = True
 source = ffbb_api_client_v3
+parallel = True
 # omit = bad_file.py
 
 [paths]
