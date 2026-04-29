@@ -12,7 +12,7 @@ import time
 import unittest
 from typing import Any
 
-import requests
+import httpx
 
 from ffbb_api_client_v3.config import (
     API_FFBB_BASE_URL,
@@ -139,7 +139,7 @@ class Test021RawApiRestConversion(unittest.TestCase):
         }
 
         try:
-            resp = requests.post(url, headers=cls.mls_headers, json=payload, timeout=15)
+            resp = httpx.post(url, headers=cls.mls_headers, json=payload, timeout=15)
             resp.raise_for_status()
             data = resp.json()
 
@@ -170,8 +170,8 @@ class Test021RawApiRestConversion(unittest.TestCase):
                     "?fields[]=id&fields[]=phases.poules.id"
                     "&deep[phases][poules][rencontres][_limit]=1"
                 )
-                resp = requests.get(comp_url, headers=cls.api_headers, timeout=15)
-                if resp.ok:
+                resp = httpx.get(comp_url, headers=cls.api_headers, timeout=15)
+                if resp.is_success:
                     comp_data = resp.json().get("data", {})
                     phases = comp_data.get("phases", [])
                     for phase in phases:
@@ -191,7 +191,7 @@ class Test021RawApiRestConversion(unittest.TestCase):
     def test_001_raw_saisons_conversion(self) -> None:
         """GET /items/ffbbserver_saisons -> GetSaisonsResponse.from_list."""
         url = f"{API_FFBB_BASE_URL}{ENDPOINT_SAISONS}"
-        resp = requests.get(url, headers=self.api_headers, timeout=15)
+        resp = httpx.get(url, headers=self.api_headers, timeout=15)
         resp.raise_for_status()
         raw = resp.json()
 
@@ -236,7 +236,7 @@ class Test021RawApiRestConversion(unittest.TestCase):
             "&fields[]=phases.poules.nom"
             "&deep[phases][poules][rencontres][_limit]=5"
         )
-        resp = requests.get(url, headers=self.api_headers, timeout=20)
+        resp = httpx.get(url, headers=self.api_headers, timeout=20)
         resp.raise_for_status()
         raw = resp.json()
 
@@ -275,7 +275,7 @@ class Test021RawApiRestConversion(unittest.TestCase):
             "&fields[]=logo.id&fields[]=logo.gradient_color"
             "&fields[]=salle.libelle&fields[]=salle.adresse"
         )
-        resp = requests.get(url, headers=self.api_headers, timeout=15)
+        resp = httpx.get(url, headers=self.api_headers, timeout=15)
         resp.raise_for_status()
         raw = resp.json()
 
@@ -317,7 +317,7 @@ class Test021RawApiRestConversion(unittest.TestCase):
             "&deep[rencontres][_limit]=10"
             "&deep[classements][_limit]=100"
         )
-        resp = requests.get(url, headers=self.api_headers, timeout=15)
+        resp = httpx.get(url, headers=self.api_headers, timeout=15)
         resp.raise_for_status()
         raw = resp.json()
 
@@ -351,7 +351,7 @@ class Test021RawApiRestConversion(unittest.TestCase):
     def test_005_raw_lives_conversion(self) -> None:
         """GET /json/lives.json -> lives_from_dict conversion."""
         url = f"{API_FFBB_BASE_URL}{ENDPOINT_LIVES}"
-        resp = requests.get(url, headers=self.api_headers, timeout=15)
+        resp = httpx.get(url, headers=self.api_headers, timeout=15)
         resp.raise_for_status()
         raw = resp.json()
 
@@ -380,7 +380,7 @@ class Test021RawApiRestConversion(unittest.TestCase):
     def test_006_raw_configuration_conversion(self) -> None:
         """GET /items/configuration -> GetConfigurationResponse.from_dict."""
         url = f"{API_FFBB_BASE_URL}{ENDPOINT_CONFIGURATION}"
-        resp = requests.get(url, headers=self.api_headers, timeout=15)
+        resp = httpx.get(url, headers=self.api_headers, timeout=15)
         resp.raise_for_status()
         raw = resp.json()
 
@@ -477,7 +477,7 @@ class Test021RawMeilisearchConversion(unittest.TestCase):
         if facets:
             q["facets"] = facets
         payload = {"queries": [q]}
-        resp = requests.post(self.url, headers=self.headers, json=payload, timeout=15)
+        resp = httpx.post(self.url, headers=self.headers, json=payload, timeout=15)
         resp.raise_for_status()
         data = resp.json()
         results = data.get("results", [])
@@ -632,7 +632,7 @@ class Test021RawMeilisearchConversion(unittest.TestCase):
                 {"indexUid": "ffbbnational_pratiques", "q": "basket", "limit": 1},
             ]
         }
-        resp = requests.post(self.url, headers=self.headers, json=payload, timeout=20)
+        resp = httpx.post(self.url, headers=self.headers, json=payload, timeout=20)
         resp.raise_for_status()
         raw = resp.json()
 

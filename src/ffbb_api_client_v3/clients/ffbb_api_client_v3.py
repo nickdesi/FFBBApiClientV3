@@ -404,7 +404,7 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> CompetitionsMultiSearchResult | None:
         results = self.search_multiple_competitions(
-            [name],
+            [name] if name is not None else None,
             filter=filter,
             sort=sort,
             limit=limit,
@@ -489,7 +489,7 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> OrganismesMultiSearchResult | None:
         results = self.search_multiple_organismes(
-            [name],
+            [name] if name is not None else None,
             filter=filter,
             sort=sort,
             limit=limit,
@@ -574,7 +574,7 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> PratiquesMultiSearchResult | None:
         results = self.search_multiple_pratiques(
-            [name],
+            [name] if name is not None else None,
             filter=filter,
             sort=sort,
             limit=limit,
@@ -656,7 +656,7 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> RencontresMultiSearchResult | None:
         results = self.search_multiple_rencontres(
-            [name],
+            [name] if name is not None else None,
             categorie,
             filter=filter,
             sort=sort,
@@ -763,7 +763,7 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> SallesMultiSearchResult | None:
         results = self.search_multiple_salles(
-            [name],
+            [name] if name is not None else None,
             filter=filter,
             sort=sort,
             limit=limit,
@@ -840,7 +840,7 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> TerrainsMultiSearchResult | None:
         results = self.search_multiple_terrains(
-            [name],
+            [name] if name is not None else None,
             filter=filter,
             sort=sort,
             limit=limit,
@@ -921,7 +921,7 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> TournoisMultiSearchResult | None:
         results = self.search_multiple_tournois(
-            [name],
+            [name] if name is not None else None,
             filter=filter,
             sort=sort,
             limit=limit,
@@ -1002,7 +1002,7 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> EngagementsMultiSearchResult | None:
         results = self.search_multiple_engagements(
-            [name],
+            [name] if name is not None else None,
             filter=filter,
             sort=sort,
             limit=limit,
@@ -1087,7 +1087,7 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> FormationsMultiSearchResult | None:
         results = self.search_multiple_formations(
-            [name],
+            [name] if name is not None else None,
             filter=filter,
             sort=sort,
             limit=limit,
