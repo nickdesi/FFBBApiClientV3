@@ -1,20 +1,18 @@
-# GitHub Actions configuration **EXAMPLE**,
-# MODIFY IT ACCORDING TO YOUR NEEDS!
+# GitHub Actions — CI Pipeline
+# Tests + Coverage → Coveralls (parallel mode, LCOV + XML)
 # Reference: https://docs.github.com/en/actions
+#            https://github.com/coverallsapp/github-action
 
 name: tests
 
 on:
   push:
-    # Avoid using all the resources/limits available by checking only
-    # relevant branches and tags. Other branches can be checked via PRs.
     branches: [master]
-    tags: ['v[0-9]*', '[0-9]+.[0-9]+*']  # Match tags that resemble a version
-  pull_request:  # Run in every PR
-  workflow_dispatch:  # Allow manually triggering the workflow
+    tags: ['v[0-9]*', '[0-9]+.[0-9]+*']
+  pull_request:
+  workflow_dispatch:
   schedule:
     # Run roughly every 15 days at 00:00 UTC
-    # (useful to check if updates on dependencies break the package)
     - cron: '0 0 1,16 * *'
 
 permissions:
@@ -32,9 +30,9 @@ jobs:
     outputs:
       wheel-distribution: ${{ steps.wheel-distribution.outputs.path }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
         with: {fetch-depth: 0}  # deep clone for setuptools-scm
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         id: setup-python
         with: {python-version: "3.10"}
       - name: Run static analysis and format checkers
@@ -47,9 +45,7 @@ jobs:
         id: wheel-distribution
         run: echo "path=$(ls dist/*.whl)" >> $GITHUB_OUTPUT
       - name: Store the distribution files for use in other stages
-        # `tests` and `publish` will use the same pre-built distributions,
-        # so we make sure to release the exact same package that was tested
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
         with:
           name: python-distribution-files
           path: dist/
@@ -65,13 +61,13 @@ jobs:
         - ubuntu-latest
     runs-on: ${{ matrix.platform }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         id: setup-python
         with:
           python-version: ${{ matrix.python }}
       - name: Retrieve pre-built distribution files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
         with: {name: python-distribution-files, path: dist/}
       - name: Run tests
         env:
@@ -80,23 +76,42 @@ jobs:
         run: >-
           pipx run --python '${{ steps.setup-python.outputs.python-path }}'
           tox --installpkg '${{ needs.prepare.outputs.wheel-distribution }}'
-      - name: Upload partial coverage report
-        uses: coverallsapp/github-action@v2
-        with:
-          path-to-lcov: coverage.lcov
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          flag-name: ${{ matrix.platform }} - py${{ matrix.python }}
-          parallel: true
 
+      # ── Coveralls: upload partial report (parallel mode) ─────────────────
+      # coverallsapp/github-action@v2 uses the Universal Coverage Reporter
+      # which auto-detects LCOV (preferred) or XML if lcov is absent.
+      # `parallel: true` signals that more reports are coming from other jobs.
+      # `flag-name` labels this specific combination for per-flag drill-down on Coveralls.
+      - name: Upload coverage to Coveralls (parallel)
+        uses: coverallsapp/github-action@648a8eb78e6d50909eff900e4ec85cab4524a45c  # v2.3.6
+        with:
+          file: coverage.lcov
+          format: lcov
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: ${{ matrix.platform }}-py${{ matrix.python }}
+          parallel: true
+          # Carry forward flags from previous builds that may not have re-run
+          # (useful when adding matrix dimensions incrementally)
+          carryforward: ""
+
+  # ── Coveralls: finalize parallel build ─────────────────────────────────────
+  # Must run after ALL test jobs complete, even if some are skipped/cancelled.
+  # Sends the "done" signal so Coveralls calculates the merged coverage %.
   finalize:
     needs: test
     runs-on: ubuntu-latest
+    # Always finalize, even if some test matrix cells failed
+    if: ${{ always() }}
     steps:
-      - name: Finalize coverage report
-        uses: coverallsapp/github-action@v2
+      - name: Finalize coverage report on Coveralls
+        uses: coverallsapp/github-action@648a8eb78e6d50909eff900e4ec85cab4524a45c  # v2.3.6
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
+          # Minimum coverage gate — Coveralls will mark the PR check as failed
+          # if merged coverage drops below this threshold.
+          # Uncomment once baseline is stabilised:
+          # carryforward-minimum-coverage: 85
 
   publish:
     needs: finalize
@@ -105,17 +120,14 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683  # v4.2.2
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065  # v5.6.0
         with: {python-version: "3.10"}
       - name: Retrieve pre-built distribution files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093  # v4.3.0
         with: {name: python-distribution-files, path: dist/}
       - name: Publish Package
         env:
-          # TODO: Set your PYPI_TOKEN as a secret using GitHub UI
-          # - https://pypi.org/help/#apitoken
-          # - https://docs.github.com/en/actions/security-guides/encrypted-secrets
           TWINE_REPOSITORY: pypi
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}

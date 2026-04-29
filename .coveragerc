@@ -1,29 +1,71 @@
-# .coveragerc to control coverage.py
+# .coveragerc — coverage.py configuration
+# https://coverage.readthedocs.io/en/latest/config.html
+
 [run]
 branch = True
 source = ffbb_api_client_v3
 parallel = True
-# omit = bad_file.py
+# CRITICAL for Coveralls: ensures paths are relative to the git root
+# Without this, Coveralls reports 0% or fails to map files
+relative_files = True
+omit =
+    # Test files don't need to appear in coverage reports
+    tests/*
+    tests/**/*
+    # Build artifacts
+    */site-packages/*
+    setup.py
+    # Type stubs
+    *.pyi
 
 [paths]
+# Maps coverage paths from different environments (tox, Docker, etc.)
+# to the canonical source root. Order matters: first match wins.
 source =
     src/ffbb_api_client_v3
     */ffbb_api_client_v3
+    */src/ffbb_api_client_v3
 
 [report]
-# Regexes for lines to exclude from consideration
+# Minimum coverage threshold — CI will fail below this
+# Uncomment and adjust once coverage stabilizes above 90%
+# fail_under = 90
+
+show_missing = True
+skip_covered = False
+skip_empty = True
+precision = 2
+
+# Lines to exclude from coverage measurement
 exclude_lines =
-    # Have to re-enable the standard pragma
+    # Standard pragma
     pragma: no cover
 
-    # Don't complain about missing debug-only code:
+    # Debug-only code
     def __repr__
     if self\.debug
+    if settings\.DEBUG
 
-    # Don't complain if tests don't hit defensive assertion code:
+    # Defensive assertions — tested via other means
     raise AssertionError
     raise NotImplementedError
 
-    # Don't complain if non-runnable code isn't run:
+    # Non-runnable code paths
     if 0:
     if __name__ == .__main__.:
+
+    # Type-checking imports (not executed at runtime)
+    if TYPE_CHECKING:
+    @(abc\.)?abstractmethod
+
+    # Protocol / overload stubs
+    \.\.\.
+
+[html]
+directory = htmlcov
+title = FFBBApiClientV3 Coverage
+
+[xml]
+# Required by coverallsapp/github-action@v2 Universal Coverage Reporter
+# when not using lcov format
+output = coverage.xml
