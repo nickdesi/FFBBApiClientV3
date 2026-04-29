@@ -4,6 +4,10 @@
 API_FFBB_BASE_URL = "https://api.ffbb.app/"
 MEILISEARCH_BASE_URL = "https://meilisearch-prod.ffbb.app/"
 
+# Alternate base URL (to be investigated — may be a migration target)
+# See: https://libraries.io/npm/ffbb-api-client
+API_FFBB_COM_BASE_URL = "https://api.ffbb.com/"
+
 # HTTP Headers
 DEFAULT_USER_AGENT = "okhttp/4.12.0"
 
@@ -18,6 +22,16 @@ ENDPOINT_COMPETITIONS = "items/ffbbserver_competitions"
 ENDPOINT_POULES = "items/ffbbserver_poules"
 ENDPOINT_SAISONS = "items/ffbbserver_saisons"
 ENDPOINT_ORGANISMES = "items/ffbbserver_organismes"
+
+# New REST endpoints (Directus collections not yet implemented in the client)
+ENDPOINT_RENCONTRES = "items/ffbbserver_rencontres"
+ENDPOINT_OFFICIELS = "items/ffbbserver_officiels"
+ENDPOINT_ENTRAINEURS = "items/ffbbserver_entraineurs"
+ENDPOINT_COMMUNES = "items/ffbbserver_communes"
+
+# Directus Assets endpoint — serves logos, images, documents
+# Usage: GET {base_url}assets/{uuid}?width=200&height=200&format=webp&quality=80
+ENDPOINT_ASSETS = "assets"
 
 # Meilisearch Endpoint Paths
 MEILISEARCH_ENDPOINT_MULTI_SEARCH = "multi-search"
