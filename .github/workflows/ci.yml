@@ -93,7 +93,7 @@ jobs:
           # Carry forward flags from previous builds that may not have re-run
           # (useful when adding matrix dimensions incrementally)
           carryforward: ""
-          coverage-reporter-version: "v0.7.2"
+          coverage-reporter-version: "v0.8.0"  # bumped from v0.7.2
 
   # ── Coveralls: finalize parallel build ─────────────────────────────────────
   # Must run after ALL test jobs complete, even if some are skipped/cancelled.
@@ -109,7 +109,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
-          coverage-reporter-version: "v0.7.2"
+          coverage-reporter-version: "v0.8.0"  # bumped from v0.7.2
           # Minimum coverage gate — Coveralls will mark the PR check as failed
           # if merged coverage drops below this threshold.
           # Uncomment once baseline is stabilised:
