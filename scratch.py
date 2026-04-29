@@ -1,4 +1,5 @@
 import httpx
+
 headers = {"user-agent": "okhttp/4.12.0"}
 r = httpx.get("https://api.ffbb.app/items/configuration", headers=headers)
 data = r.json().get("data", {})
@@ -9,7 +10,7 @@ collections = [
     "ffbbserver_organismes",
     "ffbbserver_competitions",
     "ffbbserver_poules",
-    "ffbbserver_saisons"
+    "ffbbserver_saisons",
 ]
 
 results = {}
