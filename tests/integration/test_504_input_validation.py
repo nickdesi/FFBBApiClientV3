@@ -29,11 +29,16 @@ class Test015InputValidationIntegration(unittest.TestCase):
             )
             self.assertIsInstance(client, FFBBAPIClientV3)
 
-    def test_create_client_invalid_tokens(self):
-        """Test creating client with invalid tokens."""
+    def test_create_client_invalid_tokens(self) -> None:
+        """Ensure FFBBAPIClientV3.create rejects structurally invalid tokens.
+
+        Note:
+            Cases where one of the tokens is None are no longer considered
+            invalid here: None means "let TokenManager resolve it" and are
+            covered by dedicated automatic token resolution tests.
+        """
         invalid_token_cases = [
-            (None, self.valid_token, "meilisearch_bearer_token cannot be None"),
-            (self.valid_meilisearch_token, None, "api_bearer_token cannot be None"),
+            # None cases are handled by TokenManager and tested elsewhere
             ("", self.valid_token, "meilisearch_bearer_token cannot be empty"),
             (self.valid_meilisearch_token, "", "api_bearer_token cannot be empty"),
             ("   ", self.valid_token, "meilisearch_bearer_token cannot be empty"),
