@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1] - 2026-04-29
+
+### Changed
+- Migrated test suite from `requests` to `httpx` to align with the core project dependencies.
+
+### Fixed
+- Fixed bug in `FFBBAPIClientV3.multi_search` that could improperly mutate optional arguments when initialized as `None`.
+- Fixed CI formatting errors and resolved Coveralls code coverage report upload issues by correcting `.coveragerc` path omission rules.
+
 ## [1.6.0] - 2026-04-24
 
 ### Added
