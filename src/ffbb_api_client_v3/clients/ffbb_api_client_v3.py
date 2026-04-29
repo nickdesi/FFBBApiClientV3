@@ -11,18 +11,18 @@ from ..models.competitions_multi_search_query import CompetitionsMultiSearchQuer
 from ..models.configuration_models import GetConfigurationResponse
 from ..models.engagements_multi_search_query import EngagementsMultiSearchQuery
 from ..models.formations_multi_search_query import FormationsMultiSearchQuery
-from ..models.get_competition_response import GetCompetitionResponse
-from ..models.get_organisme_response import GetOrganismeResponse
-from ..models.get_rencontre_response import GetRencontreResponse
-from ..models.get_engagement_response import GetEngagementResponse
-from ..models.get_formation_response import GetFormationResponse
-from ..models.get_entraineur_response import GetEntraineurResponse
 from ..models.get_commune_response import GetCommuneResponse
+from ..models.get_competition_response import GetCompetitionResponse
+from ..models.get_engagement_response import GetEngagementResponse
+from ..models.get_entraineur_response import GetEntraineurResponse
+from ..models.get_formation_response import GetFormationResponse
 from ..models.get_officiel_response import GetOfficielResponse
+from ..models.get_organisme_response import GetOrganismeResponse
+from ..models.get_pratique_response import GetPratiqueResponse
+from ..models.get_rencontre_response import GetRencontreResponse
 from ..models.get_salle_response import GetSalleResponse
 from ..models.get_terrain_response import GetTerrainResponse
 from ..models.get_tournoi_response import GetTournoiResponse
-from ..models.get_pratique_response import GetPratiqueResponse
 from ..models.lives import Live
 from ..models.multi_search_query import MultiSearchQuery
 from ..models.multi_search_result_competitions import CompetitionsMultiSearchResult
@@ -365,85 +365,145 @@ class FFBBAPIClientV3:
         """Retrieves ONLY the team commitments (engagements) for a specific club asynchronously."""
         return await self.api_ffbb_client.get_equipes_async(organisme_id)
 
-    def get_rencontre(self, id: str, cached_session: Client | None = None) -> GetRencontreResponse | None:
+    def get_rencontre(
+        self, id: str, cached_session: Client | None = None
+    ) -> GetRencontreResponse | None:
         """Retrieves detailed information about a rencontre."""
         return self.api_ffbb_client.get_rencontre(id, cached_session=cached_session)
 
-    async def get_rencontre_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetRencontreResponse | None:
+    async def get_rencontre_async(
+        self, id: str, cached_session: httpx.AsyncClient | None = None
+    ) -> GetRencontreResponse | None:
         """Asynchronously retrieves detailed information about a rencontre."""
-        return await self.api_ffbb_client.get_rencontre_async(id, cached_session=cached_session)
+        return await self.api_ffbb_client.get_rencontre_async(
+            id, cached_session=cached_session
+        )
 
-    def get_engagement(self, id: str, cached_session: Client | None = None) -> GetEngagementResponse | None:
+    def get_engagement(
+        self, id: str, cached_session: Client | None = None
+    ) -> GetEngagementResponse | None:
         """Retrieves detailed information about an engagement."""
         return self.api_ffbb_client.get_engagement(id, cached_session=cached_session)
 
-    async def get_engagement_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetEngagementResponse | None:
+    async def get_engagement_async(
+        self, id: str, cached_session: httpx.AsyncClient | None = None
+    ) -> GetEngagementResponse | None:
         """Asynchronously retrieves detailed information about an engagement."""
-        return await self.api_ffbb_client.get_engagement_async(id, cached_session=cached_session)
+        return await self.api_ffbb_client.get_engagement_async(
+            id, cached_session=cached_session
+        )
 
-    def get_formation(self, id: str, cached_session: Client | None = None) -> GetFormationResponse | None:
+    def get_formation(
+        self, id: str, cached_session: Client | None = None
+    ) -> GetFormationResponse | None:
         """Retrieves detailed information about a formation."""
         return self.api_ffbb_client.get_formation(id, cached_session=cached_session)
 
-    async def get_formation_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetFormationResponse | None:
+    async def get_formation_async(
+        self, id: str, cached_session: httpx.AsyncClient | None = None
+    ) -> GetFormationResponse | None:
         """Asynchronously retrieves detailed information about a formation."""
-        return await self.api_ffbb_client.get_formation_async(id, cached_session=cached_session)
+        return await self.api_ffbb_client.get_formation_async(
+            id, cached_session=cached_session
+        )
 
-    def get_entraineur(self, id: str, cached_session: Client | None = None) -> GetEntraineurResponse | None:
+    def get_entraineur(
+        self, id: str, cached_session: Client | None = None
+    ) -> GetEntraineurResponse | None:
         """Retrieves detailed information about an entraineur."""
         return self.api_ffbb_client.get_entraineur(id, cached_session=cached_session)
 
-    async def get_entraineur_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetEntraineurResponse | None:
+    async def get_entraineur_async(
+        self, id: str, cached_session: httpx.AsyncClient | None = None
+    ) -> GetEntraineurResponse | None:
         """Asynchronously retrieves detailed information about an entraineur."""
-        return await self.api_ffbb_client.get_entraineur_async(id, cached_session=cached_session)
+        return await self.api_ffbb_client.get_entraineur_async(
+            id, cached_session=cached_session
+        )
 
-    def get_commune(self, id: str, cached_session: Client | None = None) -> GetCommuneResponse | None:
+    def get_commune(
+        self, id: str, cached_session: Client | None = None
+    ) -> GetCommuneResponse | None:
         """Retrieves detailed information about a commune."""
         return self.api_ffbb_client.get_commune(id, cached_session=cached_session)
 
-    async def get_commune_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetCommuneResponse | None:
+    async def get_commune_async(
+        self, id: str, cached_session: httpx.AsyncClient | None = None
+    ) -> GetCommuneResponse | None:
         """Asynchronously retrieves detailed information about a commune."""
-        return await self.api_ffbb_client.get_commune_async(id, cached_session=cached_session)
+        return await self.api_ffbb_client.get_commune_async(
+            id, cached_session=cached_session
+        )
 
-    def get_officiel(self, id: str, cached_session: Client | None = None) -> GetOfficielResponse | None:
+    def get_officiel(
+        self, id: str, cached_session: Client | None = None
+    ) -> GetOfficielResponse | None:
         """Retrieves detailed information about an officiel."""
         return self.api_ffbb_client.get_officiel(id, cached_session=cached_session)
 
-    async def get_officiel_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetOfficielResponse | None:
+    async def get_officiel_async(
+        self, id: str, cached_session: httpx.AsyncClient | None = None
+    ) -> GetOfficielResponse | None:
         """Asynchronously retrieves detailed information about an officiel."""
-        return await self.api_ffbb_client.get_officiel_async(id, cached_session=cached_session)
+        return await self.api_ffbb_client.get_officiel_async(
+            id, cached_session=cached_session
+        )
 
-    def get_salle(self, id: str, cached_session: Client | None = None) -> GetSalleResponse | None:
+    def get_salle(
+        self, id: str, cached_session: Client | None = None
+    ) -> GetSalleResponse | None:
         """Retrieves detailed information about a salle."""
         return self.api_ffbb_client.get_salle(id, cached_session=cached_session)
 
-    async def get_salle_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetSalleResponse | None:
+    async def get_salle_async(
+        self, id: str, cached_session: httpx.AsyncClient | None = None
+    ) -> GetSalleResponse | None:
         """Asynchronously retrieves detailed information about a salle."""
-        return await self.api_ffbb_client.get_salle_async(id, cached_session=cached_session)
+        return await self.api_ffbb_client.get_salle_async(
+            id, cached_session=cached_session
+        )
 
-    def get_terrain(self, id: str, cached_session: Client | None = None) -> GetTerrainResponse | None:
+    def get_terrain(
+        self, id: str, cached_session: Client | None = None
+    ) -> GetTerrainResponse | None:
         """Retrieves detailed information about a terrain."""
         return self.api_ffbb_client.get_terrain(id, cached_session=cached_session)
 
-    async def get_terrain_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetTerrainResponse | None:
+    async def get_terrain_async(
+        self, id: str, cached_session: httpx.AsyncClient | None = None
+    ) -> GetTerrainResponse | None:
         """Asynchronously retrieves detailed information about a terrain."""
-        return await self.api_ffbb_client.get_terrain_async(id, cached_session=cached_session)
+        return await self.api_ffbb_client.get_terrain_async(
+            id, cached_session=cached_session
+        )
 
-    def get_tournoi(self, id: str, cached_session: Client | None = None) -> GetTournoiResponse | None:
+    def get_tournoi(
+        self, id: str, cached_session: Client | None = None
+    ) -> GetTournoiResponse | None:
         """Retrieves detailed information about a tournoi."""
         return self.api_ffbb_client.get_tournoi(id, cached_session=cached_session)
 
-    async def get_tournoi_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetTournoiResponse | None:
+    async def get_tournoi_async(
+        self, id: str, cached_session: httpx.AsyncClient | None = None
+    ) -> GetTournoiResponse | None:
         """Asynchronously retrieves detailed information about a tournoi."""
-        return await self.api_ffbb_client.get_tournoi_async(id, cached_session=cached_session)
+        return await self.api_ffbb_client.get_tournoi_async(
+            id, cached_session=cached_session
+        )
 
-    def get_pratique(self, id: str, cached_session: Client | None = None) -> GetPratiqueResponse | None:
+    def get_pratique(
+        self, id: str, cached_session: Client | None = None
+    ) -> GetPratiqueResponse | None:
         """Retrieves detailed information about a pratique."""
         return self.api_ffbb_client.get_pratique(id, cached_session=cached_session)
 
-    async def get_pratique_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetPratiqueResponse | None:
+    async def get_pratique_async(
+        self, id: str, cached_session: httpx.AsyncClient | None = None
+    ) -> GetPratiqueResponse | None:
         """Asynchronously retrieves detailed information about a pratique."""
-        return await self.api_ffbb_client.get_pratique_async(id, cached_session=cached_session)
+        return await self.api_ffbb_client.get_pratique_async(
+            id, cached_session=cached_session
+        )
 
     # -------------------------------------------------------------------------
     # Meilisearch — multi-search
