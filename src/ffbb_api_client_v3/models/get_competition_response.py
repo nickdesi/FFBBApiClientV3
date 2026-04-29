@@ -39,6 +39,7 @@ class GetCompetitionResponse:
 
     typeCompetitionGenerique: TypecompetitiongeneriqueModel | None = None
     logo: Any | None = None
+    id_competition_pere: int | None = None
 
     @dataclass
     class PoulesitemModel:
@@ -512,6 +513,7 @@ class GetCompetitionResponse:
             categorie=categorie,
             typeCompetitionGenerique=type_comp_generique,
             logo=data.get("logo"),
+            id_competition_pere=int(data["idCompetitionPere"]) if data.get("idCompetitionPere") else None,
             poules=poules,
             phases=phases,
         )

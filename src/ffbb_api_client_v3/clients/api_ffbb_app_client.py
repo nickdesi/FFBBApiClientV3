@@ -15,6 +15,16 @@ from ..config import (
     ENDPOINT_ORGANISMES,
     ENDPOINT_POULES,
     ENDPOINT_SAISONS,
+    ENDPOINT_RENCONTRES,
+    ENDPOINT_ENGAGEMENTS,
+    ENDPOINT_FORMATIONS,
+    ENDPOINT_ENTRAINEURS,
+    ENDPOINT_COMMUNES,
+    ENDPOINT_OFFICIELS,
+    ENDPOINT_SALLES,
+    ENDPOINT_TERRAINS,
+    ENDPOINT_TOURNOIS,
+    ENDPOINT_PRATIQUES,
 )
 from ..helpers.http_requests_helper import catch_result
 from ..helpers.http_requests_utils import (
@@ -30,6 +40,16 @@ from ..models.lives import Live
 from ..models.poules_models import GetPouleResponse
 from ..models.query_fields_manager import QueryFieldsManager
 from ..models.saisons_models import GetSaisonsResponse
+from ..models.get_rencontre_response import GetRencontreResponse
+from ..models.get_engagement_response import GetEngagementResponse
+from ..models.get_formation_response import GetFormationResponse
+from ..models.get_entraineur_response import GetEntraineurResponse
+from ..models.get_commune_response import GetCommuneResponse
+from ..models.get_officiel_response import GetOfficielResponse
+from ..models.get_salle_response import GetSalleResponse
+from ..models.get_terrain_response import GetTerrainResponse
+from ..models.get_tournoi_response import GetTournoiResponse
+from ..models.get_pratique_response import GetPratiqueResponse
 from ..models.team_ranking import TeamRanking
 from ..utils.cache_manager import CacheConfig, CacheManager
 from ..utils.retry_utils import (
@@ -755,4 +775,184 @@ class ApiFFBBAppClient:
         except Exception as e:
             if self.debug:
                 self.logger.error(f"Error in get_configuration_async: {e}")
+            return None
+
+    def get_rencontre(self, id: str, cached_session: Client | None = None) -> GetRencontreResponse | None:
+        """Retrieves detailed information about a rencontre."""
+        url = f"{self.url}{ENDPOINT_RENCONTRES}/{id}"
+        data = catch_result(lambda: http_get_json(url, self.headers, debug=self.debug, cached_session=cached_session or self.cached_session))
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetRencontreResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_rencontre_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetRencontreResponse | None:
+        """Asynchronously retrieves detailed information about a rencontre."""
+        url = f"{self.url}{ENDPOINT_RENCONTRES}/{id}"
+        try:
+            data = await http_get_json_async(url, self.headers, debug=self.debug, cached_session=cached_session or self.async_cached_session)
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetRencontreResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug: self.logger.error(f"Error in get_rencontre_async: {e}")
+            return None
+
+    def get_engagement(self, id: str, cached_session: Client | None = None) -> GetEngagementResponse | None:
+        """Retrieves detailed information about an engagement."""
+        url = f"{self.url}{ENDPOINT_ENGAGEMENTS}/{id}"
+        data = catch_result(lambda: http_get_json(url, self.headers, debug=self.debug, cached_session=cached_session or self.cached_session))
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetEngagementResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_engagement_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetEngagementResponse | None:
+        """Asynchronously retrieves detailed information about an engagement."""
+        url = f"{self.url}{ENDPOINT_ENGAGEMENTS}/{id}"
+        try:
+            data = await http_get_json_async(url, self.headers, debug=self.debug, cached_session=cached_session or self.async_cached_session)
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetEngagementResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug: self.logger.error(f"Error in get_engagement_async: {e}")
+            return None
+
+    def get_formation(self, id: str, cached_session: Client | None = None) -> GetFormationResponse | None:
+        """Retrieves detailed information about a formation."""
+        url = f"{self.url}{ENDPOINT_FORMATIONS}/{id}"
+        data = catch_result(lambda: http_get_json(url, self.headers, debug=self.debug, cached_session=cached_session or self.cached_session))
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetFormationResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_formation_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetFormationResponse | None:
+        """Asynchronously retrieves detailed information about a formation."""
+        url = f"{self.url}{ENDPOINT_FORMATIONS}/{id}"
+        try:
+            data = await http_get_json_async(url, self.headers, debug=self.debug, cached_session=cached_session or self.async_cached_session)
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetFormationResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug: self.logger.error(f"Error in get_formation_async: {e}")
+            return None
+
+    def get_entraineur(self, id: str, cached_session: Client | None = None) -> GetEntraineurResponse | None:
+        """Retrieves detailed information about an entraineur."""
+        url = f"{self.url}{ENDPOINT_ENTRAINEURS}/{id}"
+        data = catch_result(lambda: http_get_json(url, self.headers, debug=self.debug, cached_session=cached_session or self.cached_session))
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetEntraineurResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_entraineur_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetEntraineurResponse | None:
+        """Asynchronously retrieves detailed information about an entraineur."""
+        url = f"{self.url}{ENDPOINT_ENTRAINEURS}/{id}"
+        try:
+            data = await http_get_json_async(url, self.headers, debug=self.debug, cached_session=cached_session or self.async_cached_session)
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetEntraineurResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug: self.logger.error(f"Error in get_entraineur_async: {e}")
+            return None
+
+    def get_commune(self, id: str, cached_session: Client | None = None) -> GetCommuneResponse | None:
+        """Retrieves detailed information about a commune."""
+        url = f"{self.url}{ENDPOINT_COMMUNES}/{id}"
+        data = catch_result(lambda: http_get_json(url, self.headers, debug=self.debug, cached_session=cached_session or self.cached_session))
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetCommuneResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_commune_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetCommuneResponse | None:
+        """Asynchronously retrieves detailed information about a commune."""
+        url = f"{self.url}{ENDPOINT_COMMUNES}/{id}"
+        try:
+            data = await http_get_json_async(url, self.headers, debug=self.debug, cached_session=cached_session or self.async_cached_session)
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetCommuneResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug: self.logger.error(f"Error in get_commune_async: {e}")
+            return None
+
+    def get_officiel(self, id: str, cached_session: Client | None = None) -> GetOfficielResponse | None:
+        """Retrieves detailed information about an officiel."""
+        url = f"{self.url}{ENDPOINT_OFFICIELS}/{id}"
+        data = catch_result(lambda: http_get_json(url, self.headers, debug=self.debug, cached_session=cached_session or self.cached_session))
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetOfficielResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_officiel_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetOfficielResponse | None:
+        """Asynchronously retrieves detailed information about an officiel."""
+        url = f"{self.url}{ENDPOINT_OFFICIELS}/{id}"
+        try:
+            data = await http_get_json_async(url, self.headers, debug=self.debug, cached_session=cached_session or self.async_cached_session)
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetOfficielResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug: self.logger.error(f"Error in get_officiel_async: {e}")
+            return None
+
+    def get_salle(self, id: str, cached_session: Client | None = None) -> GetSalleResponse | None:
+        """Retrieves detailed information about a salle."""
+        url = f"{self.url}{ENDPOINT_SALLES}/{id}"
+        data = catch_result(lambda: http_get_json(url, self.headers, debug=self.debug, cached_session=cached_session or self.cached_session))
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetSalleResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_salle_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetSalleResponse | None:
+        """Asynchronously retrieves detailed information about a salle."""
+        url = f"{self.url}{ENDPOINT_SALLES}/{id}"
+        try:
+            data = await http_get_json_async(url, self.headers, debug=self.debug, cached_session=cached_session or self.async_cached_session)
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetSalleResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug: self.logger.error(f"Error in get_salle_async: {e}")
+            return None
+
+    def get_terrain(self, id: str, cached_session: Client | None = None) -> GetTerrainResponse | None:
+        """Retrieves detailed information about a terrain."""
+        url = f"{self.url}{ENDPOINT_TERRAINS}/{id}"
+        data = catch_result(lambda: http_get_json(url, self.headers, debug=self.debug, cached_session=cached_session or self.cached_session))
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetTerrainResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_terrain_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetTerrainResponse | None:
+        """Asynchronously retrieves detailed information about a terrain."""
+        url = f"{self.url}{ENDPOINT_TERRAINS}/{id}"
+        try:
+            data = await http_get_json_async(url, self.headers, debug=self.debug, cached_session=cached_session or self.async_cached_session)
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetTerrainResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug: self.logger.error(f"Error in get_terrain_async: {e}")
+            return None
+
+    def get_tournoi(self, id: str, cached_session: Client | None = None) -> GetTournoiResponse | None:
+        """Retrieves detailed information about a tournoi."""
+        url = f"{self.url}{ENDPOINT_TOURNOIS}/{id}"
+        data = catch_result(lambda: http_get_json(url, self.headers, debug=self.debug, cached_session=cached_session or self.cached_session))
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetTournoiResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_tournoi_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetTournoiResponse | None:
+        """Asynchronously retrieves detailed information about a tournoi."""
+        url = f"{self.url}{ENDPOINT_TOURNOIS}/{id}"
+        try:
+            data = await http_get_json_async(url, self.headers, debug=self.debug, cached_session=cached_session or self.async_cached_session)
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetTournoiResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug: self.logger.error(f"Error in get_tournoi_async: {e}")
+            return None
+
+    def get_pratique(self, id: str, cached_session: Client | None = None) -> GetPratiqueResponse | None:
+        """Retrieves detailed information about a pratique."""
+        url = f"{self.url}{ENDPOINT_PRATIQUES}/{id}"
+        data = catch_result(lambda: http_get_json(url, self.headers, debug=self.debug, cached_session=cached_session or self.cached_session))
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return GetPratiqueResponse.from_dict(actual_data) if actual_data else None
+
+    async def get_pratique_async(self, id: str, cached_session: httpx.AsyncClient | None = None) -> GetPratiqueResponse | None:
+        """Asynchronously retrieves detailed information about a pratique."""
+        url = f"{self.url}{ENDPOINT_PRATIQUES}/{id}"
+        try:
+            data = await http_get_json_async(url, self.headers, debug=self.debug, cached_session=cached_session or self.async_cached_session)
+            actual_data = data.get("data") if data and isinstance(data, dict) else data
+            return GetPratiqueResponse.from_dict(actual_data) if actual_data else None
+        except Exception as e:
+            if self.debug: self.logger.error(f"Error in get_pratique_async: {e}")
             return None
