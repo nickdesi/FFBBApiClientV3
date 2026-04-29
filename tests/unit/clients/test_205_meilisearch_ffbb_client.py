@@ -9,11 +9,23 @@ from ffbb_api_client_v3.clients.meilisearch_ffbb_client import MeilisearchFFBBCl
 from ffbb_api_client_v3.models.competitions_multi_search_query import (
     CompetitionsMultiSearchQuery,
 )
+from ffbb_api_client_v3.models.content_multi_search_query import (
+    GaleriesMultiSearchQuery,
+    NewsMultiSearchQuery,
+    RssMultiSearchQuery,
+    YoutubeVideosMultiSearchQuery,
+)
 from ffbb_api_client_v3.models.engagements_multi_search_query import (
     EngagementsMultiSearchQuery,
 )
 from ffbb_api_client_v3.models.formations_multi_search_query import (
     FormationsMultiSearchQuery,
+)
+from ffbb_api_client_v3.models.generic_search import (
+    GaleriesMultiSearchResult,
+    NewsMultiSearchResult,
+    RssMultiSearchResult,
+    YoutubeVideosMultiSearchResult,
 )
 from ffbb_api_client_v3.models.multi_search_result_competitions import (
     CompetitionsMultiSearchResult,
@@ -112,6 +124,12 @@ class Test040MeilisearchFfbbClient(unittest.TestCase):
         result = self.client.search_multiple_formations(None)
         self.assertIsNone(result)
 
+    def test_007c_search_multiple_content_indexes_none(self) -> None:
+        self.assertIsNone(self.client.search_multiple_news(None))
+        self.assertIsNone(self.client.search_multiple_youtube_videos(None))
+        self.assertIsNone(self.client.search_multiple_rss(None))
+        self.assertIsNone(self.client.search_multiple_galeries(None))
+
     # -- Mocked result tests ---------------------------------------------
 
     @patch.object(MeilisearchFFBBClient, "recursive_multi_search")
@@ -199,6 +217,40 @@ class Test040MeilisearchFfbbClient(unittest.TestCase):
         self.assertEqual(len(result), 1)  # type: ignore[arg-type]
         self.assertIsInstance(mock_rms.call_args[0][0][0], FormationsMultiSearchQuery)
 
+    @patch.object(MeilisearchFFBBClient, "recursive_multi_search")
+    def test_014c_search_multiple_content_indexes_results(
+        self, mock_rms: MagicMock
+    ) -> None:
+        cases = [
+            (
+                self.client.search_multiple_news,
+                NewsMultiSearchResult,
+                NewsMultiSearchQuery,
+            ),
+            (
+                self.client.search_multiple_youtube_videos,
+                YoutubeVideosMultiSearchResult,
+                YoutubeVideosMultiSearchQuery,
+            ),
+            (
+                self.client.search_multiple_rss,
+                RssMultiSearchResult,
+                RssMultiSearchQuery,
+            ),
+            (
+                self.client.search_multiple_galeries,
+                GaleriesMultiSearchResult,
+                GaleriesMultiSearchQuery,
+            ),
+        ]
+        for method, result_type, query_type in cases:
+            mock_result = MagicMock(spec=result_type)
+            mock_rms.return_value = self._make_mock_results(mock_result)
+            result = method(["basket"])
+            self.assertIsNotNone(result)
+            self.assertEqual(len(result), 1)  # type: ignore[arg-type]
+            self.assertIsInstance(mock_rms.call_args[0][0][0], query_type)
+
     # -- Singular delegate tests -----------------------------------------
 
     @patch.object(MeilisearchFFBBClient, "recursive_multi_search")
@@ -263,6 +315,19 @@ class Test040MeilisearchFfbbClient(unittest.TestCase):
         mock_rms.return_value = self._make_mock_results(mock_result)
         result = self.client.search_formations("Paris")
         self.assertIsNotNone(result)
+
+    @patch.object(MeilisearchFFBBClient, "recursive_multi_search")
+    def test_024_search_content_indexes_result(self, mock_rms: MagicMock) -> None:
+        for method, result_type in [
+            (self.client.search_news, NewsMultiSearchResult),
+            (self.client.search_youtube_videos, YoutubeVideosMultiSearchResult),
+            (self.client.search_rss, RssMultiSearchResult),
+            (self.client.search_galeries, GaleriesMultiSearchResult),
+        ]:
+            mock_result = MagicMock(spec=result_type)
+            mock_rms.return_value = self._make_mock_results(mock_result)
+            result = method("basket")
+            self.assertIsNotNone(result)
 
 
 if __name__ == "__main__":

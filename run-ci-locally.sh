@@ -43,15 +43,13 @@ else
     print_warning ".env file not found, using system environment"
 fi
 
-# Verify critical environment variables
+# Verify critical environment variables (optional now as TokenManager handles them)
 if [ -z "$API_FFBB_APP_BEARER_TOKEN" ]; then
-    print_error "API_FFBB_APP_BEARER_TOKEN not set"
-    exit 1
+    print_warning "API_FFBB_APP_BEARER_TOKEN not set, TokenManager will attempt auto-resolution"
 fi
 
 if [ -z "$MEILISEARCH_BEARER_TOKEN" ]; then
-    print_error "MEILISEARCH_BEARER_TOKEN not set"
-    exit 1
+    print_warning "MEILISEARCH_BEARER_TOKEN not set, TokenManager will attempt auto-resolution"
 fi
 
 print_success "Environment variables are properly configured"

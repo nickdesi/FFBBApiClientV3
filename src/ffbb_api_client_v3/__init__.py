@@ -21,6 +21,13 @@ from .models.field_set import FieldSet
 from .models.formations_facet_distribution import FormationsFacetDistribution
 from .models.formations_facet_stats import FormationsFacetStats
 from .models.formations_hit import FormationsHit
+from .models.generic_search import (
+    GaleriesMultiSearchResult,
+    GenericSearchHit,
+    NewsMultiSearchResult,
+    RssMultiSearchResult,
+    YoutubeVideosMultiSearchResult,
+)
 from .models.get_competition_response import GetCompetitionResponse
 from .models.get_organisme_response import GetOrganismeResponse
 from .models.multi_search_query import MultiSearchQuery
@@ -92,6 +99,12 @@ __all__ = [
     "FormationsFacetStats",
     "FormationsHit",
     "FormationsMultiSearchResult",
+    # Content indexes
+    "GenericSearchHit",
+    "NewsMultiSearchResult",
+    "YoutubeVideosMultiSearchResult",
+    "RssMultiSearchResult",
+    "GaleriesMultiSearchResult",
     # Organismes
     "OrganismesFacetDistribution",
     "OrganismesFacetStats",

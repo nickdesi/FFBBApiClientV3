@@ -12,17 +12,26 @@ from ..config import (
     ENDPOINT_COMMUNES,
     ENDPOINT_COMPETITIONS,
     ENDPOINT_CONFIGURATION,
+    ENDPOINT_EDF_MATCHES,
+    ENDPOINT_EDF_PLAYERS,
+    ENDPOINT_EDF_ROSTERS,
+    ENDPOINT_EDF_TEAMS,
     ENDPOINT_ENGAGEMENTS,
     ENDPOINT_ENTRAINEURS,
     ENDPOINT_FORMATIONS,
+    ENDPOINT_GENIUS_SPORT_MATCHES,
+    ENDPOINT_GENIUS_SPORTS_LIVE_LOGS,
     ENDPOINT_LIVES,
     ENDPOINT_OFFICIELS,
+    ENDPOINT_OPENAPI,
     ENDPOINT_ORGANISMES,
     ENDPOINT_POULES,
     ENDPOINT_PRATIQUES,
+    ENDPOINT_REMATCH_VIDEOS,
     ENDPOINT_RENCONTRES,
     ENDPOINT_SAISONS,
     ENDPOINT_SALLES,
+    ENDPOINT_SESSIONS,
     ENDPOINT_TERRAINS,
     ENDPOINT_TOURNOIS,
 )
@@ -143,6 +152,141 @@ class ApiFFBBAppClient:
     def bearer_token(self) -> str:
         """Get the bearer token."""
         return self._bearer_token
+
+    def _get_directus_item(
+        self,
+        endpoint: str,
+        id: str | int,
+        fields: list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> dict[str, Any] | None:
+        url = f"{self.url}{endpoint}/{id}"
+        params: dict[str, Any] = {}
+        if fields:
+            params["fields[]"] = fields
+        final_url = url_with_params(url, params) if params else url
+        data = catch_result(
+            lambda: http_get_json(
+                final_url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or self.cached_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
+            )
+        )
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return actual_data if isinstance(actual_data, dict) else None
+
+    async def _get_directus_item_async(
+        self,
+        endpoint: str,
+        id: str | int,
+        fields: list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> dict[str, Any] | None:
+        url = f"{self.url}{endpoint}/{id}"
+        params: dict[str, Any] = {}
+        if fields:
+            params["fields[]"] = fields
+        final_url = url_with_params(url, params) if params else url
+        try:
+            data = await http_get_json_async(
+                final_url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or self.async_cached_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
+            )
+        except Exception as e:
+            if self.debug:
+                self.logger.error(f"Error in _get_directus_item_async: {e}")
+            return None
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return actual_data if isinstance(actual_data, dict) else None
+
+    def _list_directus_items(
+        self,
+        endpoint: str,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> list[dict[str, Any]]:
+        url = f"{self.url}{endpoint}"
+        params: dict[str, Any] = {"limit": str(limit)}
+        if fields:
+            params["fields[]"] = fields
+        if filter_criteria:
+            params["filter"] = filter_criteria
+        if sort:
+            params["sort"] = sort
+        final_url = url_with_params(url, params)
+        data = catch_result(
+            lambda: http_get_json(
+                final_url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or self.cached_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
+            )
+        )
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return actual_data if isinstance(actual_data, list) else []
+
+    async def _list_directus_items_async(
+        self,
+        endpoint: str,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[dict[str, Any]]:
+        url = f"{self.url}{endpoint}"
+        params: dict[str, Any] = {"limit": str(limit)}
+        if fields:
+            params["fields[]"] = fields
+        if filter_criteria:
+            params["filter"] = filter_criteria
+        if sort:
+            params["sort"] = sort
+        final_url = url_with_params(url, params)
+        try:
+            data = await http_get_json_async(
+                final_url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or self.async_cached_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
+            )
+        except Exception as e:
+            if self.debug:
+                self.logger.error(f"Error in _list_directus_items_async: {e}")
+            return []
+        actual_data = data.get("data") if data and isinstance(data, dict) else data
+        return actual_data if isinstance(actual_data, list) else []
+
+    def get_openapi_spec(
+        self, cached_session: Client | None = None
+    ) -> dict[str, Any] | None:
+        """Retrieves the public Directus OpenAPI specification."""
+        url = f"{self.url}{ENDPOINT_OPENAPI}"
+        data = catch_result(
+            lambda: http_get_json(
+                url,
+                self.headers,
+                debug=self.debug,
+                cached_session=cached_session or self.cached_session,
+                retry_config=self.retry_config,
+                timeout_config=self.timeout_config,
+            )
+        )
+        return data if isinstance(data, dict) else None
 
     def get_lives(self, cached_session: Client | None = None) -> list[Live] | None:
         """
@@ -1126,3 +1270,295 @@ class ApiFFBBAppClient:
             if self.debug:
                 self.logger.error(f"Error in get_pratique_async: {e}")
             return None
+
+    def get_session(
+        self,
+        id: str,
+        fields: list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> dict[str, Any] | None:
+        """Retrieves detailed information about a formation session."""
+        return self._get_directus_item(
+            ENDPOINT_SESSIONS, id, fields=fields, cached_session=cached_session
+        )
+
+    def list_sessions(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists formation sessions."""
+        return self._list_directus_items(
+            ENDPOINT_SESSIONS,
+            limit=limit,
+            fields=fields,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            cached_session=cached_session,
+        )
+
+    async def get_session_async(
+        self,
+        id: str,
+        fields: list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> dict[str, Any] | None:
+        """Asynchronously retrieves detailed information about a formation session."""
+        return await self._get_directus_item_async(
+            ENDPOINT_SESSIONS, id, fields=fields, cached_session=cached_session
+        )
+
+    async def list_sessions_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[dict[str, Any]]:
+        """Asynchronously lists formation sessions."""
+        return await self._list_directus_items_async(
+            ENDPOINT_SESSIONS,
+            limit=limit,
+            fields=fields,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            cached_session=cached_session,
+        )
+
+    def get_genius_sport_match(
+        self,
+        id: str,
+        fields: list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> dict[str, Any] | None:
+        """Retrieves detailed Genius Sports match statistics."""
+        return self._get_directus_item(
+            ENDPOINT_GENIUS_SPORT_MATCHES,
+            id,
+            fields=fields,
+            cached_session=cached_session,
+        )
+
+    def list_genius_sport_matches(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Genius Sports match statistics."""
+        return self._list_directus_items(
+            ENDPOINT_GENIUS_SPORT_MATCHES,
+            limit=limit,
+            fields=fields,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            cached_session=cached_session,
+        )
+
+    async def get_genius_sport_match_async(
+        self,
+        id: str,
+        fields: list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> dict[str, Any] | None:
+        """Asynchronously retrieves detailed Genius Sports match statistics."""
+        return await self._get_directus_item_async(
+            ENDPOINT_GENIUS_SPORT_MATCHES,
+            id,
+            fields=fields,
+            cached_session=cached_session,
+        )
+
+    async def list_genius_sport_matches_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[dict[str, Any]]:
+        """Asynchronously lists Genius Sports match statistics."""
+        return await self._list_directus_items_async(
+            ENDPOINT_GENIUS_SPORT_MATCHES,
+            limit=limit,
+            fields=fields,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            cached_session=cached_session,
+        )
+
+    def list_genius_sports_live_logs(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Genius Sports live logs."""
+        return self._list_directus_items(
+            ENDPOINT_GENIUS_SPORTS_LIVE_LOGS,
+            limit=limit,
+            fields=fields,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            cached_session=cached_session,
+        )
+
+    def get_rematch_video(
+        self,
+        id: str,
+        fields: list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> dict[str, Any] | None:
+        """Retrieves a Rematch video linked to FFBB data."""
+        return self._get_directus_item(
+            ENDPOINT_REMATCH_VIDEOS, id, fields=fields, cached_session=cached_session
+        )
+
+    def list_rematch_videos(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Rematch videos linked to FFBB data."""
+        return self._list_directus_items(
+            ENDPOINT_REMATCH_VIDEOS,
+            limit=limit,
+            fields=fields,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            cached_session=cached_session,
+        )
+
+    async def get_rematch_video_async(
+        self,
+        id: str,
+        fields: list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> dict[str, Any] | None:
+        """Asynchronously retrieves a Rematch video linked to FFBB data."""
+        return await self._get_directus_item_async(
+            ENDPOINT_REMATCH_VIDEOS, id, fields=fields, cached_session=cached_session
+        )
+
+    async def list_rematch_videos_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[dict[str, Any]]:
+        """Asynchronously lists Rematch videos linked to FFBB data."""
+        return await self._list_directus_items_async(
+            ENDPOINT_REMATCH_VIDEOS,
+            limit=limit,
+            fields=fields,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            cached_session=cached_session,
+        )
+
+    def get_edf_match(
+        self,
+        id: str | int,
+        fields: list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> dict[str, Any] | None:
+        """Retrieves an Equipe de France match."""
+        return self._get_directus_item(
+            ENDPOINT_EDF_MATCHES, id, fields=fields, cached_session=cached_session
+        )
+
+    def list_edf_matches(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Equipe de France matches."""
+        return self._list_directus_items(
+            ENDPOINT_EDF_MATCHES,
+            limit=limit,
+            fields=fields,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            cached_session=cached_session,
+        )
+
+    def get_edf_player(
+        self,
+        id: str | int,
+        fields: list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> dict[str, Any] | None:
+        """Retrieves an Equipe de France player."""
+        return self._get_directus_item(
+            ENDPOINT_EDF_PLAYERS, id, fields=fields, cached_session=cached_session
+        )
+
+    def list_edf_players(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Equipe de France players."""
+        return self._list_directus_items(
+            ENDPOINT_EDF_PLAYERS,
+            limit=limit,
+            fields=fields,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            cached_session=cached_session,
+        )
+
+    def list_edf_teams(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Equipe de France teams."""
+        return self._list_directus_items(
+            ENDPOINT_EDF_TEAMS,
+            limit=limit,
+            fields=fields,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            cached_session=cached_session,
+        )
+
+    def list_edf_rosters(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Equipe de France rosters."""
+        return self._list_directus_items(
+            ENDPOINT_EDF_ROSTERS,
+            limit=limit,
+            fields=fields,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            cached_session=cached_session,
+        )

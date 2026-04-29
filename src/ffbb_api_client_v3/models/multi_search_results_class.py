@@ -6,15 +6,29 @@ from typing import Any
 
 from ..config import (
     MEILISEARCH_INDEX_COMPETITIONS,
+    MEILISEARCH_INDEX_ENGAGEMENTS,
+    MEILISEARCH_INDEX_FORMATIONS,
+    MEILISEARCH_INDEX_GALERIES,
+    MEILISEARCH_INDEX_NEWS,
     MEILISEARCH_INDEX_ORGANISMES,
     MEILISEARCH_INDEX_PRATIQUES,
     MEILISEARCH_INDEX_RENCONTRES,
+    MEILISEARCH_INDEX_RSS,
     MEILISEARCH_INDEX_SALLES,
     MEILISEARCH_INDEX_TERRAINS,
     MEILISEARCH_INDEX_TOURNOIS,
     MEILISEARCH_INDEX_UIDS,
+    MEILISEARCH_INDEX_YOUTUBE_VIDEOS,
+)
+from .generic_search import (
+    GaleriesMultiSearchResult,
+    NewsMultiSearchResult,
+    RssMultiSearchResult,
+    YoutubeVideosMultiSearchResult,
 )
 from .multi_search_result_competitions import CompetitionsMultiSearchResult
+from .multi_search_result_engagements import EngagementsMultiSearchResult
+from .multi_search_result_formations import FormationsMultiSearchResult
 from .multi_search_result_organismes import OrganismesMultiSearchResult
 from .multi_search_result_pratiques import PratiquesMultiSearchResult
 from .multi_search_result_rencontres import RencontresMultiSearchResult
@@ -34,6 +48,12 @@ index_uids_converters: dict[str, Callable[[Any], MultiSearchResult[Any, Any, Any
     MEILISEARCH_INDEX_TOURNOIS: TournoisMultiSearchResult.from_dict,
     MEILISEARCH_INDEX_COMPETITIONS: CompetitionsMultiSearchResult.from_dict,
     MEILISEARCH_INDEX_PRATIQUES: PratiquesMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_ENGAGEMENTS: EngagementsMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_FORMATIONS: FormationsMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_NEWS: NewsMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_YOUTUBE_VIDEOS: YoutubeVideosMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_RSS: RssMultiSearchResult.from_dict,
+    MEILISEARCH_INDEX_GALERIES: GaleriesMultiSearchResult.from_dict,
 }
 
 

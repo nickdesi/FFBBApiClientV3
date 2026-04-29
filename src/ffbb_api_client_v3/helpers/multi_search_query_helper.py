@@ -1,6 +1,12 @@
 from __future__ import annotations
 
 from ..models.competitions_multi_search_query import CompetitionsMultiSearchQuery
+from ..models.content_multi_search_query import (
+    GaleriesMultiSearchQuery,
+    NewsMultiSearchQuery,
+    RssMultiSearchQuery,
+    YoutubeVideosMultiSearchQuery,
+)
 from ..models.engagements_multi_search_query import EngagementsMultiSearchQuery
 from ..models.formations_multi_search_query import FormationsMultiSearchQuery
 from ..models.organismes_multi_search_query import OrganismesMultiSearchQuery
@@ -22,4 +28,8 @@ def generate_queries(search_name: str | None = None, limit: int | None = 1):
         PratiquesMultiSearchQuery(search_name, limit=limit),
         EngagementsMultiSearchQuery(search_name, limit=limit),
         FormationsMultiSearchQuery(search_name, limit=limit),
+        NewsMultiSearchQuery(search_name, limit=limit),
+        YoutubeVideosMultiSearchQuery(search_name, limit=limit),
+        RssMultiSearchQuery(search_name, limit=limit),
+        GaleriesMultiSearchQuery(search_name, limit=limit),
     ]

@@ -8,8 +8,20 @@ from httpx import Client
 from ..config import MEILISEARCH_BASE_URL
 from ..helpers.meilisearch_client_extension import MeilisearchClientExtension
 from ..models.competitions_multi_search_query import CompetitionsMultiSearchQuery
+from ..models.content_multi_search_query import (
+    GaleriesMultiSearchQuery,
+    NewsMultiSearchQuery,
+    RssMultiSearchQuery,
+    YoutubeVideosMultiSearchQuery,
+)
 from ..models.engagements_multi_search_query import EngagementsMultiSearchQuery
 from ..models.formations_multi_search_query import FormationsMultiSearchQuery
+from ..models.generic_search import (
+    GaleriesMultiSearchResult,
+    NewsMultiSearchResult,
+    RssMultiSearchResult,
+    YoutubeVideosMultiSearchResult,
+)
 from ..models.multi_search_result_competitions import CompetitionsMultiSearchResult
 from ..models.multi_search_result_engagements import EngagementsMultiSearchResult
 from ..models.multi_search_result_formations import FormationsMultiSearchResult
@@ -387,6 +399,152 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         cached_session: Client | None = None,
     ) -> FormationsMultiSearchResult | None:
         results = self.search_multiple_formations(
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
+            cached_session=cached_session,
+        )
+        return results[0] if results else None
+
+    def search_multiple_news(
+        self,
+        names: list[str | None] | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> list[NewsMultiSearchResult] | None:
+        if not names:
+            return None
+
+        queries = [
+            NewsMultiSearchQuery(name, limit=limit, filter=filter, sort=sort)
+            for name in names
+        ]
+        results = self.recursive_multi_search(queries, cached_session)
+        return cast(list[NewsMultiSearchResult], results.results) if results else None
+
+    def search_news(
+        self,
+        name: str | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> NewsMultiSearchResult | None:
+        results = self.search_multiple_news(
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
+            cached_session=cached_session,
+        )
+        return results[0] if results else None
+
+    def search_multiple_youtube_videos(
+        self,
+        names: list[str | None] | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> list[YoutubeVideosMultiSearchResult] | None:
+        if not names:
+            return None
+
+        queries = [
+            YoutubeVideosMultiSearchQuery(name, limit=limit, filter=filter, sort=sort)
+            for name in names
+        ]
+        results = self.recursive_multi_search(queries, cached_session)
+        return (
+            cast(list[YoutubeVideosMultiSearchResult], results.results)
+            if results
+            else None
+        )
+
+    def search_youtube_videos(
+        self,
+        name: str | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> YoutubeVideosMultiSearchResult | None:
+        results = self.search_multiple_youtube_videos(
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
+            cached_session=cached_session,
+        )
+        return results[0] if results else None
+
+    def search_multiple_rss(
+        self,
+        names: list[str | None] | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> list[RssMultiSearchResult] | None:
+        if not names:
+            return None
+
+        queries = [
+            RssMultiSearchQuery(name, limit=limit, filter=filter, sort=sort)
+            for name in names
+        ]
+        results = self.recursive_multi_search(queries, cached_session)
+        return cast(list[RssMultiSearchResult], results.results) if results else None
+
+    def search_rss(
+        self,
+        name: str | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> RssMultiSearchResult | None:
+        results = self.search_multiple_rss(
+            [name],
+            filter=filter,
+            sort=sort,
+            limit=limit,
+            cached_session=cached_session,
+        )
+        return results[0] if results else None
+
+    def search_multiple_galeries(
+        self,
+        names: list[str | None] | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> list[GaleriesMultiSearchResult] | None:
+        if not names:
+            return None
+
+        queries = [
+            GaleriesMultiSearchQuery(name, limit=limit, filter=filter, sort=sort)
+            for name in names
+        ]
+        results = self.recursive_multi_search(queries, cached_session)
+        return (
+            cast(list[GaleriesMultiSearchResult], results.results) if results else None
+        )
+
+    def search_galeries(
+        self,
+        name: str | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> GaleriesMultiSearchResult | None:
+        results = self.search_multiple_galeries(
             [name],
             filter=filter,
             sort=sort,

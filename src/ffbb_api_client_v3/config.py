@@ -28,7 +28,26 @@ ENDPOINT_SALLES = "items/ffbbserver_salles"
 ENDPOINT_TERRAINS = "items/ffbbserver_terrains"
 ENDPOINT_TOURNOIS = "items/ffbbserver_tournois"
 ENDPOINT_PRATIQUES = "items/ffbbnational_pratiques"
+ENDPOINT_SESSIONS = "items/ffbbserver_sessions"
+ENDPOINT_GENIUS_SPORT_MATCHES = "items/genius_sport_matches"
+ENDPOINT_GENIUS_SPORTS_LIVE_LOGS = "items/genius_sports_live_logs"
+ENDPOINT_REMATCH_VIDEOS = "items/rematch_videos"
+ENDPOINT_EDF_ARENAS = "items/edf_arenas"
+ENDPOINT_EDF_CAMPAIGNS = "items/edf_campaigns"
+ENDPOINT_EDF_CITIES = "items/edf_cities"
+ENDPOINT_EDF_COACHES = "items/edf_coaches"
+ENDPOINT_EDF_COMPETITION_TYPES = "items/edf_competition_types"
+ENDPOINT_EDF_COUNTRIES = "items/edf_countries"
+ENDPOINT_EDF_MATCHES = "items/edf_matches"
+ENDPOINT_EDF_OPPONENTS = "items/edf_opponents"
+ENDPOINT_EDF_PLAYERS = "items/edf_players"
+ENDPOINT_EDF_POSITIONS = "items/edf_positions"
+ENDPOINT_EDF_ROSTERS = "items/edf_rosters"
+ENDPOINT_EDF_SELECTION = "items/edf_selection"
+ENDPOINT_EDF_STAFFS = "items/edf_staffs"
+ENDPOINT_EDF_TEAMS = "items/edf_teams"
 ENDPOINT_ASSETS = "assets/"
+ENDPOINT_OPENAPI = "server/specs/oas"
 
 # Meilisearch Endpoint Paths
 MEILISEARCH_ENDPOINT_MULTI_SEARCH = "multi-search"
@@ -43,6 +62,10 @@ MEILISEARCH_INDEX_COMPETITIONS = "ffbbserver_competitions"
 MEILISEARCH_INDEX_ENGAGEMENTS = "ffbbserver_engagements"
 MEILISEARCH_INDEX_FORMATIONS = "ffbbserver_formations"
 MEILISEARCH_INDEX_PRATIQUES = "ffbbnational_pratiques"
+MEILISEARCH_INDEX_NEWS = "ffbbsite_news"
+MEILISEARCH_INDEX_YOUTUBE_VIDEOS = "youtube_videos"
+MEILISEARCH_INDEX_RSS = "ffbbnational_rss"
+MEILISEARCH_INDEX_GALERIES = "ffbbnational_galeries"
 
 MEILISEARCH_INDEX_UIDS = [
     MEILISEARCH_INDEX_ORGANISMES,
@@ -54,6 +77,10 @@ MEILISEARCH_INDEX_UIDS = [
     MEILISEARCH_INDEX_ENGAGEMENTS,
     MEILISEARCH_INDEX_FORMATIONS,
     MEILISEARCH_INDEX_PRATIQUES,
+    MEILISEARCH_INDEX_NEWS,
+    MEILISEARCH_INDEX_YOUTUBE_VIDEOS,
+    MEILISEARCH_INDEX_RSS,
+    MEILISEARCH_INDEX_GALERIES,
 ]
 
 # Meilisearch Default Facets per Index
@@ -102,5 +129,25 @@ MEILISEARCH_FACETS_FORMATIONS = [
     "postal_code",
     "postal_codes",
     "theme",
+    "type",
+]
+MEILISEARCH_FACETS_NEWS = [
+    "category",
+    "categories",
+    "tags",
+    "type",
+]
+MEILISEARCH_FACETS_YOUTUBE_VIDEOS = [
+    "channelTitle",
+    "tags",
+    "type",
+]
+MEILISEARCH_FACETS_RSS = [
+    "categories",
+    "tags",
+    "type",
+]
+MEILISEARCH_FACETS_GALERIES = [
+    "tags",
     "type",
 ]

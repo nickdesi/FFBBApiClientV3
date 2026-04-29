@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import cast
+from typing import Any, cast
 
 import httpx
 from httpx import Client
@@ -9,8 +9,20 @@ from httpx import Client
 from ..helpers.multi_search_query_helper import generate_queries
 from ..models.competitions_multi_search_query import CompetitionsMultiSearchQuery
 from ..models.configuration_models import GetConfigurationResponse
+from ..models.content_multi_search_query import (
+    GaleriesMultiSearchQuery,
+    NewsMultiSearchQuery,
+    RssMultiSearchQuery,
+    YoutubeVideosMultiSearchQuery,
+)
 from ..models.engagements_multi_search_query import EngagementsMultiSearchQuery
 from ..models.formations_multi_search_query import FormationsMultiSearchQuery
+from ..models.generic_search import (
+    GaleriesMultiSearchResult,
+    NewsMultiSearchResult,
+    RssMultiSearchResult,
+    YoutubeVideosMultiSearchResult,
+)
 from ..models.get_commune_response import GetCommuneResponse
 from ..models.get_competition_response import GetCompetitionResponse
 from ..models.get_engagement_response import GetEngagementResponse
@@ -53,6 +65,7 @@ from ..utils.input_validation import (
     validate_string_list,
     validate_token,
 )
+from ..utils.token_manager import TokenManager
 from .api_ffbb_app_client import ApiFFBBAppClient
 from .meilisearch_ffbb_client import MeilisearchFFBBClient
 
@@ -70,8 +83,8 @@ class FFBBAPIClientV3:
 
     @staticmethod
     def create(
-        meilisearch_bearer_token: str,
-        api_bearer_token: str,
+        meilisearch_bearer_token: str | None = None,
+        api_bearer_token: str | None = None,
         debug: bool = False,
         cached_session: Client | None = None,
         async_cached_session: httpx.AsyncClient | None = None,
@@ -80,10 +93,13 @@ class FFBBAPIClientV3:
         Create a new FFBB API Client V3 instance with comprehensive input validation.
 
         Args:
-            meilisearch_bearer_token (str): Bearer token for Meilisearch API
-            api_bearer_token (str): Bearer token for FFBB API
+            meilisearch_bearer_token (str, optional): Bearer token for Meilisearch API.
+                If None, resolved via TokenManager.
+            api_bearer_token (str, optional): Bearer token for FFBB API.
+                If None, resolved via TokenManager.
             debug (bool, optional): Enable debug logging. Defaults to False.
             cached_session (Client, optional): HTTP cache session
+            async_cached_session (AsyncClient, optional): Async HTTP cache session
 
         Returns:
             FFBBAPIClientV3: Configured API client instance
@@ -91,6 +107,14 @@ class FFBBAPIClientV3:
         Raises:
             ValidationError: If any input parameter is invalid
         """
+        # Resolve tokens if not provided
+        if meilisearch_bearer_token is None or api_bearer_token is None:
+            tokens = TokenManager.get_tokens()
+            if meilisearch_bearer_token is None:
+                meilisearch_bearer_token = tokens.meilisearch_token
+            if api_bearer_token is None:
+                api_bearer_token = tokens.api_token
+
         # Validate inputs with comprehensive checks
         validated_meilisearch_token = validate_token(
             meilisearch_bearer_token, "meilisearch_bearer_token"
@@ -503,6 +527,154 @@ class FFBBAPIClientV3:
         """Asynchronously retrieves detailed information about a pratique."""
         return await self.api_ffbb_client.get_pratique_async(
             id, cached_session=cached_session
+        )
+
+    def get_openapi_spec(self) -> dict[str, Any] | None:
+        """Retrieves the current Directus OpenAPI specification."""
+        return self.api_ffbb_client.get_openapi_spec()
+
+    def get_session(
+        self, id: str, fields: list[str] | None = None
+    ) -> dict[str, Any] | None:
+        """Retrieves detailed information about a formation session."""
+        return self.api_ffbb_client.get_session(id, fields=fields)
+
+    def list_sessions(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists formation sessions."""
+        return self.api_ffbb_client.list_sessions(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
+    async def get_session_async(
+        self, id: str, fields: list[str] | None = None
+    ) -> dict[str, Any] | None:
+        """Asynchronously retrieves detailed information about a formation session."""
+        return await self.api_ffbb_client.get_session_async(id, fields=fields)
+
+    async def list_sessions_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Asynchronously lists formation sessions."""
+        return await self.api_ffbb_client.list_sessions_async(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
+    def get_genius_sport_match(
+        self, id: str, fields: list[str] | None = None
+    ) -> dict[str, Any] | None:
+        """Retrieves detailed Genius Sports match statistics."""
+        return self.api_ffbb_client.get_genius_sport_match(id, fields=fields)
+
+    def list_genius_sport_matches(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Genius Sports match statistics."""
+        return self.api_ffbb_client.list_genius_sport_matches(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
+    def list_genius_sports_live_logs(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Genius Sports live logs."""
+        return self.api_ffbb_client.list_genius_sports_live_logs(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
+    def get_rematch_video(
+        self, id: str, fields: list[str] | None = None
+    ) -> dict[str, Any] | None:
+        """Retrieves a Rematch video linked to FFBB data."""
+        return self.api_ffbb_client.get_rematch_video(id, fields=fields)
+
+    def list_rematch_videos(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Rematch videos linked to FFBB data."""
+        return self.api_ffbb_client.list_rematch_videos(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
+    def get_edf_match(
+        self, id: str | int, fields: list[str] | None = None
+    ) -> dict[str, Any] | None:
+        """Retrieves an Equipe de France match."""
+        return self.api_ffbb_client.get_edf_match(id, fields=fields)
+
+    def list_edf_matches(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Equipe de France matches."""
+        return self.api_ffbb_client.list_edf_matches(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
+    def get_edf_player(
+        self, id: str | int, fields: list[str] | None = None
+    ) -> dict[str, Any] | None:
+        """Retrieves an Equipe de France player."""
+        return self.api_ffbb_client.get_edf_player(id, fields=fields)
+
+    def list_edf_players(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Equipe de France players."""
+        return self.api_ffbb_client.list_edf_players(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
+    def list_edf_teams(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Equipe de France teams."""
+        return self.api_ffbb_client.list_edf_teams(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
+    def list_edf_rosters(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Lists Equipe de France rosters."""
+        return self.api_ffbb_client.list_edf_rosters(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
         )
 
     # -------------------------------------------------------------------------
@@ -1307,4 +1479,162 @@ class FFBBAPIClientV3:
             cast(list[FormationsMultiSearchResult], results.results)
             if results
             else None
+        )
+
+    # -------------------------------------------------------------------------
+    # Meilisearch — content indexes
+    # -------------------------------------------------------------------------
+
+    def search_news(
+        self,
+        name: str | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> NewsMultiSearchResult | None:
+        results = self.search_multiple_news(
+            [name] if name is not None else None,
+            filter=filter,
+            sort=sort,
+            limit=limit,
+            cached_session=cached_session,
+        )
+        return results[0] if results else None
+
+    def search_multiple_news(
+        self,
+        names: list[str | None] | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> list[NewsMultiSearchResult] | None:
+        if not names:
+            return None
+
+        queries = [
+            NewsMultiSearchQuery(name, limit=limit, filter=filter, sort=sort)
+            for name in names
+        ]
+        results = self.meilisearch_ffbb_client.recursive_smart_multi_search(
+            queries, cached_session
+        )
+        return cast(list[NewsMultiSearchResult], results.results) if results else None
+
+    def search_youtube_videos(
+        self,
+        name: str | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> YoutubeVideosMultiSearchResult | None:
+        results = self.search_multiple_youtube_videos(
+            [name] if name is not None else None,
+            filter=filter,
+            sort=sort,
+            limit=limit,
+            cached_session=cached_session,
+        )
+        return results[0] if results else None
+
+    def search_multiple_youtube_videos(
+        self,
+        names: list[str | None] | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> list[YoutubeVideosMultiSearchResult] | None:
+        if not names:
+            return None
+
+        queries = [
+            YoutubeVideosMultiSearchQuery(name, limit=limit, filter=filter, sort=sort)
+            for name in names
+        ]
+        results = self.meilisearch_ffbb_client.recursive_smart_multi_search(
+            queries, cached_session
+        )
+        return (
+            cast(list[YoutubeVideosMultiSearchResult], results.results)
+            if results
+            else None
+        )
+
+    def search_rss(
+        self,
+        name: str | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> RssMultiSearchResult | None:
+        results = self.search_multiple_rss(
+            [name] if name is not None else None,
+            filter=filter,
+            sort=sort,
+            limit=limit,
+            cached_session=cached_session,
+        )
+        return results[0] if results else None
+
+    def search_multiple_rss(
+        self,
+        names: list[str | None] | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> list[RssMultiSearchResult] | None:
+        if not names:
+            return None
+
+        queries = [
+            RssMultiSearchQuery(name, limit=limit, filter=filter, sort=sort)
+            for name in names
+        ]
+        results = self.meilisearch_ffbb_client.recursive_smart_multi_search(
+            queries, cached_session
+        )
+        return cast(list[RssMultiSearchResult], results.results) if results else None
+
+    def search_galeries(
+        self,
+        name: str | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> GaleriesMultiSearchResult | None:
+        results = self.search_multiple_galeries(
+            [name] if name is not None else None,
+            filter=filter,
+            sort=sort,
+            limit=limit,
+            cached_session=cached_session,
+        )
+        return results[0] if results else None
+
+    def search_multiple_galeries(
+        self,
+        names: list[str | None] | None = None,
+        filter: list[str] | None = None,
+        sort: list[str] | None = None,
+        limit: int | None = 10,
+        cached_session: Client | None = None,
+    ) -> list[GaleriesMultiSearchResult] | None:
+        if not names:
+            return None
+
+        queries = [
+            GaleriesMultiSearchQuery(name, limit=limit, filter=filter, sort=sort)
+            for name in names
+        ]
+        results = self.meilisearch_ffbb_client.recursive_smart_multi_search(
+            queries, cached_session
+        )
+        return (
+            cast(list[GaleriesMultiSearchResult], results.results) if results else None
         )
