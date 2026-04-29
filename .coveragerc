@@ -13,7 +13,6 @@ omit =
     tests/*
     tests/**/*
     # Build artifacts
-    */site-packages/*
     setup.py
     # Type stubs
     *.pyi
