@@ -599,6 +599,26 @@ class FFBBAPIClientV3:
             limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
         )
 
+    async def get_genius_sport_match_async(
+        self, id: str, fields: list[str] | None = None
+    ) -> dict[str, Any] | None:
+        """Asynchronously retrieves detailed Genius Sports match statistics."""
+        return await self.api_ffbb_client.get_genius_sport_match_async(
+            id, fields=fields
+        )
+
+    async def list_genius_sport_matches_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Asynchronously lists Genius Sports match statistics."""
+        return await self.api_ffbb_client.list_genius_sport_matches_async(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
     def get_rematch_video(
         self, id: str, fields: list[str] | None = None
     ) -> dict[str, Any] | None:
@@ -614,6 +634,24 @@ class FFBBAPIClientV3:
     ) -> list[dict[str, Any]]:
         """Lists Rematch videos linked to FFBB data."""
         return self.api_ffbb_client.list_rematch_videos(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
+    async def get_rematch_video_async(
+        self, id: str, fields: list[str] | None = None
+    ) -> dict[str, Any] | None:
+        """Asynchronously retrieves a Rematch video linked to FFBB data."""
+        return await self.api_ffbb_client.get_rematch_video_async(id, fields=fields)
+
+    async def list_rematch_videos_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Asynchronously lists Rematch videos linked to FFBB data."""
+        return await self.api_ffbb_client.list_rematch_videos_async(
             limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
         )
 
