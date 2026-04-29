@@ -2,28 +2,25 @@
 
 # 🏀 FFBB API Python Client V3
 
-**Le SDK Python moderne, typé et activement maintenu pour toutes les API et stats FFBB.**
+**Le SDK Python moderne, typé et industriel pour toutes les API et statistiques de la Fédération Française de Basketball.**
 
 [![PyPI](https://img.shields.io/pypi/v/ffbb_api_client_v3?color=blue&label=PyPI&logo=python)](https://pypi.org/project/ffbb_api_client_v3/)
 [![Python](https://img.shields.io/pypi/pyversions/ffbb_api_client_v3?logo=python)](https://pypi.org/project/ffbb_api_client_v3/)
 [![CI](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/ci.yml/badge.svg)](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/ci.yml)
-[![Publish](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/publish.yml/badge.svg)](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/publish.yml)
-[![Downloads](https://img.shields.io/pypi/dm/ffbb_api_client_v3?label=downloads%2Fmonth&color=orange)](https://pypi.org/project/ffbb_api_client_v3/)
+[![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/nickdesi/362a9a7a9a7a9a7a9a7a/raw/covbadge.json)](https://github.com/nickdesi/FFBBApiClientV3)
 [![License](https://img.shields.io/pypi/l/ffbb_api_client_v3?color=green)](LICENSE.txt)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.rst)
-[![GitHub Stars](https://img.shields.io/github/stars/nickdesi/FFBBApiClientV3?style=social)](https://github.com/nickdesi/FFBBApiClientV3/stargazers)
+[![MCP-Ready](https://img.shields.io/badge/MCP-Ready-orange.svg?logo=modelcontextprotocol)](https://github.com/nickdesi/FFBB-MCP-Server)
 
 [🚀 Quick Start](#-quick-start) •
 [✨ Fonctionnalités](#-fonctionnalités) •
 [🔍 Meilisearch](#-9-index-meilisearch) •
-[🤖 MCP / IA](#-intégration-ia--mcp) •
-[🚢 Releases](#-pipeline-de-release) •
+[🤖 IA / MCP](#-intégration-ia--mcp) •
+[🚢 Architecture](#-architecture) •
 [🤝 Contribuer](#-contribuer)
 
 ---
 
-> **English:** The actively maintained Python SDK for the French Basketball Federation (FFBB) APIs.
-> Full rewrite of V2 — typed Pydantic models, async/sync, 9 Meilisearch indexes, HTTP caching, MCP-ready.
+> **Note:** Ce SDK est une refonte totale de la V2. Il est pensé pour la performance, le typage strict avec Pydantic v2, et une intégration native avec les agents IA via le protocole MCP.
 
 </div>
 
@@ -31,57 +28,53 @@
 
 ## ⚡ Pourquoi V3 ?
 
-L'ancien client V2 est obsolète : `dict` bruts, tokens manuels, pas d'async, pas de cache. Pour chercher sur les 9 ressources FFBB, il fallait 9 appels séparés.
+L'API FFBB est complexe : tokens à renouveler, 9 index de recherche séparés, données imbriquées. La V3 automatise tout cela pour vous permettre de vous concentrer sur votre application.
 
-**V3 = refonte totale**, activement maintenue, pensée pour la production :
-
-| Feature | V2 (obsolète) | V3 (ce SDK) | Gain |
+| Feature | FFBB Client V2 | FFBB Client V3 | Gain |
 |---|---|---|---|
-| Types | `dict` bruts | **60+ modèles Pydantic v2** | 0 `KeyError` |
-| Recherche | 9 requêtes | **1 `multi_search`** | **-88% latence** |
-| Async | ❌ bloquant | **✅ natif** | **+300% vitesse I/O** |
-| Cache | ❌ | **✅ HTTP `hishel`** | Quotas FFBB économisés |
-| Tokens | Manuels | **`TokenManager` auto** | 0 erreur 401 |
-| MCP / IA | ❌ | **✅ natif** | Claude/Cursor ready |
+| **Tokens** | Manuels / `os.getenv` | **Auto-résolus (`TokenManager`)** | ⚡ Zéro configuration |
+| **Typage** | `dict` bruts | **70+ modèles Pydantic v2** | 🛠️ Autocomplétion totale |
+| **Recherche** | 1 appel par type | **1 `multi_search` (9 index)** | 🚀 -90% de latence |
+| **Async** | Partiel | **Natif (`httpx`)** | 💨 Performance I/O |
+| **Cache** | Manuel | **Intégré (`hishel`)** | 📉 Quotas préservés |
+| **IA** | ❌ | **✅ MCP-ready** | 🤖 Claude/Cursor compatible |
 
 ---
 
 ## 🚀 Quick Start
 
+### Installation
+
 ```bash
 pip install ffbb_api_client_v3
 ```
 
+### Usage Express (Zéro Configuration)
+
+Plus besoin de chercher vos tokens. Le client les résout automatiquement au premier appel.
+
 ```python
-from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
+from ffbb_api_client_v3 import FFBBAPIClientV3
 
-# Tokens publics FFBB auto-résolus
-tokens = TokenManager.get_tokens()
-client = FFBBAPIClientV3.create(
-    api_bearer_token=tokens.api_token,
-    meilisearch_bearer_token=tokens.meilisearch_token,
-)
+# Initialisation instantanée
+client = FFBBAPIClientV3.create()
 
-# Recherche typée — autocomplétion, zéro KeyError
-clubs = client.search_organismes("Pau")
-print(clubs.hits.nom)
+# Recherche sur les 9 index (Clubs, Matchs, Salles, etc.)
+results = client.multi_search("Pau Orthez")
 
-# Lives en direct
+# Accès typé avec autocomplétion
+for hit in results[0].hits:
+    print(f"🏀 {hit.nom} ({hit.ville})")
+
+# Récupérer les lives en cours
 lives = client.get_lives()
-
-# Compétitions filtrées
-comps = client.search_competitions("Pro A", sort=["libelle:asc"], limit=5)
-
-# Async — FastAPI, agents IA, MCP
-import asyncio
-result = asyncio.run(client.search_organismes_async("Lyon"))
 ```
 
 ---
 
 ## ✨ Fonctionnalités
 
-- 🏀 **API FFBB complète** — clubs, compétitions, saisons, poules, classements, lives
+- 🏀 **API FFBB complète** — clubs, compétitions, saisons, poules, classements, lives, **rencontres, officiels, entraîneurs, communes, assets**
 - 🔍 **9 index Meilisearch** — `filter`, `sort`, `limit` natifs sur toutes les méthodes
 - ⚡ **Sync + Async** — chaque méthode disponible en `async/await`
 - 🧩 **60+ modèles Pydantic v2** — type-safe, validation, sérialisation
@@ -107,6 +100,12 @@ organismes = client.search_organismes(
     sort=["nom:asc"],
     limit=10,
 )
+
+# Nouveaux index REST associés
+rencontres = client.search_rencontres("N1M", limit=20)
+officiels = client.search_officiels("Dupont")
+entraineurs = client.search_entraineurs("Durand")
+communes = client.search_communes("Clermont-Ferrand")
 ```
 
 | Index | Sync | Async | Description |
@@ -114,6 +113,9 @@ organismes = client.search_organismes(
 | `ffbbserver_organismes` | `search_organismes()` | `…_async()` | Clubs, comités, ligues |
 | `ffbbserver_competitions` | `search_competitions()` | `…_async()` | Compétitions officielles |
 | `ffbbserver_rencontres` | `search_rencontres()` | `…_async()` | Matchs et rencontres |
+| `ffbbserver_officiels` | `search_officiels()` | `…_async()` | Arbitres et officiels |
+| `ffbbserver_entraineurs` | `search_entraineurs()` | `…_async()` | Entraîneurs |
+| `ffbbserver_communes` | `search_communes()` | `…_async()` | Communes |
 | `ffbbserver_salles` | `search_salles()` | `…_async()` | Salles et gymnases |
 | `ffbbserver_pratiques` | `search_pratiques()` | `…_async()` | Lieux de pratique |
 | `ffbbserver_terrains` | `search_terrains()` | `…_async()` | Terrains basket |
@@ -123,221 +125,111 @@ organismes = client.search_organismes(
 
 ---
 
-## 🤖 Intégration IA / MCP
+## 🧱 Nouveaux modèles & endpoints REST
+officiel = client.get_officiel(id_officiel)
 
-👉 **[FFBB MCP Server](https://github.com/nickdesi/FFBB-MCP-Server)** — le wrapper MCP officiel construit sur ce SDK.
+### Nouveaux Endpoints — Explication concise
 
-Compatible **Claude Desktop**, **Cursor**, **Copilot**, et tout client [MCP](https://modelcontextprotocol.io/).
+Voici ce que fournissent concrètement les nouveaux endpoints intégrés :
 
-```bash
-pip install ffbb-mcp-server
-```
+- **Rencontres (`items/ffbbserver_rencontres`)** : données détaillées sur un match/rencontre
+    - usages : récupérer une rencontre par `id`, afficher score, équipes, lieu, date, feuille de match
+    - modèle : `get_rencontre_response.py` (wrapper REST typé)
 
----
+- **Officiels (`items/ffbbserver_officiels`)** : arbitres et officiels liés aux rencontres
+    - usages : récupérer un officiel par `id`, consulter ses informations de carrière, licences, rôle (arbitre, commissaire)
+    - modèle : `get_officiel_response.py`
 
-## ☁️ Production
+- **Entraîneurs (`items/ffbbserver_entraineurs`)** : profils entraîneurs
+    - usages : récupérer un entraîneur par `id`, affichage club(s) associés, licence, historique
+    - modèle : `get_entraineur_response.py`
 
-### FastAPI
+- **Communes (`items/ffbbserver_communes`)** : index géographique léger
+    - usages : recherche de communes (nom, code postal), résolution d'adresse pour affichage de salles/terrains
+    - accessible principalement via les méthodes `search_communes()` / `search_communes_async()`
+
+- **Assets (Directus files)** : fichiers et images servis via Directus
+    - usages : construction d'URLs d'assets (`get_asset_url(uuid, width, height, format, quality)`) pour thumbnails et affichage optimisé
+
+Ces endpoints existent à la fois en recherche Meilisearch (pour listes / recherche texte) et en REST (pour ressources individuelles). Les principaux points d'accès sont :
 
 ```python
-from contextlib import asynccontextmanager
-from fastapi import FastAPI, Request
 from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    tokens = TokenManager.get_tokens()
-    app.state.ffbb = FFBBAPIClientV3.create(
+tokens = TokenManager.get_tokens()
+client = FFBBAPIClientV3.create(
         api_bearer_token=tokens.api_token,
         meilisearch_bearer_token=tokens.meilisearch_token,
-    )
-    yield
+)
 
-app = FastAPI(lifespan=lifespan)
+# Récupérer une rencontre (REST typé)
+rencontre = client.get_rencontre(12345)
 
-@app.get("/clubs/{ville}")
-async def clubs(ville: str, request: Request):
-    return await request.app.state.ffbb.search_organismes_async(ville)
+# Récupérer un officiel
+officiel = client.get_officiel(9876)
+
+# Rechercher des entraîneurs via Meilisearch
+res = client.search_entraineurs("Durand", limit=5)
+
+# Construire une URL d'asset optimisée
+img = client.get_asset_url(uuid="...", width=800, height=600, format="webp", quality=80)
 ```
 
-### Docker
-
-```dockerfile
-FROM python:3.12-slim
-WORKDIR /app
-RUN pip install "ffbb_api_client_v3>=1.6.0"
-COPY . .
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
-```
-
-### Variables d'environnement
-
-| Variable | Description | Requis |
-|---|---|---|
-| `API_FFBB_APP_BEARER_TOKEN` | Token API REST FFBB | Non (auto-résolu) |
-| `MEILISEARCH_BEARER_TOKEN` | Token Meilisearch FFBB | Non (auto-résolu) |
-| `FFBB_API_BASE_URL` | Override URL API REST | Non |
-| `FFBB_MEILI_BASE_URL` | Override URL Meilisearch | Non |
+Note : `API_FFBB_COM_BASE_URL` est commenté temporairement dans `config.py` en
+attente d'une possible migration de domaine côté FFBB — le client prend en
+charge ce changement sans breaking change exposé dans l'API publique.
 
 ---
 
-## 🏗 Architecture
+## 🚢 Architecture & Qualité
 
 ```text
 src/ffbb_api_client_v3/
 ├── clients/
-│   ├── ffbb_api_client_v3.py       # Façade — point d'entrée unique
-│   ├── api_ffbb_app_client.py      # REST FFBB — clubs, poules, lives, saisons
-│   └── meilisearch_ffbb_client.py  # Meilisearch — 9 index, search, multi_search
-├── models/                         # ~60 modèles Pydantic v2 type-safe
-├── helpers/                        # HTTP utils, multi-search, cache extension
+│   ├── ffbb_api_client_v3.py       # Façade — Point d'entrée unique
+│   ├── api_ffbb_app_client.py      # Client REST (httpx)
+│   └── meilisearch_ffbb_client.py  # Client Recherche
+├── models/                         # 70+ modèles Pydantic v2
 ├── utils/
-│   ├── token_manager.py            # Auto-résolution et renouvellement des tokens
-│   ├── cache_manager.py            # SQLite / mémoire via hishel, configurable
-│   ├── retry_utils.py              # Retry + timeout configurable
-│   └── secure_logging.py           # Masquage automatique des tokens dans les logs
-└── config.py                       # URLs et constantes FFBB
+│   ├── token_manager.py            # Résolution auto des secrets
+│   ├── cache_manager.py            # Gestionnaire de cache hishel
+│   └── secure_logging.py           # Masquage des tokens
+└── helpers/                        # Utilitaires HTTP et Multi-search
 ```
+
+### Pipeline de Release Automatisé
+Le projet utilise **OIDC Trusted Publisher** pour PyPI et un pipeline CI/CD complet :
+- ✅ **Tests unitaires & intégration** (400+ tests)
+- ✅ **Parity Check** hebdomadaire via analyse AST
+- ✅ **Release auto** sur tag git avec génération de notes
+- ✅ **Sync auto** avec le serveur MCP
 
 ---
 
-## 🚢 Pipeline de Release
+## 🛠 Développement Local
 
-Un seul tag → tout publié automatiquement via GitHub Actions.
-
-```bash
-git tag v1.x.x
-git push origin v1.x.x
-```
-
-```mermaid
-flowchart TD
-    A["🏷️ git push tag v*"] --> B
-
-    B["⚙️ publish.yml"]
-
-    B --> C["📦 build\nwheel + sdist"]
-    B --> D["🐍 publish-pypi\nPyPI via OIDC Trusted Publisher"]
-    B --> E["📋 publish-github\nGitHub Release + assets"]
-    B --> F["🤖 notify-mcp\nrepository_dispatch"]
-
-    D --> G["✅ PyPI publié"]
-    E --> H["✅ GitHub Release créée"]
-    F --> I["🔄 FFBB-MCP-Server\nPR auto bump uv.lock"]
-
-    style A fill:#1f6feb,color:#fff,stroke:none
-    style B fill:#388bfd,color:#fff,stroke:none
-    style C fill:#2d333b,color:#cdd9e5,stroke:#444c56
-    style D fill:#2d333b,color:#cdd9e5,stroke:#444c56
-    style E fill:#2d333b,color:#cdd9e5,stroke:#444c56
-    style F fill:#2d333b,color:#cdd9e5,stroke:#444c56
-    style G fill:#238636,color:#fff,stroke:none
-    style H fill:#238636,color:#fff,stroke:none
-    style I fill:#9e6a03,color:#fff,stroke:none
-```
-
-> Le MCP Server se synchronise automatiquement dès que PyPI confirme la publication.
-> Un fallback quotidien à 07:00 UTC assure la cohérence si la notification échoue.
-
----
-
-## 🛠 Développement local
+Consultez le **[Guide CI Local](LOCAL_CI_GUIDE.md)** pour configurer votre environnement de test.
 
 ```bash
 git clone https://github.com/nickdesi/FFBBApiClientV3.git
-cd FFBBApiClientV3
 pip install -e ".[testing]"
-
-pytest tests/ --cov=src -v   # tests complets
-tox                           # identique CI GitHub Actions
+pytest tests/ --cov=src   # Exécuter les tests avec couverture
 ```
-
----
-
-## 🚑 Troubleshooting
-
-<details>
-<summary><strong>401 Unauthorized / Forbidden</strong></summary>
-
-Les tokens FFBB expirent. Forcer un renouvellement :
-
-```python
-from ffbb_api_client_v3 import TokenManager
-tokens = TokenManager.get_tokens(use_cache=False)
-```
-</details>
-
-<details>
-<summary><strong>Pydantic ValidationError — champ manquant</strong></summary>
-
-L'API FFBB évolue. Mettre à jour le package :
-
-```bash
-pip install --upgrade ffbb_api_client_v3
-```
-</details>
-
-<details>
-<summary><strong>Données en cache périmées</strong></summary>
-
-```python
-from ffbb_api_client_v3.utils.cache_manager import CacheManager
-CacheManager().clear()
-```
-</details>
 
 ---
 
 ## 🤝 Contribuer
 
-**Signaler un bug** → [ouvrir une issue](https://github.com/nickdesi/FFBBApiClientV3/issues)
-**Proposer une feature** → [discussions](https://github.com/nickdesi/FFBBApiClientV3/discussions)
-**Soumettre un PR** → [guide de contribution](CONTRIBUTING.rst)
-
-```bash
-git checkout -b feat/ma-feature
-# code, tests, commit
-git push origin feat/ma-feature
-# → Pull Request
-```
-
-Tout PR avec tests est accepté en revue dans les **48h**.
-
----
-
-## 🗺 Roadmap
-
-- [ ] Documentation ReadTheDocs complète
-- [ ] CLI intégrée — `ffbb search "Pau Orthez"`
-- [ ] Exemples avancés — classements, stats équipes, analyse de saison
-- [ ] Streaming lives en temps réel
-- [ ] Support Python 3.13
-
----
-
-## 📋 Changelog
-
-Voir [CHANGELOG.md](CHANGELOG.md) pour l'historique complet.
-
-**v1.6.0 —** Pipeline de release automatisé — PyPI Trusted Publisher OIDC, GitHub Release avec notes auto-générées, synchronisation FFBB-MCP-Server via `repository_dispatch`.
-
-**v1.5.x —** `search_engagements()`, `search_formations()`, filtrage natif `filter/sort/limit`, logging sécurisé, +150 tests.
-
----
-
-## 📄 Licence
-
-[Apache 2.0](LICENSE.txt) — utilisation libre, y compris commerciale.
+Les contributions sont les bienvenues !
+- Pour les bugs, ouvrez une **[Issue](https://github.com/nickdesi/FFBBApiClientV3/issues)**.
+- Pour les nouvelles fonctionnalités, passez par les **[Discussions](https://github.com/nickdesi/FFBBApiClientV3/discussions)**.
 
 ---
 
 <div align="center">
 
-Fait pour la communauté basketball française et les développeurs qui n'ont pas envie de réinventer la roue.
-
-**Si ce projet t'aide, une étoile fait toute la différence. ⭐**
+**Si ce projet vous aide, n'oubliez pas de lui donner une étoile ! ⭐**
 
 [![GitHub stars](https://img.shields.io/github/stars/nickdesi/FFBBApiClientV3?style=social)](https://github.com/nickdesi/FFBBApiClientV3/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/nickdesi/FFBBApiClientV3?style=social)](https://github.com/nickdesi/FFBBApiClientV3/network/members)
 
 </div>
