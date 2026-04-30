@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import threading
@@ -155,7 +156,7 @@ class MeilisearchClient:
         key = _make_cache_key(queries)
         cached = _cache_get(key)
         if cached is not None:
-            return cached
+            return copy.deepcopy(cached)
 
         url = f"{self.url}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}"
         params = {"queries": [query.to_dict() for query in queries] if queries else []}
@@ -172,7 +173,7 @@ class MeilisearchClient:
         )
         result = MultiSearchResults.from_dict(raw_data) if raw_data else None
         if result is not None:
-            _cache_set(key, result)
+            _cache_set(key, copy.deepcopy(result))
         return result
 
     async def multi_search_async(
@@ -183,7 +184,7 @@ class MeilisearchClient:
         key = _make_cache_key(queries)
         cached = _cache_get(key)
         if cached is not None:
-            return cached
+            return copy.deepcopy(cached)
 
         url = f"{self.url}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}"
         params = {"queries": [query.to_dict() for query in queries] if queries else []}
@@ -206,5 +207,5 @@ class MeilisearchClient:
             result = None
 
         if result is not None:
-            _cache_set(key, result)
+            _cache_set(key, copy.deepcopy(result))
         return result

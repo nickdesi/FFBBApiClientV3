@@ -1077,14 +1077,16 @@ class FFBBAPIClientV3:
         if categorie:
             for res in rencontres_results:
                 if res.hits:
-                    # ⚡ Bolt optimization: Use walrus operator to avoid redundant attribute access (~14% speedup)
-                    filtered_hits = [
-                        hit
-                        for hit in res.hits
-                        if (comp := hit.competition_id)
-                        and (cat := comp.categorie)
-                        and (cat.code == categorie or cat.libelle == categorie)
-                    ]
+                    filtered_hits = []
+                    for hit in res.hits:
+                        comp = hit.competition_id
+                        cat = comp.categorie if comp else None
+                        if (
+                            comp
+                            and cat
+                            and (cat.code == categorie or cat.libelle == categorie)
+                        ):
+                            filtered_hits.append(hit)
                     res.hits = filtered_hits
                     res.estimated_total_hits = len(filtered_hits)
 
