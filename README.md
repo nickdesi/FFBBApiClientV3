@@ -26,6 +26,18 @@
 
 ---
 
+## 🚀 Release v1.7.0 (2026-04-30)
+
+Small release summarizing recent changes since `v1.6.1`:
+
+- **Added**: extended API coverage with ~10 new entities (rencontres, officiels, entraineurs, communes, assets).
+- **Improved**: Meilisearch — in-memory app cache and stronger cache policies.
+- **Added**: async delegations (expose async `list_*` methods) and async Genius Sports / Rematch wrappers.
+- **Updated**: data collections, Meilisearch indexes and OpenAPI schema.
+- **Fixed**: CI, tests and formatting issues.
+
+See the full commit history for details.
+
 ## ⚡ Pourquoi V3 ?
 
 L'API FFBB est complexe : tokens à renouveler, 9 index de recherche séparés, données imbriquées. La V3 automatise tout cela pour vous permettre de vous concentrer sur votre application.
