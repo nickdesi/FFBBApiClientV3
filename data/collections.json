@@ -332,9 +332,9 @@
     "items/youtube_videos_youtube_tags"
   ],
   "metadata": {
-    "openapi_version": "fa7fbe4505aabafbafa5ab1c54e35beef721e52d",
+    "openapi_version": "81dc585185721d2d026413c186a80f4779abf831",
     "source": "https://api.ffbb.app/server/specs/oas",
-    "timestamp": "2026-04-30T13:19:42.659663+00:00"
+    "timestamp": "2026-04-30T13:30:14.497350+00:00"
   },
   "paths": {
     "items/configuration": [

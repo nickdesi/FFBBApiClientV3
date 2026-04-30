@@ -180,9 +180,13 @@ def _probe_meili_indexes(token: str) -> list[dict[str, Any]]:
         payload = {"queries": [{"indexUid": index_uid, "q": "", "limit": 1}]}
         try:
             response = http_post_json(url, headers, data=payload, timeout=30)
-        except Exception as exc:
+        except Exception:
             discovered.append(
-                {"indexUid": index_uid, "available": False, "error": str(exc)}
+                {
+                    "indexUid": index_uid,
+                    "available": False,
+                    "status": "not_available",
+                }
             )
             continue
 
@@ -192,6 +196,7 @@ def _probe_meili_indexes(token: str) -> list[dict[str, Any]]:
             {
                 "indexUid": index_uid,
                 "available": bool(results),
+                "status": "available" if results else "empty_or_not_available",
                 "estimatedTotalHits": result.get("estimatedTotalHits"),
                 "sampleKeys": (
                     sorted(result.get("hits", [{}])[0].keys())
@@ -341,8 +346,16 @@ def main() -> None:
             "timestamp": timestamp,
             "source": f"{MEILISEARCH_BASE_URL}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}",
         },
-        "indexes": meili_indexes,
         "available_indexes": available_indexes,
+        "indexes": [item for item in meili_indexes if item["available"]],
+        "unavailable_indexes": [
+            {
+                "indexUid": item["indexUid"],
+                "status": item.get("status", "not_available"),
+            }
+            for item in meili_indexes
+            if not item["available"]
+        ],
     }
     report = {
         "metadata": {

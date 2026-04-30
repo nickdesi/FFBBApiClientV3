@@ -16,21 +16,6 @@
   ],
   "indexes": [
     {
-      "available": false,
-      "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-      "indexUid": "edf_matches"
-    },
-    {
-      "available": false,
-      "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-      "indexUid": "edf_players"
-    },
-    {
-      "available": false,
-      "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-      "indexUid": "edf_teams"
-    },
-    {
       "available": true,
       "estimatedTotalHits": 98,
       "indexUid": "ffbbnational_galeries",
@@ -50,7 +35,8 @@
         "thumbnail",
         "title",
         "type"
-      ]
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -103,7 +89,8 @@
         "twitter",
         "type",
         "ville_salle"
-      ]
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -132,7 +119,8 @@
         "thumbnail",
         "title",
         "type"
-      ]
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -175,7 +163,8 @@
         "toUpdate",
         "typeCompetition",
         "typeCompetitionGenerique"
-      ]
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -209,7 +198,8 @@
         "numeroEquipe",
         "sexe",
         "thumbnail"
-      ]
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -243,7 +233,8 @@
         "thumbnail",
         "title",
         "type"
-      ]
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -277,7 +268,8 @@
         "type_association",
         "urlSiteWeb",
         "url_competition"
-      ]
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -320,7 +312,8 @@
         "thumbnail",
         "uniqueKey",
         "url_competition"
-      ]
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -344,12 +337,8 @@
         "thumbnail",
         "type",
         "type_association"
-      ]
-    },
-    {
-      "available": false,
-      "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-      "indexUid": "ffbbserver_sessions"
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -371,7 +360,8 @@
         "rue",
         "thumbnail",
         "type"
-      ]
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -409,7 +399,8 @@
         "tournoiType",
         "tournoiTypes3x3",
         "urlOrganisateur"
-      ]
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -437,22 +428,8 @@
         "thumbnail",
         "title",
         "type"
-      ]
-    },
-    {
-      "available": false,
-      "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-      "indexUid": "genius_sport_matches"
-    },
-    {
-      "available": false,
-      "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-      "indexUid": "genius_sports_live_logs"
-    },
-    {
-      "available": false,
-      "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-      "indexUid": "rematch_videos"
+      ],
+      "status": "available"
     },
     {
       "available": true,
@@ -483,11 +460,42 @@
         "title",
         "type",
         "viewCount"
-      ]
+      ],
+      "status": "available"
     }
   ],
   "metadata": {
     "source": "https://meilisearch-prod.ffbb.app/multi-search",
-    "timestamp": "2026-04-30T13:19:42.659663+00:00"
-  }
+    "timestamp": "2026-04-30T13:30:14.497350+00:00"
+  },
+  "unavailable_indexes": [
+    {
+      "indexUid": "edf_matches",
+      "status": "not_available"
+    },
+    {
+      "indexUid": "edf_players",
+      "status": "not_available"
+    },
+    {
+      "indexUid": "edf_teams",
+      "status": "not_available"
+    },
+    {
+      "indexUid": "ffbbserver_sessions",
+      "status": "not_available"
+    },
+    {
+      "indexUid": "genius_sport_matches",
+      "status": "not_available"
+    },
+    {
+      "indexUid": "genius_sports_live_logs",
+      "status": "not_available"
+    },
+    {
+      "indexUid": "rematch_videos",
+      "status": "not_available"
+    }
+  ]
 }

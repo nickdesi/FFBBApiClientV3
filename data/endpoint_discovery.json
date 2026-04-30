@@ -333,9 +333,9 @@
       "items/youtube_videos_youtube_tags"
     ],
     "metadata": {
-      "openapi_version": "fa7fbe4505aabafbafa5ab1c54e35beef721e52d",
+      "openapi_version": "81dc585185721d2d026413c186a80f4779abf831",
       "source": "https://api.ffbb.app/server/specs/oas",
-      "timestamp": "2026-04-30T13:19:42.659663+00:00"
+      "timestamp": "2026-04-30T13:30:14.497350+00:00"
     },
     "paths": {
       "items/configuration": [
@@ -1381,21 +1381,6 @@
     ],
     "indexes": [
       {
-        "available": false,
-        "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-        "indexUid": "edf_matches"
-      },
-      {
-        "available": false,
-        "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-        "indexUid": "edf_players"
-      },
-      {
-        "available": false,
-        "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-        "indexUid": "edf_teams"
-      },
-      {
         "available": true,
         "estimatedTotalHits": 98,
         "indexUid": "ffbbnational_galeries",
@@ -1415,7 +1400,8 @@
           "thumbnail",
           "title",
           "type"
-        ]
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1468,7 +1454,8 @@
           "twitter",
           "type",
           "ville_salle"
-        ]
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1497,7 +1484,8 @@
           "thumbnail",
           "title",
           "type"
-        ]
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1540,7 +1528,8 @@
           "toUpdate",
           "typeCompetition",
           "typeCompetitionGenerique"
-        ]
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1574,7 +1563,8 @@
           "numeroEquipe",
           "sexe",
           "thumbnail"
-        ]
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1608,7 +1598,8 @@
           "thumbnail",
           "title",
           "type"
-        ]
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1642,7 +1633,8 @@
           "type_association",
           "urlSiteWeb",
           "url_competition"
-        ]
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1685,7 +1677,8 @@
           "thumbnail",
           "uniqueKey",
           "url_competition"
-        ]
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1709,12 +1702,8 @@
           "thumbnail",
           "type",
           "type_association"
-        ]
-      },
-      {
-        "available": false,
-        "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-        "indexUid": "ffbbserver_sessions"
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1736,7 +1725,8 @@
           "rue",
           "thumbnail",
           "type"
-        ]
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1774,7 +1764,8 @@
           "tournoiType",
           "tournoiTypes3x3",
           "urlOrganisateur"
-        ]
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1802,22 +1793,8 @@
           "thumbnail",
           "title",
           "type"
-        ]
-      },
-      {
-        "available": false,
-        "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-        "indexUid": "genius_sport_matches"
-      },
-      {
-        "available": false,
-        "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-        "indexUid": "genius_sports_live_logs"
-      },
-      {
-        "available": false,
-        "error": "Client error '400 Bad Request' for url 'https://meilisearch-prod.ffbb.app/multi-search'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400",
-        "indexUid": "rematch_videos"
+        ],
+        "status": "available"
       },
       {
         "available": true,
@@ -1848,20 +1825,51 @@
           "title",
           "type",
           "viewCount"
-        ]
+        ],
+        "status": "available"
       }
     ],
     "metadata": {
       "source": "https://meilisearch-prod.ffbb.app/multi-search",
-      "timestamp": "2026-04-30T13:19:42.659663+00:00"
-    }
+      "timestamp": "2026-04-30T13:30:14.497350+00:00"
+    },
+    "unavailable_indexes": [
+      {
+        "indexUid": "edf_matches",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "edf_players",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "edf_teams",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "ffbbserver_sessions",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "genius_sport_matches",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "genius_sports_live_logs",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "rematch_videos",
+        "status": "not_available"
+      }
+    ]
   },
   "metadata": {
     "api_base_url": "https://api.ffbb.app/",
     "meilisearch_base_url": "https://meilisearch-prod.ffbb.app/",
-    "openapi_sha256": "6fed70777396060dacd23abc760956d5bba312655163b74229d6994e508a2be0",
-    "openapi_snapshot_sha256": "0653458e50f89450bf7a6d246e4f90020c023f92ba2177e330de069ba3e2427b",
-    "openapi_version": "fa7fbe4505aabafbafa5ab1c54e35beef721e52d",
-    "timestamp": "2026-04-30T13:19:42.659663+00:00"
+    "openapi_sha256": "196c91b6ca286bc66f7c78a7e9a067f817dc89fa3deb00be3d70e0b586f8bab4",
+    "openapi_snapshot_sha256": "c0b15cf5d6e68fae001591e92c69a5155f1e96afce725065f401c92488f20015",
+    "openapi_version": "81dc585185721d2d026413c186a80f4779abf831",
+    "timestamp": "2026-04-30T13:30:14.497350+00:00"
   }
 }
