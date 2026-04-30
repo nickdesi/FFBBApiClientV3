@@ -35,7 +35,7 @@ jobs:
       - name: Detect discovery changes
         id: changes
         run: |
-          if [[ -n "$(git status --porcelain data/)" ]]; then
+          if [[ -n "$(git status --porcelain data/ src/ffbb_api_client_v3/data/)" ]]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -70,3 +70,9 @@ jobs:
             data/openapi.json
             data/openapi_full.json
             data/api_update_summary.md
+            src/ffbb_api_client_v3/data/__init__.py
+            src/ffbb_api_client_v3/data/collections.json
+            src/ffbb_api_client_v3/data/endpoint_discovery.json
+            src/ffbb_api_client_v3/data/indexes.json
+            src/ffbb_api_client_v3/data/openapi.json
+            src/ffbb_api_client_v3/data/openapi_full.json

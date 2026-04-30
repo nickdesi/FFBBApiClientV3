@@ -27,6 +27,34 @@ jobs:
       - name: Build package
         run: python -m build
 
+      - name: Verify packaged discovery artefacts
+        run: |
+          python - <<'PY'
+          import json
+          import zipfile
+          from pathlib import Path
+
+          wheels = list(Path('dist').glob('*.whl'))
+          if len(wheels) != 1:
+              raise SystemExit(f'Expected one wheel, found {len(wheels)}')
+
+          required = {
+              'ffbb_api_client_v3/data/collections.json',
+              'ffbb_api_client_v3/data/endpoint_discovery.json',
+              'ffbb_api_client_v3/data/indexes.json',
+              'ffbb_api_client_v3/data/openapi.json',
+              'ffbb_api_client_v3/data/openapi_full.json',
+          }
+          with zipfile.ZipFile(wheels[0]) as wheel:
+              names = set(wheel.namelist())
+              missing = sorted(required - names)
+              if missing:
+                  raise SystemExit(f'Missing discovery artefacts in wheel: {missing}')
+              with wheel.open('ffbb_api_client_v3/data/endpoint_discovery.json') as handle:
+                  json.load(handle)
+          print('Discovery artefacts are present in the wheel.')
+          PY
+
       - name: Upload distribution artifacts
         uses: actions/upload-artifact@v4
         with:

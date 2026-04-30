@@ -53,12 +53,20 @@ from ffbb_api_client_v3.utils.cache_manager import CacheConfig  # noqa: E402
 from ffbb_api_client_v3.utils.token_manager import TokenManager  # noqa: E402
 
 DATA_DIR = PROJECT_ROOT / "data"
+PACKAGE_DATA_DIR = PROJECT_ROOT / "src" / "ffbb_api_client_v3" / "data"
 REPORT_PATH = DATA_DIR / "endpoint_discovery.json"
 COLLECTIONS_PATH = DATA_DIR / "collections.json"
 INDEXES_PATH = DATA_DIR / "indexes.json"
 OPENAPI_PATH = DATA_DIR / "openapi.json"
 OPENAPI_FULL_PATH = DATA_DIR / "openapi_full.json"
 CHANGE_SUMMARY_PATH = DATA_DIR / "api_update_summary.md"
+PACKAGED_ARTEFACT_PATHS = [
+    COLLECTIONS_PATH,
+    REPORT_PATH,
+    INDEXES_PATH,
+    OPENAPI_PATH,
+    OPENAPI_FULL_PATH,
+]
 
 MEILI_CANDIDATE_INDEXES = [
     MEILISEARCH_INDEX_ORGANISMES,
@@ -119,6 +127,22 @@ def _write_json_if_changed(path: Path, payload: Any) -> bool:
         return False
     _write_json(path, payload)
     return True
+
+
+def _sync_packaged_artefacts(paths: list[Path]) -> list[Path]:
+    PACKAGE_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    changed: list[Path] = []
+    for source_path in paths:
+        target_path = PACKAGE_DATA_DIR / source_path.name
+        source_content = source_path.read_text(encoding="utf-8")
+        previous_content = (
+            target_path.read_text(encoding="utf-8") if target_path.exists() else None
+        )
+        if previous_content == source_content:
+            continue
+        target_path.write_text(source_content, encoding="utf-8")
+        changed.append(target_path)
+    return changed
 
 
 def _stable_hash(payload: Any) -> str:
@@ -391,12 +415,21 @@ def main() -> None:
     if any(changed) or not CHANGE_SUMMARY_PATH.exists():
         CHANGE_SUMMARY_PATH.write_text(summary, encoding="utf-8")
 
+    packaged_changed = _sync_packaged_artefacts(PACKAGED_ARTEFACT_PATHS)
+
     print(f"Directus collections: {len(collections)}")
     print(f"Directus item paths: {len(item_paths)}")
     print(f"Available Meilisearch indexes: {len(available_indexes)}")
     print(f"OpenAPI SHA256: {report['metadata']['openapi_sha256']}")
     print(f"Report written to: {REPORT_PATH}")
     print(f"Change summary written to: {CHANGE_SUMMARY_PATH}")
+    if packaged_changed:
+        print(
+            "Packaged artefacts updated: "
+            + ", ".join(
+                str(path.relative_to(PROJECT_ROOT)) for path in packaged_changed
+            )
+        )
 
 
 if __name__ == "__main__":

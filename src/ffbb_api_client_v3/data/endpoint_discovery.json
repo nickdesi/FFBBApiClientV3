@@ -1,0 +1,1875 @@
+{
+  "directus": {
+    "collections": [
+      "configuration",
+      "edf_arenas",
+      "edf_campaigns",
+      "edf_campaigns_edf_cities",
+      "edf_campaigns_edf_countries",
+      "edf_cities",
+      "edf_coaches",
+      "edf_competition_types",
+      "edf_countries",
+      "edf_matches",
+      "edf_opponents",
+      "edf_players",
+      "edf_players_edf_positions",
+      "edf_positions",
+      "edf_rosters",
+      "edf_selection",
+      "edf_staffs",
+      "edf_teams",
+      "ffbb_app_images",
+      "ffbbcompetitions_globals",
+      "ffbbcompetitions_navigation",
+      "ffbbcompetitions_navigations_items",
+      "ffbbcompetitions_pages",
+      "ffbbcompetitions_pages_blocks",
+      "ffbbcompetitions_seo",
+      "ffbbnational_categories",
+      "ffbbnational_galeries",
+      "ffbbnational_galeries_ffbbnational_tags",
+      "ffbbnational_galeries_files",
+      "ffbbnational_pratiques",
+      "ffbbnational_rss",
+      "ffbbnational_rss_ffbbnational_categories",
+      "ffbbnational_rss_ffbbnational_tags",
+      "ffbbnational_tags",
+      "ffbbserver_cartographies",
+      "ffbbserver_categories_age",
+      "ffbbserver_categories_championnats",
+      "ffbbserver_communes",
+      "ffbbserver_competitions",
+      "ffbbserver_engagements",
+      "ffbbserver_entraineurs",
+      "ffbbserver_fonctions_officiels",
+      "ffbbserver_formations",
+      "ffbbserver_formations_domain",
+      "ffbbserver_formations_files",
+      "ffbbserver_formations_theme",
+      "ffbbserver_labellisation_label",
+      "ffbbserver_labellisation_programme",
+      "ffbbserver_labellisations_organismes",
+      "ffbbserver_membres",
+      "ffbbserver_officiels",
+      "ffbbserver_officiels_rencontres",
+      "ffbbserver_offres_pratiques",
+      "ffbbserver_organismes",
+      "ffbbserver_organismes_ffbbserver_offres_pratiques",
+      "ffbbserver_organismes_ffbbserver_organismes",
+      "ffbbserver_poules",
+      "ffbbserver_poules_classements",
+      "ffbbserver_rencontres",
+      "ffbbserver_revetements",
+      "ffbbserver_saisons",
+      "ffbbserver_salles",
+      "ffbbserver_sessions",
+      "ffbbserver_terrains",
+      "ffbbserver_tournois",
+      "ffbbserver_tournois_ffbbserver_types_tournois_3x3",
+      "ffbbserver_types_associations",
+      "ffbbserver_types_competitions",
+      "ffbbserver_types_divisions",
+      "ffbbserver_types_pratiques_sportives",
+      "ffbbserver_types_tournois",
+      "ffbbserver_types_tournois_3x3",
+      "ffbbsite_assets_tags",
+      "ffbbsite_assets_types",
+      "ffbbsite_authors",
+      "ffbbsite_block_assets",
+      "ffbbsite_block_assets_directus_files",
+      "ffbbsite_block_assets_ffbbsite_assets_tags",
+      "ffbbsite_block_assets_ffbbsite_assets_types",
+      "ffbbsite_block_assets_files",
+      "ffbbsite_block_assets_list",
+      "ffbbsite_block_become_actor",
+      "ffbbsite_block_button",
+      "ffbbsite_block_button_group",
+      "ffbbsite_block_columns",
+      "ffbbsite_block_columns_rows",
+      "ffbbsite_block_cta",
+      "ffbbsite_block_faq",
+      "ffbbsite_block_faq_ffbbsite_faq",
+      "ffbbsite_block_faq_list",
+      "ffbbsite_block_form_picker",
+      "ffbbsite_block_formations",
+      "ffbbsite_block_hero",
+      "ffbbsite_block_hero_items",
+      "ffbbsite_block_history",
+      "ffbbsite_block_iframe",
+      "ffbbsite_block_jobs",
+      "ffbbsite_block_last_news",
+      "ffbbsite_block_last_news_ffbbsite_categories",
+      "ffbbsite_block_matches",
+      "ffbbsite_block_matches_edf_teams",
+      "ffbbsite_block_news",
+      "ffbbsite_block_palmares",
+      "ffbbsite_block_palmares_edf_teams",
+      "ffbbsite_block_richtext",
+      "ffbbsite_block_slider_news",
+      "ffbbsite_block_slider_news_ffbbsite_news",
+      "ffbbsite_block_spacer",
+      "ffbbsite_block_teams",
+      "ffbbsite_block_teams_edf_teams",
+      "ffbbsite_block_title",
+      "ffbbsite_block_videos",
+      "ffbbsite_block_videos_items_youtube_videos",
+      "ffbbsite_block_videos_youtube_videos",
+      "ffbbsite_block_wysiwyg",
+      "ffbbsite_categories",
+      "ffbbsite_codes",
+      "ffbbsite_faq",
+      "ffbbsite_faq_categories",
+      "ffbbsite_faq_ffbbsite_faq_categories",
+      "ffbbsite_faq_ffbbsite_faq_categories_1",
+      "ffbbsite_forms",
+      "ffbbsite_forms_entries",
+      "ffbbsite_forms_entries_directus_files",
+      "ffbbsite_forms_fields",
+      "ffbbsite_globals",
+      "ffbbsite_jobs",
+      "ffbbsite_jobs_contracts",
+      "ffbbsite_jobs_domains",
+      "ffbbsite_jobs_experience",
+      "ffbbsite_jobs_services",
+      "ffbbsite_jobs_studies",
+      "ffbbsite_jobs_units",
+      "ffbbsite_navigation",
+      "ffbbsite_navigations_items",
+      "ffbbsite_news",
+      "ffbbsite_news_ffbbsite_categories",
+      "ffbbsite_news_ffbbsite_tags",
+      "ffbbsite_pages",
+      "ffbbsite_pages_blocks_1",
+      "ffbbsite_pages_ffbbsite_codes",
+      "ffbbsite_partners",
+      "ffbbsite_self_promotion",
+      "ffbbsite_seo",
+      "ffbbsite_tags",
+      "genius_sport_matches",
+      "genius_sports_live_logs",
+      "junction_directus_files_ffbbsite_assets_tags",
+      "junction_directus_files_ffbbsite_assets_types",
+      "junction_directus_files_ffbbsite_categories",
+      "rematch_videos",
+      "users",
+      "users_favoris",
+      "users_ffbbserver_competitions",
+      "users_ffbbserver_organismes",
+      "users_notifications",
+      "users_notifications_types",
+      "users_tokens",
+      "youtube_playlists",
+      "youtube_playlists_youtube_videos",
+      "youtube_tags",
+      "youtube_videos",
+      "youtube_videos_tags",
+      "youtube_videos_youtube_tags"
+    ],
+    "item_paths": [
+      "items/configuration",
+      "items/edf_arenas",
+      "items/edf_campaigns",
+      "items/edf_campaigns_edf_cities",
+      "items/edf_campaigns_edf_countries",
+      "items/edf_cities",
+      "items/edf_coaches",
+      "items/edf_competition_types",
+      "items/edf_countries",
+      "items/edf_matches",
+      "items/edf_opponents",
+      "items/edf_players",
+      "items/edf_players_edf_positions",
+      "items/edf_positions",
+      "items/edf_rosters",
+      "items/edf_selection",
+      "items/edf_staffs",
+      "items/edf_teams",
+      "items/ffbb_app_images",
+      "items/ffbbcompetitions_globals",
+      "items/ffbbcompetitions_navigation",
+      "items/ffbbcompetitions_navigations_items",
+      "items/ffbbcompetitions_pages",
+      "items/ffbbcompetitions_pages_blocks",
+      "items/ffbbcompetitions_seo",
+      "items/ffbbnational_categories",
+      "items/ffbbnational_galeries",
+      "items/ffbbnational_galeries_ffbbnational_tags",
+      "items/ffbbnational_galeries_files",
+      "items/ffbbnational_pratiques",
+      "items/ffbbnational_rss",
+      "items/ffbbnational_rss_ffbbnational_categories",
+      "items/ffbbnational_rss_ffbbnational_tags",
+      "items/ffbbnational_tags",
+      "items/ffbbserver_cartographies",
+      "items/ffbbserver_categories_age",
+      "items/ffbbserver_categories_championnats",
+      "items/ffbbserver_communes",
+      "items/ffbbserver_competitions",
+      "items/ffbbserver_engagements",
+      "items/ffbbserver_entraineurs",
+      "items/ffbbserver_fonctions_officiels",
+      "items/ffbbserver_formations",
+      "items/ffbbserver_formations_domain",
+      "items/ffbbserver_formations_files",
+      "items/ffbbserver_formations_theme",
+      "items/ffbbserver_labellisation_label",
+      "items/ffbbserver_labellisation_programme",
+      "items/ffbbserver_labellisations_organismes",
+      "items/ffbbserver_membres",
+      "items/ffbbserver_officiels",
+      "items/ffbbserver_officiels_rencontres",
+      "items/ffbbserver_offres_pratiques",
+      "items/ffbbserver_organismes",
+      "items/ffbbserver_organismes_ffbbserver_offres_pratiques",
+      "items/ffbbserver_organismes_ffbbserver_organismes",
+      "items/ffbbserver_poules",
+      "items/ffbbserver_poules_classements",
+      "items/ffbbserver_rencontres",
+      "items/ffbbserver_revetements",
+      "items/ffbbserver_saisons",
+      "items/ffbbserver_salles",
+      "items/ffbbserver_sessions",
+      "items/ffbbserver_terrains",
+      "items/ffbbserver_tournois",
+      "items/ffbbserver_tournois_ffbbserver_types_tournois_3x3",
+      "items/ffbbserver_types_associations",
+      "items/ffbbserver_types_competitions",
+      "items/ffbbserver_types_divisions",
+      "items/ffbbserver_types_pratiques_sportives",
+      "items/ffbbserver_types_tournois",
+      "items/ffbbserver_types_tournois_3x3",
+      "items/ffbbsite_assets_tags",
+      "items/ffbbsite_assets_types",
+      "items/ffbbsite_authors",
+      "items/ffbbsite_block_assets",
+      "items/ffbbsite_block_assets_directus_files",
+      "items/ffbbsite_block_assets_ffbbsite_assets_tags",
+      "items/ffbbsite_block_assets_ffbbsite_assets_types",
+      "items/ffbbsite_block_assets_files",
+      "items/ffbbsite_block_assets_list",
+      "items/ffbbsite_block_become_actor",
+      "items/ffbbsite_block_button",
+      "items/ffbbsite_block_button_group",
+      "items/ffbbsite_block_columns",
+      "items/ffbbsite_block_columns_rows",
+      "items/ffbbsite_block_cta",
+      "items/ffbbsite_block_faq",
+      "items/ffbbsite_block_faq_ffbbsite_faq",
+      "items/ffbbsite_block_faq_list",
+      "items/ffbbsite_block_form_picker",
+      "items/ffbbsite_block_formations",
+      "items/ffbbsite_block_hero",
+      "items/ffbbsite_block_hero_items",
+      "items/ffbbsite_block_history",
+      "items/ffbbsite_block_iframe",
+      "items/ffbbsite_block_jobs",
+      "items/ffbbsite_block_last_news",
+      "items/ffbbsite_block_last_news_ffbbsite_categories",
+      "items/ffbbsite_block_matches",
+      "items/ffbbsite_block_matches_edf_teams",
+      "items/ffbbsite_block_news",
+      "items/ffbbsite_block_palmares",
+      "items/ffbbsite_block_palmares_edf_teams",
+      "items/ffbbsite_block_richtext",
+      "items/ffbbsite_block_slider_news",
+      "items/ffbbsite_block_slider_news_ffbbsite_news",
+      "items/ffbbsite_block_spacer",
+      "items/ffbbsite_block_teams",
+      "items/ffbbsite_block_teams_edf_teams",
+      "items/ffbbsite_block_title",
+      "items/ffbbsite_block_videos",
+      "items/ffbbsite_block_videos_items_youtube_videos",
+      "items/ffbbsite_block_videos_youtube_videos",
+      "items/ffbbsite_block_wysiwyg",
+      "items/ffbbsite_categories",
+      "items/ffbbsite_codes",
+      "items/ffbbsite_faq",
+      "items/ffbbsite_faq_categories",
+      "items/ffbbsite_faq_ffbbsite_faq_categories",
+      "items/ffbbsite_faq_ffbbsite_faq_categories_1",
+      "items/ffbbsite_forms",
+      "items/ffbbsite_forms_entries",
+      "items/ffbbsite_forms_entries_directus_files",
+      "items/ffbbsite_forms_fields",
+      "items/ffbbsite_globals",
+      "items/ffbbsite_jobs",
+      "items/ffbbsite_jobs_contracts",
+      "items/ffbbsite_jobs_domains",
+      "items/ffbbsite_jobs_experience",
+      "items/ffbbsite_jobs_services",
+      "items/ffbbsite_jobs_studies",
+      "items/ffbbsite_jobs_units",
+      "items/ffbbsite_navigation",
+      "items/ffbbsite_navigations_items",
+      "items/ffbbsite_news",
+      "items/ffbbsite_news_ffbbsite_categories",
+      "items/ffbbsite_news_ffbbsite_tags",
+      "items/ffbbsite_pages",
+      "items/ffbbsite_pages_blocks_1",
+      "items/ffbbsite_pages_ffbbsite_codes",
+      "items/ffbbsite_partners",
+      "items/ffbbsite_self_promotion",
+      "items/ffbbsite_seo",
+      "items/ffbbsite_tags",
+      "items/genius_sport_matches",
+      "items/genius_sports_live_logs",
+      "items/junction_directus_files_ffbbsite_assets_tags",
+      "items/junction_directus_files_ffbbsite_assets_types",
+      "items/junction_directus_files_ffbbsite_categories",
+      "items/rematch_videos",
+      "items/users",
+      "items/users_favoris",
+      "items/users_ffbbserver_competitions",
+      "items/users_ffbbserver_organismes",
+      "items/users_notifications",
+      "items/users_notifications_types",
+      "items/users_tokens",
+      "items/youtube_playlists",
+      "items/youtube_playlists_youtube_videos",
+      "items/youtube_tags",
+      "items/youtube_videos",
+      "items/youtube_videos_tags",
+      "items/youtube_videos_youtube_tags"
+    ],
+    "metadata": {
+      "openapi_version": "81dc585185721d2d026413c186a80f4779abf831",
+      "source": "https://api.ffbb.app/server/specs/oas",
+      "timestamp": "2026-04-30T13:30:14.497350+00:00"
+    },
+    "paths": {
+      "items/configuration": [
+        "get"
+      ],
+      "items/configuration/{id}": [
+        "get"
+      ],
+      "items/edf_arenas": [
+        "get"
+      ],
+      "items/edf_arenas/{id}": [
+        "get"
+      ],
+      "items/edf_campaigns": [
+        "get"
+      ],
+      "items/edf_campaigns/{id}": [
+        "get"
+      ],
+      "items/edf_campaigns_edf_cities": [
+        "get"
+      ],
+      "items/edf_campaigns_edf_cities/{id}": [
+        "get"
+      ],
+      "items/edf_campaigns_edf_countries": [
+        "get"
+      ],
+      "items/edf_campaigns_edf_countries/{id}": [
+        "get"
+      ],
+      "items/edf_cities": [
+        "get"
+      ],
+      "items/edf_cities/{id}": [
+        "get"
+      ],
+      "items/edf_coaches": [
+        "get"
+      ],
+      "items/edf_coaches/{id}": [
+        "get"
+      ],
+      "items/edf_competition_types": [
+        "get"
+      ],
+      "items/edf_competition_types/{id}": [
+        "get"
+      ],
+      "items/edf_countries": [
+        "get"
+      ],
+      "items/edf_countries/{id}": [
+        "get"
+      ],
+      "items/edf_matches": [
+        "get"
+      ],
+      "items/edf_matches/{id}": [
+        "get"
+      ],
+      "items/edf_opponents": [
+        "get"
+      ],
+      "items/edf_opponents/{id}": [
+        "get"
+      ],
+      "items/edf_players": [
+        "get"
+      ],
+      "items/edf_players/{id}": [
+        "get"
+      ],
+      "items/edf_players_edf_positions": [
+        "get"
+      ],
+      "items/edf_players_edf_positions/{id}": [
+        "get"
+      ],
+      "items/edf_positions": [
+        "get"
+      ],
+      "items/edf_positions/{id}": [
+        "get"
+      ],
+      "items/edf_rosters": [
+        "get"
+      ],
+      "items/edf_rosters/{id}": [
+        "get"
+      ],
+      "items/edf_selection": [
+        "get"
+      ],
+      "items/edf_selection/{id}": [
+        "get"
+      ],
+      "items/edf_staffs": [
+        "get"
+      ],
+      "items/edf_staffs/{id}": [
+        "get"
+      ],
+      "items/edf_teams": [
+        "get"
+      ],
+      "items/edf_teams/{id}": [
+        "get"
+      ],
+      "items/ffbb_app_images": [
+        "get"
+      ],
+      "items/ffbb_app_images/{id}": [
+        "get"
+      ],
+      "items/ffbbcompetitions_globals": [
+        "get"
+      ],
+      "items/ffbbcompetitions_globals/{id}": [
+        "get"
+      ],
+      "items/ffbbcompetitions_navigation": [
+        "get"
+      ],
+      "items/ffbbcompetitions_navigation/{id}": [
+        "get"
+      ],
+      "items/ffbbcompetitions_navigations_items": [
+        "get"
+      ],
+      "items/ffbbcompetitions_navigations_items/{id}": [
+        "get"
+      ],
+      "items/ffbbcompetitions_pages": [
+        "get"
+      ],
+      "items/ffbbcompetitions_pages/{id}": [
+        "get"
+      ],
+      "items/ffbbcompetitions_pages_blocks": [
+        "get"
+      ],
+      "items/ffbbcompetitions_pages_blocks/{id}": [
+        "get"
+      ],
+      "items/ffbbcompetitions_seo": [
+        "get"
+      ],
+      "items/ffbbcompetitions_seo/{id}": [
+        "get"
+      ],
+      "items/ffbbnational_categories": [
+        "get"
+      ],
+      "items/ffbbnational_categories/{id}": [
+        "get"
+      ],
+      "items/ffbbnational_galeries": [
+        "get"
+      ],
+      "items/ffbbnational_galeries/{id}": [
+        "get"
+      ],
+      "items/ffbbnational_galeries_ffbbnational_tags": [
+        "get"
+      ],
+      "items/ffbbnational_galeries_ffbbnational_tags/{id}": [
+        "get"
+      ],
+      "items/ffbbnational_galeries_files": [
+        "get"
+      ],
+      "items/ffbbnational_galeries_files/{id}": [
+        "get"
+      ],
+      "items/ffbbnational_pratiques": [
+        "get"
+      ],
+      "items/ffbbnational_pratiques/{id}": [
+        "get"
+      ],
+      "items/ffbbnational_rss": [
+        "get"
+      ],
+      "items/ffbbnational_rss/{id}": [
+        "get"
+      ],
+      "items/ffbbnational_rss_ffbbnational_categories": [
+        "get"
+      ],
+      "items/ffbbnational_rss_ffbbnational_categories/{id}": [
+        "get"
+      ],
+      "items/ffbbnational_rss_ffbbnational_tags": [
+        "get"
+      ],
+      "items/ffbbnational_rss_ffbbnational_tags/{id}": [
+        "get"
+      ],
+      "items/ffbbnational_tags": [
+        "get"
+      ],
+      "items/ffbbnational_tags/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_cartographies": [
+        "get"
+      ],
+      "items/ffbbserver_cartographies/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_categories_age": [
+        "get"
+      ],
+      "items/ffbbserver_categories_age/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_categories_championnats": [
+        "get"
+      ],
+      "items/ffbbserver_categories_championnats/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_communes": [
+        "get"
+      ],
+      "items/ffbbserver_communes/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_competitions": [
+        "get"
+      ],
+      "items/ffbbserver_competitions/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_engagements": [
+        "get"
+      ],
+      "items/ffbbserver_engagements/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_entraineurs": [
+        "get"
+      ],
+      "items/ffbbserver_entraineurs/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_fonctions_officiels": [
+        "get"
+      ],
+      "items/ffbbserver_fonctions_officiels/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_formations": [
+        "get"
+      ],
+      "items/ffbbserver_formations/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_formations_domain": [
+        "get"
+      ],
+      "items/ffbbserver_formations_domain/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_formations_files": [
+        "get"
+      ],
+      "items/ffbbserver_formations_files/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_formations_theme": [
+        "get"
+      ],
+      "items/ffbbserver_formations_theme/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_labellisation_label": [
+        "get"
+      ],
+      "items/ffbbserver_labellisation_label/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_labellisation_programme": [
+        "get"
+      ],
+      "items/ffbbserver_labellisation_programme/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_labellisations_organismes": [
+        "get"
+      ],
+      "items/ffbbserver_labellisations_organismes/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_membres": [
+        "get"
+      ],
+      "items/ffbbserver_membres/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_officiels": [
+        "get"
+      ],
+      "items/ffbbserver_officiels/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_officiels_rencontres": [
+        "get"
+      ],
+      "items/ffbbserver_officiels_rencontres/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_offres_pratiques": [
+        "get"
+      ],
+      "items/ffbbserver_offres_pratiques/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_organismes": [
+        "get"
+      ],
+      "items/ffbbserver_organismes/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_organismes_ffbbserver_offres_pratiques": [
+        "get"
+      ],
+      "items/ffbbserver_organismes_ffbbserver_offres_pratiques/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_organismes_ffbbserver_organismes": [
+        "get"
+      ],
+      "items/ffbbserver_organismes_ffbbserver_organismes/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_poules": [
+        "get"
+      ],
+      "items/ffbbserver_poules/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_poules_classements": [
+        "get"
+      ],
+      "items/ffbbserver_poules_classements/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_rencontres": [
+        "get"
+      ],
+      "items/ffbbserver_rencontres/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_revetements": [
+        "get"
+      ],
+      "items/ffbbserver_revetements/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_saisons": [
+        "get"
+      ],
+      "items/ffbbserver_saisons/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_salles": [
+        "get"
+      ],
+      "items/ffbbserver_salles/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_sessions": [
+        "get"
+      ],
+      "items/ffbbserver_sessions/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_terrains": [
+        "get"
+      ],
+      "items/ffbbserver_terrains/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_tournois": [
+        "get"
+      ],
+      "items/ffbbserver_tournois/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_tournois_ffbbserver_types_tournois_3x3": [
+        "get"
+      ],
+      "items/ffbbserver_tournois_ffbbserver_types_tournois_3x3/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_types_associations": [
+        "get"
+      ],
+      "items/ffbbserver_types_associations/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_types_competitions": [
+        "get"
+      ],
+      "items/ffbbserver_types_competitions/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_types_divisions": [
+        "get"
+      ],
+      "items/ffbbserver_types_divisions/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_types_pratiques_sportives": [
+        "get"
+      ],
+      "items/ffbbserver_types_pratiques_sportives/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_types_tournois": [
+        "get"
+      ],
+      "items/ffbbserver_types_tournois/{id}": [
+        "get"
+      ],
+      "items/ffbbserver_types_tournois_3x3": [
+        "get"
+      ],
+      "items/ffbbserver_types_tournois_3x3/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_assets_tags": [
+        "get"
+      ],
+      "items/ffbbsite_assets_tags/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_assets_types": [
+        "get"
+      ],
+      "items/ffbbsite_assets_types/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_authors": [
+        "get"
+      ],
+      "items/ffbbsite_authors/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets_directus_files": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets_directus_files/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets_ffbbsite_assets_tags": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets_ffbbsite_assets_tags/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets_ffbbsite_assets_types": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets_ffbbsite_assets_types/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets_files": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets_files/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets_list": [
+        "get"
+      ],
+      "items/ffbbsite_block_assets_list/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_become_actor": [
+        "get"
+      ],
+      "items/ffbbsite_block_become_actor/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_button": [
+        "get"
+      ],
+      "items/ffbbsite_block_button/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_button_group": [
+        "get"
+      ],
+      "items/ffbbsite_block_button_group/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_columns": [
+        "get"
+      ],
+      "items/ffbbsite_block_columns/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_columns_rows": [
+        "get"
+      ],
+      "items/ffbbsite_block_columns_rows/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_cta": [
+        "get"
+      ],
+      "items/ffbbsite_block_cta/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_faq": [
+        "get"
+      ],
+      "items/ffbbsite_block_faq/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_faq_ffbbsite_faq": [
+        "get"
+      ],
+      "items/ffbbsite_block_faq_ffbbsite_faq/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_faq_list": [
+        "get"
+      ],
+      "items/ffbbsite_block_faq_list/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_form_picker": [
+        "get"
+      ],
+      "items/ffbbsite_block_form_picker/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_formations": [
+        "get"
+      ],
+      "items/ffbbsite_block_formations/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_hero": [
+        "get"
+      ],
+      "items/ffbbsite_block_hero/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_hero_items": [
+        "get"
+      ],
+      "items/ffbbsite_block_hero_items/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_history": [
+        "get"
+      ],
+      "items/ffbbsite_block_history/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_iframe": [
+        "get"
+      ],
+      "items/ffbbsite_block_iframe/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_jobs": [
+        "get"
+      ],
+      "items/ffbbsite_block_jobs/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_last_news": [
+        "get"
+      ],
+      "items/ffbbsite_block_last_news/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_last_news_ffbbsite_categories": [
+        "get"
+      ],
+      "items/ffbbsite_block_last_news_ffbbsite_categories/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_matches": [
+        "get"
+      ],
+      "items/ffbbsite_block_matches/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_matches_edf_teams": [
+        "get"
+      ],
+      "items/ffbbsite_block_matches_edf_teams/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_news": [
+        "get"
+      ],
+      "items/ffbbsite_block_news/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_palmares": [
+        "get"
+      ],
+      "items/ffbbsite_block_palmares/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_palmares_edf_teams": [
+        "get"
+      ],
+      "items/ffbbsite_block_palmares_edf_teams/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_richtext": [
+        "get"
+      ],
+      "items/ffbbsite_block_richtext/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_slider_news": [
+        "get"
+      ],
+      "items/ffbbsite_block_slider_news/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_slider_news_ffbbsite_news": [
+        "get"
+      ],
+      "items/ffbbsite_block_slider_news_ffbbsite_news/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_spacer": [
+        "get"
+      ],
+      "items/ffbbsite_block_spacer/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_teams": [
+        "get"
+      ],
+      "items/ffbbsite_block_teams/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_teams_edf_teams": [
+        "get"
+      ],
+      "items/ffbbsite_block_teams_edf_teams/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_title": [
+        "get"
+      ],
+      "items/ffbbsite_block_title/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_videos": [
+        "get"
+      ],
+      "items/ffbbsite_block_videos/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_videos_items_youtube_videos": [
+        "get"
+      ],
+      "items/ffbbsite_block_videos_items_youtube_videos/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_videos_youtube_videos": [
+        "get"
+      ],
+      "items/ffbbsite_block_videos_youtube_videos/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_block_wysiwyg": [
+        "get"
+      ],
+      "items/ffbbsite_block_wysiwyg/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_categories": [
+        "get"
+      ],
+      "items/ffbbsite_categories/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_codes": [
+        "get"
+      ],
+      "items/ffbbsite_codes/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_faq": [
+        "get"
+      ],
+      "items/ffbbsite_faq/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_faq_categories": [
+        "get"
+      ],
+      "items/ffbbsite_faq_categories/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_faq_ffbbsite_faq_categories": [
+        "get"
+      ],
+      "items/ffbbsite_faq_ffbbsite_faq_categories/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_faq_ffbbsite_faq_categories_1": [
+        "get"
+      ],
+      "items/ffbbsite_faq_ffbbsite_faq_categories_1/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_forms": [
+        "get"
+      ],
+      "items/ffbbsite_forms/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_forms_entries": [
+        "get",
+        "patch",
+        "post"
+      ],
+      "items/ffbbsite_forms_entries/{id}": [
+        "get",
+        "patch"
+      ],
+      "items/ffbbsite_forms_entries_directus_files": [
+        "get",
+        "patch",
+        "post"
+      ],
+      "items/ffbbsite_forms_entries_directus_files/{id}": [
+        "get",
+        "patch"
+      ],
+      "items/ffbbsite_forms_fields": [
+        "get"
+      ],
+      "items/ffbbsite_forms_fields/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_globals": [
+        "get"
+      ],
+      "items/ffbbsite_globals/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_jobs": [
+        "get"
+      ],
+      "items/ffbbsite_jobs/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_contracts": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_contracts/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_domains": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_domains/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_experience": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_experience/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_services": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_services/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_studies": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_studies/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_units": [
+        "get"
+      ],
+      "items/ffbbsite_jobs_units/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_navigation": [
+        "get"
+      ],
+      "items/ffbbsite_navigation/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_navigations_items": [
+        "get"
+      ],
+      "items/ffbbsite_navigations_items/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_news": [
+        "get"
+      ],
+      "items/ffbbsite_news/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_news_ffbbsite_categories": [
+        "get"
+      ],
+      "items/ffbbsite_news_ffbbsite_categories/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_news_ffbbsite_tags": [
+        "get"
+      ],
+      "items/ffbbsite_news_ffbbsite_tags/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_pages": [
+        "get"
+      ],
+      "items/ffbbsite_pages/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_pages_blocks_1": [
+        "get"
+      ],
+      "items/ffbbsite_pages_blocks_1/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_pages_ffbbsite_codes": [
+        "get"
+      ],
+      "items/ffbbsite_pages_ffbbsite_codes/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_partners": [
+        "get"
+      ],
+      "items/ffbbsite_partners/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_self_promotion": [
+        "get"
+      ],
+      "items/ffbbsite_self_promotion/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_seo": [
+        "get"
+      ],
+      "items/ffbbsite_seo/{id}": [
+        "get"
+      ],
+      "items/ffbbsite_tags": [
+        "get"
+      ],
+      "items/ffbbsite_tags/{id}": [
+        "get"
+      ],
+      "items/genius_sport_matches": [
+        "get"
+      ],
+      "items/genius_sport_matches/{id}": [
+        "get"
+      ],
+      "items/genius_sports_live_logs": [
+        "get"
+      ],
+      "items/genius_sports_live_logs/{id}": [
+        "get"
+      ],
+      "items/junction_directus_files_ffbbsite_assets_tags": [
+        "get"
+      ],
+      "items/junction_directus_files_ffbbsite_assets_tags/{id}": [
+        "get"
+      ],
+      "items/junction_directus_files_ffbbsite_assets_types": [
+        "get"
+      ],
+      "items/junction_directus_files_ffbbsite_assets_types/{id}": [
+        "get"
+      ],
+      "items/junction_directus_files_ffbbsite_categories": [
+        "get"
+      ],
+      "items/junction_directus_files_ffbbsite_categories/{id}": [
+        "get"
+      ],
+      "items/rematch_videos": [
+        "get"
+      ],
+      "items/rematch_videos/{id}": [
+        "get"
+      ],
+      "items/users": [
+        "get",
+        "patch",
+        "post"
+      ],
+      "items/users/{id}": [
+        "get",
+        "patch"
+      ],
+      "items/users_favoris": [
+        "delete",
+        "get",
+        "patch",
+        "post"
+      ],
+      "items/users_favoris/{id}": [
+        "delete",
+        "get",
+        "patch"
+      ],
+      "items/users_ffbbserver_competitions": [
+        "delete",
+        "get",
+        "patch",
+        "post"
+      ],
+      "items/users_ffbbserver_competitions/{id}": [
+        "delete",
+        "get",
+        "patch"
+      ],
+      "items/users_ffbbserver_organismes": [
+        "delete",
+        "get",
+        "patch",
+        "post"
+      ],
+      "items/users_ffbbserver_organismes/{id}": [
+        "delete",
+        "get",
+        "patch"
+      ],
+      "items/users_notifications": [
+        "delete",
+        "get",
+        "patch",
+        "post"
+      ],
+      "items/users_notifications/{id}": [
+        "delete",
+        "get",
+        "patch"
+      ],
+      "items/users_notifications_types": [
+        "delete",
+        "get",
+        "patch",
+        "post"
+      ],
+      "items/users_notifications_types/{id}": [
+        "delete",
+        "get",
+        "patch"
+      ],
+      "items/users_tokens": [
+        "delete",
+        "get",
+        "patch",
+        "post"
+      ],
+      "items/users_tokens/{id}": [
+        "delete",
+        "get",
+        "patch"
+      ],
+      "items/youtube_playlists": [
+        "get"
+      ],
+      "items/youtube_playlists/{id}": [
+        "get"
+      ],
+      "items/youtube_playlists_youtube_videos": [
+        "get"
+      ],
+      "items/youtube_playlists_youtube_videos/{id}": [
+        "get"
+      ],
+      "items/youtube_tags": [
+        "get"
+      ],
+      "items/youtube_tags/{id}": [
+        "get"
+      ],
+      "items/youtube_videos": [
+        "get"
+      ],
+      "items/youtube_videos/{id}": [
+        "get"
+      ],
+      "items/youtube_videos_tags": [
+        "get"
+      ],
+      "items/youtube_videos_tags/{id}": [
+        "get"
+      ],
+      "items/youtube_videos_youtube_tags": [
+        "get"
+      ],
+      "items/youtube_videos_youtube_tags/{id}": [
+        "get"
+      ]
+    }
+  },
+  "meilisearch": {
+    "available_indexes": [
+      "ffbbnational_galeries",
+      "ffbbnational_pratiques",
+      "ffbbnational_rss",
+      "ffbbserver_competitions",
+      "ffbbserver_engagements",
+      "ffbbserver_formations",
+      "ffbbserver_organismes",
+      "ffbbserver_rencontres",
+      "ffbbserver_salles",
+      "ffbbserver_terrains",
+      "ffbbserver_tournois",
+      "ffbbsite_news",
+      "youtube_videos"
+    ],
+    "indexes": [
+      {
+        "available": true,
+        "estimatedTotalHits": 98,
+        "indexUid": "ffbbnational_galeries",
+        "sampleKeys": [
+          "count",
+          "cover",
+          "creator",
+          "date",
+          "date_created",
+          "date_published",
+          "date_timestamp",
+          "date_updated",
+          "id",
+          "images",
+          "surtitle",
+          "tags",
+          "thumbnail",
+          "title",
+          "type"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 690,
+        "indexUid": "ffbbnational_pratiques",
+        "sampleKeys": [
+          "_geo",
+          "action",
+          "adresse",
+          "adresse_salle",
+          "adresse_structure",
+          "affiche",
+          "assurance",
+          "cartographie",
+          "code",
+          "cp_salle",
+          "date_created",
+          "date_debut",
+          "date_debut_timestamp",
+          "date_demande",
+          "date_fin",
+          "date_fin_timestamp",
+          "date_inscription",
+          "date_updated",
+          "description",
+          "email",
+          "engagement",
+          "facebook",
+          "horaires_seances",
+          "id",
+          "inscriptions",
+          "jours",
+          "label",
+          "latitude",
+          "longitude",
+          "mail_demandeur",
+          "mail_structure",
+          "nom_demandeur",
+          "nom_salle",
+          "nom_structure",
+          "nombre_personnes",
+          "nombre_seances",
+          "objectif",
+          "prenom_demandeur",
+          "public",
+          "site_web",
+          "telephone",
+          "thumbnail",
+          "titre",
+          "twitter",
+          "type",
+          "ville_salle"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 3799,
+        "indexUid": "ffbbnational_rss",
+        "sampleKeys": [
+          "categories",
+          "chapo",
+          "cover",
+          "creator",
+          "date",
+          "date_created",
+          "date_timestamp",
+          "date_updated",
+          "highlight",
+          "id",
+          "img",
+          "img_credits",
+          "img_legend",
+          "link",
+          "match_id",
+          "surtitle",
+          "tags",
+          "text",
+          "texte",
+          "thumbnail",
+          "title",
+          "type"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 5000,
+        "indexUid": "ffbbserver_competitions",
+        "sampleKeys": [
+          "age",
+          "categorie",
+          "code",
+          "codeComite",
+          "codeLigue",
+          "compare_old_site",
+          "competition_origine",
+          "competition_origine_niveau",
+          "competition_origine_nom",
+          "creationEnCours",
+          "date_created",
+          "date_updated",
+          "emarqueV2",
+          "etat",
+          "id",
+          "idCompetitionPere",
+          "liveStat",
+          "logo",
+          "niveau",
+          "niveau_nb",
+          "nom",
+          "ordre",
+          "organisateur",
+          "participants",
+          "phase_code",
+          "phases",
+          "poules",
+          "pro",
+          "publicationInternet",
+          "saison",
+          "sexe",
+          "slug",
+          "thumbnail",
+          "toUpdate",
+          "typeCompetition",
+          "typeCompetitionGenerique"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 5000,
+        "indexUid": "ffbbserver_engagements",
+        "sampleKeys": [
+          "_geo",
+          "age",
+          "categorie",
+          "clubPro",
+          "codeAbrege",
+          "codeClub",
+          "codeComite",
+          "codeLigue",
+          "competitionsUrl",
+          "id",
+          "idCompetition",
+          "idPoule",
+          "logo",
+          "niveau",
+          "nom",
+          "nomClub",
+          "nomClubPro",
+          "nomComite",
+          "nomCtc",
+          "nomEquipe",
+          "nomLigue",
+          "nomOfficiel",
+          "nomOrganisme",
+          "nomUsuel",
+          "numeroEquipe",
+          "sexe",
+          "thumbnail"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 108,
+        "indexUid": "ffbbserver_formations",
+        "sampleKeys": [
+          "certification",
+          "content",
+          "description",
+          "domain",
+          "duration_hours",
+          "files",
+          "goals",
+          "id",
+          "id_origin_hash",
+          "image",
+          "level",
+          "modalities",
+          "mode",
+          "mode_hidden",
+          "pedagogy",
+          "places",
+          "postal_codes",
+          "prerequisites",
+          "programIdFbi",
+          "public",
+          "reference",
+          "results",
+          "sessions",
+          "theme",
+          "thumbnail",
+          "title",
+          "type"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 4573,
+        "indexUid": "ffbbserver_organismes",
+        "sampleKeys": [
+          "_geo",
+          "adresse",
+          "adresseClubPro",
+          "cartographie",
+          "code",
+          "commune",
+          "communeClubPro",
+          "dateAffiliation",
+          "engagements_codes",
+          "engagements_noms",
+          "id",
+          "labellisation",
+          "logo",
+          "mail",
+          "nom",
+          "nomClubPro",
+          "nom_simple",
+          "offresPratiques",
+          "organisme_id_pere",
+          "saison",
+          "saison_en_cours",
+          "telephone",
+          "thumbnail",
+          "type",
+          "type_association",
+          "urlSiteWeb",
+          "url_competition"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 5000,
+        "indexUid": "ffbbserver_rencontres",
+        "sampleKeys": [
+          "_geo",
+          "competitionId",
+          "creation_timestamp",
+          "date",
+          "dateSaisieResultat_timestamp",
+          "date_rencontre",
+          "date_rencontre_timestamp",
+          "date_timestamp",
+          "gsId",
+          "handicap1",
+          "handicap2",
+          "id",
+          "idEngagementEquipe1",
+          "idEngagementEquipe2",
+          "idOrganismeEquipe1",
+          "idOrganismeEquipe2",
+          "idPoule",
+          "joue",
+          "modification_timestamp",
+          "niveau",
+          "niveau_nb",
+          "nomEquipe1",
+          "nomEquipe2",
+          "numeroJournee",
+          "officiels",
+          "officiels_string",
+          "organisateur",
+          "pratique",
+          "rematch_videos",
+          "resultatEquipe1",
+          "resultatEquipe2",
+          "saison",
+          "salle",
+          "thumbnail",
+          "uniqueKey",
+          "url_competition"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 5000,
+        "indexUid": "ffbbserver_salles",
+        "sampleKeys": [
+          "_geo",
+          "adresse",
+          "adresseComplement",
+          "capaciteSpectateur",
+          "cartographie",
+          "commune",
+          "date_created",
+          "date_updated",
+          "id",
+          "libelle",
+          "libelle2",
+          "mail",
+          "numero",
+          "telephone",
+          "thumbnail",
+          "type",
+          "type_association"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 5000,
+        "indexUid": "ffbbserver_terrains",
+        "sampleKeys": [
+          "_geo",
+          "accesLibre",
+          "cartographie",
+          "commune",
+          "date_created",
+          "date_updated",
+          "id",
+          "largeur",
+          "longueur",
+          "natureSol",
+          "nom",
+          "numero",
+          "rue",
+          "thumbnail",
+          "type"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 241,
+        "indexUid": "ffbbserver_tournois",
+        "sampleKeys": [
+          "_geo",
+          "adresse",
+          "adresseComplement",
+          "ageMax",
+          "ageMin",
+          "cartographie",
+          "categorieChampionnat3x3Id",
+          "categorieChampionnat3x3Libelle",
+          "code",
+          "commune",
+          "date_created",
+          "date_updated",
+          "debut",
+          "debut_timestamp",
+          "description",
+          "document_flyer",
+          "fin",
+          "fin_timestamp",
+          "id",
+          "mailOrganisateur",
+          "nbParticipantPrevu",
+          "nom",
+          "nomOrganisateur",
+          "sexe",
+          "siteChoisi",
+          "tarifOrganisateur",
+          "telephoneOrganisateur",
+          "thumbnail",
+          "tournoiType",
+          "tournoiTypes3x3",
+          "urlOrganisateur"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 5800,
+        "indexUid": "ffbbsite_news",
+        "sampleKeys": [
+          "author",
+          "categories",
+          "category",
+          "category_2",
+          "content",
+          "date_published",
+          "featured",
+          "featured_mobile",
+          "filters_3x3",
+          "headline",
+          "id",
+          "image",
+          "link",
+          "match_id",
+          "permalink",
+          "push_newsletter",
+          "surtitle",
+          "tags",
+          "thumbnail",
+          "title",
+          "type"
+        ],
+        "status": "available"
+      },
+      {
+        "available": true,
+        "estimatedTotalHits": 1824,
+        "indexUid": "youtube_videos",
+        "sampleKeys": [
+          "channelId",
+          "channelTitle",
+          "commentCount",
+          "date",
+          "date_created",
+          "date_published",
+          "date_updated",
+          "description",
+          "display_image",
+          "duration",
+          "duration_seconds",
+          "id",
+          "likeCount",
+          "snippet",
+          "tags",
+          "thumbnail",
+          "thumbnailDefaultUrl",
+          "thumbnailHighUrl",
+          "thumbnailMaxresUrl",
+          "thumbnailMediumUrl",
+          "thumbnailStandardUrl",
+          "title",
+          "type",
+          "viewCount"
+        ],
+        "status": "available"
+      }
+    ],
+    "metadata": {
+      "source": "https://meilisearch-prod.ffbb.app/multi-search",
+      "timestamp": "2026-04-30T13:30:14.497350+00:00"
+    },
+    "unavailable_indexes": [
+      {
+        "indexUid": "edf_matches",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "edf_players",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "edf_teams",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "ffbbserver_sessions",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "genius_sport_matches",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "genius_sports_live_logs",
+        "status": "not_available"
+      },
+      {
+        "indexUid": "rematch_videos",
+        "status": "not_available"
+      }
+    ]
+  },
+  "metadata": {
+    "api_base_url": "https://api.ffbb.app/",
+    "meilisearch_base_url": "https://meilisearch-prod.ffbb.app/",
+    "openapi_sha256": "196c91b6ca286bc66f7c78a7e9a067f817dc89fa3deb00be3d70e0b586f8bab4",
+    "openapi_snapshot_sha256": "c0b15cf5d6e68fae001591e92c69a5155f1e96afce725065f401c92488f20015",
+    "openapi_version": "81dc585185721d2d026413c186a80f4779abf831",
+    "timestamp": "2026-04-30T13:30:14.497350+00:00"
+  }
+}

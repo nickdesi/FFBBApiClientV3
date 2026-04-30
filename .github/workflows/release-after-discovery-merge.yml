@@ -1,0 +1,87 @@
+name: Release after FFBB API discovery merge
+
+on:
+  workflow_run:
+    workflows: [tests]
+    types: [completed]
+    branches: [master]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  tag-patch-release:
+    name: Tag patch release
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Resolve merged discovery PR
+        id: pr
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          pr_json="$(gh api "repos/$REPOSITORY/commits/$HEAD_SHA/pulls" -H "Accept: application/vnd.github+json")"
+          pr_count="$(jq 'length' <<< "$pr_json")"
+          if [[ "$pr_count" == "0" ]]; then
+            echo "release=false" >> "$GITHUB_OUTPUT"
+            echo "No PR associated with $HEAD_SHA."
+            exit 0
+          fi
+
+          pr_number="$(jq -r '.[0].number' <<< "$pr_json")"
+          pr_merged="$(jq -r '.[0].merged_at != null' <<< "$pr_json")"
+          pr_base="$(jq -r '.[0].base.ref' <<< "$pr_json")"
+          has_label="$(jq -r '.[0].labels | map(.name) | index("ffbb-api") != null' <<< "$pr_json")"
+
+          echo "number=$pr_number" >> "$GITHUB_OUTPUT"
+          echo "release=$([[ "$pr_merged" == "true" && "$pr_base" == "master" && "$has_label" == "true" ]] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+
+          echo "PR #$pr_number merged=$pr_merged base=$pr_base ffbb-api-label=$has_label"
+
+      - name: Stop when this was not a discovery PR merge
+        if: steps.pr.outputs.release != 'true'
+        run: echo "No FFBB API discovery release needed."
+
+      - name: Checkout tested commit
+        if: steps.pr.outputs.release == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0
+
+      - name: Compute next patch tag
+        if: steps.pr.outputs.release == 'true'
+        id: version
+        run: |
+          latest_tag="$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)"
+          if [[ -z "$latest_tag" ]]; then
+            next_tag="v0.1.0"
+          else
+            version="${latest_tag#v}"
+            IFS='.' read -r major minor patch <<< "$version"
+            next_tag="v${major}.${minor}.$((patch + 1))"
+          fi
+          echo "tag=$next_tag" >> "$GITHUB_OUTPUT"
+          echo "Next tag: $next_tag"
+
+      - name: Create and push tag
+        if: steps.pr.outputs.release == 'true'
+        env:
+          NEXT_TAG: ${{ steps.version.outputs.tag }}
+          PR_NUMBER: ${{ steps.pr.outputs.number }}
+        run: |
+          if git rev-parse "$NEXT_TAG" >/dev/null 2>&1; then
+            echo "Tag $NEXT_TAG already exists."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$NEXT_TAG" -m "Release $NEXT_TAG after FFBB API discovery PR #$PR_NUMBER"
+          git push origin "$NEXT_TAG"
