@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import atexit
 import json
 import time
 from typing import Any
@@ -18,6 +19,48 @@ from ..utils.secure_logging import get_secure_logger
 
 logger = get_secure_logger(__name__)
 
+_DEFAULT_SYNC_CLIENT: httpx.Client | None = None
+_DEFAULT_ASYNC_CLIENT: httpx.AsyncClient | None = None
+
+
+def _build_timeout(timeout: int | float | TimeoutConfig | None) -> httpx.Timeout:
+    if isinstance(timeout, TimeoutConfig):
+        return httpx.Timeout(
+            timeout.total_timeout,
+            connect=timeout.connect_timeout,
+            read=timeout.read_timeout,
+            write=timeout.read_timeout,
+            pool=timeout.connect_timeout,
+        )
+    value = 20.0 if timeout is None else float(timeout)
+    return httpx.Timeout(value)
+
+
+def _get_default_sync_client(timeout: int | float = 20) -> httpx.Client:
+    global _DEFAULT_SYNC_CLIENT
+    if _DEFAULT_SYNC_CLIENT is None or _DEFAULT_SYNC_CLIENT.is_closed:
+        _DEFAULT_SYNC_CLIENT = httpx.Client(timeout=_build_timeout(timeout))
+    return _DEFAULT_SYNC_CLIENT
+
+
+async def _get_default_async_client(timeout: int | float = 20) -> httpx.AsyncClient:
+    global _DEFAULT_ASYNC_CLIENT
+    if _DEFAULT_ASYNC_CLIENT is None or _DEFAULT_ASYNC_CLIENT.is_closed:
+        _DEFAULT_ASYNC_CLIENT = httpx.AsyncClient(timeout=_build_timeout(timeout))
+    return _DEFAULT_ASYNC_CLIENT
+
+
+def close_default_clients() -> None:
+    """Close module-level fallback clients used when no session is provided."""
+    global _DEFAULT_SYNC_CLIENT, _DEFAULT_ASYNC_CLIENT
+    if _DEFAULT_SYNC_CLIENT is not None and not _DEFAULT_SYNC_CLIENT.is_closed:
+        _DEFAULT_SYNC_CLIENT.close()
+    _DEFAULT_SYNC_CLIENT = None
+    _DEFAULT_ASYNC_CLIENT = None
+
+
+atexit.register(close_default_clients)
+
 
 def to_json_from_response(response: Response) -> Any:
     """
@@ -29,6 +72,12 @@ def to_json_from_response(response: Response) -> Any:
     Returns:
         Any: Parsed JSON payload (dict, list, etc.).
     """
+    if isinstance(response, Response):
+        try:
+            return response.json()
+        except (json.JSONDecodeError, ValueError) as e:
+            logger.warning(f"Error in to_json_from_response: {e}")
+
     data_str = response.text.strip()
 
     try:
@@ -89,12 +138,15 @@ def http_get(
             debug=debug,
         )
     else:
-        # Fallback to original behavior
+        # Fallback to reusable client to keep connections warm across calls.
         if cached_session:
-            response = cached_session.get(url, headers=headers, timeout=timeout)
+            response = cached_session.get(
+                url, headers=headers, timeout=_build_timeout(timeout_config or timeout)
+            )
         else:
-            with httpx.Client() as client:
-                response = client.get(url, headers=headers, timeout=timeout)
+            response = _get_default_sync_client(timeout).get(
+                url, headers=headers, timeout=_build_timeout(timeout_config or timeout)
+            )
 
     if debug:
         end_time = time.time()
@@ -150,14 +202,21 @@ def http_post(
             debug=debug,
         )
     else:
-        # Fallback to original behavior
+        # Fallback to reusable client to keep connections warm across calls.
         if cached_session:
             response = cached_session.post(
-                url, headers=headers, json=data, timeout=timeout
+                url,
+                headers=headers,
+                json=data,
+                timeout=_build_timeout(timeout_config or timeout),
             )
         else:
-            with httpx.Client() as client:
-                response = client.post(url, headers=headers, json=data, timeout=timeout)
+            response = _get_default_sync_client(timeout).post(
+                url,
+                headers=headers,
+                json=data,
+                timeout=_build_timeout(timeout_config or timeout),
+            )
 
     if debug:
         end_time = time.time()
@@ -277,12 +336,15 @@ async def http_get_async(
             debug=debug,
         )
     else:
-        # Fallback to original behavior
+        # Fallback to reusable async client to keep connections warm across calls.
         if cached_session:
-            response = await cached_session.get(url, headers=headers, timeout=timeout)
+            response = await cached_session.get(
+                url, headers=headers, timeout=_build_timeout(timeout_config or timeout)
+            )
         else:
-            async with httpx.AsyncClient() as client:
-                response = await client.get(url, headers=headers, timeout=timeout)
+            response = await (await _get_default_async_client(timeout)).get(
+                url, headers=headers, timeout=_build_timeout(timeout_config or timeout)
+            )
 
     if debug:
         end_time = time.time()
@@ -354,16 +416,21 @@ async def http_post_async(
             debug=debug,
         )
     else:
-        # Fallback to original behavior
+        # Fallback to reusable async client to keep connections warm across calls.
         if cached_session:
             response = await cached_session.post(
-                url, headers=headers, json=filtered_data, timeout=timeout
+                url,
+                headers=headers,
+                json=filtered_data,
+                timeout=_build_timeout(timeout_config or timeout),
             )
         else:
-            async with httpx.AsyncClient() as client:
-                response = await client.post(
-                    url, headers=headers, json=filtered_data, timeout=timeout
-                )
+            response = await (await _get_default_async_client(timeout)).post(
+                url,
+                headers=headers,
+                json=filtered_data,
+                timeout=_build_timeout(timeout_config or timeout),
+            )
 
     if debug:
         end_time = time.time()

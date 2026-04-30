@@ -58,6 +58,7 @@ class CacheConfig:
         redis_url: Redis URL for Redis backend.
         key_prefix: Prefix for cache keys.
         compression: Whether to compress cached data.
+        transport_retries: Low-level HTTP transport retries.
     """
 
     def __init__(
@@ -69,6 +70,7 @@ class CacheConfig:
         redis_url: str | None = None,
         key_prefix: str = "ffbb_api",
         compression: bool = False,
+        transport_retries: int = 0,
     ) -> None:
         """
         Initialize cache configuration.
@@ -81,6 +83,7 @@ class CacheConfig:
             redis_url: Redis connection URL.
             key_prefix: Prefix for cache keys.
             compression: Whether to compress cached data.
+            transport_retries: Low-level HTTP transport retries.
         """
         self.enabled = enabled
         self.backend = backend
@@ -89,6 +92,7 @@ class CacheConfig:
         self.redis_url = redis_url
         self.key_prefix = key_prefix
         self.compression = compression
+        self.transport_retries = transport_retries
 
 
 class CacheManager:
@@ -175,7 +179,9 @@ class CacheManager:
                 connection=sync_conn, default_ttl=self.config.expire_after
             )
             self._client = hishel.httpx.SyncCacheClient(
-                storage=storage, policy=policy, transport=httpx.HTTPTransport(retries=3)
+                storage=storage,
+                policy=policy,
+                transport=httpx.HTTPTransport(retries=self.config.transport_retries),
             )
             # Async version uses its own connection
             async_storage = hishel.AsyncSqliteStorage(
@@ -184,14 +190,18 @@ class CacheManager:
             self._async_client = hishel.httpx.AsyncCacheClient(
                 storage=async_storage,
                 policy=policy,
-                transport=httpx.AsyncHTTPTransport(retries=3),
+                transport=httpx.AsyncHTTPTransport(
+                    retries=self.config.transport_retries
+                ),
             )
         elif self.config.backend == "sqlite":
             storage = hishel.SyncSqliteStorage(
                 database_path="http_cache.db", default_ttl=self.config.expire_after
             )
             self._client = hishel.httpx.SyncCacheClient(
-                storage=storage, policy=policy, transport=httpx.HTTPTransport(retries=3)
+                storage=storage,
+                policy=policy,
+                transport=httpx.HTTPTransport(retries=self.config.transport_retries),
             )
             # Async version
             async_storage = hishel.AsyncSqliteStorage(
@@ -200,7 +210,9 @@ class CacheManager:
             self._async_client = hishel.httpx.AsyncCacheClient(
                 storage=async_storage,
                 policy=policy,
-                transport=httpx.AsyncHTTPTransport(retries=3),
+                transport=httpx.AsyncHTTPTransport(
+                    retries=self.config.transport_retries
+                ),
             )
         else:
             raise ValueError(f"Unsupported cache backend: {self.config.backend}")
@@ -373,5 +385,9 @@ class CacheManager:
     def reset_instance(cls) -> None:
         """Reset the singleton instance (for testing purposes)."""
         with cls._lock:
+            if cls._instance is not None:
+                client = getattr(cls._instance, "_client", None)
+                if client is not None:
+                    client.close()
             cls._instance = None
             cls._initialized = False

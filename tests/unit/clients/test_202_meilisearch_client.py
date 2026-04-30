@@ -2,6 +2,37 @@ import os
 import unittest
 
 from ffbb_api_client_v3 import MeilisearchClient, MultiSearchQuery, generate_queries
+from ffbb_api_client_v3.clients.meilisearch_client import (
+    _cache_get,
+    _cache_result_payload,
+    _make_cache_key,
+    _result_from_cached_payload,
+    clear_meili_app_cache,
+)
+from ffbb_api_client_v3.models.multi_search_results_class import MultiSearchResults
+
+
+class TestMeilisearchAppCache(unittest.TestCase):
+    def setUp(self):
+        clear_meili_app_cache()
+
+    def tearDown(self):
+        clear_meili_app_cache()
+
+    def test_cache_stores_raw_payload_and_rebuilds_result(self):
+        result = MultiSearchResults.from_dict({"results": []})
+        assert result is not None
+        key = _make_cache_key(None)
+
+        _cache_result_payload(key, result)
+        cached_payload = _cache_get(key)
+        rebuilt = _result_from_cached_payload(cached_payload)
+        assert rebuilt is not None
+
+        self.assertIsInstance(cached_payload, dict)
+        self.assertIsInstance(rebuilt, MultiSearchResults)
+        self.assertIsNot(rebuilt, result)
+        self.assertEqual(rebuilt.to_dict(), result.to_dict())
 
 
 class Test002MeilisearchClient(unittest.TestCase):
@@ -41,6 +72,7 @@ class Test002MeilisearchClient(unittest.TestCase):
             self.assertIsNotNone(
                 query, f"No query found for result index_uid: {result.index_uid}"
             )
+            assert query is not None
             self.assertTrue(query.is_valid_result(result))
 
     def test_multi_search_with_all_possible_empty_queries(self):

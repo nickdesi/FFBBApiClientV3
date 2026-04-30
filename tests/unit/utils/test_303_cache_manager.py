@@ -42,6 +42,13 @@ class Test018CacheManager(unittest.TestCase):
         self.assertIsNone(config.redis_url)
         self.assertEqual(config.key_prefix, "ffbb_api")
         self.assertFalse(config.compression)
+        self.assertEqual(config.transport_retries, 0)
+
+    def test_cache_config_transport_retries(self):
+        """Test CacheConfig transport retry override."""
+        config = CacheConfig(transport_retries=2)
+
+        self.assertEqual(config.transport_retries, 2)
 
     def test_cache_metrics(self):
         """Test CacheMetrics functionality."""

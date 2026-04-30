@@ -11,49 +11,57 @@
 [![License](https://img.shields.io/pypi/l/ffbb_api_client_v3?color=green)](LICENSE.txt)
 [![MCP-Ready](https://img.shields.io/badge/MCP-Ready-orange.svg?logo=modelcontextprotocol)](https://github.com/nickdesi/FFBB-MCP-Server)
 
-[🚀 Quick Start](#-quick-start) •
+[🚀 Démarrage rapide](#-démarrage-rapide) •
 [✨ Fonctionnalités](#-fonctionnalités) •
 [🔍 Meilisearch](#-9-index-meilisearch) •
 [🤖 IA / MCP](#-intégration-ia--mcp) •
-[🚢 Architecture](#-architecture) •
+[🚢 Architecture](#-architecture--qualité) •
 [🤝 Contribuer](#-contribuer)
 
 ---
 
-> **Note:** Ce SDK est une refonte totale de la V2. Il est pensé pour la performance, le typage strict avec Pydantic v2, et une intégration native avec les agents IA via le protocole MCP.
+> **Note :** Ce SDK est une refonte totale de la V2. Il est pensé pour la performance, le typage strict avec Pydantic v2, et une intégration native avec les agents IA via le protocole MCP.
 
 </div>
 
 ---
 
-## 🚀 Release v1.7.0 (2026-04-30)
+## 🚀 Version v1.7.0 (30 avril 2026)
 
-Small release summarizing recent changes since `v1.6.1`:
+Cette version consolide les évolutions récentes depuis `v1.6.1` :
 
-- **Added**: extended API coverage with ~10 new entities (rencontres, officiels, entraineurs, communes, assets).
-- **Improved**: Meilisearch — in-memory app cache and stronger cache policies.
-- **Added**: async delegations (expose async `list_*` methods) and async Genius Sports / Rematch wrappers.
-- **Updated**: data collections, Meilisearch indexes and OpenAPI schema.
-- **Fixed**: CI, tests and formatting issues.
+- **Ajout** : couverture API étendue avec de nouvelles entités — rencontres, officiels, entraîneurs, communes et assets.
+- **Amélioration** : recherche Meilisearch plus efficace grâce à un cache applicatif mémoire et des politiques de cache renforcées.
+- **Ajout** : délégations asynchrones avec exposition des méthodes `list_*` async et wrappers async Genius Sports / Rematch.
+- **Mise à jour** : collections de données, index Meilisearch et schéma OpenAPI.
+- **Correction** : stabilité CI, tests, typage et formatage.
 
-See the full commit history for details.
+### ⚡ Optimisations de performance récentes
+
+- Réutilisation des clients `httpx` synchrones et asynchrones pour conserver les connexions chaudes et réduire la latence des appels répétés.
+- Parsing JSON accéléré via `response.json()` sur les vraies réponses HTTP, avec conservation des fallbacks historiques pour les payloads FFBB atypiques.
+- Cache applicatif Meilisearch allégé : stockage en dictionnaire brut puis reconstruction typée, afin d’éviter les `deepcopy` coûteux sur de gros résultats.
+- Retries de transport `hishel/httpx` configurables via `CacheConfig.transport_retries`, avec défaut à `0` pour éviter de multiplier les tentatives quand le retry applicatif est déjà actif.
+- Validation complète : **552 tests unitaires passants**.
+
+Consultez l’historique Git pour le détail complet des changements.
 
 ## ⚡ Pourquoi V3 ?
 
 L'API FFBB est complexe : tokens à renouveler, 9 index de recherche séparés, données imbriquées. La V3 automatise tout cela pour vous permettre de vous concentrer sur votre application.
 
-| Feature | FFBB Client V2 | FFBB Client V3 | Gain |
+| Fonctionnalité | FFBB Client V2 | FFBB Client V3 | Gain |
 |---|---|---|---|
 | **Tokens** | Manuels / `os.getenv` | **Auto-résolus (`TokenManager`)** | ⚡ Zéro configuration |
 | **Typage** | `dict` bruts | **70+ modèles Pydantic v2** | 🛠️ Autocomplétion totale |
 | **Recherche** | 1 appel par type | **1 `multi_search` (9 index)** | 🚀 -90% de latence |
 | **Async** | Partiel | **Natif (`httpx`)** | 💨 Performance I/O |
 | **Cache** | Manuel | **Intégré (`hishel`)** | 📉 Quotas préservés |
-| **IA** | ❌ | **✅ MCP-ready** | 🤖 Claude/Cursor compatible |
+| **IA** | ❌ | **✅ prêt pour MCP** | 🤖 Compatible Claude/Cursor |
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Démarrage rapide
 
 ### Installation
 
@@ -61,7 +69,7 @@ L'API FFBB est complexe : tokens à renouveler, 9 index de recherche séparés, 
 pip install ffbb_api_client_v3
 ```
 
-### Usage Express (Zéro Configuration)
+### Utilisation express — zéro configuration
 
 Plus besoin de chercher vos tokens. Le client les résout automatiquement au premier appel.
 
@@ -91,11 +99,13 @@ lives = client.get_lives()
 - ⚡ **Sync + Async** — chaque méthode disponible en `async/await`
 - 🧩 **60+ modèles Pydantic v2** — type-safe, validation, sérialisation
 - 📦 **Cache HTTP intégré** — SQLite ou mémoire via `hishel[async]`, configurable
-- 🔄 **Retry + Timeout** — robustesse réseau out-of-the-box
+- 🚀 **Connexions HTTP réutilisées** — clients `httpx` persistants pour améliorer la latence des appels successifs
+- 🧠 **Cache Meilisearch optimisé** — moins de copies profondes, moins d’allocations mémoire
+- 🔄 **Retry + Timeout** — robustesse réseau prête à l’emploi, retries de transport configurables
 - 🔐 **TokenManager intelligent** — auto-résolution + renouvellement transparent
 - 🪵 **Logging sécurisé** — tokens masqués automatiquement dans les logs
-- 🤖 **MCP-ready** — wrapper officiel pour Claude, Cursor, Copilot
-- 🧪 **400+ tests** — unitaires + intégration, CI GitHub Actions
+- 🤖 **Prêt pour MCP** — wrapper officiel pour Claude, Cursor, Copilot
+- 🧪 **552 tests unitaires validés** — unitaires + intégration, CI GitHub Actions
 
 ---
 
@@ -137,10 +147,13 @@ communes = client.search_communes("Clermont-Ferrand")
 
 ---
 
-## 🧱 Nouveaux modèles & endpoints REST
-officiel = client.get_officiel(id_officiel)
+## 🧱 Nouveaux modèles et endpoints REST
 
-### Nouveaux Endpoints — Explication concise
+```python
+officiel = client.get_officiel(id_officiel)
+```
+
+### Nouveaux endpoints — explication concise
 
 Voici ce que fournissent concrètement les nouveaux endpoints intégrés :
 
@@ -209,12 +222,12 @@ src/ffbb_api_client_v3/
 └── helpers/                        # Utilitaires HTTP et Multi-search
 ```
 
-### Pipeline de Release Automatisé
+### Pipeline de release automatisé
 Le projet utilise **OIDC Trusted Publisher** pour PyPI et un pipeline CI/CD complet :
-- ✅ **Tests unitaires & intégration** (400+ tests)
+- ✅ **Tests unitaires & intégration** (552 tests unitaires validés)
 - ✅ **Parity Check** hebdomadaire via analyse AST
-- ✅ **Release auto** sur tag git avec génération de notes
-- ✅ **Sync auto** avec le serveur MCP
+- ✅ **Release automatique** sur tag git avec génération de notes
+- ✅ **Synchronisation automatique** avec le serveur MCP
 
 ---
 
