@@ -11716,7 +11716,7 @@
   "info": {
     "description": "This is a dynamically generated API specification for all endpoints existing on the current project.",
     "title": "Dynamic API Specification",
-    "version": "81dc585185721d2d026413c186a80f4779abf831"
+    "version": "ecf40998ba74aac2fb252c1a901a585835c23863"
   },
   "openapi": "3.0.1",
   "paths": {

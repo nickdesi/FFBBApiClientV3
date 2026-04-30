@@ -333,9 +333,9 @@
       "items/youtube_videos_youtube_tags"
     ],
     "metadata": {
-      "openapi_version": "81dc585185721d2d026413c186a80f4779abf831",
+      "openapi_version": "ecf40998ba74aac2fb252c1a901a585835c23863",
       "source": "https://api.ffbb.app/server/specs/oas",
-      "timestamp": "2026-04-30T13:30:14.497350+00:00"
+      "timestamp": "2026-04-30T13:55:16.710993+00:00"
     },
     "paths": {
       "items/configuration": [
@@ -1831,7 +1831,7 @@
     ],
     "metadata": {
       "source": "https://meilisearch-prod.ffbb.app/multi-search",
-      "timestamp": "2026-04-30T13:30:14.497350+00:00"
+      "timestamp": "2026-04-30T13:55:16.710993+00:00"
     },
     "unavailable_indexes": [
       {
@@ -1867,9 +1867,9 @@
   "metadata": {
     "api_base_url": "https://api.ffbb.app/",
     "meilisearch_base_url": "https://meilisearch-prod.ffbb.app/",
-    "openapi_sha256": "196c91b6ca286bc66f7c78a7e9a067f817dc89fa3deb00be3d70e0b586f8bab4",
-    "openapi_snapshot_sha256": "c0b15cf5d6e68fae001591e92c69a5155f1e96afce725065f401c92488f20015",
-    "openapi_version": "81dc585185721d2d026413c186a80f4779abf831",
-    "timestamp": "2026-04-30T13:30:14.497350+00:00"
+    "openapi_sha256": "2cf878c8ec60be8a5034dd1837fdea03930be91fa15c4f36c566a2958ebb830c",
+    "openapi_snapshot_sha256": "30a8aa21628c6f0659008d030a3b5ce438c38d5276d12c5c11d413869b4a175d",
+    "openapi_version": "ecf40998ba74aac2fb252c1a901a585835c23863",
+    "timestamp": "2026-04-30T13:55:16.710993+00:00"
   }
 }
