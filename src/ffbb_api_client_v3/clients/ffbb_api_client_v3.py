@@ -84,6 +84,17 @@ from .meilisearch_ffbb_client import MeilisearchFFBBClient
 
 
 class FFBBAPIClientV3:
+
+    def __init__(
+        self,
+        api_ffbb_client: ApiFFBBAppClient,
+        meilisearch_ffbb_client: MeilisearchFFBBClient,
+    ):
+        self.api_ffbb_client = api_ffbb_client
+        self.meilisearch_ffbb_client = meilisearch_ffbb_client
+        self.cached_session = api_ffbb_client.cached_session
+        self.async_cached_session = api_ffbb_client.async_cached_session
+
     def get_organisme_for_search(
         self,
         organisme_id: int,
@@ -107,16 +118,6 @@ class FFBBAPIClientV3:
             organisme_id=organisme_id,
             cached_session=cached_session,
         )
-
-    def __init__(
-        self,
-        api_ffbb_client: ApiFFBBAppClient,
-        meilisearch_ffbb_client: MeilisearchFFBBClient,
-    ):
-        self.api_ffbb_client = api_ffbb_client
-        self.meilisearch_ffbb_client = meilisearch_ffbb_client
-        self.cached_session = api_ffbb_client.cached_session
-        self.async_cached_session = api_ffbb_client.async_cached_session
 
     _BATCH_CHUNK_SIZE = 50
 
@@ -380,22 +381,34 @@ class FFBBAPIClientV3:
         return await self.api_ffbb_client.get_lives_async()
 
     async def get_saisons_async(
-        self, active_only: bool = True
+        self,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = '{"actif":{"_eq":true}}',
+        cached_session: httpx.AsyncClient | None = None,
     ) -> list[GetSaisonsResponse]:
-        """Retrieves list of seasons asynchronously."""
-        filter_criteria = '{"actif":{"_eq":true}}' if active_only else None
+        """Retrieves list of seasons asynchronously with input validation."""
+        validated_fields = validate_string_list(fields, "fields")
+        validated_filter = validate_filter_criteria(filter_criteria, "filter_criteria")
         return await self.api_ffbb_client.get_saisons_async(
-            filter_criteria=filter_criteria
+            fields=validated_fields,
+            filter_criteria=validated_filter,
+            cached_session=cached_session,
         )
 
     async def get_competition_async(
         self,
         competition_id: int,
         deep_limit: str | None = "1000",
+        fields: list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
     ) -> GetCompetitionResponse | None:
         """Retrieves detailed information about a competition asynchronously."""
+        validated_fields = validate_string_list(fields, "fields")
         return await self.api_ffbb_client.get_competition_async(
-            competition_id, deep_limit=deep_limit
+            competition_id=competition_id,
+            deep_limit=deep_limit,
+            fields=validated_fields,
+            cached_session=cached_session,
         )
 
     async def list_competitions_async(
@@ -410,10 +423,18 @@ class FFBBAPIClientV3:
         )
 
     async def get_organisme_async(
-        self, organisme_id: int
+        self,
+        organisme_id: int,
+        fields: list[str] | None = None,
+        cached_session: httpx.AsyncClient | None = None,
     ) -> GetOrganismeResponse | None:
         """Retrieves detailed information about an organisme asynchronously."""
-        return await self.api_ffbb_client.get_organisme_async(organisme_id)
+        validated_fields = validate_string_list(fields, "fields")
+        return await self.api_ffbb_client.get_organisme_async(
+            organisme_id=organisme_id,
+            fields=validated_fields,
+            cached_session=cached_session,
+        )
 
     async def get_poule_async(
         self, poule_id: int, deep_limit: str | None = "1000"
@@ -1425,6 +1446,206 @@ class FFBBAPIClientV3:
         cached_session: Client | None = None,
     ) -> list[GetPratiqueResponse]:
         return self.api_ffbb_client.list_all_pratiques(
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            search=validate_search_query(search, "search"),
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    async def list_all_rencontres_async(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetRencontreResponse]:
+        return await self.api_ffbb_client.list_all_rencontres_async(
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            search=validate_search_query(search, "search"),
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    async def list_all_salles_async(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetSalleResponse]:
+        return await self.api_ffbb_client.list_all_salles_async(
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            search=validate_search_query(search, "search"),
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    async def list_all_terrains_async(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetTerrainResponse]:
+        return await self.api_ffbb_client.list_all_terrains_async(
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            search=validate_search_query(search, "search"),
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    async def list_all_tournois_async(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetTournoiResponse]:
+        return await self.api_ffbb_client.list_all_tournois_async(
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            search=validate_search_query(search, "search"),
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    async def list_all_engagements_async(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetEngagementResponse]:
+        return await self.api_ffbb_client.list_all_engagements_async(
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            search=validate_search_query(search, "search"),
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    async def list_all_formations_async(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetFormationResponse]:
+        return await self.api_ffbb_client.list_all_formations_async(
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            search=validate_search_query(search, "search"),
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    async def list_all_entraineurs_async(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetEntraineurResponse]:
+        return await self.api_ffbb_client.list_all_entraineurs_async(
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            search=validate_search_query(search, "search"),
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    async def list_all_communes_async(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetCommuneResponse]:
+        return await self.api_ffbb_client.list_all_communes_async(
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            search=validate_search_query(search, "search"),
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    async def list_all_officiels_async(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetOfficielResponse]:
+        return await self.api_ffbb_client.list_all_officiels_async(
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            search=validate_search_query(search, "search"),
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    async def list_all_pratiques_async(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetPratiqueResponse]:
+        return await self.api_ffbb_client.list_all_pratiques_async(
             filter_criteria=validate_filter_criteria(
                 filter_criteria, "filter_criteria"
             ),
