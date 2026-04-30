@@ -110,12 +110,23 @@ def _write_json(path: Path, payload: Any) -> None:
 
 def _strip_volatile_metadata(payload: Any) -> Any:
     if isinstance(payload, dict):
-        return {
-            key: _strip_volatile_metadata(value)
-            for key, value in payload.items()
-            if not (key == "timestamp" and "source" in payload)
-            and not (key == "timestamp" and "api_base_url" in payload)
-        }
+        stripped: dict[str, Any] = {}
+        for key, value in payload.items():
+            if key in {
+                "timestamp",
+                "openapi_version",
+                "openapi_sha256",
+                "openapi_snapshot_sha256",
+            }:
+                continue
+            if key == "info" and isinstance(value, dict):
+                info = _strip_volatile_metadata(value)
+                if isinstance(info, dict):
+                    info.pop("version", None)
+                stripped[key] = info
+                continue
+            stripped[key] = _strip_volatile_metadata(value)
+        return stripped
     if isinstance(payload, list):
         return [_strip_volatile_metadata(item) for item in payload]
     return payload
