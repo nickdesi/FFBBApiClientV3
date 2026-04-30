@@ -1031,6 +1031,206 @@ class FFBBAPIClientV3:
             cached_session=cached_session,
         )
 
+    async def list_rencontres_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetRencontreResponse]:
+        return await self.api_ffbb_client.list_rencontres_async(
+            limit=limit,
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            offset=validate_offset(offset),
+            search=validate_search_query(search, "search"),
+            cached_session=cached_session,
+        )
+
+    async def list_salles_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetSalleResponse]:
+        return await self.api_ffbb_client.list_salles_async(
+            limit=limit,
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            offset=validate_offset(offset),
+            search=validate_search_query(search, "search"),
+            cached_session=cached_session,
+        )
+
+    async def list_terrains_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetTerrainResponse]:
+        return await self.api_ffbb_client.list_terrains_async(
+            limit=limit,
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            offset=validate_offset(offset),
+            search=validate_search_query(search, "search"),
+            cached_session=cached_session,
+        )
+
+    async def list_tournois_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetTournoiResponse]:
+        return await self.api_ffbb_client.list_tournois_async(
+            limit=limit,
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            offset=validate_offset(offset),
+            search=validate_search_query(search, "search"),
+            cached_session=cached_session,
+        )
+
+    async def list_engagements_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetEngagementResponse]:
+        return await self.api_ffbb_client.list_engagements_async(
+            limit=limit,
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            offset=validate_offset(offset),
+            search=validate_search_query(search, "search"),
+            cached_session=cached_session,
+        )
+
+    async def list_formations_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetFormationResponse]:
+        return await self.api_ffbb_client.list_formations_async(
+            limit=limit,
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            offset=validate_offset(offset),
+            search=validate_search_query(search, "search"),
+            cached_session=cached_session,
+        )
+
+    async def list_entraineurs_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetEntraineurResponse]:
+        return await self.api_ffbb_client.list_entraineurs_async(
+            limit=limit,
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            offset=validate_offset(offset),
+            search=validate_search_query(search, "search"),
+            cached_session=cached_session,
+        )
+
+    async def list_communes_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetCommuneResponse]:
+        return await self.api_ffbb_client.list_communes_async(
+            limit=limit,
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            offset=validate_offset(offset),
+            search=validate_search_query(search, "search"),
+            cached_session=cached_session,
+        )
+
+    async def list_officiels_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetOfficielResponse]:
+        return await self.api_ffbb_client.list_officiels_async(
+            limit=limit,
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            offset=validate_offset(offset),
+            search=validate_search_query(search, "search"),
+            cached_session=cached_session,
+        )
+
+    async def list_pratiques_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetPratiqueResponse]:
+        return await self.api_ffbb_client.list_pratiques_async(
+            limit=limit,
+            filter_criteria=validate_filter_criteria(
+                filter_criteria, "filter_criteria"
+            ),
+            sort=validate_string_list(sort, "sort"),
+            offset=validate_offset(offset),
+            search=validate_search_query(search, "search"),
+            cached_session=cached_session,
+        )
+
     # ---------------------------------------------------------------------
     # list_all delegations
     # ---------------------------------------------------------------------
