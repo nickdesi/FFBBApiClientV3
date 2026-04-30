@@ -239,6 +239,8 @@ class ApiFFBBAppClient:
         fields: list[str] | None = None,
         filter_criteria: str | None = None,
         sort: str | list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
         cached_session: Client | None = None,
     ) -> list[dict[str, Any]]:
         url = f"{self.url}{endpoint}"
@@ -249,6 +251,10 @@ class ApiFFBBAppClient:
             params["filter"] = filter_criteria
         if sort:
             params["sort"] = sort
+        if offset:
+            params["offset"] = str(offset)
+        if search:
+            params["search"] = search
         final_url = url_with_params(url, params)
         data = catch_result(
             lambda: http_get_json(
@@ -270,6 +276,8 @@ class ApiFFBBAppClient:
         fields: list[str] | None = None,
         filter_criteria: str | None = None,
         sort: str | list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
         cached_session: httpx.AsyncClient | None = None,
     ) -> list[dict[str, Any]]:
         url = f"{self.url}{endpoint}"
@@ -280,6 +288,10 @@ class ApiFFBBAppClient:
             params["filter"] = filter_criteria
         if sort:
             params["sort"] = sort
+        if offset:
+            params["offset"] = str(offset)
+        if search:
+            params["search"] = search
         final_url = url_with_params(url, params)
         try:
             data = await http_get_json_async(
@@ -1352,6 +1364,648 @@ class ApiFFBBAppClient:
             fields=fields,
             filter_criteria=filter_criteria,
             sort=sort,
+            cached_session=cached_session,
+        )
+
+    # ---------- list_rencontres ----------
+    def list_rencontres(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: Client | None = None,
+    ) -> list[GetRencontreResponse]:
+        raw = self._list_directus_items(
+            ENDPOINT_RENCONTRES,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetRencontreResponse.from_dict(r) for r in raw if r]
+
+    async def list_rencontres_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetRencontreResponse]:
+        raw = await self._list_directus_items_async(
+            ENDPOINT_RENCONTRES,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetRencontreResponse.from_dict(r) for r in raw if r]
+
+    # ---------- list_salles ----------
+    def list_salles(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: Client | None = None,
+    ) -> list[GetSalleResponse]:
+        raw = self._list_directus_items(
+            ENDPOINT_SALLES,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetSalleResponse.from_dict(r) for r in raw if r]
+
+    async def list_salles_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetSalleResponse]:
+        raw = await self._list_directus_items_async(
+            ENDPOINT_SALLES,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetSalleResponse.from_dict(r) for r in raw if r]
+
+    # ---------- list_terrains ----------
+    def list_terrains(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: Client | None = None,
+    ) -> list[GetTerrainResponse]:
+        raw = self._list_directus_items(
+            ENDPOINT_TERRAINS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetTerrainResponse.from_dict(r) for r in raw if r]
+
+    async def list_terrains_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetTerrainResponse]:
+        raw = await self._list_directus_items_async(
+            ENDPOINT_TERRAINS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetTerrainResponse.from_dict(r) for r in raw if r]
+
+    # ---------- list_tournois ----------
+    def list_tournois(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: Client | None = None,
+    ) -> list[GetTournoiResponse]:
+        raw = self._list_directus_items(
+            ENDPOINT_TOURNOIS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetTournoiResponse.from_dict(r) for r in raw if r]
+
+    async def list_tournois_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetTournoiResponse]:
+        raw = await self._list_directus_items_async(
+            ENDPOINT_TOURNOIS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetTournoiResponse.from_dict(r) for r in raw if r]
+
+    # ---------- list_engagements ----------
+    def list_engagements(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: Client | None = None,
+    ) -> list[GetEngagementResponse]:
+        raw = self._list_directus_items(
+            ENDPOINT_ENGAGEMENTS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetEngagementResponse.from_dict(r) for r in raw if r]
+
+    async def list_engagements_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetEngagementResponse]:
+        raw = await self._list_directus_items_async(
+            ENDPOINT_ENGAGEMENTS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetEngagementResponse.from_dict(r) for r in raw if r]
+
+    # ---------- list_formations ----------
+    def list_formations(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: Client | None = None,
+    ) -> list[GetFormationResponse]:
+        raw = self._list_directus_items(
+            ENDPOINT_FORMATIONS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetFormationResponse.from_dict(r) for r in raw if r]
+
+    async def list_formations_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetFormationResponse]:
+        raw = await self._list_directus_items_async(
+            ENDPOINT_FORMATIONS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetFormationResponse.from_dict(r) for r in raw if r]
+
+    # ---------- list_entraineurs ----------
+    def list_entraineurs(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: Client | None = None,
+    ) -> list[GetEntraineurResponse]:
+        raw = self._list_directus_items(
+            ENDPOINT_ENTRAINEURS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetEntraineurResponse.from_dict(r) for r in raw if r]
+
+    async def list_entraineurs_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetEntraineurResponse]:
+        raw = await self._list_directus_items_async(
+            ENDPOINT_ENTRAINEURS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetEntraineurResponse.from_dict(r) for r in raw if r]
+
+    # ---------- list_communes ----------
+    def list_communes(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: Client | None = None,
+    ) -> list[GetCommuneResponse]:
+        raw = self._list_directus_items(
+            ENDPOINT_COMMUNES,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetCommuneResponse.from_dict(r) for r in raw if r]
+
+    async def list_communes_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetCommuneResponse]:
+        raw = await self._list_directus_items_async(
+            ENDPOINT_COMMUNES,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetCommuneResponse.from_dict(r) for r in raw if r]
+
+    # ---------- list_officiels ----------
+    def list_officiels(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: Client | None = None,
+    ) -> list[GetOfficielResponse]:
+        raw = self._list_directus_items(
+            ENDPOINT_OFFICIELS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetOfficielResponse.from_dict(r) for r in raw if r]
+
+    async def list_officiels_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetOfficielResponse]:
+        raw = await self._list_directus_items_async(
+            ENDPOINT_OFFICIELS,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetOfficielResponse.from_dict(r) for r in raw if r]
+
+    # ---------- list_pratiques ----------
+    def list_pratiques(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: Client | None = None,
+    ) -> list[GetPratiqueResponse]:
+        raw = self._list_directus_items(
+            ENDPOINT_PRATIQUES,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetPratiqueResponse.from_dict(r) for r in raw if r]
+
+    async def list_pratiques_async(
+        self,
+        limit: int = 10,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        offset: int | None = None,
+        search: str | None = None,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> list[GetPratiqueResponse]:
+        raw = await self._list_directus_items_async(
+            ENDPOINT_PRATIQUES,
+            limit=limit,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            offset=offset,
+            search=search,
+            cached_session=cached_session,
+        )
+        return [GetPratiqueResponse.from_dict(r) for r in raw if r]
+
+    # ---------- Pagination helper: list all items ----------
+    def _list_all_directus_items(
+        self,
+        endpoint: str,
+        model_cls,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: Client | None = None,
+    ) -> list:
+        results: list = []
+        offset = 0
+        while len(results) < max_items:
+            batch = self._list_directus_items(
+                endpoint,
+                limit=page_size,
+                filter_criteria=filter_criteria,
+                sort=sort,
+                offset=offset,
+                search=search,
+                cached_session=cached_session,
+            )
+            if not batch:
+                break
+            results.extend([model_cls.from_dict(r) for r in batch if r])
+            if len(batch) < page_size:
+                break
+            offset += page_size
+        return results[:max_items]
+
+    def list_all_rencontres(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: Client | None = None,
+    ) -> list[GetRencontreResponse]:
+        return self._list_all_directus_items(
+            ENDPOINT_RENCONTRES,
+            GetRencontreResponse,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            search=search,
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    def list_all_salles(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: Client | None = None,
+    ) -> list[GetSalleResponse]:
+        return self._list_all_directus_items(
+            ENDPOINT_SALLES,
+            GetSalleResponse,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            search=search,
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    def list_all_terrains(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: Client | None = None,
+    ) -> list[GetTerrainResponse]:
+        return self._list_all_directus_items(
+            ENDPOINT_TERRAINS,
+            GetTerrainResponse,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            search=search,
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    def list_all_tournois(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: Client | None = None,
+    ) -> list[GetTournoiResponse]:
+        return self._list_all_directus_items(
+            ENDPOINT_TOURNOIS,
+            GetTournoiResponse,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            search=search,
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    def list_all_engagements(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: Client | None = None,
+    ) -> list[GetEngagementResponse]:
+        return self._list_all_directus_items(
+            ENDPOINT_ENGAGEMENTS,
+            GetEngagementResponse,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            search=search,
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    def list_all_formations(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: Client | None = None,
+    ) -> list[GetFormationResponse]:
+        return self._list_all_directus_items(
+            ENDPOINT_FORMATIONS,
+            GetFormationResponse,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            search=search,
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    def list_all_entraineurs(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: Client | None = None,
+    ) -> list[GetEntraineurResponse]:
+        return self._list_all_directus_items(
+            ENDPOINT_ENTRAINEURS,
+            GetEntraineurResponse,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            search=search,
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    def list_all_communes(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: Client | None = None,
+    ) -> list[GetCommuneResponse]:
+        return self._list_all_directus_items(
+            ENDPOINT_COMMUNES,
+            GetCommuneResponse,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            search=search,
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    def list_all_officiels(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: Client | None = None,
+    ) -> list[GetOfficielResponse]:
+        return self._list_all_directus_items(
+            ENDPOINT_OFFICIELS,
+            GetOfficielResponse,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            search=search,
+            page_size=page_size,
+            max_items=max_items,
+            cached_session=cached_session,
+        )
+
+    def list_all_pratiques(
+        self,
+        filter_criteria: str | None = None,
+        sort: list[str] | None = None,
+        search: str | None = None,
+        page_size: int = 100,
+        max_items: int = 10000,
+        cached_session: Client | None = None,
+    ) -> list[GetPratiqueResponse]:
+        return self._list_all_directus_items(
+            ENDPOINT_PRATIQUES,
+            GetPratiqueResponse,
+            filter_criteria=filter_criteria,
+            sort=sort,
+            search=search,
+            page_size=page_size,
+            max_items=max_items,
             cached_session=cached_session,
         )
 

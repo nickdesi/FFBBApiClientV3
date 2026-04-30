@@ -11,9 +11,12 @@ from .clients.meilisearch_client import MeilisearchClient
 from .clients.meilisearch_ffbb_client import MeilisearchFFBBClient
 from .helpers.meilisearch_client_extension import MeilisearchClientExtension
 from .helpers.multi_search_query_helper import generate_queries
+from .models.club_contacts import ClubContacts
 from .models.competitions_facet_distribution import CompetitionsFacetDistribution
 from .models.competitions_facet_stats import CompetitionsFacetStats
 from .models.competitions_hit import CompetitionsHit
+from .models.contact_info import ContactInfo
+from .models.engagement_contacts import EngagementContacts
 from .models.engagements_facet_distribution import EngagementsFacetDistribution
 from .models.engagements_facet_stats import EngagementsFacetStats
 from .models.engagements_hit import EngagementsHit
@@ -80,6 +83,9 @@ __all__ = [
     # Responses
     "GetCompetitionResponse",
     "GetOrganismeResponse",
+    "ContactInfo",
+    "ClubContacts",
+    "EngagementContacts",
     "GetPouleResponse",
     # Rankings
     "RankingEngagement",

@@ -257,6 +257,32 @@ def validate_deep_limit(
     return str(int_value)
 
 
+def validate_offset(value: int | str | None, field_name: str = "offset") -> int | None:
+    """
+    Validate an offset parameter (can be used for pagination).
+
+    Returns the integer offset or None.
+    """
+    if value is None:
+        return None
+
+    try:
+        if isinstance(value, str):
+            int_value = int(value.strip())
+        else:
+            int_value = int(value)
+    except (ValueError, AttributeError) as e:
+        raise ValidationError(f"{field_name} must be a valid integer: {e}") from e
+
+    if int_value < 0:
+        raise ValidationError(f"{field_name} must be >= 0, got {int_value}")
+
+    if int_value > 2**31 - 1:
+        raise ValidationError(f"{field_name} is too large (max: {2**31 - 1})")
+
+    return int_value
+
+
 def validate_filter_criteria(
     filter_criteria: str | None, field_name: str = "filter_criteria"
 ) -> str | None:

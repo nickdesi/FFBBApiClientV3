@@ -22,6 +22,7 @@ from ..models.generic_search import (
     RssMultiSearchResult,
     YoutubeVideosMultiSearchResult,
 )
+from ..models.geo_sort_order import GeoSortOrder
 from ..models.multi_search_result_competitions import CompetitionsMultiSearchResult
 from ..models.multi_search_result_engagements import EngagementsMultiSearchResult
 from ..models.multi_search_result_formations import FormationsMultiSearchResult
@@ -96,6 +97,38 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
             cached_session=cached_session,
         )
         return results[0] if results else None
+
+    def search_organismes_by_geo(
+        self,
+        lat: float,
+        lng: float,
+        radius_km: float = 10.0,
+        q: str = "",
+        limit: int | None = 20,
+        geo_sort: GeoSortOrder = GeoSortOrder.NEAREST_FIRST,
+        cached_session: Client | None = None,
+    ) -> OrganismesMultiSearchResult | None:
+        filter_str = f"_geoRadius({lat}, {lng}, {int(radius_km * 1000)})"
+        sort = [f"_geoPoint({lat}, {lng}):{geo_sort.value}"]
+        return self.search_organismes(
+            name=q,
+            filter=[filter_str],
+            sort=sort,
+            limit=limit,
+            cached_session=cached_session,
+        )
+
+    def search_organismes_by_city(
+        self,
+        city_name: str,
+        q: str = "",
+        limit: int = 200,
+        cached_session: Client | None = None,
+    ) -> OrganismesMultiSearchResult | None:
+        filter_str = f'commune = "{city_name}"'
+        return self.search_organismes(
+            name=q, filter=[filter_str], limit=limit, cached_session=cached_session
+        )
 
     def search_multiple_rencontres(
         self,
@@ -251,6 +284,26 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
         )
         return results[0] if results else None
 
+    def search_salles_by_geo(
+        self,
+        lat: float,
+        lng: float,
+        radius_km: float = 10.0,
+        q: str = "",
+        limit: int | None = 20,
+        geo_sort: GeoSortOrder = GeoSortOrder.NEAREST_FIRST,
+        cached_session: Client | None = None,
+    ) -> SallesMultiSearchResult | None:
+        filter_str = f"_geoRadius({lat}, {lng}, {int(radius_km * 1000)})"
+        sort = [f"_geoPoint({lat}, {lng}):{geo_sort.value}"]
+        return self.search_salles(
+            name=q,
+            filter=[filter_str],
+            sort=sort,
+            limit=limit,
+            cached_session=cached_session,
+        )
+
     def search_multiple_tournois(
         self,
         names: list[str | None] | None = None,
@@ -366,6 +419,46 @@ class MeilisearchFFBBClient(MeilisearchClientExtension):
             cached_session=cached_session,
         )
         return results[0] if results else None
+
+    def search_engagements_by_geo(
+        self,
+        lat: float,
+        lng: float,
+        radius_km: float = 10.0,
+        q: str = "",
+        limit: int | None = 20,
+        geo_sort: GeoSortOrder = GeoSortOrder.NEAREST_FIRST,
+        cached_session: Client | None = None,
+    ) -> EngagementsMultiSearchResult | None:
+        filter_str = f"_geoRadius({lat}, {lng}, {int(radius_km * 1000)})"
+        sort = [f"_geoPoint({lat}, {lng}):{geo_sort.value}"]
+        return self.search_engagements(
+            name=q,
+            filter=[filter_str],
+            sort=sort,
+            limit=limit,
+            cached_session=cached_session,
+        )
+
+    def search_engagements_filtered(
+        self,
+        lat: float,
+        lng: float,
+        radius_km: float = 10.0,
+        q: str = "",
+        limit: int | None = 5000,
+        sexes: list[str] | None = None,
+        niveau_codes: list[str] | None = None,
+        cached_session: Client | None = None,
+    ) -> EngagementsMultiSearchResult | None:
+        filters: list[str] = [f"_geoRadius({lat}, {lng}, {int(radius_km * 1000)})"]
+        if sexes:
+            filters.append(" OR ".join(f'sexe = "{s}"' for s in sexes))
+        if niveau_codes:
+            filters.append(" OR ".join(f'niveau.code = "{n}"' for n in niveau_codes))
+        return self.search_engagements(
+            name=q, filter=filters, limit=limit, cached_session=cached_session
+        )
 
     def search_multiple_formations(
         self,
