@@ -71,6 +71,30 @@ from .meilisearch_ffbb_client import MeilisearchFFBBClient
 
 
 class FFBBAPIClientV3:
+    def get_organisme_for_search(
+        self,
+        organisme_id: int,
+        cached_session: Client | None = None,
+    ) -> GetOrganismeResponse | None:
+        """Version allégée de get_organisme() pour les contextes de recherche.
+        Retourne 31 champs au lieu de 77 (exclut membres, labellisation, salle).
+        """
+        return self.api_ffbb_client.get_organisme_for_search(
+            organisme_id=organisme_id,
+            cached_session=cached_session,
+        )
+
+    async def get_organisme_for_search_async(
+        self,
+        organisme_id: int,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> GetOrganismeResponse | None:
+        """Version async allégée de get_organisme() pour les contextes de recherche."""
+        return await self.api_ffbb_client.get_organisme_for_search_async(
+            organisme_id=organisme_id,
+            cached_session=cached_session,
+        )
+
     def __init__(
         self,
         api_ffbb_client: ApiFFBBAppClient,
