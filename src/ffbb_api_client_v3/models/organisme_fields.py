@@ -233,6 +233,46 @@ class OrganismeFields:
         ]
 
     @classmethod
+    def get_search_fields(cls) -> list[str]:
+        """Champs minimaux pour identifier un organisme dans un contexte
+        de recherche. 31 champs vs 77 pour get_default_fields().
+        Exclus : membres.*, labellisation.*, offresPratiques.*, salle.*
+        """
+        return [
+            cls.ID,
+            cls.NOM,
+            cls.CODE,
+            cls.TELEPHONE,
+            cls.ADRESSE,
+            cls.MAIL,
+            cls.TYPE,
+            cls.NOM_SIMPLE,
+            cls.URL_SITE_WEB,
+            cls.COMMUNE_CODE_POSTAL,
+            cls.COMMUNE_LIBELLE,
+            cls.CARTOGRAPHIE_LATITUDE,
+            cls.CARTOGRAPHIE_LONGITUDE,
+            cls.NOM_CLUB_PRO,
+            cls.LOGO_ID,
+            cls.LOGO_GRADIENT_COLOR,
+            cls.ENGAGEMENTS_ID,
+            cls.ENGAGEMENTS_NUMERO_EQUIPE,
+            cls.ENGAGEMENTS_ID_COMPETITION_ID,
+            cls.ENGAGEMENTS_ID_COMPETITION_NOM,
+            cls.ENGAGEMENTS_ID_COMPETITION_CODE,
+            cls.ENGAGEMENTS_ID_COMPETITION_SEXE,
+            cls.ENGAGEMENTS_ID_COMPETITION_TYPE_COMPETITION,
+            cls.ENGAGEMENTS_ID_COMPETITION_SAISON_ID,
+            cls.ENGAGEMENTS_ID_COMPETITION_CATEGORIE_CODE,
+            cls.ENGAGEMENTS_ID_COMPETITION_CATEGORIE_ORDRE,
+            cls.ENGAGEMENTS_ID_POULE_ID,
+            cls.ENGAGEMENTS_ID_POULE_NOM,
+            cls.COMPETITIONS_ID,
+            cls.COMPETITIONS_NOM,
+            cls.ORGANISMES_FILS,
+        ]
+
+    @classmethod
     def get_engagements_fields(cls) -> list[str]:
         """Get engagements-only fields for lightweight team listing queries."""
         return [

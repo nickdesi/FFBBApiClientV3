@@ -153,6 +153,32 @@ class ApiFFBBAppClient:
         """Get the bearer token."""
         return self._bearer_token
 
+    def get_organisme_for_search(
+        self,
+        organisme_id: int,
+        cached_session: Client | None = None,
+    ) -> GetOrganismeResponse | None:
+        """Version allégée de get_organisme() pour les contextes de recherche.
+        Retourne 31 champs au lieu de 77 (exclut membres, labellisation, salle).
+        """
+        return self.get_organisme(
+            organisme_id=organisme_id,
+            fields=QueryFieldsManager.get_organisme_search_fields(),
+            cached_session=cached_session,
+        )
+
+    async def get_organisme_for_search_async(
+        self,
+        organisme_id: int,
+        cached_session: httpx.AsyncClient | None = None,
+    ) -> GetOrganismeResponse | None:
+        """Version async allégée de get_organisme() pour les contextes de recherche."""
+        return await self.get_organisme_async(
+            organisme_id=organisme_id,
+            fields=QueryFieldsManager.get_organisme_search_fields(),
+            cached_session=cached_session,
+        )
+
     def _get_directus_item(
         self,
         endpoint: str,

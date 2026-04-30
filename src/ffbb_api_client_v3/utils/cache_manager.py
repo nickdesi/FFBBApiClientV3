@@ -157,6 +157,12 @@ class CacheManager:
         """Initialize the cache backend."""
         policy = hishel.FilterPolicy()
         policy.use_body_key = True
+        # ── AJOUT : force le cache indépendamment des headers HTTP ──────────
+        # hishel respecte RFC 7234 par défaut → ne cache pas si le serveur
+        # ne renvoie pas de Cache-Control/ETag. FFBB n'en envoie pas.
+        policy.cacheable_methods = ["GET", "POST"]
+        policy.cacheable_status_codes = [200, 203, 204, 206, 300, 301, 308]
+        # ────────────────────────────────────────────────────────────────────
 
         if self.config.backend == "memory":
             import sqlite3

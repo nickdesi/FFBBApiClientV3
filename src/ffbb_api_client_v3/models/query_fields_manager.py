@@ -14,6 +14,13 @@ class QueryFieldsManager(ABC):
     Static helper methods remain available for direct use.
     """
 
+    @staticmethod
+    def get_organisme_search_fields() -> list[str]:
+        """Champs optimisés pour les contextes de recherche/identification
+        (31 champs vs 77 pour FieldSet.DEFAULT).
+        """
+        return OrganismeFields.get_search_fields()
+
     @abstractmethod
     def get_fields(self) -> list[str]:
         """Return the list of fields for this query."""

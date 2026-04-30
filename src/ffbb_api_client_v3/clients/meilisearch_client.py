@@ -1,6 +1,11 @@
 from __future__ import annotations
 
+import hashlib
+import json
+import threading
+import time
 from collections.abc import Sequence
+from typing import Any
 
 import httpx
 from httpx import Client
@@ -25,6 +30,41 @@ from ..utils.retry_utils import (
     get_default_timeout_config,
 )
 from ..utils.secure_logging import get_secure_logger, mask_token
+
+_APP_CACHE: dict[str, tuple[float, Any]] = {}
+_APP_CACHE_LOCK = threading.Lock()
+_APP_CACHE_TTL: int = 300  # secondes, modifiable
+
+
+def _make_cache_key(queries: Sequence[MultiSearchQuery] | None) -> str:
+    payload = [q.to_dict() for q in queries] if queries else []
+    raw = json.dumps(payload, sort_keys=True, default=str)
+    return hashlib.md5(raw.encode(), usedforsecurity=False).hexdigest()
+
+
+def _cache_get(key: str) -> Any | None:
+    with _APP_CACHE_LOCK:
+        entry = _APP_CACHE.get(key)
+    if entry is None:
+        return None
+    ts, value = entry
+    if time.monotonic() - ts > _APP_CACHE_TTL:
+        with _APP_CACHE_LOCK:
+            _APP_CACHE.pop(key, None)
+        return None
+    return value
+
+
+def _cache_set(key: str, value: Any) -> None:
+    with _APP_CACHE_LOCK:
+        _APP_CACHE[key] = (time.monotonic(), value)
+
+
+def clear_meili_app_cache() -> None:
+    """Vide le cache applicatif (utile pour les tests)."""
+    with _APP_CACHE_LOCK:
+        _APP_CACHE.clear()
+
 
 logger = get_secure_logger(__name__)
 
@@ -112,6 +152,11 @@ class MeilisearchClient:
         queries: Sequence[MultiSearchQuery] | None = None,
         cached_session: Client | None = None,
     ) -> MultiSearchResults | None:
+        key = _make_cache_key(queries)
+        cached = _cache_get(key)
+        if cached is not None:
+            return cached
+
         url = f"{self.url}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}"
         params = {"queries": [query.to_dict() for query in queries] if queries else []}
         raw_data = catch_result(
@@ -125,15 +170,21 @@ class MeilisearchClient:
                 timeout_config=self.timeout_config,
             )
         )
-        if raw_data:
-            return MultiSearchResults.from_dict(raw_data)
-        return None
+        result = MultiSearchResults.from_dict(raw_data) if raw_data else None
+        if result is not None:
+            _cache_set(key, result)
+        return result
 
     async def multi_search_async(
         self,
         queries: Sequence[MultiSearchQuery] | None = None,
         cached_session: httpx.AsyncClient | None = None,
     ) -> MultiSearchResults | None:
+        key = _make_cache_key(queries)
+        cached = _cache_get(key)
+        if cached is not None:
+            return cached
+
         url = f"{self.url}{MEILISEARCH_ENDPOINT_MULTI_SEARCH}"
         params = {"queries": [query.to_dict() for query in queries] if queries else []}
         try:
@@ -146,10 +197,14 @@ class MeilisearchClient:
                 retry_config=self.retry_config,
                 timeout_config=self.timeout_config,
             )
-            if raw_data:
-                return MultiSearchResults.from_dict(raw_data)
+            result = MultiSearchResults.from_dict(raw_data) if raw_data else None
         except (httpx.HTTPStatusError, httpx.RequestError) as e:
             self.logger.warning("multi_search_async request failed: %s", e)
+            result = None
         except Exception as e:
             self.logger.error("multi_search_async unexpected error: %s", e)
-        return None
+            result = None
+
+        if result is not None:
+            _cache_set(key, result)
+        return result
