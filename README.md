@@ -132,8 +132,8 @@ communes = client.search_communes("Clermont-Ferrand")
 | `ffbbserver_pratiques` | `search_pratiques()` | `…_async()` | Lieux de pratique |
 | `ffbbserver_terrains` | `search_terrains()` | `…_async()` | Terrains basket |
 | `ffbbserver_tournois` | `search_tournois()` | `…_async()` | Tournois |
-| `ffbbserver_engagements` | `search_engagements()` | `…_async()` | Engagements équipes ✨ v1.5 |
-| `ffbbserver_formations` | `search_formations()` | `…_async()` | Formations & stages ✨ v1.5 |
+| `ffbbserver_engagements` | `search_engagements()` | `…_async()` | Engagements équipes |
+| `ffbbserver_formations` | `search_formations()` | `…_async()` | Formations & stages |
 
 ---
 
