@@ -37,7 +37,8 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         # Should filter results.hits according to query.q
         if queries and results and results.results:
-            for i, (query, res) in enumerate(zip(queries, results.results)):
+            for i, res in enumerate(results.results):
+                query = queries[i]
                 if query.q:
                     results.results[i] = query.filter_result(res)
 
@@ -52,7 +53,8 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         # Should filter results.hits according to query.q
         if queries and results and results.results:
-            for i, (query, res) in enumerate(zip(queries, results.results)):
+            for i, res in enumerate(results.results):
+                query = queries[i]
                 if query.q:
                     results.results[i] = query.filter_result(res)
 
