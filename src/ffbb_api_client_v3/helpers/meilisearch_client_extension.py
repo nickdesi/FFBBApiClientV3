@@ -37,11 +37,9 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         # Should filter results.hits according to query.q
         if queries and results and results.results:
-            # ⚡ Bolt optimization: Use list comprehension with zip() over range(len()) for mapping parallel sequences
-            results.results = [
-                query.filter_result(res) if query.q else res
-                for query, res in zip(queries, results.results)
-            ]
+            for i, (query, res) in enumerate(zip(queries, results.results)):
+                if query.q:
+                    results.results[i] = query.filter_result(res)
 
         return results
 
@@ -54,11 +52,9 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         # Should filter results.hits according to query.q
         if queries and results and results.results:
-            # ⚡ Bolt optimization: Use list comprehension with zip() over range(len()) for mapping parallel sequences
-            results.results = [
-                query.filter_result(res) if query.q else res
-                for query, res in zip(queries, results.results)
-            ]
+            for i, (query, res) in enumerate(zip(queries, results.results)):
+                if query.q:
+                    results.results[i] = query.filter_result(res)
 
         return results
 
