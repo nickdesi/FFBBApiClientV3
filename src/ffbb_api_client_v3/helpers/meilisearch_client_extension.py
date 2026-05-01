@@ -89,7 +89,9 @@ class MeilisearchClientExtension(MeilisearchClient):
             new_result = self.recursive_smart_multi_search(next_queries, cached_session)
 
             if new_result and new_result.results:
-                for query_result, orig_result in zip(new_result.results, result.results):
+                for query_result, orig_result in zip(
+                    new_result.results, result.results
+                ):
                     hits_list = orig_result.hits
                     if query_result.hits and hits_list is not None:
                         hits_list.extend(query_result.hits)
@@ -124,7 +126,9 @@ class MeilisearchClientExtension(MeilisearchClient):
             )
 
             if new_result and new_result.results:
-                for query_result, orig_result in zip(new_result.results, result.results):
+                for query_result, orig_result in zip(
+                    new_result.results, result.results
+                ):
                     hits_list = orig_result.hits
                     if query_result.hits and hits_list is not None:
                         hits_list.extend(query_result.hits)
