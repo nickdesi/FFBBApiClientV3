@@ -2,120 +2,119 @@
 
 # 🏀 FFBB API Python Client V3
 
-**Le SDK Python moderne, typé et industriel pour toutes les API et statistiques de la Fédération Française de Basketball.**
+**SDK Python moderne, typé et asynchrone pour exploiter les données publiques FFBB : clubs, compétitions, rencontres, classements, salles, officiels et recherche Meilisearch.**
 
 [![PyPI](https://img.shields.io/pypi/v/ffbb_api_client_v3?color=blue&label=PyPI&logo=python)](https://pypi.org/project/ffbb_api_client_v3/)
 [![Python](https://img.shields.io/pypi/pyversions/ffbb_api_client_v3?logo=python)](https://pypi.org/project/ffbb_api_client_v3/)
 [![CI](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/ci.yml/badge.svg)](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/ci.yml)
-[![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/nickdesi/362a9a7a9a7a9a7a9a7a/raw/covbadge.json)](https://github.com/nickdesi/FFBBApiClientV3)
 [![License](https://img.shields.io/pypi/l/ffbb_api_client_v3?color=green)](LICENSE.txt)
 [![MCP-Ready](https://img.shields.io/badge/MCP-Ready-orange.svg?logo=modelcontextprotocol)](https://github.com/nickdesi/FFBB-MCP-Server)
 
-[🚀 Démarrage rapide](#-démarrage-rapide) •
-[✨ Fonctionnalités](#-fonctionnalités) •
-[🔍 Meilisearch](#-9-index-meilisearch) •
-[🤖 IA / MCP](#-intégration-ia--mcp) •
-[🚢 Architecture](#-architecture--qualité) •
-[🤝 Contribuer](#-contribuer)
-
----
-
-> **Note :** Ce SDK est une refonte totale de la V2. Il est pensé pour la performance, le typage strict avec Pydantic v2, et une intégration native avec les agents IA via le protocole MCP.
+[Installation](#-installation) •
+[Démarrage rapide](#-démarrage-rapide) •
+[Fonctionnalités](#-fonctionnalités) •
+[Recherche](#-recherche-meilisearch) •
+[Async](#-utilisation-asynchrone) •
+[Développement](#-développement-local)
 
 </div>
 
 ---
 
-## 🚀 Version v1.7.0 (30 avril 2026)
+## 📌 À propos
 
-Cette version consolide les évolutions récentes depuis `v1.6.1` :
+`ffbb_api_client_v3` simplifie l'accès aux API FFBB et à leurs index Meilisearch avec :
 
-- **Ajout** : couverture API étendue avec de nouvelles entités — rencontres, officiels, entraîneurs, communes et assets.
-- **Amélioration** : recherche Meilisearch plus efficace grâce à un cache applicatif mémoire et des politiques de cache renforcées.
-- **Ajout** : délégations asynchrones avec exposition des méthodes `list_*` async et wrappers async Genius Sports / Rematch.
-- **Mise à jour** : collections de données, index Meilisearch et schéma OpenAPI.
-- **Correction** : stabilité CI, tests, typage et formatage.
+- une façade unique : `FFBBAPIClientV3` ;
+- des modèles Pydantic v2 typés ;
+- une API utilisable en synchrone ou en `async/await` ;
+- une gestion automatique des tokens via `TokenManager` ;
+- du cache HTTP configurable via `hishel` ;
+- des helpers prêts pour l'intégration MCP / agents IA.
 
-### ⚡ Optimisations de performance récentes
-
-- Réutilisation des clients `httpx` synchrones et asynchrones pour conserver les connexions chaudes et réduire la latence des appels répétés.
-- Parsing JSON accéléré via `response.json()` sur les vraies réponses HTTP, avec conservation des fallbacks historiques pour les payloads FFBB atypiques.
-- Cache applicatif Meilisearch allégé : stockage en dictionnaire brut puis reconstruction typée, afin d’éviter les `deepcopy` coûteux sur de gros résultats.
-- Retries de transport `hishel/httpx` configurables via `CacheConfig.transport_retries`, avec défaut à `0` pour éviter de multiplier les tentatives quand le retry applicatif est déjà actif.
-- Validation complète : **552 tests unitaires passants**.
-
-Consultez l’historique Git pour le détail complet des changements.
-
-## ⚡ Pourquoi V3 ?
-
-L'API FFBB est complexe : tokens à renouveler, 9 index de recherche séparés, données imbriquées. La V3 automatise tout cela pour vous permettre de vous concentrer sur votre application.
-
-| Fonctionnalité | FFBB Client V2 | FFBB Client V3 | Gain |
-|---|---|---|---|
-| **Tokens** | Manuels / `os.getenv` | **Auto-résolus (`TokenManager`)** | ⚡ Zéro configuration |
-| **Typage** | `dict` bruts | **70+ modèles Pydantic v2** | 🛠️ Autocomplétion totale |
-| **Recherche** | 1 appel par type | **1 `multi_search` (9 index)** | 🚀 -90% de latence |
-| **Async** | Partiel | **Natif (`httpx`)** | 💨 Performance I/O |
-| **Cache** | Manuel | **Intégré (`hishel`)** | 📉 Quotas préservés |
-| **IA** | ❌ | **✅ prêt pour MCP** | 🤖 Compatible Claude/Cursor |
+> La V3 remplace l’approche V2 basée sur des dictionnaires bruts et une configuration manuelle. Elle privilégie le typage, la robustesse réseau et les appels batchés.
 
 ---
 
-## 🚀 Démarrage rapide
+## 🚀 Version v1.7.0 — 30 avril 2026
 
-### Installation
+Principales évolutions récentes :
+
+- ajout d'entités REST et Meilisearch : rencontres, officiels, entraîneurs, communes et assets ;
+- réutilisation des clients `httpx` synchrones et asynchrones ;
+- cache Meilisearch optimisé pour limiter les copies coûteuses ;
+- retries de transport configurables via `CacheConfig.transport_retries` ;
+- mise à jour des schémas OpenAPI, collections et index ;
+- stabilisation CI, typage, tests et formatage.
+
+Voir aussi : [`CHANGELOG.md`](CHANGELOG.md) et [`RELEASE_NOTES.md`](RELEASE_NOTES.md).
+
+---
+
+## 📦 Installation
 
 ```bash
 pip install ffbb_api_client_v3
 ```
 
-### Utilisation express — zéro configuration
+Pour contribuer ou exécuter les tests :
 
-Plus besoin de chercher vos tokens. Le client les résout automatiquement au premier appel.
+```bash
+git clone https://github.com/nickdesi/FFBBApiClientV3.git
+cd FFBBApiClientV3
+pip install -e ".[testing]"
+```
+
+Prérequis : Python `>=3.10`.
+
+---
+
+## ⚡ Démarrage rapide
 
 ```python
 from ffbb_api_client_v3 import FFBBAPIClientV3
 
-# Initialisation instantanée
 client = FFBBAPIClientV3.create()
 
-# Recherche sur les 9 index (Clubs, Matchs, Salles, etc.)
+# Recherche globale sur les index FFBB
 results = client.multi_search("Pau Orthez")
 
-# Accès typé avec autocomplétion
-for hit in results[0].hits:
-    print(f"🏀 {hit.nom} ({hit.ville})")
+for result in results or []:
+    print(result.index_uid, len(result.hits or []))
 
-# Récupérer les lives en cours
+# Lives en cours
 lives = client.get_lives()
 ```
+
+`FFBBAPIClientV3.create()` résout automatiquement les tokens si aucun token n'est passé explicitement.
 
 ---
 
 ## ✨ Fonctionnalités
 
-- 🏀 **API FFBB complète** — clubs, compétitions, saisons, poules, classements, lives, **rencontres, officiels, entraîneurs, communes, assets**
-- 🔍 **9 index Meilisearch** — `filter`, `sort`, `limit` natifs sur toutes les méthodes
-- ⚡ **Sync + Async** — chaque méthode disponible en `async/await`
-- 🧩 **60+ modèles Pydantic v2** — type-safe, validation, sérialisation
-- 📦 **Cache HTTP intégré** — SQLite ou mémoire via `hishel[async]`, configurable
-- 🚀 **Connexions HTTP réutilisées** — clients `httpx` persistants pour améliorer la latence des appels successifs
-- 🧠 **Cache Meilisearch optimisé** — moins de copies profondes, moins d’allocations mémoire
-- 🔄 **Retry + Timeout** — robustesse réseau prête à l’emploi, retries de transport configurables
-- 🔐 **TokenManager intelligent** — auto-résolution + renouvellement transparent
-- 🪵 **Logging sécurisé** — tokens masqués automatiquement dans les logs
-- 🤖 **Prêt pour MCP** — wrapper officiel pour Claude, Cursor, Copilot
-- 🧪 **552 tests unitaires validés** — unitaires + intégration, CI GitHub Actions
+| Domaine | Capacités |
+|---|---|
+| API FFBB | clubs, compétitions, organismes, saisons, poules, classements, rencontres, lives |
+| Recherche | organismes, compétitions, rencontres, salles, terrains, pratiques, tournois, engagements et formations |
+| REST typé | récupération de ressources individuelles avec modèles Pydantic v2 |
+| Async | méthodes `*_async()` pour les appels réseau non bloquants |
+| Cache | cache HTTP `hishel`, sessions `httpx` réutilisées, retries configurables |
+| Sécurité | masquage des tokens dans les logs |
+| IA / MCP | structure compatible avec des wrappers MCP et agents IA |
 
 ---
 
-## 🔍 9 Index Meilisearch
+## 🔍 Recherche Meilisearch
+
+### Recherche globale
 
 ```python
-# 1 appel réseau → 9 index interrogés simultanément
 results = client.multi_search("Clermont")
+```
 
-# Filtrage natif
+### Recherche ciblée
+
+```python
 organismes = client.search_organismes(
     "Clermont",
     filter=['codePostal = "63000"'],
@@ -123,137 +122,164 @@ organismes = client.search_organismes(
     limit=10,
 )
 
-# Nouveaux index REST associés
 rencontres = client.search_rencontres("N1M", limit=20)
-officiels = client.search_officiels("Dupont")
-entraineurs = client.search_entraineurs("Durand")
-communes = client.search_communes("Clermont-Ferrand")
+salles = client.search_salles("Maison des Sports", limit=5)
+engagements = client.search_engagements("U15M", limit=20)
 ```
 
-| Index | Sync | Async | Description |
-|---|---|---|---|
-| `ffbbserver_organismes` | `search_organismes()` | `…_async()` | Clubs, comités, ligues |
-| `ffbbserver_competitions` | `search_competitions()` | `…_async()` | Compétitions officielles |
-| `ffbbserver_rencontres` | `search_rencontres()` | `…_async()` | Matchs et rencontres |
-| `ffbbserver_officiels` | `search_officiels()` | `…_async()` | Arbitres et officiels |
-| `ffbbserver_entraineurs` | `search_entraineurs()` | `…_async()` | Entraîneurs |
-| `ffbbserver_communes` | `search_communes()` | `…_async()` | Communes |
-| `ffbbserver_salles` | `search_salles()` | `…_async()` | Salles et gymnases |
-| `ffbbserver_pratiques` | `search_pratiques()` | `…_async()` | Lieux de pratique |
-| `ffbbserver_terrains` | `search_terrains()` | `…_async()` | Terrains basket |
-| `ffbbserver_tournois` | `search_tournois()` | `…_async()` | Tournois |
-| `ffbbserver_engagements` | `search_engagements()` | `…_async()` | Engagements équipes |
-| `ffbbserver_formations` | `search_formations()` | `…_async()` | Formations & stages |
+### Recherche géographique
+
+```python
+clubs = client.search_organismes_by_geo(
+    lat=45.7772,
+    lng=3.0870,
+    radius_km=20,
+    limit=20,
+)
+```
+
+### Principales méthodes exposées
+
+| Ressource | Méthode sync | Méthode async |
+|---|---|---|
+| Recherche globale | `multi_search()` | `multi_search_async()` |
+| Clubs / organismes | `search_organismes()` | `search_organismes_async()` |
+| Compétitions | `search_competitions()` | `search_competitions_async()` |
+| Rencontres | `search_rencontres()` | `search_rencontres_async()` |
+| Salles | `search_salles()` | `search_salles_async()` |
+| Terrains | `search_terrains()` | `search_terrains_async()` |
+| Pratiques | `search_pratiques()` | `search_pratiques_async()` |
+| Tournois | `search_tournois()` | `search_tournois_async()` |
+| Engagements | `search_engagements()` | `search_engagements_async()` |
+| Formations | `search_formations()` | `search_formations_async()` |
 
 ---
 
-## 🧱 Nouveaux modèles et endpoints REST
+## 🧱 Accès REST typé
 
 ```python
-officiel = client.get_officiel(id_officiel)
+# Ressources principales
+organisme = client.get_organisme(12345)
+competition = client.get_competition(67890)
+poule = client.get_poule(11111)
+
+# Ressources ajoutées récemment
+rencontre = client.get_rencontre(22222)
+officiel = client.get_officiel(33333)
+entraineur = client.get_entraineur(44444)
 ```
 
-### Nouveaux endpoints — explication concise
+Les assets Directus et autres collections peuvent être exploités via les méthodes REST/listing dédiées exposées par le client lorsque disponibles.
 
-Voici ce que fournissent concrètement les nouveaux endpoints intégrés :
+Les réponses sont converties en modèles Pydantic lorsque le schéma est connu, ce qui apporte validation, autocomplétion et sérialisation propre.
 
-- **Rencontres (`items/ffbbserver_rencontres`)** : données détaillées sur un match/rencontre
-    - usages : récupérer une rencontre par `id`, afficher score, équipes, lieu, date, feuille de match
-    - modèle : `get_rencontre_response.py` (wrapper REST typé)
+---
 
-- **Officiels (`items/ffbbserver_officiels`)** : arbitres et officiels liés aux rencontres
-    - usages : récupérer un officiel par `id`, consulter ses informations de carrière, licences, rôle (arbitre, commissaire)
-    - modèle : `get_officiel_response.py`
+## 🧵 Utilisation asynchrone
 
-- **Entraîneurs (`items/ffbbserver_entraineurs`)** : profils entraîneurs
-    - usages : récupérer un entraîneur par `id`, affichage club(s) associés, licence, historique
-    - modèle : `get_entraineur_response.py`
+```python
+import asyncio
+from ffbb_api_client_v3 import FFBBAPIClientV3
 
-- **Communes (`items/ffbbserver_communes`)** : index géographique léger
-    - usages : recherche de communes (nom, code postal), résolution d'adresse pour affichage de salles/terrains
-    - accessible principalement via les méthodes `search_communes()` / `search_communes_async()`
+async def main() -> None:
+    client = FFBBAPIClientV3.create()
 
-- **Assets (Directus files)** : fichiers et images servis via Directus
-    - usages : construction d'URLs d'assets (`get_asset_url(uuid, width, height, format, quality)`) pour thumbnails et affichage optimisé
+    results = await client.search_organismes_async("ASVEL")
+    lives = await client.get_lives_async()
 
-Ces endpoints existent à la fois en recherche Meilisearch (pour listes / recherche texte) et en REST (pour ressources individuelles). Les principaux points d'accès sont :
+    print(results.estimated_total_hits if results else 0)
+    print(len(lives or []))
+
+asyncio.run(main())
+```
+
+---
+
+## 🔐 Tokens et configuration
+
+Par défaut, le client utilise `TokenManager.get_tokens()` au moment de la création :
 
 ```python
 from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
 
 tokens = TokenManager.get_tokens()
+
 client = FFBBAPIClientV3.create(
-        api_bearer_token=tokens.api_token,
-        meilisearch_bearer_token=tokens.meilisearch_token,
+    api_bearer_token=tokens.api_token,
+    meilisearch_bearer_token=tokens.meilisearch_token,
 )
-
-# Récupérer une rencontre (REST typé)
-rencontre = client.get_rencontre(12345)
-
-# Récupérer un officiel
-officiel = client.get_officiel(9876)
-
-# Rechercher des entraîneurs via Meilisearch
-res = client.search_entraineurs("Durand", limit=5)
-
-# Construire une URL d'asset optimisée
-img = client.get_asset_url(uuid="...", width=800, height=600, format="webp", quality=80)
 ```
 
-Note : `API_FFBB_COM_BASE_URL` est commenté temporairement dans `config.py` en
-attente d'une possible migration de domaine côté FFBB — le client prend en
-charge ce changement sans breaking change exposé dans l'API publique.
+Il est donc possible de laisser le client résoudre les tokens automatiquement ou de les fournir explicitement selon le contexte d'exécution.
 
 ---
 
-## 🚢 Architecture & Qualité
+## 🏗 Architecture
 
 ```text
 src/ffbb_api_client_v3/
 ├── clients/
-│   ├── ffbb_api_client_v3.py       # Façade — Point d'entrée unique
-│   ├── api_ffbb_app_client.py      # Client REST (httpx)
-│   └── meilisearch_ffbb_client.py  # Client Recherche
-├── models/                         # 70+ modèles Pydantic v2
-├── utils/
-│   ├── token_manager.py            # Résolution auto des secrets
-│   ├── cache_manager.py            # Gestionnaire de cache hishel
-│   └── secure_logging.py           # Masquage des tokens
-└── helpers/                        # Utilitaires HTTP et Multi-search
+│   ├── ffbb_api_client_v3.py       # Façade publique
+│   ├── api_ffbb_app_client.py      # Client REST FFBB
+│   └── meilisearch_ffbb_client.py  # Client recherche Meilisearch
+├── helpers/                        # Requêtes HTTP, multi-search, conversions
+├── models/                         # Modèles Pydantic v2
+├── utils/                          # cache, tokens, logging sécurisé
+└── data/                           # schémas et métadonnées embarqués
 ```
-
-### Pipeline de release automatisé
-Le projet utilise **OIDC Trusted Publisher** pour PyPI et un pipeline CI/CD complet :
-- ✅ **Tests unitaires & intégration** (552 tests unitaires validés)
-- ✅ **Parity Check** hebdomadaire via analyse AST
-- ✅ **Release automatique** sur tag git avec génération de notes
-- ✅ **Synchronisation automatique** avec le serveur MCP
 
 ---
 
-## 🛠 Développement Local
-
-Consultez le **[Guide CI Local](LOCAL_CI_GUIDE.md)** pour configurer votre environnement de test.
+## 🧪 Développement local
 
 ```bash
-git clone https://github.com/nickdesi/FFBBApiClientV3.git
 pip install -e ".[testing]"
-pytest tests/ --cov=src   # Exécuter les tests avec couverture
+pytest tests/
 ```
+
+Commandes utiles :
+
+```bash
+pytest tests/unit/
+pytest tests/integration/
+pytest tests/ --cov=src
+```
+
+Documentation complémentaire :
+
+- [`LOCAL_CI_GUIDE.md`](LOCAL_CI_GUIDE.md)
+- [`docs/testing_conventions.md`](docs/testing_conventions.md)
+- [`docs/architecture.rst`](docs/architecture.rst)
+
+---
+
+## 🤖 Intégration IA / MCP
+
+Le client sert de base au serveur MCP FFBB et expose une API stable pour construire des outils agent-friendly : recherche de clubs, récupération de poules, classements, lives, calendriers et détails de rencontres.
+
+Projet associé : [FFBB-MCP-Server](https://github.com/nickdesi/FFBB-MCP-Server)
 
 ---
 
 ## 🤝 Contribuer
 
-Les contributions sont les bienvenues !
-- Pour les bugs, ouvrez une **[Issue](https://github.com/nickdesi/FFBBApiClientV3/issues)**.
-- Pour les nouvelles fonctionnalités, passez par les **[Discussions](https://github.com/nickdesi/FFBBApiClientV3/discussions)**.
+Les contributions sont bienvenues :
+
+- ouvrez une [issue](https://github.com/nickdesi/FFBBApiClientV3/issues) pour un bug ;
+- proposez une évolution via les [discussions](https://github.com/nickdesi/FFBBApiClientV3/discussions) ;
+- lancez les tests localement avant une pull request.
+
+---
+
+## 📄 Licence
+
+Distribué sous licence Apache-2.0. Voir [`LICENSE.txt`](LICENSE.txt).
 
 ---
 
 <div align="center">
 
-**Si ce projet vous aide, n'oubliez pas de lui donner une étoile ! ⭐**
+**Si ce projet vous aide, une étoile est appréciée. ⭐**
 
 [![GitHub stars](https://img.shields.io/github/stars/nickdesi/FFBBApiClientV3?style=social)](https://github.com/nickdesi/FFBBApiClientV3/stargazers)
 
