@@ -69,7 +69,8 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         next_queries: list[MultiSearchQuery] = []
 
-        for querie, query_result in zip(queries, result.results):
+        for i, query_result in enumerate(result.results):
+            querie = queries[i]
             nb_hits = len(query_result.hits) if query_result.hits else 0
             querie_offset = querie.offset or 0
             querie_limit = querie.limit or 10
@@ -85,9 +86,8 @@ class MeilisearchClientExtension(MeilisearchClient):
             new_result = self.recursive_smart_multi_search(next_queries, cached_session)
 
             if new_result and new_result.results:
-                for query_result, orig_result in zip(
-                    new_result.results, result.results
-                ):
+                for i, query_result in enumerate(new_result.results):
+                    orig_result = result.results[i]
                     hits_list = orig_result.hits
                     if query_result.hits and hits_list is not None:
                         hits_list.extend(query_result.hits)
@@ -104,7 +104,8 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         next_queries: list[MultiSearchQuery] = []
 
-        for querie, query_result in zip(queries, result.results):
+        for i, query_result in enumerate(result.results):
+            querie = queries[i]
             nb_hits = len(query_result.hits) if query_result.hits else 0
             querie_offset = querie.offset or 0
             querie_limit = querie.limit or 10
@@ -122,9 +123,8 @@ class MeilisearchClientExtension(MeilisearchClient):
             )
 
             if new_result and new_result.results:
-                for query_result, orig_result in zip(
-                    new_result.results, result.results
-                ):
+                for i, query_result in enumerate(new_result.results):
+                    orig_result = result.results[i]
                     hits_list = orig_result.hits
                     if query_result.hits and hits_list is not None:
                         hits_list.extend(query_result.hits)
