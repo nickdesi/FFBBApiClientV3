@@ -40,7 +40,7 @@
     },
     {
       "available": true,
-      "estimatedTotalHits": 690,
+      "estimatedTotalHits": 688,
       "indexUid": "ffbbnational_pratiques",
       "sampleKeys": [
         "_geo",
@@ -94,7 +94,7 @@
     },
     {
       "available": true,
-      "estimatedTotalHits": 3799,
+      "estimatedTotalHits": 3801,
       "indexUid": "ffbbnational_rss",
       "sampleKeys": [
         "categories",
@@ -404,7 +404,7 @@
     },
     {
       "available": true,
-      "estimatedTotalHits": 5800,
+      "estimatedTotalHits": 5801,
       "indexUid": "ffbbsite_news",
       "sampleKeys": [
         "author",
@@ -466,7 +466,7 @@
   ],
   "metadata": {
     "source": "https://meilisearch-prod.ffbb.app/multi-search",
-    "timestamp": "2026-04-30T13:30:14.497350+00:00"
+    "timestamp": "2026-05-01T07:37:35.099626+00:00"
   },
   "unavailable_indexes": [
     {

@@ -333,9 +333,9 @@
       "items/youtube_videos_youtube_tags"
     ],
     "metadata": {
-      "openapi_version": "81dc585185721d2d026413c186a80f4779abf831",
+      "openapi_version": "8e93d6f32551a752e04a70907ba0ed961188546b",
       "source": "https://api.ffbb.app/server/specs/oas",
-      "timestamp": "2026-04-30T13:30:14.497350+00:00"
+      "timestamp": "2026-05-01T07:37:35.099626+00:00"
     },
     "paths": {
       "items/configuration": [
@@ -1405,7 +1405,7 @@
       },
       {
         "available": true,
-        "estimatedTotalHits": 690,
+        "estimatedTotalHits": 688,
         "indexUid": "ffbbnational_pratiques",
         "sampleKeys": [
           "_geo",
@@ -1459,7 +1459,7 @@
       },
       {
         "available": true,
-        "estimatedTotalHits": 3799,
+        "estimatedTotalHits": 3801,
         "indexUid": "ffbbnational_rss",
         "sampleKeys": [
           "categories",
@@ -1769,7 +1769,7 @@
       },
       {
         "available": true,
-        "estimatedTotalHits": 5800,
+        "estimatedTotalHits": 5801,
         "indexUid": "ffbbsite_news",
         "sampleKeys": [
           "author",
@@ -1831,7 +1831,7 @@
     ],
     "metadata": {
       "source": "https://meilisearch-prod.ffbb.app/multi-search",
-      "timestamp": "2026-04-30T13:30:14.497350+00:00"
+      "timestamp": "2026-05-01T07:37:35.099626+00:00"
     },
     "unavailable_indexes": [
       {
@@ -1867,9 +1867,9 @@
   "metadata": {
     "api_base_url": "https://api.ffbb.app/",
     "meilisearch_base_url": "https://meilisearch-prod.ffbb.app/",
-    "openapi_sha256": "196c91b6ca286bc66f7c78a7e9a067f817dc89fa3deb00be3d70e0b586f8bab4",
-    "openapi_snapshot_sha256": "c0b15cf5d6e68fae001591e92c69a5155f1e96afce725065f401c92488f20015",
-    "openapi_version": "81dc585185721d2d026413c186a80f4779abf831",
-    "timestamp": "2026-04-30T13:30:14.497350+00:00"
+    "openapi_sha256": "7e19d027f00027379b8632e6adfdbf635e37ba92271a6a9a3d9a01ea0ab3e255",
+    "openapi_snapshot_sha256": "e22b1ab24982576e76b79f07c1168129a09a63d17d3d2191a6a3bc0012040fc9",
+    "openapi_version": "8e93d6f32551a752e04a70907ba0ed961188546b",
+    "timestamp": "2026-05-01T07:37:35.099626+00:00"
   }
 }
