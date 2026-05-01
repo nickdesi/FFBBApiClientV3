@@ -7,6 +7,7 @@
 [![PyPI](https://img.shields.io/pypi/v/ffbb_api_client_v3?color=blue&label=PyPI&logo=python)](https://pypi.org/project/ffbb_api_client_v3/)
 [![Python](https://img.shields.io/pypi/pyversions/ffbb_api_client_v3?logo=python)](https://pypi.org/project/ffbb_api_client_v3/)
 [![CI](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/ci.yml/badge.svg)](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/nickdesi/FFBBApiClientV3/badge.svg?branch=master)](https://coveralls.io/github/nickdesi/FFBBApiClientV3?branch=master)
 [![License](https://img.shields.io/pypi/l/ffbb_api_client_v3?color=green)](LICENSE.txt)
 [![MCP-Ready](https://img.shields.io/badge/MCP-Ready-orange.svg?logo=modelcontextprotocol)](https://github.com/nickdesi/FFBB-MCP-Server)
 
