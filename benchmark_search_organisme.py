@@ -1,31 +1,20 @@
 """
-Benchmark de latence FFBBApiClientV2 vs V3
+Benchmark de latence FFBBApiClientV3.
 
 Usage :
-- Place ce script dans chaque repo (V2 et V3)
-- Modifie l'import du client selon la version
 - Lance : python benchmark_search_organisme.py
 """
 
 import statistics
 import time
 
+from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
+
 N_RUNS = 10
 SEARCH_QUERY = "Gerzat Basket"
 
-# --- MODIFIER ICI SELON LA VERSION ---
-# Pour V3 :
-try:
-    from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
-
-    CLIENT_CLASS = FFBBAPIClientV3
-    token_getter = TokenManager.get_tokens
-except ImportError:
-    # Pour V2 :
-    from ffbb_api_client_v2 import FFBBAPIClientV2, TokenManager
-
-    CLIENT_CLASS = FFBBAPIClientV2
-    token_getter = TokenManager.get_tokens
+CLIENT_CLASS = FFBBAPIClientV3
+token_getter = TokenManager.get_tokens
 
 
 def main():
