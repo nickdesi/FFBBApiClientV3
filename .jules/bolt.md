@@ -18,3 +18,6 @@
 ## 2024-04-24 - Optimize deep attribute lookups in list comprehensions
 **Learning:** Performing multiple checks on deep object graphs within list comprehensions (e.g., `if hit.comp and hit.comp.cat and hit.comp.cat.code == "U17"`) involves redundant attribute traversals for each iteration. By using the walrus operator (`:=`) to assign and check intermediate steps (e.g., `if (comp := hit.comp) and (cat := comp.cat) and cat.code == "U17"`), you avoid evaluating the same getter multiple times, yielding a measurable ~14% speedup.
 **Action:** When filtering objects based on nested properties inside loops or list comprehensions, use the walrus operator to cache intermediate references, especially for large lists of results.
+## 2024-04-25 - Optimize iterating over parallel sequences
+**Learning:** Using `enumerate()` and indexing parallel sequences inside a loop (e.g., `queries[i]` for `results.results`) incurs performance overhead from repeatedly computing indexes. List comprehensions paired with `zip()` are both significantly faster and more idiomatic for matching pairs.
+**Action:** Always prefer list comprehensions using `zip()` over `for` loops with index-based access (`enumerate()` or `range(len())`) when mapping parallel sequences, as it is more idiomatic and avoids repeated indexing overhead.

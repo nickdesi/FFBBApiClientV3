@@ -37,10 +37,12 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         # Should filter results.hits according to query.q
         if queries and results and results.results:
-            for i, res in enumerate(results.results):
-                query = queries[i]
-                if query.q:
-                    results.results[i] = query.filter_result(res)
+            # ⚡ Bolt optimization: using list comprehension with zip is more idiomatic and faster
+            # than iterating with enumerate and indexing parallel arrays.
+            results.results = [
+                query.filter_result(res) if query.q else res
+                for query, res in zip(queries, results.results)
+            ]
 
         return results
 
@@ -53,10 +55,12 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         # Should filter results.hits according to query.q
         if queries and results and results.results:
-            for i, res in enumerate(results.results):
-                query = queries[i]
-                if query.q:
-                    results.results[i] = query.filter_result(res)
+            # ⚡ Bolt optimization: using list comprehension with zip is more idiomatic and faster
+            # than iterating with enumerate and indexing parallel arrays.
+            results.results = [
+                query.filter_result(res) if query.q else res
+                for query, res in zip(queries, results.results)
+            ]
 
         return results
 
@@ -71,8 +75,7 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         next_queries: list[MultiSearchQuery] = []
 
-        for i, query_result in enumerate(result.results):
-            querie = queries[i]
+        for querie, query_result in zip(queries, result.results):
             nb_hits = len(query_result.hits) if query_result.hits else 0
             querie_offset = querie.offset or 0
             querie_limit = querie.limit or 10
@@ -88,8 +91,9 @@ class MeilisearchClientExtension(MeilisearchClient):
             new_result = self.recursive_smart_multi_search(next_queries, cached_session)
 
             if new_result and new_result.results:
-                for i, query_result in enumerate(new_result.results):
-                    orig_result = result.results[i]
+                for orig_result, query_result in zip(
+                    result.results, new_result.results
+                ):
                     hits_list = orig_result.hits
                     if query_result.hits and hits_list is not None:
                         hits_list.extend(query_result.hits)
@@ -106,8 +110,7 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         next_queries: list[MultiSearchQuery] = []
 
-        for i, query_result in enumerate(result.results):
-            querie = queries[i]
+        for querie, query_result in zip(queries, result.results):
             nb_hits = len(query_result.hits) if query_result.hits else 0
             querie_offset = querie.offset or 0
             querie_limit = querie.limit or 10
@@ -125,8 +128,9 @@ class MeilisearchClientExtension(MeilisearchClient):
             )
 
             if new_result and new_result.results:
-                for i, query_result in enumerate(new_result.results):
-                    orig_result = result.results[i]
+                for orig_result, query_result in zip(
+                    result.results, new_result.results
+                ):
                     hits_list = orig_result.hits
                     if query_result.hits and hits_list is not None:
                         hits_list.extend(query_result.hits)
