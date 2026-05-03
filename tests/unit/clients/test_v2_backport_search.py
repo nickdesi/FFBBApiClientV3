@@ -5,34 +5,34 @@ from __future__ import annotations
 import unittest
 from unittest.mock import MagicMock, patch
 
-from ffbb_api_client_v3.clients.api_ffbb_app_client import ApiFFBBAppClient
-from ffbb_api_client_v3.clients.ffbb_api_client_v3 import FFBBAPIClientV3
-from ffbb_api_client_v3.clients.meilisearch_ffbb_client import MeilisearchFFBBClient
-from ffbb_api_client_v3.models.multi_search_result_competitions import (
+from ffbb_data_client.clients.api_ffbb_app_client import ApiFFBBAppClient
+from ffbb_data_client.clients.ffbb_data_client import FFBBDataClient
+from ffbb_data_client.clients.meilisearch_ffbb_client import MeilisearchFFBBClient
+from ffbb_data_client.models.multi_search_result_competitions import (
     CompetitionsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_engagements import (
+from ffbb_data_client.models.multi_search_result_engagements import (
     EngagementsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_formations import (
+from ffbb_data_client.models.multi_search_result_formations import (
     FormationsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_organismes import (
+from ffbb_data_client.models.multi_search_result_organismes import (
     OrganismesMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_results_class import MultiSearchResults
+from ffbb_data_client.models.multi_search_results_class import MultiSearchResults
 
 
 class TestV2BackportSearch(unittest.TestCase):
     """Tests for new search_engagements/formations + filter/sort params."""
 
     def setUp(self) -> None:
-        with patch("ffbb_api_client_v3.clients.meilisearch_client.CacheManager"):
+        with patch("ffbb_data_client.clients.meilisearch_client.CacheManager"):
             api_client = MagicMock(spec=ApiFFBBAppClient)
             api_client.cached_session = None
             api_client.async_cached_session = None
             meilisearch_client = MeilisearchFFBBClient(bearer_token="test-token")
-            self.client = FFBBAPIClientV3(api_client, meilisearch_client)
+            self.client = FFBBDataClient(api_client, meilisearch_client)
 
     def _make_mock_results(self, result_mock: MagicMock) -> MultiSearchResults:
         results = MagicMock(spec=MultiSearchResults)

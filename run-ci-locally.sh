@@ -2,7 +2,7 @@
 
 set -e  # Exit immediately if a command exits with a non-zero status
 
-echo "🚀 Starting local CI replication for FFBBApiClientV3..."
+echo "🚀 Starting local CI replication for ffbb-data-client..."
 echo "=================================================="
 
 # Color codes for output

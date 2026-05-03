@@ -34,7 +34,7 @@ except ImportError:
     from sphinx import apidoc
 
 output_dir = os.path.join(__location__, "api")
-module_dir = os.path.join(__location__, "../src/ffbb_api_client_v3")
+module_dir = os.path.join(__location__, "../src/ffbb_data_client")
 try:
     shutil.rmtree(output_dir)
 except FileNotFoundError:
@@ -101,7 +101,7 @@ html_short_title = "FFBB API SDK V3"
 # If you don’t need the separation provided between version and release,
 # just set them both to the same value.
 try:
-    from ffbb_api_client_v3 import __version__ as version
+    from ffbb_data_client import __version__ as version
 except ImportError:
     version = ""
 
@@ -231,7 +231,7 @@ html_static_path = ["_static"]
 # html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = "ffbb_api_client_v3-doc"
+htmlhelp_basename = "ffbb_data_client-doc"
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -248,7 +248,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ("index", "user_guide.tex", "FFBB API Client V3 Documentation", "nickdesi", "manual")
+    ("index", "user_guide.tex", "FFBB Data Client Documentation", "nickdesi", "manual")
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

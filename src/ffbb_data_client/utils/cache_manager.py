@@ -1,5 +1,5 @@
 """
-Advanced cache management for FFBB API Client V3.
+Advanced cache management for FFBB Data Client.
 
 This module provides sophisticated caching strategies including:
 - Multi-level caching (memory, disk, Redis)

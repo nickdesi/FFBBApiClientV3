@@ -1,7 +1,7 @@
 import os
 import unittest
 
-from ffbb_api_client_v3 import (
+from ffbb_data_client import (
     MeilisearchClientExtension,
     MultiSearchQuery,
     generate_queries,

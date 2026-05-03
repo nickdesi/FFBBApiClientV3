@@ -18,57 +18,57 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from ffbb_api_client_v3.models.affiche import Affiche
-from ffbb_api_client_v3.models.cartographie import Cartographie
-from ffbb_api_client_v3.models.commune import Commune
-from ffbb_api_client_v3.models.competitions_facet_distribution import (
+from ffbb_data_client.models.affiche import Affiche
+from ffbb_data_client.models.cartographie import Cartographie
+from ffbb_data_client.models.commune import Commune
+from ffbb_data_client.models.competitions_facet_distribution import (
     CompetitionsFacetDistribution,
 )
-from ffbb_api_client_v3.models.competitions_hit import CompetitionsHit
-from ffbb_api_client_v3.models.document_flyer import DocumentFlyer
-from ffbb_api_client_v3.models.external_id import ExternalCompetitionID, ExternalID
-from ffbb_api_client_v3.models.folder import Folder
-from ffbb_api_client_v3.models.geo import Geo
-from ffbb_api_client_v3.models.lives import Clock, Live
-from ffbb_api_client_v3.models.logo import Logo
-from ffbb_api_client_v3.models.multi_search_result_competitions import (
+from ffbb_data_client.models.competitions_hit import CompetitionsHit
+from ffbb_data_client.models.document_flyer import DocumentFlyer
+from ffbb_data_client.models.external_id import ExternalCompetitionID, ExternalID
+from ffbb_data_client.models.folder import Folder
+from ffbb_data_client.models.geo import Geo
+from ffbb_data_client.models.lives import Clock, Live
+from ffbb_data_client.models.logo import Logo
+from ffbb_data_client.models.multi_search_result_competitions import (
     CompetitionsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_organismes import (
+from ffbb_data_client.models.multi_search_result_organismes import (
     OrganismesMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_pratiques import (
+from ffbb_data_client.models.multi_search_result_pratiques import (
     PratiquesMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_rencontres import (
+from ffbb_data_client.models.multi_search_result_rencontres import (
     RencontresMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_salles import (
+from ffbb_data_client.models.multi_search_result_salles import (
     SallesMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_terrains import (
+from ffbb_data_client.models.multi_search_result_terrains import (
     TerrainsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_tournois import (
+from ffbb_data_client.models.multi_search_result_tournois import (
     TournoisMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_results_class import MultiSearchResults
-from ffbb_api_client_v3.models.nature_sol import NatureSol
-from ffbb_api_client_v3.models.organisme_id_pere import OrganismeIDPere
-from ffbb_api_client_v3.models.organismes_facet_distribution import (
+from ffbb_data_client.models.multi_search_results_class import MultiSearchResults
+from ffbb_data_client.models.nature_sol import NatureSol
+from ffbb_data_client.models.organisme_id_pere import OrganismeIDPere
+from ffbb_data_client.models.organismes_facet_distribution import (
     OrganismesFacetDistribution,
 )
-from ffbb_api_client_v3.models.organismes_hit import OrganismesHit
-from ffbb_api_client_v3.models.pratiques_hit import PratiquesHit
-from ffbb_api_client_v3.models.rencontres_facet_distribution import (
+from ffbb_data_client.models.organismes_hit import OrganismesHit
+from ffbb_data_client.models.pratiques_hit import PratiquesHit
+from ffbb_data_client.models.rencontres_facet_distribution import (
     RencontresFacetDistribution,
 )
-from ffbb_api_client_v3.models.rencontres_hit import RencontresHit
-from ffbb_api_client_v3.models.salles_hit import SallesHit
-from ffbb_api_client_v3.models.team_engagement import TeamEngagement
-from ffbb_api_client_v3.models.terrains_hit import TerrainsHit
-from ffbb_api_client_v3.models.tournois_hit import TournoisHit
-from ffbb_api_client_v3.models.type_association import TypeAssociation
+from ffbb_data_client.models.rencontres_hit import RencontresHit
+from ffbb_data_client.models.salles_hit import SallesHit
+from ffbb_data_client.models.team_engagement import TeamEngagement
+from ffbb_data_client.models.terrains_hit import TerrainsHit
+from ffbb_data_client.models.tournois_hit import TournoisHit
+from ffbb_data_client.models.type_association import TypeAssociation
 
 
 class Test022ToDictRoundTrip(unittest.TestCase):

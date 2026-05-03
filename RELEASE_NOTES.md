@@ -153,7 +153,7 @@ TokenManager.clear_cache()
 
 # After v1.2.0
 tokens = TokenManager.get_tokens(use_cache=False)
-from ffbb_api_client_v3.utils.cache_manager import CacheManager
+from ffbb_data_client.utils.cache_manager import CacheManager
 CacheManager().clear()
 ```
 
@@ -311,7 +311,7 @@ name = organisme.nom  # Object attribute access
 fields = ["id", "nom", "code"]  # Manual field lists
 
 # After v2.1.0
-from ffbb_api_client_v3.models.query_fields import QueryFieldsManager, FieldSet
+from ffbb_data_client.models.query_fields import QueryFieldsManager, FieldSet
 fields = QueryFieldsManager.get_organisme_fields(FieldSet.BASIC)
 ```
 

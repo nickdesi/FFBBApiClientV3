@@ -5,40 +5,40 @@ from __future__ import annotations
 import unittest
 from abc import ABC
 
-from ffbb_api_client_v3.config import (
+from ffbb_data_client.config import (
     MEILISEARCH_FACETS_ENGAGEMENTS,
     MEILISEARCH_FACETS_FORMATIONS,
     MEILISEARCH_INDEX_ENGAGEMENTS,
     MEILISEARCH_INDEX_FORMATIONS,
 )
-from ffbb_api_client_v3.models.engagements_facet_distribution import (
+from ffbb_data_client.models.engagements_facet_distribution import (
     EngagementsFacetDistribution,
 )
-from ffbb_api_client_v3.models.engagements_facet_stats import EngagementsFacetStats
-from ffbb_api_client_v3.models.engagements_hit import EngagementsHit
-from ffbb_api_client_v3.models.engagements_multi_search_query import (
+from ffbb_data_client.models.engagements_facet_stats import EngagementsFacetStats
+from ffbb_data_client.models.engagements_hit import EngagementsHit
+from ffbb_data_client.models.engagements_multi_search_query import (
     EngagementsMultiSearchQuery,
 )
-from ffbb_api_client_v3.models.field_set import FieldSet
-from ffbb_api_client_v3.models.formation_session import FormationSession
-from ffbb_api_client_v3.models.formations_facet_distribution import (
+from ffbb_data_client.models.field_set import FieldSet
+from ffbb_data_client.models.formation_session import FormationSession
+from ffbb_data_client.models.formations_facet_distribution import (
     FormationsFacetDistribution,
 )
-from ffbb_api_client_v3.models.formations_facet_stats import FormationsFacetStats
-from ffbb_api_client_v3.models.formations_hit import FormationsHit
-from ffbb_api_client_v3.models.formations_multi_search_query import (
+from ffbb_data_client.models.formations_facet_stats import FormationsFacetStats
+from ffbb_data_client.models.formations_hit import FormationsHit
+from ffbb_data_client.models.formations_multi_search_query import (
     FormationsMultiSearchQuery,
 )
-from ffbb_api_client_v3.models.multi_search_result_engagements import (
+from ffbb_data_client.models.multi_search_result_engagements import (
     EngagementsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_formations import (
+from ffbb_data_client.models.multi_search_result_formations import (
     FormationsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.organismes_multi_search_query import (
+from ffbb_data_client.models.organismes_multi_search_query import (
     OrganismesMultiSearchQuery,
 )
-from ffbb_api_client_v3.models.query_fields_manager import QueryFieldsManager
+from ffbb_data_client.models.query_fields_manager import QueryFieldsManager
 
 
 class TestEngagementsHit(unittest.TestCase):

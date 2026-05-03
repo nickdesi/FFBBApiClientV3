@@ -4,11 +4,11 @@
 
 **SDK Python moderne, typé et asynchrone pour exploiter les données publiques FFBB : clubs, compétitions, rencontres, classements, salles, officiels et recherche Meilisearch.**
 
-[![PyPI](https://img.shields.io/pypi/v/ffbb_api_client_v3?color=blue&label=PyPI&logo=python)](https://pypi.org/project/ffbb_api_client_v3/)
-[![Python](https://img.shields.io/pypi/pyversions/ffbb_api_client_v3?logo=python)](https://pypi.org/project/ffbb_api_client_v3/)
-[![CI](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/ci.yml/badge.svg)](https://github.com/nickdesi/FFBBApiClientV3/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/nickdesi/FFBBApiClientV3/badge.svg?branch=master)](https://coveralls.io/github/nickdesi/FFBBApiClientV3?branch=master)
-[![License](https://img.shields.io/pypi/l/ffbb_api_client_v3?color=green)](LICENSE.txt)
+[![PyPI](https://img.shields.io/pypi/v/ffbb_data_client?color=blue&label=PyPI&logo=python)](https://pypi.org/project/ffbb_data_client/)
+[![Python](https://img.shields.io/pypi/pyversions/ffbb_data_client?logo=python)](https://pypi.org/project/ffbb_data_client/)
+[![CI](https://github.com/nickdesi/ffbb-data-client/actions/workflows/ci.yml/badge.svg)](https://github.com/nickdesi/ffbb-data-client/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/nickdesi/ffbb-data-client/badge.svg?branch=master)](https://coveralls.io/github/nickdesi/ffbb-data-client?branch=master)
+[![License](https://img.shields.io/pypi/l/ffbb_data_client?color=green)](LICENSE.txt)
 [![MCP-Ready](https://img.shields.io/badge/MCP-Ready-orange.svg?logo=modelcontextprotocol)](https://github.com/nickdesi/FFBB-MCP-Server)
 
 [Installation](#-installation) •
@@ -24,9 +24,9 @@
 
 ## 📌 À propos
 
-`ffbb_api_client_v3` simplifie l'accès aux API FFBB et à leurs index Meilisearch avec :
+`ffbb_data_client` simplifie l'accès aux API FFBB et à leurs index Meilisearch avec :
 
-- une façade unique : `FFBBAPIClientV3` ;
+- une façade unique : `FFBBDataClient` ;
 - des modèles Pydantic v2 typés ;
 - une API utilisable en synchrone ou en `async/await` ;
 - une gestion automatique des tokens via `TokenManager` ;
@@ -55,14 +55,14 @@ Voir aussi : [`CHANGELOG.md`](CHANGELOG.md) et [`RELEASE_NOTES.md`](RELEASE_NOTE
 ## 📦 Installation
 
 ```bash
-pip install ffbb_api_client_v3
+pip install ffbb_data_client
 ```
 
 Pour contribuer ou exécuter les tests :
 
 ```bash
-git clone https://github.com/nickdesi/FFBBApiClientV3.git
-cd FFBBApiClientV3
+git clone https://github.com/nickdesi/ffbb-data-client.git
+cd ffbb-data-client
 pip install -e ".[testing]"
 ```
 
@@ -73,9 +73,9 @@ Prérequis : Python `>=3.10`.
 ## ⚡ Démarrage rapide
 
 ```python
-from ffbb_api_client_v3 import FFBBAPIClientV3
+from ffbb_data_client import FFBBDataClient
 
-client = FFBBAPIClientV3.create()
+client = FFBBDataClient.create()
 
 # Recherche globale sur les index FFBB
 results = client.multi_search("Pau Orthez")
@@ -87,7 +87,7 @@ for result in results or []:
 lives = client.get_lives()
 ```
 
-`FFBBAPIClientV3.create()` résout automatiquement les tokens si aucun token n'est passé explicitement.
+`FFBBDataClient.create()` résout automatiquement les tokens si aucun token n'est passé explicitement.
 
 ---
 
@@ -180,10 +180,10 @@ Les réponses sont converties en modèles Pydantic lorsque le schéma est connu,
 
 ```python
 import asyncio
-from ffbb_api_client_v3 import FFBBAPIClientV3
+from ffbb_data_client import FFBBDataClient
 
 async def main() -> None:
-    client = FFBBAPIClientV3.create()
+    client = FFBBDataClient.create()
 
     results = await client.search_organismes_async("ASVEL")
     lives = await client.get_lives_async()
@@ -201,11 +201,11 @@ asyncio.run(main())
 Par défaut, le client utilise `TokenManager.get_tokens()` au moment de la création :
 
 ```python
-from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
+from ffbb_data_client import FFBBDataClient, TokenManager
 
 tokens = TokenManager.get_tokens()
 
-client = FFBBAPIClientV3.create(
+client = FFBBDataClient.create(
     api_bearer_token=tokens.api_token,
     meilisearch_bearer_token=tokens.meilisearch_token,
 )
@@ -218,9 +218,9 @@ Il est donc possible de laisser le client résoudre les tokens automatiquement o
 ## 🏗 Architecture
 
 ```text
-src/ffbb_api_client_v3/
+src/ffbb_data_client/
 ├── clients/
-│   ├── ffbb_api_client_v3.py       # Façade publique
+│   ├── ffbb_data_client.py       # Façade publique
 │   ├── api_ffbb_app_client.py      # Client REST FFBB
 │   └── meilisearch_ffbb_client.py  # Client recherche Meilisearch
 ├── helpers/                        # Requêtes HTTP, multi-search, conversions
@@ -266,8 +266,8 @@ Projet associé : [FFBB-MCP-Server](https://github.com/nickdesi/FFBB-MCP-Server)
 
 Les contributions sont bienvenues :
 
-- ouvrez une [issue](https://github.com/nickdesi/FFBBApiClientV3/issues) pour un bug ;
-- proposez une évolution via les [discussions](https://github.com/nickdesi/FFBBApiClientV3/discussions) ;
+- ouvrez une [issue](https://github.com/nickdesi/ffbb-data-client/issues) pour un bug ;
+- proposez une évolution via les [discussions](https://github.com/nickdesi/ffbb-data-client/discussions) ;
 - lancez les tests localement avant une pull request.
 
 ---
@@ -282,6 +282,6 @@ Distribué sous licence Apache-2.0. Voir [`LICENSE.txt`](LICENSE.txt).
 
 **Si ce projet vous aide, une étoile est appréciée. ⭐**
 
-[![GitHub stars](https://img.shields.io/github/stars/nickdesi/FFBBApiClientV3?style=social)](https://github.com/nickdesi/FFBBApiClientV3/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/nickdesi/ffbb-data-client?style=social)](https://github.com/nickdesi/ffbb-data-client/stargazers)
 
 </div>

@@ -8,8 +8,8 @@ from unittest.mock import MagicMock, Mock, patch
 
 from httpx import ReadTimeout
 
-from ffbb_api_client_v3.helpers.http_requests_helper import catch_result
-from ffbb_api_client_v3.helpers.http_requests_utils import (
+from ffbb_data_client.helpers.http_requests_helper import catch_result
+from ffbb_data_client.helpers.http_requests_utils import (
     encode_params,
     http_get,
     http_get_json,
@@ -110,7 +110,7 @@ class Test045HttpHelpers(unittest.TestCase):
 
     # -- http_get tests --
 
-    @patch("ffbb_api_client_v3.helpers.http_requests_utils.httpx.Client.get")
+    @patch("ffbb_data_client.helpers.http_requests_utils.httpx.Client.get")
     def test_012_http_get_no_cache(self, mock_get: MagicMock) -> None:
         mock_resp = Mock()
         mock_resp.text = '{"ok": true}'
@@ -119,7 +119,7 @@ class Test045HttpHelpers(unittest.TestCase):
         self.assertEqual(response, mock_resp)
         mock_get.assert_called_once()
 
-    @patch("ffbb_api_client_v3.helpers.http_requests_utils.httpx.Client.get")
+    @patch("ffbb_data_client.helpers.http_requests_utils.httpx.Client.get")
     def test_013_http_get_debug_mode(self, mock_get: MagicMock) -> None:
         mock_resp = Mock()
         mock_resp.text = '{"ok": true}'
@@ -131,7 +131,7 @@ class Test045HttpHelpers(unittest.TestCase):
 
     # -- http_post tests --
 
-    @patch("ffbb_api_client_v3.helpers.http_requests_utils.httpx.Client.post")
+    @patch("ffbb_data_client.helpers.http_requests_utils.httpx.Client.post")
     def test_014_http_post_no_cache(self, mock_post: MagicMock) -> None:
         mock_resp = Mock()
         mock_resp.text = '{"ok": true}'
@@ -144,7 +144,7 @@ class Test045HttpHelpers(unittest.TestCase):
         self.assertEqual(response, mock_resp)
         mock_post.assert_called_once()
 
-    @patch("ffbb_api_client_v3.helpers.http_requests_utils.httpx.Client.post")
+    @patch("ffbb_data_client.helpers.http_requests_utils.httpx.Client.post")
     def test_015_http_post_debug_mode(self, mock_post: MagicMock) -> None:
         mock_resp = Mock()
         mock_resp.text = '{"ok": true}'
@@ -157,7 +157,7 @@ class Test045HttpHelpers(unittest.TestCase):
         )
         self.assertEqual(response, mock_resp)
 
-    @patch("ffbb_api_client_v3.helpers.http_requests_utils.httpx.Client.get")
+    @patch("ffbb_data_client.helpers.http_requests_utils.httpx.Client.get")
     def test_016_http_get_json_calls_raise_for_status(
         self, mock_get: MagicMock
     ) -> None:
@@ -171,7 +171,7 @@ class Test045HttpHelpers(unittest.TestCase):
         self.assertEqual(result, {"ok": True})
         mock_resp.raise_for_status.assert_called_once()
 
-    @patch("ffbb_api_client_v3.helpers.http_requests_utils.httpx.Client.post")
+    @patch("ffbb_data_client.helpers.http_requests_utils.httpx.Client.post")
     def test_017_http_post_json_calls_raise_for_status(
         self, mock_post: MagicMock
     ) -> None:

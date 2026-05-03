@@ -1,5 +1,5 @@
 """
-Benchmark de latence FFBBApiClientV3.
+Benchmark de latence ffbb-data-client.
 
 Usage :
 - Lance : python benchmark_search_organisme.py
@@ -8,12 +8,12 @@ Usage :
 import statistics
 import time
 
-from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
+from ffbb_data_client import FFBBDataClient, TokenManager
 
 N_RUNS = 10
 SEARCH_QUERY = "Gerzat Basket"
 
-CLIENT_CLASS = FFBBAPIClientV3
+CLIENT_CLASS = FFBBDataClient
 token_getter = TokenManager.get_tokens
 
 

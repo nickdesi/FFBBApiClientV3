@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check that FFBBAPIClientV3 wrapper exposes all methods from inner clients."""
+"""Check that FFBBDataClient wrapper exposes all methods from inner clients."""
 
 import ast
 import os
@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-CLIENTS = ROOT / "src" / "ffbb_api_client_v3" / "clients"
+CLIENTS = ROOT / "src" / "ffbb_data_client" / "clients"
 
 # Methods / names intentionally excluded from the parity check
 EXCLUDED = {
@@ -62,13 +62,13 @@ def write_summary(text: str) -> None:
 def main() -> int:
     api_methods = get_public_methods(CLIENTS / "api_ffbb_app_client.py")
     ms_methods = get_public_methods(CLIENTS / "meilisearch_ffbb_client.py")
-    wrapper_methods = get_public_methods(CLIENTS / "ffbb_api_client_v3.py")
+    wrapper_methods = get_public_methods(CLIENTS / "ffbb_data_client.py")
 
     all_inner = api_methods | ms_methods
     missing = sorted(all_inner - wrapper_methods)
 
     if not missing:
-        msg = "## ✅ Wrapper parity OK\n\nAll public methods from inner clients are exposed in `FFBBAPIClientV3`."
+        msg = "## ✅ Wrapper parity OK\n\nAll public methods from inner clients are exposed in `FFBBDataClient`."
         print(msg)
         write_summary(msg)
         return 0
@@ -78,7 +78,7 @@ def main() -> int:
         "## ⚠️ Wrapper parity check failed",
         "",
         "The following methods exist in inner clients but are **not exposed** "
-        "in `FFBBAPIClientV3`:",
+        "in `FFBBDataClient`:",
         "",
         "| Method | Source client |",
         "|---|---|",
@@ -95,7 +95,7 @@ def main() -> int:
         "",
         "### How to fix",
         "Add the missing method(s) to "
-        "`src/ffbb_api_client_v3/clients/ffbb_api_client_v3.py` "
+        "`src/ffbb_data_client/clients/ffbb_data_client.py` "
         "so they delegate to the appropriate inner client.",
     ]
 

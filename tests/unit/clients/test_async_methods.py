@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, Mock, patch
 import pytest
 import respx
 
-from ffbb_api_client_v3.clients.api_ffbb_app_client import ApiFFBBAppClient
+from ffbb_data_client.clients.api_ffbb_app_client import ApiFFBBAppClient
 
 
 @pytest.mark.asyncio
@@ -69,7 +69,7 @@ async def test_get_competition_async_reuses_client_async_session():
     )
 
     with patch(
-        "ffbb_api_client_v3.clients.api_ffbb_app_client.http_get_json_async",
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
         new=AsyncMock(return_value={"data": {"id": "123", "nom": "Coupe de France"}}),
     ) as mock_http_get_json_async:
         await client.get_competition_async(123)

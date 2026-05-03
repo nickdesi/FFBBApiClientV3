@@ -9,9 +9,9 @@ Prerequisites:
 - (Optional) Set up your .env file with API tokens for manual configuration
 """
 
-from ffbb_api_client_v3 import FFBBAPIClientV3, TokenManager
-from ffbb_api_client_v3.models.field_set import FieldSet
-from ffbb_api_client_v3.models.query_fields_manager import QueryFieldsManager
+from ffbb_data_client import FFBBDataClient, TokenManager
+from ffbb_data_client.models.field_set import FieldSet
+from ffbb_data_client.models.query_fields_manager import QueryFieldsManager
 
 
 def main():
@@ -25,7 +25,7 @@ def main():
         print("🔑 Using TokenManager for automatic token retrieval...")
         tokens = TokenManager.get_tokens()
 
-        client = FFBBAPIClientV3.create(
+        client = FFBBDataClient.create(
             api_bearer_token=tokens.api_token,
             meilisearch_bearer_token=tokens.meilisearch_token,
         )
@@ -43,7 +43,7 @@ def main():
     # load_dotenv()
     # api_token = os.getenv("API_FFBB_APP_BEARER_TOKEN")
     # meilisearch_token = os.getenv("MEILISEARCH_BEARER_TOKEN")
-    # client = FFBBAPIClientV3.create(
+    # client = FFBBDataClient.create(
     #     api_bearer_token=api_token, meilisearch_bearer_token=meilisearch_token
     # )
 

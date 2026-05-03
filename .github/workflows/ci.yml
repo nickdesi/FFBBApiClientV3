@@ -53,18 +53,18 @@ jobs:
               raise SystemExit(f'Expected one wheel, found {len(wheels)}')
 
           required = {
-              'ffbb_api_client_v3/data/collections.json',
-              'ffbb_api_client_v3/data/endpoint_discovery.json',
-              'ffbb_api_client_v3/data/indexes.json',
-              'ffbb_api_client_v3/data/openapi.json',
-              'ffbb_api_client_v3/data/openapi_full.json',
+              'ffbb_data_client/data/collections.json',
+              'ffbb_data_client/data/endpoint_discovery.json',
+              'ffbb_data_client/data/indexes.json',
+              'ffbb_data_client/data/openapi.json',
+              'ffbb_data_client/data/openapi_full.json',
           }
           with zipfile.ZipFile(wheels[0]) as wheel:
               names = set(wheel.namelist())
               missing = sorted(required - names)
               if missing:
                   raise SystemExit(f'Missing discovery artefacts in wheel: {missing}')
-              with wheel.open('ffbb_api_client_v3/data/endpoint_discovery.json') as handle:
+              with wheel.open('ffbb_data_client/data/endpoint_discovery.json') as handle:
                   json.load(handle)
           print('Discovery artefacts are present in the wheel.')
           PY

@@ -5,70 +5,70 @@ from __future__ import annotations
 import unittest
 from unittest.mock import MagicMock, patch
 
-from ffbb_api_client_v3.clients.meilisearch_ffbb_client import MeilisearchFFBBClient
-from ffbb_api_client_v3.models.competitions_multi_search_query import (
+from ffbb_data_client.clients.meilisearch_ffbb_client import MeilisearchFFBBClient
+from ffbb_data_client.models.competitions_multi_search_query import (
     CompetitionsMultiSearchQuery,
 )
-from ffbb_api_client_v3.models.content_multi_search_query import (
+from ffbb_data_client.models.content_multi_search_query import (
     GaleriesMultiSearchQuery,
     NewsMultiSearchQuery,
     RssMultiSearchQuery,
     YoutubeVideosMultiSearchQuery,
 )
-from ffbb_api_client_v3.models.engagements_multi_search_query import (
+from ffbb_data_client.models.engagements_multi_search_query import (
     EngagementsMultiSearchQuery,
 )
-from ffbb_api_client_v3.models.formations_multi_search_query import (
+from ffbb_data_client.models.formations_multi_search_query import (
     FormationsMultiSearchQuery,
 )
-from ffbb_api_client_v3.models.generic_search import (
+from ffbb_data_client.models.generic_search import (
     GaleriesMultiSearchResult,
     NewsMultiSearchResult,
     RssMultiSearchResult,
     YoutubeVideosMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_competitions import (
+from ffbb_data_client.models.multi_search_result_competitions import (
     CompetitionsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_engagements import (
+from ffbb_data_client.models.multi_search_result_engagements import (
     EngagementsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_formations import (
+from ffbb_data_client.models.multi_search_result_formations import (
     FormationsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_organismes import (
+from ffbb_data_client.models.multi_search_result_organismes import (
     OrganismesMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_pratiques import (
+from ffbb_data_client.models.multi_search_result_pratiques import (
     PratiquesMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_rencontres import (
+from ffbb_data_client.models.multi_search_result_rencontres import (
     RencontresMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_salles import (
+from ffbb_data_client.models.multi_search_result_salles import (
     SallesMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_terrains import (
+from ffbb_data_client.models.multi_search_result_terrains import (
     TerrainsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_result_tournois import (
+from ffbb_data_client.models.multi_search_result_tournois import (
     TournoisMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_results_class import MultiSearchResults
-from ffbb_api_client_v3.models.organismes_multi_search_query import (
+from ffbb_data_client.models.multi_search_results_class import MultiSearchResults
+from ffbb_data_client.models.organismes_multi_search_query import (
     OrganismesMultiSearchQuery,
 )
-from ffbb_api_client_v3.models.pratiques_multi_search_query import (
+from ffbb_data_client.models.pratiques_multi_search_query import (
     PratiquesMultiSearchQuery,
 )
-from ffbb_api_client_v3.models.rencontres_multi_search_query import (
+from ffbb_data_client.models.rencontres_multi_search_query import (
     RencontresMultiSearchQuery,
 )
-from ffbb_api_client_v3.models.salles_multi_search_query import SallesMultiSearchQuery
-from ffbb_api_client_v3.models.terrains_multi_search_query import (
+from ffbb_data_client.models.salles_multi_search_query import SallesMultiSearchQuery
+from ffbb_data_client.models.terrains_multi_search_query import (
     TerrainsMultiSearchQuery,
 )
-from ffbb_api_client_v3.models.tournois_multi_search_query import (
+from ffbb_data_client.models.tournois_multi_search_query import (
     TournoisMultiSearchQuery,
 )
 
@@ -77,7 +77,7 @@ class Test040MeilisearchFfbbClient(unittest.TestCase):
     """Tests for MeilisearchFFBBClient search_multiple_* and search_* methods."""
 
     def setUp(self) -> None:
-        with patch("ffbb_api_client_v3.clients.meilisearch_client.CacheManager"):
+        with patch("ffbb_data_client.clients.meilisearch_client.CacheManager"):
             self.client = MeilisearchFFBBClient(bearer_token="test-token")
 
     def _make_mock_results(self, result_mock: MagicMock) -> MultiSearchResults:

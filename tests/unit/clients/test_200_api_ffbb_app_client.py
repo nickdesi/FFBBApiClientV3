@@ -3,7 +3,7 @@ import unittest
 
 from dotenv import load_dotenv
 
-from ffbb_api_client_v3 import ApiFFBBAppClient
+from ffbb_data_client import ApiFFBBAppClient
 
 
 class Test000ApiFfbbAppClient(unittest.TestCase):

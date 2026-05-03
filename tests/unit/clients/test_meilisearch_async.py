@@ -1,15 +1,15 @@
 import pytest
 import respx
 
-from ffbb_api_client_v3.config import (
+from ffbb_data_client.config import (
     MEILISEARCH_BASE_URL,
     MEILISEARCH_ENDPOINT_MULTI_SEARCH,
     MEILISEARCH_INDEX_ORGANISMES,
 )
-from ffbb_api_client_v3.helpers.meilisearch_client_extension import (
+from ffbb_data_client.helpers.meilisearch_client_extension import (
     MeilisearchClientExtension,
 )
-from ffbb_api_client_v3.models.multi_search_query import MultiSearchQuery
+from ffbb_data_client.models.multi_search_query import MultiSearchQuery
 
 
 @pytest.mark.asyncio

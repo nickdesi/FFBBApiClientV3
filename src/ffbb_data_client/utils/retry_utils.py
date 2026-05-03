@@ -1,5 +1,5 @@
 """
-Retry utilities for FFBB API Client V3.
+Retry utilities for FFBB Data Client.
 
 This module provides retry logic with exponential backoff for HTTP requests,
 along with configurable timeout management.

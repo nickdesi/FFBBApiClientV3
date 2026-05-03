@@ -3,9 +3,9 @@
 import pytest
 import respx
 
-from ffbb_api_client_v3.clients.api_ffbb_app_client import ApiFFBBAppClient
-from ffbb_api_client_v3.clients.ffbb_api_client_v3 import FFBBAPIClientV3
-from ffbb_api_client_v3.clients.meilisearch_ffbb_client import MeilisearchFFBBClient
+from ffbb_data_client.clients.api_ffbb_app_client import ApiFFBBAppClient
+from ffbb_data_client.clients.ffbb_data_client import FFBBDataClient
+from ffbb_data_client.clients.meilisearch_ffbb_client import MeilisearchFFBBClient
 
 
 # ---------------------------------------------------------------------------
@@ -108,7 +108,7 @@ async def test_search_rencontres_async_with_categorie():
     """search_rencontres_async with categorie should filter hits client-side."""
     ms_client = MeilisearchFFBBClient(bearer_token="ms-token")
     api_client = ApiFFBBAppClient(bearer_token="api-token")
-    facade = FFBBAPIClientV3(api_client, ms_client)
+    facade = FFBBDataClient(api_client, ms_client)
 
     # The correct URL: MEILISEARCH_BASE_URL + MEILISEARCH_ENDPOINT_MULTI_SEARCH
     ms_url = "https://meilisearch-prod.ffbb.app/multi-search"

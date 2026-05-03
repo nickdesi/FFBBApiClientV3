@@ -1,4 +1,4 @@
-# Testing Conventions - FFBBApiClientV3_Python
+# Testing Conventions - ffbb-data-client_Python
 
 ## 1. Framework et execution
 
@@ -8,7 +8,7 @@
   - Unit rapide : `python -m pytest tests/unit/ -x -q -n auto`
   - Integration : `python -m pytest tests/integration/ -q`
   - E2E : `python -m pytest tests/e2e/ -q` (necessite tokens API)
-  - Couverture : `python -m pytest tests/ --cov=ffbb_api_client_v3 --cov-branch -q`
+  - Couverture : `python -m pytest tests/ --cov=ffbb_data_client --cov-branch -q`
 
 ---
 

@@ -7,15 +7,15 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 from httpx import ReadTimeout
 
-from ffbb_api_client_v3.clients.api_ffbb_app_client import ApiFFBBAppClient
-from ffbb_api_client_v3.clients.ffbb_api_client_v3 import FFBBAPIClientV3
-from ffbb_api_client_v3.helpers.http_requests_helper import async_catch_result
-from ffbb_api_client_v3.helpers.meilisearch_client_extension import (
+from ffbb_data_client.clients.api_ffbb_app_client import ApiFFBBAppClient
+from ffbb_data_client.clients.ffbb_data_client import FFBBDataClient
+from ffbb_data_client.helpers.http_requests_helper import async_catch_result
+from ffbb_data_client.helpers.meilisearch_client_extension import (
     MeilisearchClientExtension,
 )
-from ffbb_api_client_v3.models.multi_search_query import MultiSearchQuery
-from ffbb_api_client_v3.models.multi_search_results import MultiSearchResult
-from ffbb_api_client_v3.models.multi_search_results_class import MultiSearchResults
+from ffbb_data_client.models.multi_search_query import MultiSearchQuery
+from ffbb_data_client.models.multi_search_results import MultiSearchResult
+from ffbb_data_client.models.multi_search_results_class import MultiSearchResults
 
 
 class _Hit:
@@ -183,7 +183,7 @@ class TestTargetedApiFFBBAppClientCoverage(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(client.bearer_token, "api-token")
         self.assertEqual(client.headers["Authorization"], "Bearer api-token")
 
-    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.http_get_json")
+    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
     def test_get_directus_item_extracts_nested_data_and_fields(
         self, mock_get: MagicMock
     ) -> None:
@@ -197,7 +197,7 @@ class TestTargetedApiFFBBAppClientCoverage(unittest.IsolatedAsyncioTestCase):
         self.assertIn("https://api.example/items/1", called_url)
         self.assertIn("fields%5B%5D=id", called_url)
 
-    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.http_get_json")
+    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
     def test_get_directus_item_handles_raw_dict_and_non_dict(
         self, mock_get: MagicMock
     ) -> None:
@@ -208,7 +208,7 @@ class TestTargetedApiFFBBAppClientCoverage(unittest.IsolatedAsyncioTestCase):
         mock_get.return_value = {"data": ["not", "dict"]}
         self.assertIsNone(client._get_directus_item("items", 1))
 
-    @patch("ffbb_api_client_v3.clients.api_ffbb_app_client.http_get_json")
+    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
     def test_list_directus_items_extracts_lists_and_defaults_empty(
         self, mock_get: MagicMock
     ) -> None:
@@ -233,7 +233,7 @@ class TestTargetedApiFFBBAppClientCoverage(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(client._list_directus_items("items"), [])
 
     @patch(
-        "ffbb_api_client_v3.clients.api_ffbb_app_client.http_get_json_async",
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
         new_callable=AsyncMock,
     )
     async def test_async_directus_helpers_success_and_failure(
@@ -281,18 +281,18 @@ class TestTargetedApiFFBBAppClientCoverage(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(result[0].id, "1")
 
 
-class TestTargetedFFBBAPIClientV3Coverage(unittest.IsolatedAsyncioTestCase):
+class TestTargetedFFBBDataClientCoverage(unittest.IsolatedAsyncioTestCase):
     def test_chunked_handles_empty_and_partial_chunks(self) -> None:
-        self.assertEqual(FFBBAPIClientV3._chunked([], 2), [])
+        self.assertEqual(FFBBDataClient._chunked([], 2), [])
         self.assertEqual(
-            FFBBAPIClientV3._chunked([1, 2, 3, 4, 5], 2), [[1, 2], [3, 4], [5]]
+            FFBBDataClient._chunked([1, 2, 3, 4, 5], 2), [[1, 2], [3, 4], [5]]
         )
 
-    @patch("ffbb_api_client_v3.clients.ffbb_api_client_v3.MeilisearchFFBBClient")
-    @patch("ffbb_api_client_v3.clients.ffbb_api_client_v3.ApiFFBBAppClient")
-    @patch("ffbb_api_client_v3.clients.ffbb_api_client_v3.CacheManager")
+    @patch("ffbb_data_client.clients.ffbb_data_client.MeilisearchFFBBClient")
+    @patch("ffbb_data_client.clients.ffbb_data_client.ApiFFBBAppClient")
+    @patch("ffbb_data_client.clients.ffbb_data_client.CacheManager")
     @patch(
-        "ffbb_api_client_v3.clients.ffbb_api_client_v3.TokenManager.get_tokens",
+        "ffbb_data_client.clients.ffbb_data_client.TokenManager.get_tokens",
         return_value=_Tokens(),
     )
     def test_create_resolves_tokens_validates_and_wires_clients(
@@ -313,7 +313,7 @@ class TestTargetedFFBBAPIClientV3Coverage(unittest.IsolatedAsyncioTestCase):
         mock_meili = MagicMock()
         mock_meili_cls.return_value = mock_meili
 
-        client = FFBBAPIClientV3.create(debug=True)
+        client = FFBBDataClient.create(debug=True)
 
         self.assertIs(client.api_ffbb_client, mock_api)
         self.assertIs(client.meilisearch_ffbb_client, mock_meili)
@@ -342,7 +342,7 @@ class TestTargetedFFBBAPIClientV3Coverage(unittest.IsolatedAsyncioTestCase):
         api.get_competition.return_value = "competition"
         api.list_competitions.return_value = ["competition"]
         meili = MagicMock()
-        client = FFBBAPIClientV3(api, meili)
+        client = FFBBDataClient(api, meili)
 
         self.assertEqual(client.cached_session, "sync")
         self.assertEqual(client.async_cached_session, "async")
@@ -356,7 +356,7 @@ class TestTargetedFFBBAPIClientV3Coverage(unittest.IsolatedAsyncioTestCase):
     def test_directus_extra_sync_delegations_forward_arguments(self) -> None:
         api = MagicMock()
         meili = MagicMock()
-        client = FFBBAPIClientV3(api, meili)
+        client = FFBBDataClient(api, meili)
         fields = ["id"]
         filter_criteria = '{"active":{"_eq":true}}'
         sort = ["id"]
@@ -409,7 +409,7 @@ class TestTargetedFFBBAPIClientV3Coverage(unittest.IsolatedAsyncioTestCase):
     async def test_directus_extra_async_delegations_forward_arguments(self) -> None:
         api = MagicMock()
         meili = MagicMock()
-        client = FFBBAPIClientV3(api, meili)
+        client = FFBBDataClient(api, meili)
         fields = ["id"]
         filter_criteria = '{"active":{"_eq":true}}'
         sort = ["id"]
@@ -442,7 +442,7 @@ class TestTargetedFFBBAPIClientV3Coverage(unittest.IsolatedAsyncioTestCase):
     def test_batch_helpers_build_filters_and_merge_chunks(self) -> None:
         api = MagicMock()
         meili = MagicMock()
-        client = FFBBAPIClientV3(api, meili)
+        client = FFBBDataClient(api, meili)
         client._BATCH_CHUNK_SIZE = 2
         client.list_engagements = MagicMock(side_effect=[["e1"], ["e2"]])
         client.list_rencontres = MagicMock(side_effect=[["r1"], ["r2"]])
@@ -470,7 +470,7 @@ class TestTargetedFFBBAPIClientV3Coverage(unittest.IsolatedAsyncioTestCase):
     ) -> None:
         api = MagicMock()
         meili = MagicMock()
-        client = FFBBAPIClientV3(api, meili)
+        client = FFBBDataClient(api, meili)
         filter_criteria = '{"id":{"_eq":1}}'
         sort = ["id"]
 
@@ -607,7 +607,7 @@ class TestTargetedFFBBAPIClientV3Coverage(unittest.IsolatedAsyncioTestCase):
     ) -> None:
         api = MagicMock()
         meili = MagicMock()
-        client = FFBBAPIClientV3(api, meili)
+        client = FFBBDataClient(api, meili)
         result = MultiSearchResult(hits=[], estimated_total_hits=0)
         meili.recursive_smart_multi_search.return_value = MultiSearchResults([result])
 
@@ -661,7 +661,7 @@ class TestTargetedFFBBAPIClientV3Coverage(unittest.IsolatedAsyncioTestCase):
     async def test_search_wrappers_cover_async_empty_and_results(self) -> None:
         api = MagicMock()
         meili = MagicMock()
-        client = FFBBAPIClientV3(api, meili)
+        client = FFBBDataClient(api, meili)
         result = MultiSearchResult(hits=[], estimated_total_hits=0)
         meili.recursive_smart_multi_search_async = AsyncMock(
             return_value=MultiSearchResults([result])
@@ -695,7 +695,7 @@ class TestTargetedFFBBAPIClientV3Coverage(unittest.IsolatedAsyncioTestCase):
     async def test_search_rencontres_filters_by_category_sync_and_async(self) -> None:
         api = MagicMock()
         meili = MagicMock()
-        client = FFBBAPIClientV3(api, meili)
+        client = FFBBDataClient(api, meili)
         kept = SimpleNamespace(
             competition_id=SimpleNamespace(
                 categorie=SimpleNamespace(code="U11M", libelle="U11 Masculin")

@@ -5,7 +5,7 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from ffbb_api_client_v3.models.purple_logo import PurpleLogo
+from ffbb_data_client.models.purple_logo import PurpleLogo
 
 
 class Test035PurpleLogo(unittest.TestCase):

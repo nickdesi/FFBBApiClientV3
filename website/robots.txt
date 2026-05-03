@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://nickdesi.github.io/FFBBApiClientV3/sitemap.xml
+Sitemap: https://nickdesi.github.io/ffbb-data-client/sitemap.xml

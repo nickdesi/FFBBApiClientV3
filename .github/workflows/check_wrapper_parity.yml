@@ -4,10 +4,10 @@ on:
   push:
     branches: [master]
     paths:
-      - 'src/ffbb_api_client_v3/clients/**'
+      - 'src/ffbb_data_client/clients/**'
   pull_request:
     paths:
-      - 'src/ffbb_api_client_v3/clients/**'
+      - 'src/ffbb_data_client/clients/**'
   schedule:
     - cron: '0 6 * * 1'  # Every Monday at 06:00 UTC
   workflow_dispatch:

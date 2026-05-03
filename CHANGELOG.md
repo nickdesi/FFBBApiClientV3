@@ -11,27 +11,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated test suite from `requests` to `httpx` to align with the core project dependencies.
 
 ### Fixed
-- Fixed bug in `FFBBAPIClientV3.multi_search` that could improperly mutate optional arguments when initialized as `None`.
+- Fixed bug in `FFBBDataClient.multi_search` that could improperly mutate optional arguments when initialized as `None`.
 - Fixed CI formatting errors and resolved Coveralls code coverage report upload issues by correcting `.coveragerc` path omission rules.
 
 ## [1.6.0] - 2026-04-24
 
 ### Added
-- **NEW**: `get_configuration()` / `get_configuration_async()` exposed in `FFBBAPIClientV3` wrapper
-- **NEW**: `list_competitions()` / `list_competitions_async()` exposed in `FFBBAPIClientV3` wrapper
-- **NEW**: `search_multiple_competitions_async()` exposed in `FFBBAPIClientV3` wrapper
-- **NEW**: `search_multiple_organismes_async()` exposed in `FFBBAPIClientV3` wrapper
-- **NEW**: `search_multiple_pratiques_async()` exposed in `FFBBAPIClientV3` wrapper
-- **NEW**: `search_multiple_salles_async()` exposed in `FFBBAPIClientV3` wrapper
-- **NEW**: `search_multiple_terrains_async()` exposed in `FFBBAPIClientV3` wrapper
-- **NEW**: `search_multiple_tournois_async()` exposed in `FFBBAPIClientV3` wrapper
-- **NEW**: `search_multiple_engagements_async()` exposed in `FFBBAPIClientV3` wrapper
-- **NEW**: `search_multiple_formations_async()` exposed in `FFBBAPIClientV3` wrapper
+- **NEW**: `get_configuration()` / `get_configuration_async()` exposed in `FFBBDataClient` wrapper
+- **NEW**: `list_competitions()` / `list_competitions_async()` exposed in `FFBBDataClient` wrapper
+- **NEW**: `search_multiple_competitions_async()` exposed in `FFBBDataClient` wrapper
+- **NEW**: `search_multiple_organismes_async()` exposed in `FFBBDataClient` wrapper
+- **NEW**: `search_multiple_pratiques_async()` exposed in `FFBBDataClient` wrapper
+- **NEW**: `search_multiple_salles_async()` exposed in `FFBBDataClient` wrapper
+- **NEW**: `search_multiple_terrains_async()` exposed in `FFBBDataClient` wrapper
+- **NEW**: `search_multiple_tournois_async()` exposed in `FFBBDataClient` wrapper
+- **NEW**: `search_multiple_engagements_async()` exposed in `FFBBDataClient` wrapper
+- **NEW**: `search_multiple_formations_async()` exposed in `FFBBDataClient` wrapper
 - **NEW**: GitHub Actions workflow `check_wrapper_parity.yml` — automated weekly CI check (every Monday 06:00 UTC) that fails if any public method from inner clients is missing from the wrapper
 - **NEW**: `.github/scripts/check_wrapper_parity.py` — AST-based parity script with `@property` exclusion and GitHub Step Summary output
 
 ### Fixed
-- Wrapper `FFBBAPIClientV3` was silently missing 10 methods previously only accessible via inner clients directly
+- Wrapper `FFBBDataClient` was silently missing 10 methods previously only accessible via inner clients directly
 
 ## [1.5.5] - 2026-04-20
 
@@ -204,7 +204,7 @@ name = organisme.nom  # Object attribute access
 fields = ["id", "nom", "code"]
 
 # After
-from ffbb_api_client_v3.models.query_fields import QueryFieldsManager, FieldSet
+from ffbb_data_client.models.query_fields import QueryFieldsManager, FieldSet
 fields = QueryFieldsManager.get_organisme_fields(FieldSet.BASIC)
 ```
 

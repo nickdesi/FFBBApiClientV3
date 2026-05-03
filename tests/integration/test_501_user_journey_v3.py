@@ -4,13 +4,13 @@ import os
 import time
 import unittest
 
-from ffbb_api_client_v3 import (
-    FFBBAPIClientV3,
+from ffbb_data_client import (
+    FFBBDataClient,
     OrganismesHit,
     OrganismesMultiSearchResult,
 )
-from ffbb_api_client_v3.models.get_competition_response import GetCompetitionResponse
-from ffbb_api_client_v3.models.get_organisme_response import GetOrganismeResponse
+from ffbb_data_client.models.get_competition_response import GetCompetitionResponse
+from ffbb_data_client.models.get_organisme_response import GetOrganismeResponse
 
 
 class Test010UserJourneyIntegration(unittest.TestCase):
@@ -38,7 +38,7 @@ class Test010UserJourneyIntegration(unittest.TestCase):
             )
 
         # NOTE: Set debug=True for detailed logging if needed during debugging
-        cls.api_client = FFBBAPIClientV3.create(
+        cls.api_client = FFBBDataClient.create(
             meilisearch_bearer_token=mls_token,
             api_bearer_token=api_token,
             debug=False,

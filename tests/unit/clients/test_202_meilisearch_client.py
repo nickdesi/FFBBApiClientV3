@@ -1,15 +1,15 @@
 import os
 import unittest
 
-from ffbb_api_client_v3 import MeilisearchClient, MultiSearchQuery, generate_queries
-from ffbb_api_client_v3.clients.meilisearch_client import (
+from ffbb_data_client import MeilisearchClient, MultiSearchQuery, generate_queries
+from ffbb_data_client.clients.meilisearch_client import (
     _cache_get,
     _cache_result_payload,
     _make_cache_key,
     _result_from_cached_payload,
     clear_meili_app_cache,
 )
-from ffbb_api_client_v3.models.multi_search_results_class import MultiSearchResults
+from ffbb_data_client.models.multi_search_results_class import MultiSearchResults
 
 
 class TestMeilisearchAppCache(unittest.TestCase):

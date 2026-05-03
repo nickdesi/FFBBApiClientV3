@@ -1,5 +1,5 @@
 """
-Secure logging utilities for FFBB API Client V3.
+Secure logging utilities for FFBB Data Client.
 
 This module provides logging utilities that automatically mask sensitive information
 like API tokens and authentication credentials.
@@ -115,7 +115,7 @@ class SecureLogger:
 
 
 # Global secure logger instance
-secure_logger = SecureLogger("ffbb_api_client_v3")
+secure_logger = SecureLogger("ffbb_data_client")
 
 
 def get_secure_logger(name: str) -> SecureLogger:

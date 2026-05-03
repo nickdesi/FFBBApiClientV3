@@ -8,7 +8,7 @@ from unittest.mock import MagicMock, patch
 
 class TestPackagedDiscoveryArtefacts(unittest.TestCase):
     def test_load_discovery_artefact_reads_packaged_json(self) -> None:
-        from ffbb_api_client_v3.data import load_discovery_artefact
+        from ffbb_data_client.data import load_discovery_artefact
 
         fake_resource = MagicMock()
         fake_resource.joinpath.return_value.read_text.return_value = (
@@ -16,11 +16,11 @@ class TestPackagedDiscoveryArtefacts(unittest.TestCase):
         )
 
         with patch(
-            "ffbb_api_client_v3.data.resources.files", return_value=fake_resource
+            "ffbb_data_client.data.resources.files", return_value=fake_resource
         ) as files_mock:
             result = load_discovery_artefact("indexes.json")
 
-        files_mock.assert_called_once_with("ffbb_api_client_v3.data")
+        files_mock.assert_called_once_with("ffbb_data_client.data")
         fake_resource.joinpath.assert_called_once_with("indexes.json")
         fake_resource.joinpath.return_value.read_text.assert_called_once_with(
             encoding="utf-8"
@@ -30,8 +30,8 @@ class TestPackagedDiscoveryArtefacts(unittest.TestCase):
 
 class TestGameStatsCompatibilityShim(unittest.TestCase):
     def test_game_stats_models_reexports_game_stats_model(self) -> None:
-        from ffbb_api_client_v3.models.game_stats_model import GameStatsModel
-        from ffbb_api_client_v3.models.game_stats_models import (
+        from ffbb_data_client.models.game_stats_model import GameStatsModel
+        from ffbb_data_client.models.game_stats_models import (
             GameStatsModel as Reexported,
         )
 
@@ -40,13 +40,13 @@ class TestGameStatsCompatibilityShim(unittest.TestCase):
 
 class TestGameStatsModelCoverage(unittest.TestCase):
     def test_from_dict_empty_and_non_dict_return_none(self) -> None:
-        from ffbb_api_client_v3.models.game_stats_model import GameStatsModel
+        from ffbb_data_client.models.game_stats_model import GameStatsModel
 
         self.assertIsNone(GameStatsModel.from_dict({}))
         self.assertIsNone(GameStatsModel.from_dict("invalid"))
 
     def test_from_dict_maps_all_scores(self) -> None:
-        from ffbb_api_client_v3.models.game_stats_model import GameStatsModel
+        from ffbb_data_client.models.game_stats_model import GameStatsModel
 
         data = {
             "matchId": "M1",
@@ -79,9 +79,9 @@ class TestGameStatsModelCoverage(unittest.TestCase):
 
 class TestNiveauExtractorCoverage(unittest.TestCase):
     def test_extract_niveau_variants(self) -> None:
-        from ffbb_api_client_v3.models.categorie_type import CategorieType
-        from ffbb_api_client_v3.models.niveau_extractor import NiveauExtractor
-        from ffbb_api_client_v3.models.niveau_type import NiveauType
+        from ffbb_data_client.models.categorie_type import CategorieType
+        from ffbb_data_client.models.niveau_extractor import NiveauExtractor
+        from ffbb_data_client.models.niveau_type import NiveauType
 
         cases = [
             (
@@ -125,8 +125,8 @@ class TestNiveauExtractorCoverage(unittest.TestCase):
                 self.assertEqual(niveau.zone_geographique, expected_zone)
 
     def test_extract_niveau_none_and_senior_fallback(self) -> None:
-        from ffbb_api_client_v3.models.categorie_type import CategorieType
-        from ffbb_api_client_v3.models.niveau_extractor import NiveauExtractor
+        from ffbb_data_client.models.categorie_type import CategorieType
+        from ffbb_data_client.models.niveau_extractor import NiveauExtractor
 
         self.assertIsNone(NiveauExtractor.extract_niveau(""))
         self.assertIsNone(NiveauExtractor.extract_niveau("Coupe sans marqueur"))
@@ -137,8 +137,8 @@ class TestNiveauExtractorCoverage(unittest.TestCase):
         self.assertEqual(niveau.categorie, CategorieType.SENIOR)
 
     def test_extract_from_competition_data_uses_nom_then_code(self) -> None:
-        from ffbb_api_client_v3.models.niveau_extractor import NiveauExtractor
-        from ffbb_api_client_v3.models.niveau_type import NiveauType
+        from ffbb_data_client.models.niveau_extractor import NiveauExtractor
+        from ffbb_data_client.models.niveau_type import NiveauType
 
         from_nom = NiveauExtractor.extract_from_competition_data(
             {"nom": "N1 U20", "code": "D1"}
@@ -157,10 +157,10 @@ class TestNiveauExtractorCoverage(unittest.TestCase):
         self.assertEqual(from_code.division, 2)
 
     def test_get_niveau_from_idcompetition(self) -> None:
-        from ffbb_api_client_v3.models.niveau_extractor import (
+        from ffbb_data_client.models.niveau_extractor import (
             get_niveau_from_idcompetition,
         )
-        from ffbb_api_client_v3.models.niveau_type import NiveauType
+        from ffbb_data_client.models.niveau_type import NiveauType
 
         self.assertIsNone(get_niveau_from_idcompetition(None))
         self.assertIsNone(
@@ -178,7 +178,7 @@ class TestNiveauExtractorCoverage(unittest.TestCase):
 
 class TestGenericSearchModels(unittest.TestCase):
     def test_generic_hit_accessors_and_query_matching(self) -> None:
-        from ffbb_api_client_v3.models.generic_search import GenericSearchHit
+        from ffbb_data_client.models.generic_search import GenericSearchHit
 
         hit = GenericSearchHit.from_dict(
             {"id": 123, "title": "Résumé", "type": 42, "nested": {"text": "Basket"}}
@@ -193,7 +193,7 @@ class TestGenericSearchModels(unittest.TestCase):
         self.assertFalse(hit.is_valid_for_query("football"))
 
     def test_generic_hit_handles_non_dict_and_null_title_type(self) -> None:
-        from ffbb_api_client_v3.models.generic_search import GenericSearchHit
+        from ffbb_data_client.models.generic_search import GenericSearchHit
 
         hit = GenericSearchHit.from_dict("invalid")
 
@@ -203,7 +203,7 @@ class TestGenericSearchModels(unittest.TestCase):
         self.assertEqual(hit.to_dict(), {})
 
     def test_generic_facets_roundtrip_dict_and_non_dict(self) -> None:
-        from ffbb_api_client_v3.models.generic_search import (
+        from ffbb_data_client.models.generic_search import (
             GenericFacetDistribution,
             GenericFacetStats,
         )
@@ -218,12 +218,12 @@ class TestGenericSearchModels(unittest.TestCase):
 
 class TestRankingEngagementCoverage(unittest.TestCase):
     def test_from_dict_empty_returns_none(self) -> None:
-        from ffbb_api_client_v3.models.ranking_engagement import RankingEngagement
+        from ffbb_data_client.models.ranking_engagement import RankingEngagement
 
         self.assertIsNone(RankingEngagement.from_dict({}))
 
     def test_from_dict_maps_logo_when_dict(self) -> None:
-        from ffbb_api_client_v3.models.ranking_engagement import RankingEngagement
+        from ffbb_data_client.models.ranking_engagement import RankingEngagement
 
         obj = RankingEngagement.from_dict(
             {
@@ -245,7 +245,7 @@ class TestRankingEngagementCoverage(unittest.TestCase):
         self.assertEqual(obj.logo_gradient, "#fff")
 
     def test_from_dict_ignores_non_dict_logo(self) -> None:
-        from ffbb_api_client_v3.models.ranking_engagement import RankingEngagement
+        from ffbb_data_client.models.ranking_engagement import RankingEngagement
 
         obj = RankingEngagement.from_dict({"id": "1", "nom": "Team", "logo": "bad"})
 
@@ -257,7 +257,7 @@ class TestRankingEngagementCoverage(unittest.TestCase):
 
 class TestContactExtractionCoverage(unittest.TestCase):
     def test_extract_club_info_none_and_value(self) -> None:
-        from ffbb_api_client_v3.models.club_contacts import extract_club_info
+        from ffbb_data_client.models.club_contacts import extract_club_info
 
         empty = type("Organisme", (), {"telephone": "", "mail": None, "nom": "Club"})()
         self.assertIsNone(extract_club_info(empty))
@@ -276,7 +276,7 @@ class TestContactExtractionCoverage(unittest.TestCase):
         self.assertEqual(contact.role, "club")
 
     def test_extract_membres_contacts_filters_and_sanitizes(self) -> None:
-        from ffbb_api_client_v3.models.club_contacts import extract_membres_contacts
+        from ffbb_data_client.models.club_contacts import extract_membres_contacts
 
         membre_empty = type(
             "Membre",
@@ -306,7 +306,7 @@ class TestContactExtractionCoverage(unittest.TestCase):
         self.assertEqual(contacts[0].role, "PRES")
 
     def test_extract_correspondant_and_entraineur_contacts(self) -> None:
-        from ffbb_api_client_v3.models.engagement_contacts import (
+        from ffbb_data_client.models.engagement_contacts import (
             extract_correspondant,
             extract_entraineur_contact,
         )
@@ -353,7 +353,7 @@ class TestContactExtractionCoverage(unittest.TestCase):
 
 class TestFacetDistributionCoverage(unittest.TestCase):
     def test_engagements_facet_distribution_roundtrip(self) -> None:
-        from ffbb_api_client_v3.models.engagements_facet_distribution import (
+        from ffbb_data_client.models.engagements_facet_distribution import (
             EngagementsFacetDistribution,
         )
 
@@ -374,7 +374,7 @@ class TestFacetDistributionCoverage(unittest.TestCase):
             EngagementsFacetDistribution.from_dict(None)
 
     def test_formations_facet_distribution_roundtrip(self) -> None:
-        from ffbb_api_client_v3.models.formations_facet_distribution import (
+        from ffbb_data_client.models.formations_facet_distribution import (
             FormationsFacetDistribution,
         )
 
@@ -398,7 +398,7 @@ class TestFacetDistributionCoverage(unittest.TestCase):
 
 class TestSaisonsAndNiveauInfoCoverage(unittest.TestCase):
     def test_get_saisons_response_from_dict_and_list(self) -> None:
-        from ffbb_api_client_v3.models.get_saisons_response import GetSaisonsResponse
+        from ffbb_data_client.models.get_saisons_response import GetSaisonsResponse
 
         self.assertIsNone(GetSaisonsResponse.from_dict({}))
         self.assertIsNone(GetSaisonsResponse.from_dict("bad"))
@@ -423,8 +423,8 @@ class TestSaisonsAndNiveauInfoCoverage(unittest.TestCase):
         self.assertEqual(GetSaisonsResponse.from_list([{}, data]), [saison])
 
     def test_niveau_info_properties_and_filters(self) -> None:
-        from ffbb_api_client_v3.models.niveau_info import NiveauInfo
-        from ffbb_api_client_v3.models.niveau_type import NiveauType
+        from ffbb_data_client.models.niveau_info import NiveauInfo
+        from ffbb_data_client.models.niveau_type import NiveauType
 
         elite = NiveauInfo(type=NiveauType.ELITE)
         self.assertTrue(elite.is_elite)

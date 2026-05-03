@@ -83,7 +83,7 @@ from .api_ffbb_app_client import ApiFFBBAppClient
 from .meilisearch_ffbb_client import MeilisearchFFBBClient
 
 
-class FFBBAPIClientV3:
+class FFBBDataClient:
 
     def __init__(
         self,
@@ -132,9 +132,9 @@ class FFBBAPIClientV3:
         debug: bool = False,
         cached_session: Client | None = None,
         async_cached_session: httpx.AsyncClient | None = None,
-    ) -> FFBBAPIClientV3:
+    ) -> FFBBDataClient:
         """
-        Create a new FFBB API Client V3 instance with comprehensive input validation.
+        Create a new FFBB Data Client instance with comprehensive input validation.
 
         Args:
             meilisearch_bearer_token (str, optional): Bearer token for Meilisearch API.
@@ -146,7 +146,7 @@ class FFBBAPIClientV3:
             async_cached_session (AsyncClient, optional): Async HTTP cache session
 
         Returns:
-            FFBBAPIClientV3: Configured API client instance
+            FFBBDataClient: Configured API client instance
 
         Raises:
             ValidationError: If any input parameter is invalid
@@ -189,7 +189,7 @@ class FFBBAPIClientV3:
             async_cached_session=async_cached_session,
         )
 
-        return FFBBAPIClientV3(api_ffbb_client, meilisearch_ffbb_client)
+        return FFBBDataClient(api_ffbb_client, meilisearch_ffbb_client)
 
     # -------------------------------------------------------------------------
     # REST API — api.ffbb.app

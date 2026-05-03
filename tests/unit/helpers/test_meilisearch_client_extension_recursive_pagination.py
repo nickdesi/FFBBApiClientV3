@@ -1,11 +1,11 @@
-from ffbb_api_client_v3.helpers.meilisearch_client_extension import (
+from ffbb_data_client.helpers.meilisearch_client_extension import (
     MeilisearchClientExtension,
 )
-from ffbb_api_client_v3.models.multi_search_query import MultiSearchQuery
-from ffbb_api_client_v3.models.multi_search_result_competitions import (
+from ffbb_data_client.models.multi_search_query import MultiSearchQuery
+from ffbb_data_client.models.multi_search_result_competitions import (
     CompetitionsMultiSearchResult,
 )
-from ffbb_api_client_v3.models.multi_search_results_class import MultiSearchResults
+from ffbb_data_client.models.multi_search_results_class import MultiSearchResults
 
 
 class FakeMeilisearchClient(MeilisearchClientExtension):

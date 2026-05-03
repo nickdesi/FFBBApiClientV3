@@ -25,7 +25,7 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from ffbb_api_client_v3.config import (  # noqa: E402
+from ffbb_data_client.config import (  # noqa: E402
     API_FFBB_BASE_URL,
     DEFAULT_USER_AGENT,
     ENDPOINT_OPENAPI,
@@ -45,15 +45,15 @@ from ffbb_api_client_v3.config import (  # noqa: E402
     MEILISEARCH_INDEX_TOURNOIS,
     MEILISEARCH_INDEX_YOUTUBE_VIDEOS,
 )
-from ffbb_api_client_v3.helpers.http_requests_utils import (  # noqa: E402
+from ffbb_data_client.helpers.http_requests_utils import (  # noqa: E402
     http_get_json,
     http_post_json,
 )
-from ffbb_api_client_v3.utils.cache_manager import CacheConfig  # noqa: E402
-from ffbb_api_client_v3.utils.token_manager import TokenManager  # noqa: E402
+from ffbb_data_client.utils.cache_manager import CacheConfig  # noqa: E402
+from ffbb_data_client.utils.token_manager import TokenManager  # noqa: E402
 
 DATA_DIR = PROJECT_ROOT / "data"
-PACKAGE_DATA_DIR = PROJECT_ROOT / "src" / "ffbb_api_client_v3" / "data"
+PACKAGE_DATA_DIR = PROJECT_ROOT / "src" / "ffbb_data_client" / "data"
 REPORT_PATH = DATA_DIR / "endpoint_discovery.json"
 COLLECTIONS_PATH = DATA_DIR / "collections.json"
 INDEXES_PATH = DATA_DIR / "indexes.json"

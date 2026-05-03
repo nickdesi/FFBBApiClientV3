@@ -2,12 +2,12 @@
 
 from datetime import datetime
 
-from ffbb_api_client_v3.models.competitions_hit import CompetitionsHit
-from ffbb_api_client_v3.models.get_organisme_response import GetOrganismeResponse
-from ffbb_api_client_v3.models.organismes_hit import OrganismesHit
-from ffbb_api_client_v3.models.poule_rencontre_item_model import PouleRencontreItemModel
-from ffbb_api_client_v3.models.rencontres_hit import RencontresHit
-from ffbb_api_client_v3.models.salles_hit import SallesHit
+from ffbb_data_client.models.competitions_hit import CompetitionsHit
+from ffbb_data_client.models.get_organisme_response import GetOrganismeResponse
+from ffbb_data_client.models.organismes_hit import OrganismesHit
+from ffbb_data_client.models.poule_rencontre_item_model import PouleRencontreItemModel
+from ffbb_data_client.models.rencontres_hit import RencontresHit
+from ffbb_data_client.models.salles_hit import SallesHit
 
 
 def test_organismes_hit_name_alias():
