@@ -114,8 +114,7 @@ jobs:
           parallel-finished: true
           # Minimum coverage gate — Coveralls will mark the PR check as failed
           # if merged coverage drops below this threshold.
-          # Uncomment once baseline is stabilised:
-          # carryforward-minimum-coverage: 85
+          carryforward-minimum-coverage: 85
 
   publish:
     needs: finalize
