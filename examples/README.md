@@ -55,7 +55,7 @@ python examples/team_ranking_analysis.py
 
 1. **Install the package:**
    ```bash
-   pip install ffbb_data_client
+   pip install ffbb-data-client
    ```
 
 2. **Token Configuration (Choose one):**

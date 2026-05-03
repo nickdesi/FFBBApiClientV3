@@ -55,7 +55,7 @@ Voir aussi : [`CHANGELOG.md`](CHANGELOG.md) et [`RELEASE_NOTES.md`](RELEASE_NOTE
 ## 📦 Installation
 
 ```bash
-pip install ffbb_data_client
+pip install ffbb-data-client
 ```
 
 Pour contribuer ou exécuter les tests :
