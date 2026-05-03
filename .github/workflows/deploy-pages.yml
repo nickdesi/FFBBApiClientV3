@@ -3,7 +3,6 @@ name: Deploy landing page to Pages
 on:
   push:
     branches: ["master", "main"]
-    tags: ["v*"]
   # Permet de lancer manuellement depuis l'onglet Actions
   workflow_dispatch:
 
