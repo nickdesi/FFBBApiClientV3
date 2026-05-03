@@ -9,9 +9,7 @@ on:
 
 # Permissions nécessaires pour GitHub Pages
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 # Permet d'annuler les déploiements obsolètes
 concurrency:
@@ -19,63 +17,57 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy_branch:
-    if: ${{ github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/heads/') }}
+  deploy:
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: ${{ steps.pages-url.outputs.url }}
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ github.token }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
+      - name: Fetch repository
+        run: |
+          set -euo pipefail
+          git init source
+          cd source
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --tags --force origin "${GITHUB_REF}"
+          git checkout --detach FETCH_HEAD
 
       - name: Inject Dynamic Version for SEO
         run: |
+          cd source
           LATEST_TAG=$(git describe --tags --abbrev=0)
           VERSION=${LATEST_TAG#v}
           echo "Dernière version trouvée : $VERSION. Injection dans le JSON-LD Schema..."
           sed -i "s/\"softwareVersion\": \"[^\"]*\"/\"softwareVersion\": \"$VERSION\"/g" website/index.html
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          # Point vital : on choisit le dossier "website"
-          path: './website'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
-
-  deploy_tag:
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Inject Dynamic Version for SEO
+      - name: Publish website to gh-pages
         run: |
-          LATEST_TAG=$(git describe --tags --abbrev=0)
-          VERSION=${LATEST_TAG#v}
-          echo "Dernière version trouvée : $VERSION. Injection dans le JSON-LD Schema..."
-          sed -i "s/\"softwareVersion\": \"[^\"]*\"/\"softwareVersion\": \"$VERSION\"/g" website/index.html
+          set -euo pipefail
+          git init gh-pages
+          cd gh-pages
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git fetch origin gh-pages --depth=1; then
+            git checkout gh-pages
+          else
+            git checkout --orphan gh-pages
+          fi
+          rsync -a --delete --exclude .git ../source/website/ ./
+          touch .nojekyll
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to publish."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Deploy website from ${GITHUB_SHA}"
+          git push --force origin HEAD:gh-pages
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
-        with:
-          # Point vital : on choisit le dossier "website"
-          path: './website'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+      - name: Set Pages URL
+        id: pages-url
+        run: |
+          OWNER=${GITHUB_REPOSITORY%/*}
+          REPO=${GITHUB_REPOSITORY#*/}
+          echo "url=https://${OWNER}.github.io/${REPO}/" >> "$GITHUB_OUTPUT"

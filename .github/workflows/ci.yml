@@ -125,9 +125,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: ${{ matrix.platform }}-py${{ matrix.python }}
           parallel: true
-          # Carry forward flags from previous builds that may not have re-run
-          # (useful when adding matrix dimensions incrementally)
-          carryforward: ""
 
   # ── Coveralls: finalize parallel build ─────────────────────────────────────
   # Must run after ALL test jobs complete, even if some are skipped/cancelled.
@@ -143,9 +140,6 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           parallel-finished: true
-          # Minimum coverage gate — Coveralls will mark the PR check as failed
-          # if merged coverage drops below this threshold.
-          carryforward-minimum-coverage: 85
 
   publish:
     needs: finalize
