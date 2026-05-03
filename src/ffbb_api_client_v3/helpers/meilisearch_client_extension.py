@@ -37,10 +37,10 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         # Should filter results.hits according to query.q
         if queries and results and results.results:
-            for i, res in enumerate(results.results):
-                query = queries[i]
-                if query.q:
-                    results.results[i] = query.filter_result(res)
+            results.results = [
+                query.filter_result(res) if query.q else res
+                for query, res in zip(queries, results.results, strict=True)
+            ]
 
         return results
 
@@ -53,10 +53,10 @@ class MeilisearchClientExtension(MeilisearchClient):
 
         # Should filter results.hits according to query.q
         if queries and results and results.results:
-            for i, res in enumerate(results.results):
-                query = queries[i]
-                if query.q:
-                    results.results[i] = query.filter_result(res)
+            results.results = [
+                query.filter_result(res) if query.q else res
+                for query, res in zip(queries, results.results, strict=True)
+            ]
 
         return results
 
@@ -70,9 +70,12 @@ class MeilisearchClientExtension(MeilisearchClient):
             return result
 
         next_queries: list[MultiSearchQuery] = []
+        # Store original query indexes to merge results correctly later
+        query_indices: list[int] = []
 
-        for i, query_result in enumerate(result.results):
-            querie = queries[i]
+        for i, (querie, query_result) in enumerate(
+            zip(queries, result.results, strict=True)
+        ):
             nb_hits = len(query_result.hits) if query_result.hits else 0
             querie_offset = querie.offset or 0
             querie_limit = querie.limit or 10
@@ -83,13 +86,16 @@ class MeilisearchClientExtension(MeilisearchClient):
                 querie.offset = querie_offset + querie_limit
                 querie.limit = query_result.estimated_total_hits - nb_hits
                 next_queries.append(querie)
+                query_indices.append(i)
 
         if next_queries:
             new_result = self.recursive_smart_multi_search(next_queries, cached_session)
 
             if new_result and new_result.results:
-                for i, query_result in enumerate(new_result.results):
-                    orig_result = result.results[i]
+                for orig_idx, query_result in zip(
+                    query_indices, new_result.results, strict=True
+                ):
+                    orig_result = result.results[orig_idx]
                     hits_list = orig_result.hits
                     if query_result.hits and hits_list is not None:
                         hits_list.extend(query_result.hits)
@@ -105,9 +111,12 @@ class MeilisearchClientExtension(MeilisearchClient):
             return result
 
         next_queries: list[MultiSearchQuery] = []
+        # Store original query indexes to merge results correctly later
+        query_indices: list[int] = []
 
-        for i, query_result in enumerate(result.results):
-            querie = queries[i]
+        for i, (querie, query_result) in enumerate(
+            zip(queries, result.results, strict=True)
+        ):
             nb_hits = len(query_result.hits) if query_result.hits else 0
             querie_offset = querie.offset or 0
             querie_limit = querie.limit or 10
@@ -118,6 +127,7 @@ class MeilisearchClientExtension(MeilisearchClient):
                 querie.offset = querie_offset + querie_limit
                 querie.limit = query_result.estimated_total_hits - nb_hits
                 next_queries.append(querie)
+                query_indices.append(i)
 
         if next_queries:
             new_result = await self.recursive_smart_multi_search_async(
@@ -125,8 +135,10 @@ class MeilisearchClientExtension(MeilisearchClient):
             )
 
             if new_result and new_result.results:
-                for i, query_result in enumerate(new_result.results):
-                    orig_result = result.results[i]
+                for orig_idx, query_result in zip(
+                    query_indices, new_result.results, strict=True
+                ):
+                    orig_result = result.results[orig_idx]
                     hits_list = orig_result.hits
                     if query_result.hits and hits_list is not None:
                         hits_list.extend(query_result.hits)
