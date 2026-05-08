@@ -155,21 +155,3 @@ except PackageNotFoundError:
     __version__ = "unknown"
 finally:
     del version, PackageNotFoundError
-
-
-# ---------------------------------------------------------------------------
-# Backward-compatibility alias (deprecated)
-# ---------------------------------------------------------------------------
-import warnings as _warnings
-
-
-def __getattr__(name: str):
-    if name == "FFBBAPIClientV3":
-        _warnings.warn(
-            "FFBBAPIClientV3 has been renamed to FFBBDataClient. "
-            "Update your imports: from ffbb_data_client import FFBBDataClient",
-            DeprecationWarning,
-            stacklevel=2,
-        )
-        return FFBBDataClient
-    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
