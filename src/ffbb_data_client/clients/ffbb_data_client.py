@@ -243,7 +243,7 @@ class FFBBDataClient:
         limit: int = 10,
         fields: list[str] | None = None,
         cached_session: Client | None = None,
-    ) -> list[GetCompetitionResponse | None]:
+    ) -> list[GetCompetitionResponse]:
         """
         Lists competitions with optional field selection.
 
@@ -415,7 +415,7 @@ class FFBBDataClient:
         self,
         limit: int = 10,
         fields: list[str] | None = None,
-    ) -> list[GetCompetitionResponse | None]:
+    ) -> list[GetCompetitionResponse]:
         """Lists competitions asynchronously."""
         return await self.api_ffbb_client.list_competitions_async(
             limit=limit,

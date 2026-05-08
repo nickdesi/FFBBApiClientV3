@@ -34,7 +34,7 @@ class Commune:
         code_postal = from_str(obj, "codePostal")
         date_created = from_datetime(obj, "date_created")
         date_updated = from_datetime(obj, "date_updated")
-        commune_id = from_int(obj, "id")
+        commune_id_raw = from_int(obj, "id")
         libelle = from_str(obj, "libelle")
         departement = from_str(obj, "departement")
         return Commune(
@@ -42,7 +42,7 @@ class Commune:
             code_postal=code_postal,
             date_created=date_created,
             date_updated=date_updated,
-            commune_id=commune_id,
+            commune_id=str(commune_id_raw) if commune_id_raw is not None else None,
             libelle=libelle,
             departement=departement,
         )

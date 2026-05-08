@@ -3,7 +3,7 @@
 
 [run]
 branch = True
-source = ffbb_api_client_v3
+source = ffbb_data_client
 parallel = True
 # CRITICAL for Coveralls: ensures paths are relative to the git root
 # Without this, Coveralls reports 0% or fails to map files
@@ -21,9 +21,9 @@ omit =
 # Maps coverage paths from different environments (tox, Docker, etc.)
 # to the canonical source root. Order matters: first match wins.
 source =
-    src/ffbb_api_client_v3
-    */ffbb_api_client_v3
-    */src/ffbb_api_client_v3
+    src/ffbb_data_client
+    */ffbb_data_client
+    */src/ffbb_data_client
 
 [report]
 # Minimum coverage threshold — CI will fail below this
@@ -62,7 +62,7 @@ exclude_lines =
 
 [html]
 directory = htmlcov
-title = FFBBApiClientV3 Coverage
+title = FFBB Data Client Coverage
 
 [xml]
 # Required by coverallsapp/github-action@v2 Universal Coverage Reporter

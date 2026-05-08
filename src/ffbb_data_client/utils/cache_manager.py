@@ -164,8 +164,8 @@ class CacheManager:
         # ── AJOUT : force le cache indépendamment des headers HTTP ──────────
         # hishel respecte RFC 7234 par défaut → ne cache pas si le serveur
         # ne renvoie pas de Cache-Control/ETag. FFBB n'en envoie pas.
-        policy.cacheable_methods = ["GET", "POST"]
-        policy.cacheable_status_codes = [200, 203, 204, 206, 300, 301, 308]
+        cast(Any, policy).cacheable_methods = ["GET", "POST"]
+        cast(Any, policy).cacheable_status_codes = [200, 203, 204, 206, 300, 301, 308]
         # ────────────────────────────────────────────────────────────────────
 
         if self.config.backend == "memory":
@@ -185,7 +185,7 @@ class CacheManager:
             )
             # Async version uses its own connection
             async_storage = hishel.AsyncSqliteStorage(
-                connection=async_conn, default_ttl=self.config.expire_after
+                connection=cast(Any, async_conn), default_ttl=self.config.expire_after
             )
             self._async_client = hishel.httpx.AsyncCacheClient(
                 storage=async_storage,

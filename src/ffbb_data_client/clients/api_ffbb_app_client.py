@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, TypeVar
 
 import httpx
 from httpx import Client
@@ -68,6 +68,12 @@ from ..utils.retry_utils import (
     get_default_timeout_config,
 )
 from ..utils.secure_logging import get_secure_logger, mask_token
+
+ResponseT = TypeVar("ResponseT")
+
+
+def _present_items(items: list[ResponseT | None]) -> list[ResponseT]:
+    return [item for item in items if item is not None]
 
 
 class ApiFFBBAppClient:
@@ -820,7 +826,7 @@ class ApiFFBBAppClient:
         limit: int = 10,
         fields: list[str] | None = None,
         cached_session: Client | None = None,
-    ) -> list[GetCompetitionResponse | None]:
+    ) -> list[GetCompetitionResponse]:
         """
         Lists competitions with optional field selection.
 
@@ -865,7 +871,7 @@ class ApiFFBBAppClient:
         limit: int = 10,
         fields: list[str] | None = None,
         cached_session: httpx.AsyncClient | None = None,
-    ) -> list[GetCompetitionResponse | None]:
+    ) -> list[GetCompetitionResponse]:
         """
         Lists competitions with optional field selection asynchroniously.
         """
@@ -1386,7 +1392,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetRencontreResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetRencontreResponse.from_dict(r) for r in raw if r])
 
     async def list_rencontres_async(
         self,
@@ -1406,7 +1412,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetRencontreResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetRencontreResponse.from_dict(r) for r in raw if r])
 
     # ---------- list_salles ----------
     def list_salles(
@@ -1427,7 +1433,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetSalleResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetSalleResponse.from_dict(r) for r in raw if r])
 
     async def list_salles_async(
         self,
@@ -1447,7 +1453,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetSalleResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetSalleResponse.from_dict(r) for r in raw if r])
 
     # ---------- list_terrains ----------
     def list_terrains(
@@ -1468,7 +1474,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetTerrainResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetTerrainResponse.from_dict(r) for r in raw if r])
 
     async def list_terrains_async(
         self,
@@ -1488,7 +1494,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetTerrainResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetTerrainResponse.from_dict(r) for r in raw if r])
 
     # ---------- list_tournois ----------
     def list_tournois(
@@ -1509,7 +1515,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetTournoiResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetTournoiResponse.from_dict(r) for r in raw if r])
 
     async def list_tournois_async(
         self,
@@ -1529,7 +1535,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetTournoiResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetTournoiResponse.from_dict(r) for r in raw if r])
 
     # ---------- list_engagements ----------
     def list_engagements(
@@ -1550,7 +1556,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetEngagementResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetEngagementResponse.from_dict(r) for r in raw if r])
 
     async def list_engagements_async(
         self,
@@ -1570,7 +1576,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetEngagementResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetEngagementResponse.from_dict(r) for r in raw if r])
 
     # ---------- list_formations ----------
     def list_formations(
@@ -1591,7 +1597,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetFormationResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetFormationResponse.from_dict(r) for r in raw if r])
 
     async def list_formations_async(
         self,
@@ -1611,7 +1617,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetFormationResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetFormationResponse.from_dict(r) for r in raw if r])
 
     # ---------- list_entraineurs ----------
     def list_entraineurs(
@@ -1632,7 +1638,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetEntraineurResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetEntraineurResponse.from_dict(r) for r in raw if r])
 
     async def list_entraineurs_async(
         self,
@@ -1652,7 +1658,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetEntraineurResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetEntraineurResponse.from_dict(r) for r in raw if r])
 
     # ---------- list_communes ----------
     def list_communes(
@@ -1673,7 +1679,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetCommuneResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetCommuneResponse.from_dict(r) for r in raw if r])
 
     async def list_communes_async(
         self,
@@ -1693,7 +1699,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetCommuneResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetCommuneResponse.from_dict(r) for r in raw if r])
 
     # ---------- list_officiels ----------
     def list_officiels(
@@ -1714,7 +1720,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetOfficielResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetOfficielResponse.from_dict(r) for r in raw if r])
 
     async def list_officiels_async(
         self,
@@ -1734,7 +1740,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetOfficielResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetOfficielResponse.from_dict(r) for r in raw if r])
 
     # ---------- list_pratiques ----------
     def list_pratiques(
@@ -1755,7 +1761,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetPratiqueResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetPratiqueResponse.from_dict(r) for r in raw if r])
 
     async def list_pratiques_async(
         self,
@@ -1775,7 +1781,7 @@ class ApiFFBBAppClient:
             search=search,
             cached_session=cached_session,
         )
-        return [GetPratiqueResponse.from_dict(r) for r in raw if r]
+        return _present_items([GetPratiqueResponse.from_dict(r) for r in raw if r])
 
     # ---------- Pagination helper: list all items ----------
     def _list_all_directus_items(

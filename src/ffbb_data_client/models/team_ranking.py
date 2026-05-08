@@ -51,6 +51,7 @@ class TeamRanking:
             return None
 
         id_engagement_raw = data.get("idEngagement")
+        id_engagement: RankingEngagement | str | None
         if isinstance(id_engagement_raw, dict):
             id_engagement = RankingEngagement.from_dict(id_engagement_raw)
         elif isinstance(id_engagement_raw, (str, int)):

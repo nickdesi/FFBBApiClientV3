@@ -9,7 +9,7 @@ import asyncio
 import random
 import time
 from collections.abc import Callable
-from typing import Any
+from typing import Any, cast
 
 import httpx
 from httpx import Client, Response
@@ -419,8 +419,11 @@ async def make_http_request_with_retry_async(
             if not cached_session:
                 await session.aclose()
 
-    return await execute_with_retry_async(
-        _make_request, config=retry_config, timeout_config=timeout_config
+    return cast(
+        Response,
+        await execute_with_retry_async(
+            _make_request, config=retry_config, timeout_config=timeout_config
+        ),
     )
 
 
