@@ -61,6 +61,16 @@ repos:
   hooks:
   - id: flake8
 
+# Type-checking on push (mypy + pyright via tox)
+- repo: local
+  hooks:
+  - id: type-check
+    name: type-check (mypy + pyright)
+    entry: bash -c 'PATH="$PWD/.venv/bin:$PATH" tox -e type'
+    language: system
+    pass_filenames: false
+    stages: [pre-push]
+
 # Check for misspells in documentation files:
 # - repo: https://github.com/codespell-project/codespell
 #   rev: v2.2.5
