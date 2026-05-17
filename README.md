@@ -33,8 +33,6 @@
 - du cache HTTP configurable via `hishel` ;
 - des helpers prêts pour l'intégration MCP / agents IA.
 
-> La V3 remplace l’approche V2 basée sur des dictionnaires bruts et une configuration manuelle. Elle privilégie le typage, la robustesse réseau et les appels batchés.
-
 ---
 
 ## 🚀 Version v2.1.0 — Mai 2026
