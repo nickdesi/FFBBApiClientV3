@@ -35,14 +35,15 @@
 
 ---
 
-## 🚀 Version v2.1.0 — Mai 2026
+## 🚀 Version v2.2.0 — Mai 2026
 
 Principales évolutions récentes :
 
-- **unification sync/async** : les méthodes synchrones délèguent désormais à leurs homologues asynchrones via `_run_async()`, éliminant ~604 lignes de duplication ;
+- **refactor architecture** : `FFBBDataClient` (2865 → 272 lignes) découpé en `_RestFacade` + `_SearchFacade` — API publique 100% compatible ;
+- **unification sync/async** : les méthodes synchrones délèguent à leurs homologues asynchrones via `_run_async()`, éliminant ~604 lignes de duplication ;
 - **nouvelles entités** : EDF (matches, joueurs, rosters, équipes), Genius Sport (matches, live logs), Rematch Videos ;
 - **cache SQLite concurrency-safe** : fichiers séparés pour sync (`http_cache.db`) et async (`http_cache_async.db`) ;
-- **CI renforcée** : mypy + pyright + CodeQL + Dependabot + hook pre-push ;
+- **CI renforcée** : mypy + pyright + CodeQL + Dependabot + hook pre-push + wrapper parity check ;
 - **nettoyage** : suppression du shim `ffbb_api_client_v3`, scripts morts et code mort (`invalidate_pattern`).
 
 Voir aussi : [`CHANGELOG.md`](CHANGELOG.md) et [`RELEASE_NOTES.md`](RELEASE_NOTES.md).
@@ -218,7 +219,9 @@ Il est donc possible de laisser le client résoudre les tokens automatiquement o
 ```text
 src/ffbb_data_client/
 ├── clients/
-│   ├── ffbb_data_client.py       # Façade publique (sync → async delegation)
+│   ├── ffbb_data_client.py       # Façade publique (272 lignes, delegation)
+│   ├── _rest_facade.py           # Façade REST API (Directus)
+│   ├── _search_facade.py         # Façade recherche Meilisearch
 │   ├── api_ffbb_app_client.py    # Client REST FFBB (async source of truth)
 │   └── meilisearch_ffbb_client.py # Client recherche Meilisearch
 ├── helpers/                       # Requêtes HTTP, multi-search, conversions
@@ -228,6 +231,8 @@ src/ffbb_data_client/
 ```
 
 > **Architecture sync/async** : Depuis v2.1.0, les méthodes asynchrones sont la source de vérité. Les méthodes synchrones délèguent via `_run_async()`, un helper qui gère les event loops imbriqués avec `ThreadPoolExecutor`.
+>
+> **Architecture facades** : Depuis v2.2.0, `FFBBDataClient` est une fine coquille qui compose `_RestFacade` et `_SearchFacade`. L'API publique reste identique — `client.get_organisme(123)` fonctionne comme avant.
 
 ---
 

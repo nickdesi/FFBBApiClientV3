@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0] - 2026-05-17
+
+### Changed
+- **REFACTOR**: `FFBBDataClient` (2865 → 272 lines) split into modular facades — `_RestFacade` (1592 lines) and `_SearchFacade` (1020 lines)
+- Public API remains 100% backward-compatible — all 167 methods accessible directly on `FFBBDataClient`
+- `check_wrapper_parity.py` updated to scan facade files in addition to the main client
+
+### Added
+- `pytest_asyncio_mode = "auto"` in `pyproject.toml` for pytest-asyncio compatibility
+- `isolated_build = True` in `tox.ini` for proper PEP 517 builds
+
+### Fixed
+- `CacheManager` docstring corrected — Redis backend marked as "planned" (not implemented)
+- `readme_renderer[md]` moved from `install_requires` to `testing` extras (build-time only dependency)
+
+### Removed
+- Orphaned `src/ffbb_api_client_v3/` directory (residual from v2.1.0 cleanup)
+- Orphaned `.coverage` file at project root
+- `benchmark_search_organisme.py` moved from root to `scripts/`
+
 ## [2.1.0] - 2026-05-17
 
 ### Changed
