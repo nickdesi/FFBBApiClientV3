@@ -180,7 +180,8 @@ class TestApiFFBBAppClientCoverage(unittest.IsolatedAsyncioTestCase):
     def test_list_competitions_none_fields(self):
         client = ApiFFBBAppClient("token")
         with patch(
-            "ffbb_data_client.clients.api_ffbb_app_client.http_get_json"
+            "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+            new_callable=AsyncMock,
         ) as mock_get:
             mock_get.return_value = {"data": []}
             res = client.list_competitions(fields=None)

@@ -666,6 +666,10 @@ class FFBBDataClient:
         """Retrieves the current Directus OpenAPI specification."""
         return self.api_ffbb_client.get_openapi_spec()
 
+    async def get_openapi_spec_async(self) -> dict[str, Any] | None:
+        """Asynchronously retrieves the current Directus OpenAPI specification."""
+        return await self.api_ffbb_client.get_openapi_spec_async()
+
     def get_session(
         self, id: str, fields: list[str] | None = None
     ) -> dict[str, Any] | None:
@@ -732,6 +736,18 @@ class FFBBDataClient:
             limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
         )
 
+    async def list_genius_sports_live_logs_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Asynchronously lists Genius Sports live logs."""
+        return await self.api_ffbb_client.list_genius_sports_live_logs_async(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
     async def get_genius_sport_match_async(
         self, id: str, fields: list[str] | None = None
     ) -> dict[str, Any] | None:
@@ -794,6 +810,12 @@ class FFBBDataClient:
         """Retrieves an Equipe de France match."""
         return self.api_ffbb_client.get_edf_match(id, fields=fields)
 
+    async def get_edf_match_async(
+        self, id: str | int, fields: list[str] | None = None
+    ) -> dict[str, Any] | None:
+        """Asynchronously retrieves an Equipe de France match."""
+        return await self.api_ffbb_client.get_edf_match_async(id, fields=fields)
+
     def list_edf_matches(
         self,
         limit: int = 10,
@@ -806,11 +828,29 @@ class FFBBDataClient:
             limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
         )
 
+    async def list_edf_matches_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Asynchronously lists Equipe de France matches."""
+        return await self.api_ffbb_client.list_edf_matches_async(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
     def get_edf_player(
         self, id: str | int, fields: list[str] | None = None
     ) -> dict[str, Any] | None:
         """Retrieves an Equipe de France player."""
         return self.api_ffbb_client.get_edf_player(id, fields=fields)
+
+    async def get_edf_player_async(
+        self, id: str | int, fields: list[str] | None = None
+    ) -> dict[str, Any] | None:
+        """Asynchronously retrieves an Equipe de France player."""
+        return await self.api_ffbb_client.get_edf_player_async(id, fields=fields)
 
     def list_edf_players(
         self,
@@ -821,6 +861,18 @@ class FFBBDataClient:
     ) -> list[dict[str, Any]]:
         """Lists Equipe de France players."""
         return self.api_ffbb_client.list_edf_players(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
+    async def list_edf_players_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Asynchronously lists Equipe de France players."""
+        return await self.api_ffbb_client.list_edf_players_async(
             limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
         )
 
@@ -836,6 +888,18 @@ class FFBBDataClient:
             limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
         )
 
+    async def list_edf_teams_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Asynchronously lists Equipe de France teams."""
+        return await self.api_ffbb_client.list_edf_teams_async(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
     def list_edf_rosters(
         self,
         limit: int = 10,
@@ -845,6 +909,18 @@ class FFBBDataClient:
     ) -> list[dict[str, Any]]:
         """Lists Equipe de France rosters."""
         return self.api_ffbb_client.list_edf_rosters(
+            limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
+        )
+
+    async def list_edf_rosters_async(
+        self,
+        limit: int = 10,
+        fields: list[str] | None = None,
+        filter_criteria: str | None = None,
+        sort: str | list[str] | None = None,
+    ) -> list[dict[str, Any]]:
+        """Asynchronously lists Equipe de France rosters."""
+        return await self.api_ffbb_client.list_edf_rosters_async(
             limit=limit, fields=fields, filter_criteria=filter_criteria, sort=sort
         )
 
