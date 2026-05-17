@@ -37,7 +37,7 @@
 
 ---
 
-## 🚀 Version v1.7.0 — 30 avril 2026
+## 🚀 Version v2.0.2 — Mai 2026
 
 Principales évolutions récentes :
 

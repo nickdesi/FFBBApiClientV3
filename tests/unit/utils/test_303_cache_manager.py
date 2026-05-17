@@ -163,13 +163,6 @@ class Test018CacheManager(unittest.TestCase):
 
         self.assertEqual(mock_get.call_count, 2)
 
-    def test_invalidate_pattern(self):
-        """Test cache invalidation by pattern."""
-        manager = CacheManager(self.config)
-
-        # This should not raise an exception
-        manager.invalidate_pattern("test_pattern")
-
     def test_singleton_pattern(self):
         """Test that CacheManager follows singleton pattern."""
         manager1 = CacheManager(self.config)

@@ -1,7 +1,7 @@
 """Unit tests for FFBB API Client V2 core components."""
 
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
 from httpx import Client
 
@@ -216,7 +216,10 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         self.assertEqual(client.url, custom_url)
 
     @patch("ffbb_data_client.clients.api_ffbb_app_client.TypeAdapter")
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     def test_005_get_lives_success(self, mock_http_get, mock_type_adapter):
         """Test get_lives returns live data successfully."""
         mock_data = {"lives": [{"id": "1", "team1": "A", "team2": "B"}]}
@@ -233,7 +236,10 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         self.assertEqual(result, mock_lives)
 
     @patch("ffbb_data_client.clients.api_ffbb_app_client.TypeAdapter")
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     def test_006_get_competition_success(self, mock_http_get, mock_type_adapter):
         """Test get_competition returns competition model with default fields."""
         mock_inner_data = {"id": 123, "nom": "Test Competition"}
@@ -258,7 +264,10 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         self.assertEqual(result, mock_competition_obj)
 
     @patch("ffbb_data_client.clients.api_ffbb_app_client.TypeAdapter")
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     def test_006b_get_competition_with_basic_fields(
         self, mock_http_get, mock_type_adapter
     ):
@@ -291,7 +300,10 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         self.assertEqual(result, mock_competition_obj)
 
     @patch("ffbb_data_client.clients.api_ffbb_app_client.TypeAdapter")
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     def test_006c_get_competition_with_custom_fields(
         self, mock_http_get, mock_type_adapter
     ):
@@ -323,7 +335,10 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         self.assertEqual(result, mock_competition_obj)
 
     @patch("ffbb_data_client.clients.api_ffbb_app_client.GetPouleResponse.from_dict")
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     def test_007_get_poule_with_default_fields(self, mock_http_get, mock_from_dict):
         """Test get_poule without fields uses default fields."""
         mock_inner_data = {"id": 456, "nom": "Test Poule"}
@@ -344,7 +359,10 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         self.assertEqual(result, mock_poule_obj)
 
     @patch("ffbb_data_client.clients.api_ffbb_app_client.GetPouleResponse.from_dict")
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     def test_007b_get_poule_with_custom_fields(self, mock_http_get, mock_from_dict):
         """Test get_poule with custom fields."""
         mock_inner_data = {"id": 456, "nom": "Test Poule", "rencontres": []}
@@ -367,7 +385,10 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
         self.assertEqual(result, mock_poule_obj)
 
     @patch("ffbb_data_client.clients.api_ffbb_app_client.TypeAdapter")
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     def test_008_get_saisons_with_filter(self, mock_http_get, mock_type_adapter):
         """Test get_saisons with filter returns saisons list successfully."""
         mock_inner_data = [{"id": 2024, "nom": "Saison 2024"}]
@@ -389,7 +410,10 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
     @patch(
         "ffbb_data_client.clients.api_ffbb_app_client.GetOrganismeResponse.from_dict"
     )
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     def test_009_get_organisme_with_default_fields(self, mock_http_get, mock_from_dict):
         """Test get_organisme without fields uses default fields."""
         mock_inner_data = {
@@ -416,7 +440,10 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
     @patch(
         "ffbb_data_client.clients.api_ffbb_app_client.GetOrganismeResponse.from_dict"
     )
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     def test_009b_get_organisme_with_basic_fields(self, mock_http_get, mock_from_dict):
         """Test get_organisme with basic fields."""
         mock_inner_data = {"id": 789, "nom": "Test Club", "code": "TEST"}
@@ -445,7 +472,10 @@ class Test001ApiFfbbAppCore(unittest.TestCase):
     @patch(
         "ffbb_data_client.clients.api_ffbb_app_client.GetOrganismeResponse.from_dict"
     )
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     def test_009c_get_organisme_with_detailed_fields(
         self, mock_http_get, mock_from_dict
     ):
@@ -699,7 +729,10 @@ class Test001QueryFieldsManagerFieldSets(unittest.TestCase):
         self.assertNotIn(SaisonFields.DATE_CREATED, fields)
         self.assertNotIn(SaisonFields.DATE_UPDATED, fields)
 
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     @patch("ffbb_data_client.clients.api_ffbb_app_client.TypeAdapter")
     def test_008_get_organisme_with_each_field_set(
         self, mock_type_adapter, mock_http_get
@@ -728,7 +761,10 @@ class Test001QueryFieldsManagerFieldSets(unittest.TestCase):
             # URL must contain fields[] encoded
             self.assertIn("fields%5B%5D", url)
 
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     @patch("ffbb_data_client.clients.api_ffbb_app_client.TypeAdapter")
     def test_009_get_competition_with_each_field_set(
         self, mock_type_adapter, mock_http_get
@@ -756,7 +792,10 @@ class Test001QueryFieldsManagerFieldSets(unittest.TestCase):
             url = mock_http_get.call_args[0][0]
             self.assertIn("fields%5B%5D", url)
 
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     @patch("ffbb_data_client.clients.api_ffbb_app_client.TypeAdapter")
     def test_010_get_poule_with_each_field_set(self, mock_type_adapter, mock_http_get):
         """Test get_poule works with BASIC, DEFAULT, and DETAILED field sets."""
@@ -782,7 +821,10 @@ class Test001QueryFieldsManagerFieldSets(unittest.TestCase):
             url = mock_http_get.call_args[0][0]
             self.assertIn("fields%5B%5D", url)
 
-    @patch("ffbb_data_client.clients.api_ffbb_app_client.http_get_json")
+    @patch(
+        "ffbb_data_client.clients.api_ffbb_app_client.http_get_json_async",
+        new_callable=AsyncMock,
+    )
     @patch("ffbb_data_client.clients.api_ffbb_app_client.TypeAdapter")
     def test_011_get_saisons_with_each_field_set(
         self, mock_type_adapter, mock_http_get

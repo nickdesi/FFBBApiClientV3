@@ -195,6 +195,8 @@ class CacheManager:
                 ),
             )
         elif self.config.backend == "sqlite":
+            # Use separate database files to avoid "database is locked" errors
+            # when sync and async clients write concurrently.
             storage = hishel.SyncSqliteStorage(
                 database_path="http_cache.db", default_ttl=self.config.expire_after
             )
@@ -203,9 +205,10 @@ class CacheManager:
                 policy=policy,
                 transport=httpx.HTTPTransport(retries=self.config.transport_retries),
             )
-            # Async version
+            # Async version uses its own database file
             async_storage = hishel.AsyncSqliteStorage(
-                database_path="http_cache.db", default_ttl=self.config.expire_after
+                database_path="http_cache_async.db",
+                default_ttl=self.config.expire_after,
             )
             self._async_client = hishel.httpx.AsyncCacheClient(
                 storage=async_storage,
@@ -359,28 +362,6 @@ class CacheManager:
                 self.metrics.errors += 1
                 continue
         return count
-
-    def invalidate_pattern(self, pattern: str) -> int:
-        """
-        Invalidate cache entries matching a pattern.
-
-        Args:
-            pattern: Pattern to match for invalidation.
-
-        Returns:
-            Number of entries invalidated.
-        """
-        if not self.is_enabled() or self._client is None:
-            return 0
-
-        try:
-            getattr(self._client, "_storage", None)
-            # hishel storage doesn't generally support pattern invalidation exposing cache_dict,
-            # so we'd need to iterate visually, but for now we skip or implement if needed
-            return 0
-        except (OSError, RuntimeError, AttributeError, KeyError):
-            self.metrics.errors += 1
-        return 0
 
     @classmethod
     def reset_instance(cls) -> None:
