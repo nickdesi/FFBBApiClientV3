@@ -2,7 +2,7 @@
 Advanced cache management for FFBB Data Client.
 
 This module provides sophisticated caching strategies including:
-- Multi-level caching (memory, disk, Redis)
+- Dual backend support (memory via in-memory sqlite, persistent sqlite)
 - Configurable cache policies
 - Cache performance metrics
 - Intelligent cache invalidation
@@ -52,7 +52,7 @@ class CacheConfig:
 
     Attributes:
         enabled: Whether caching is enabled.
-        backend: Cache backend ('memory', 'sqlite', 'redis').
+        backend: Cache backend ('memory', 'sqlite'). Redis is planned but not yet implemented.
         expire_after: Default expiration time in seconds.
         max_size: Maximum cache size (for memory backend).
         redis_url: Redis URL for Redis backend.

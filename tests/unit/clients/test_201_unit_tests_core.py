@@ -88,7 +88,7 @@ class Test001FfbbApiClientV2Core(unittest.TestCase):
     def test_006_multi_search_with_name(self):
         """Test multi_search with valid name parameter."""
         with patch(
-            "ffbb_data_client.clients.ffbb_data_client.generate_queries"
+            "ffbb_data_client.clients._search_facade.generate_queries"
         ) as mock_gen_queries:
             mock_queries = ["query1", "query2"]
             mock_gen_queries.return_value = mock_queries
@@ -109,7 +109,7 @@ class Test001FfbbApiClientV2Core(unittest.TestCase):
     def test_007_multi_search_no_results(self):
         """Test multi_search returns None when no results found."""
         with patch(
-            "ffbb_data_client.clients.ffbb_data_client.generate_queries"
+            "ffbb_data_client.clients._search_facade.generate_queries"
         ) as mock_gen_queries:
             mock_gen_queries.return_value = ["query"]
             self.mock_meilisearch_client.recursive_smart_multi_search.return_value = (
@@ -123,7 +123,7 @@ class Test001FfbbApiClientV2Core(unittest.TestCase):
     def test_008_search_organismes_with_name(self):
         """Test search_organismes with valid name parameter."""
         with patch.object(
-            self.client, "search_multiple_organismes"
+            self.client._search, "search_multiple_organismes"
         ) as mock_search_multiple:
             mock_result = Mock()
             mock_search_multiple.return_value = [mock_result]
@@ -138,7 +138,7 @@ class Test001FfbbApiClientV2Core(unittest.TestCase):
     def test_009_search_organismes_no_results(self):
         """Test search_organismes returns None when no results found."""
         with patch.object(
-            self.client, "search_multiple_organismes"
+            self.client._search, "search_multiple_organismes"
         ) as mock_search_multiple:
             mock_search_multiple.return_value = None
 
