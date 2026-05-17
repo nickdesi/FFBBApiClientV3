@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import concurrent.futures
+from collections.abc import Awaitable
 from typing import Any, TypeVar
 
 import httpx
@@ -69,14 +70,14 @@ from ..utils.retry_utils import (
 )
 from ..utils.secure_logging import get_secure_logger, mask_token
 
-ResponseT = TypeVar("ResponseT")
+T = TypeVar("T")
 
 
-def _present_items(items: list[ResponseT | None]) -> list[ResponseT]:
+def _present_items(items: list[T | None]) -> list[T]:
     return [item for item in items if item is not None]
 
 
-def _run_async(coro):
+def _run_async(coro: Awaitable[T]) -> T:
     """Run an async coroutine from sync context, handling nested event loops."""
     try:
         loop = asyncio.get_running_loop()
@@ -85,12 +86,12 @@ def _run_async(coro):
 
     if loop and loop.is_running():
         with concurrent.futures.ThreadPoolExecutor() as executor:
-            future = executor.submit(asyncio.run, coro)
+            future: concurrent.futures.Future[T] = executor.submit(asyncio.run, coro)  # type: ignore[arg-type]
             return future.result()
     elif loop:
         return loop.run_until_complete(coro)
     else:
-        return asyncio.run(coro)
+        return asyncio.run(coro)  # type: ignore[arg-type]
 
 
 class ApiFFBBAppClient:
@@ -186,8 +187,8 @@ class ApiFFBBAppClient:
         """
         return _run_async(
             self.get_organisme_for_search_async(
-                organisme_id, cached_session=cached_session
-            )  # type: ignore[no-any-return, arg-type]
+                organisme_id, cached_session=self.async_cached_session
+            )
         )
 
     async def get_organisme_for_search_async(
@@ -199,7 +200,7 @@ class ApiFFBBAppClient:
         return await self.get_organisme_async(
             organisme_id=organisme_id,
             fields=QueryFieldsManager.get_organisme_search_fields(),
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     def _get_directus_item(
@@ -211,8 +212,8 @@ class ApiFFBBAppClient:
     ) -> dict[str, Any] | None:
         return _run_async(
             self._get_directus_item_async(
-                endpoint, id, fields=fields, cached_session=cached_session
-            )  # type: ignore[no-any-return, arg-type]
+                endpoint, id, fields=fields, cached_session=self.async_cached_session
+            )
         )
 
     async def _get_directus_item_async(
@@ -232,7 +233,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
                 retry_config=self.retry_config,
                 timeout_config=self.timeout_config,
             )
@@ -263,8 +264,8 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def _list_directus_items_async(
@@ -296,7 +297,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
                 retry_config=self.retry_config,
                 timeout_config=self.timeout_config,
             )
@@ -311,7 +312,9 @@ class ApiFFBBAppClient:
         self, cached_session: Client | None = None
     ) -> dict[str, Any] | None:
         """Retrieves the public Directus OpenAPI specification."""
-        return _run_async(self.get_openapi_spec_async(cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_openapi_spec_async(cached_session=self.async_cached_session)
+        )
 
     async def get_openapi_spec_async(
         self, cached_session: httpx.AsyncClient | None = None
@@ -323,7 +326,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
                 retry_config=self.retry_config,
                 timeout_config=self.timeout_config,
             )
@@ -343,7 +346,9 @@ class ApiFFBBAppClient:
         Returns:
             List[Live]: A list of Live objects representing the live events.
         """
-        return _run_async(self.get_lives_async(cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_lives_async(cached_session=self.async_cached_session)
+        )
 
     async def get_lives_async(
         self, cached_session: httpx.AsyncClient | None = None
@@ -360,7 +365,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
                 retry_config=self.retry_config,
                 timeout_config=self.timeout_config,
             )
@@ -406,8 +411,8 @@ class ApiFFBBAppClient:
                 competition_id,
                 deep_limit=deep_limit,
                 fields=fields,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def get_competition_async(
@@ -442,7 +447,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data:
@@ -480,8 +485,8 @@ class ApiFFBBAppClient:
                 poule_id,
                 deep_limit=deep_limit,
                 fields=fields,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def get_poule_async(
@@ -512,7 +517,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data:
@@ -532,8 +537,10 @@ class ApiFFBBAppClient:
         Retrieves ONLY the ranking (classement) for a specific poule.
         """
         return _run_async(
-            self.get_classement_async(poule_id, cached_session=cached_session)
-        )  # type: ignore[no-any-return, arg-type]
+            self.get_classement_async(
+                poule_id, cached_session=self.async_cached_session
+            )
+        )
 
     async def get_classement_async(
         self,
@@ -547,7 +554,7 @@ class ApiFFBBAppClient:
             poule_id=poule_id,
             deep_limit="1000",
             fields=QueryFieldsManager.get_classement_fields(),
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return res.classements if res else None
 
@@ -574,8 +581,8 @@ class ApiFFBBAppClient:
             self.get_saisons_async(
                 fields=fields,
                 filter_criteria=filter_criteria,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def get_saisons_async(
@@ -604,7 +611,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data and isinstance(actual_data, list):
@@ -637,8 +644,8 @@ class ApiFFBBAppClient:
             self.get_organisme_async(
                 organisme_id,
                 fields=fields,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def get_organisme_async(
@@ -666,7 +673,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data:
@@ -686,8 +693,10 @@ class ApiFFBBAppClient:
         Retrieves ONLY the team commitments (engagements) for a specific club.
         """
         return _run_async(
-            self.get_equipes_async(organisme_id, cached_session=cached_session)
-        )  # type: ignore[no-any-return, arg-type]
+            self.get_equipes_async(
+                organisme_id, cached_session=self.async_cached_session
+            )
+        )
 
     async def get_equipes_async(
         self,
@@ -700,7 +709,7 @@ class ApiFFBBAppClient:
         res = await self.get_organisme_async(
             organisme_id=organisme_id,
             fields=QueryFieldsManager.get_equipes_fields(),
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return res.engagements if res else None
 
@@ -726,8 +735,8 @@ class ApiFFBBAppClient:
             self.list_competitions_async(
                 limit=limit,
                 fields=fields,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_competitions_async(
@@ -754,7 +763,7 @@ class ApiFFBBAppClient:
                 final_url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             if actual_data and isinstance(actual_data, list):
@@ -782,7 +791,9 @@ class ApiFFBBAppClient:
         Returns:
             GetConfigurationResponse: Configuration data with tokens
         """
-        return _run_async(self.get_configuration_async(cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_configuration_async(cached_session=self.async_cached_session)
+        )
 
     async def get_configuration_async(
         self,
@@ -797,7 +808,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
                 retry_config=self.retry_config,
                 timeout_config=self.timeout_config,
             )
@@ -815,7 +826,9 @@ class ApiFFBBAppClient:
         self, id: str, cached_session: Client | None = None
     ) -> GetRencontreResponse | None:
         """Retrieves detailed information about a rencontre."""
-        return _run_async(self.get_rencontre_async(id, cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_rencontre_async(id, cached_session=self.async_cached_session)
+        )
 
     async def get_rencontre_async(
         self, id: str, cached_session: httpx.AsyncClient | None = None
@@ -827,7 +840,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             return GetRencontreResponse.from_dict(actual_data) if actual_data else None
@@ -840,7 +853,9 @@ class ApiFFBBAppClient:
         self, id: str, cached_session: Client | None = None
     ) -> GetEngagementResponse | None:
         """Retrieves detailed information about an engagement."""
-        return _run_async(self.get_engagement_async(id, cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_engagement_async(id, cached_session=self.async_cached_session)
+        )
 
     async def get_engagement_async(
         self, id: str, cached_session: httpx.AsyncClient | None = None
@@ -852,7 +867,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             return GetEngagementResponse.from_dict(actual_data) if actual_data else None
@@ -865,7 +880,9 @@ class ApiFFBBAppClient:
         self, id: str, cached_session: Client | None = None
     ) -> GetFormationResponse | None:
         """Retrieves detailed information about a formation."""
-        return _run_async(self.get_formation_async(id, cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_formation_async(id, cached_session=self.async_cached_session)
+        )
 
     async def get_formation_async(
         self, id: str, cached_session: httpx.AsyncClient | None = None
@@ -877,7 +894,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             return GetFormationResponse.from_dict(actual_data) if actual_data else None
@@ -890,7 +907,9 @@ class ApiFFBBAppClient:
         self, id: str, cached_session: Client | None = None
     ) -> GetEntraineurResponse | None:
         """Retrieves detailed information about an entraineur."""
-        return _run_async(self.get_entraineur_async(id, cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_entraineur_async(id, cached_session=self.async_cached_session)
+        )
 
     async def get_entraineur_async(
         self, id: str, cached_session: httpx.AsyncClient | None = None
@@ -902,7 +921,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             return GetEntraineurResponse.from_dict(actual_data) if actual_data else None
@@ -915,7 +934,9 @@ class ApiFFBBAppClient:
         self, id: str, cached_session: Client | None = None
     ) -> GetCommuneResponse | None:
         """Retrieves detailed information about a commune."""
-        return _run_async(self.get_commune_async(id, cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_commune_async(id, cached_session=self.async_cached_session)
+        )
 
     async def get_commune_async(
         self, id: str, cached_session: httpx.AsyncClient | None = None
@@ -927,7 +948,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             return GetCommuneResponse.from_dict(actual_data) if actual_data else None
@@ -940,7 +961,9 @@ class ApiFFBBAppClient:
         self, id: str, cached_session: Client | None = None
     ) -> GetOfficielResponse | None:
         """Retrieves detailed information about an officiel."""
-        return _run_async(self.get_officiel_async(id, cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_officiel_async(id, cached_session=self.async_cached_session)
+        )
 
     async def get_officiel_async(
         self, id: str, cached_session: httpx.AsyncClient | None = None
@@ -952,7 +975,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             return GetOfficielResponse.from_dict(actual_data) if actual_data else None
@@ -965,7 +988,9 @@ class ApiFFBBAppClient:
         self, id: str, cached_session: Client | None = None
     ) -> GetSalleResponse | None:
         """Retrieves detailed information about a salle."""
-        return _run_async(self.get_salle_async(id, cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_salle_async(id, cached_session=self.async_cached_session)
+        )
 
     async def get_salle_async(
         self, id: str, cached_session: httpx.AsyncClient | None = None
@@ -977,7 +1002,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             return GetSalleResponse.from_dict(actual_data) if actual_data else None
@@ -990,7 +1015,9 @@ class ApiFFBBAppClient:
         self, id: str, cached_session: Client | None = None
     ) -> GetTerrainResponse | None:
         """Retrieves detailed information about a terrain."""
-        return _run_async(self.get_terrain_async(id, cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_terrain_async(id, cached_session=self.async_cached_session)
+        )
 
     async def get_terrain_async(
         self, id: str, cached_session: httpx.AsyncClient | None = None
@@ -1002,7 +1029,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             return GetTerrainResponse.from_dict(actual_data) if actual_data else None
@@ -1015,7 +1042,9 @@ class ApiFFBBAppClient:
         self, id: str, cached_session: Client | None = None
     ) -> GetTournoiResponse | None:
         """Retrieves detailed information about a tournoi."""
-        return _run_async(self.get_tournoi_async(id, cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_tournoi_async(id, cached_session=self.async_cached_session)
+        )
 
     async def get_tournoi_async(
         self, id: str, cached_session: httpx.AsyncClient | None = None
@@ -1027,7 +1056,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             return GetTournoiResponse.from_dict(actual_data) if actual_data else None
@@ -1040,7 +1069,9 @@ class ApiFFBBAppClient:
         self, id: str, cached_session: Client | None = None
     ) -> GetPratiqueResponse | None:
         """Retrieves detailed information about a pratique."""
-        return _run_async(self.get_pratique_async(id, cached_session=cached_session))  # type: ignore[no-any-return, arg-type]
+        return _run_async(
+            self.get_pratique_async(id, cached_session=self.async_cached_session)
+        )
 
     async def get_pratique_async(
         self, id: str, cached_session: httpx.AsyncClient | None = None
@@ -1052,7 +1083,7 @@ class ApiFFBBAppClient:
                 url,
                 self.headers,
                 debug=self.debug,
-                cached_session=cached_session or self.async_cached_session,
+                cached_session=self.async_cached_session or self.async_cached_session,
             )
             actual_data = data.get("data") if data and isinstance(data, dict) else data
             return GetPratiqueResponse.from_dict(actual_data) if actual_data else None
@@ -1069,8 +1100,10 @@ class ApiFFBBAppClient:
     ) -> dict[str, Any] | None:
         """Retrieves detailed information about a formation session."""
         return _run_async(
-            self.get_session_async(id, fields=fields, cached_session=cached_session)
-        )  # type: ignore[no-any-return, arg-type]
+            self.get_session_async(
+                id, fields=fields, cached_session=self.async_cached_session
+            )
+        )
 
     def list_sessions(
         self,
@@ -1087,8 +1120,8 @@ class ApiFFBBAppClient:
                 fields=fields,
                 filter_criteria=filter_criteria,
                 sort=sort,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def get_session_async(
@@ -1099,7 +1132,10 @@ class ApiFFBBAppClient:
     ) -> dict[str, Any] | None:
         """Asynchronously retrieves detailed information about a formation session."""
         return await self._get_directus_item_async(
-            ENDPOINT_SESSIONS, id, fields=fields, cached_session=cached_session
+            ENDPOINT_SESSIONS,
+            id,
+            fields=fields,
+            cached_session=self.async_cached_session,
         )
 
     async def list_sessions_async(
@@ -1117,7 +1153,7 @@ class ApiFFBBAppClient:
             fields=fields,
             filter_criteria=filter_criteria,
             sort=sort,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     # ---------- list_rencontres ----------
@@ -1137,8 +1173,8 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_rencontres_async(
@@ -1157,7 +1193,7 @@ class ApiFFBBAppClient:
             sort=sort,
             offset=offset,
             search=search,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return _present_items([GetRencontreResponse.from_dict(r) for r in raw if r])
 
@@ -1178,8 +1214,8 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_salles_async(
@@ -1198,7 +1234,7 @@ class ApiFFBBAppClient:
             sort=sort,
             offset=offset,
             search=search,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return _present_items([GetSalleResponse.from_dict(r) for r in raw if r])
 
@@ -1219,8 +1255,8 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_terrains_async(
@@ -1239,7 +1275,7 @@ class ApiFFBBAppClient:
             sort=sort,
             offset=offset,
             search=search,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return _present_items([GetTerrainResponse.from_dict(r) for r in raw if r])
 
@@ -1260,8 +1296,8 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_tournois_async(
@@ -1280,7 +1316,7 @@ class ApiFFBBAppClient:
             sort=sort,
             offset=offset,
             search=search,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return _present_items([GetTournoiResponse.from_dict(r) for r in raw if r])
 
@@ -1301,8 +1337,8 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_engagements_async(
@@ -1321,7 +1357,7 @@ class ApiFFBBAppClient:
             sort=sort,
             offset=offset,
             search=search,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return _present_items([GetEngagementResponse.from_dict(r) for r in raw if r])
 
@@ -1342,8 +1378,8 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_formations_async(
@@ -1362,7 +1398,7 @@ class ApiFFBBAppClient:
             sort=sort,
             offset=offset,
             search=search,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return _present_items([GetFormationResponse.from_dict(r) for r in raw if r])
 
@@ -1383,8 +1419,8 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_entraineurs_async(
@@ -1403,7 +1439,7 @@ class ApiFFBBAppClient:
             sort=sort,
             offset=offset,
             search=search,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return _present_items([GetEntraineurResponse.from_dict(r) for r in raw if r])
 
@@ -1424,8 +1460,8 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_communes_async(
@@ -1444,7 +1480,7 @@ class ApiFFBBAppClient:
             sort=sort,
             offset=offset,
             search=search,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return _present_items([GetCommuneResponse.from_dict(r) for r in raw if r])
 
@@ -1465,8 +1501,8 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_officiels_async(
@@ -1485,7 +1521,7 @@ class ApiFFBBAppClient:
             sort=sort,
             offset=offset,
             search=search,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return _present_items([GetOfficielResponse.from_dict(r) for r in raw if r])
 
@@ -1506,8 +1542,8 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_pratiques_async(
@@ -1526,7 +1562,7 @@ class ApiFFBBAppClient:
             sort=sort,
             offset=offset,
             search=search,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
         return _present_items([GetPratiqueResponse.from_dict(r) for r in raw if r])
 
@@ -1551,8 +1587,8 @@ class ApiFFBBAppClient:
                 search=search,
                 page_size=page_size,
                 max_items=max_items,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     def list_all_rencontres(
@@ -1571,8 +1607,8 @@ class ApiFFBBAppClient:
                 search=search,
                 page_size=page_size,
                 max_items=max_items,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     def list_all_salles(
@@ -1591,8 +1627,8 @@ class ApiFFBBAppClient:
                 search=search,
                 page_size=page_size,
                 max_items=max_items,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     def list_all_terrains(
@@ -1611,8 +1647,8 @@ class ApiFFBBAppClient:
                 search=search,
                 page_size=page_size,
                 max_items=max_items,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     def list_all_tournois(
@@ -1631,8 +1667,8 @@ class ApiFFBBAppClient:
                 search=search,
                 page_size=page_size,
                 max_items=max_items,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     def list_all_engagements(
@@ -1651,8 +1687,8 @@ class ApiFFBBAppClient:
                 search=search,
                 page_size=page_size,
                 max_items=max_items,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     def list_all_formations(
@@ -1671,8 +1707,8 @@ class ApiFFBBAppClient:
                 search=search,
                 page_size=page_size,
                 max_items=max_items,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     def list_all_entraineurs(
@@ -1691,8 +1727,8 @@ class ApiFFBBAppClient:
                 search=search,
                 page_size=page_size,
                 max_items=max_items,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     def list_all_communes(
@@ -1711,8 +1747,8 @@ class ApiFFBBAppClient:
                 search=search,
                 page_size=page_size,
                 max_items=max_items,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     def list_all_officiels(
@@ -1731,8 +1767,8 @@ class ApiFFBBAppClient:
                 search=search,
                 page_size=page_size,
                 max_items=max_items,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     def list_all_pratiques(
@@ -1751,8 +1787,8 @@ class ApiFFBBAppClient:
                 search=search,
                 page_size=page_size,
                 max_items=max_items,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def _list_all_directus_items_async(
@@ -1776,7 +1812,7 @@ class ApiFFBBAppClient:
                 sort=sort,
                 offset=offset,
                 search=search,
-                cached_session=cached_session,
+                cached_session=self.async_cached_session,
             )
             if not batch:
                 break
@@ -1803,7 +1839,7 @@ class ApiFFBBAppClient:
             search=search,
             page_size=page_size,
             max_items=max_items,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     async def list_all_salles_async(
@@ -1823,7 +1859,7 @@ class ApiFFBBAppClient:
             search=search,
             page_size=page_size,
             max_items=max_items,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     async def list_all_terrains_async(
@@ -1843,7 +1879,7 @@ class ApiFFBBAppClient:
             search=search,
             page_size=page_size,
             max_items=max_items,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     async def list_all_tournois_async(
@@ -1863,7 +1899,7 @@ class ApiFFBBAppClient:
             search=search,
             page_size=page_size,
             max_items=max_items,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     async def list_all_engagements_async(
@@ -1883,7 +1919,7 @@ class ApiFFBBAppClient:
             search=search,
             page_size=page_size,
             max_items=max_items,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     async def list_all_formations_async(
@@ -1903,7 +1939,7 @@ class ApiFFBBAppClient:
             search=search,
             page_size=page_size,
             max_items=max_items,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     async def list_all_entraineurs_async(
@@ -1923,7 +1959,7 @@ class ApiFFBBAppClient:
             search=search,
             page_size=page_size,
             max_items=max_items,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     async def list_all_communes_async(
@@ -1943,7 +1979,7 @@ class ApiFFBBAppClient:
             search=search,
             page_size=page_size,
             max_items=max_items,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     async def list_all_officiels_async(
@@ -1963,7 +1999,7 @@ class ApiFFBBAppClient:
             search=search,
             page_size=page_size,
             max_items=max_items,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     async def list_all_pratiques_async(
@@ -1983,7 +2019,7 @@ class ApiFFBBAppClient:
             search=search,
             page_size=page_size,
             max_items=max_items,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     def get_genius_sport_match(
@@ -1995,8 +2031,8 @@ class ApiFFBBAppClient:
         """Retrieves detailed Genius Sports match statistics."""
         return _run_async(
             self.get_genius_sport_match_async(
-                id, fields=fields, cached_session=cached_session
-            )  # type: ignore[no-any-return, arg-type]
+                id, fields=fields, cached_session=self.async_cached_session
+            )
         )
 
     def list_genius_sport_matches(
@@ -2014,8 +2050,8 @@ class ApiFFBBAppClient:
                 fields=fields,
                 filter_criteria=filter_criteria,
                 sort=sort,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def get_genius_sport_match_async(
@@ -2029,7 +2065,7 @@ class ApiFFBBAppClient:
             ENDPOINT_GENIUS_SPORT_MATCHES,
             id,
             fields=fields,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     async def list_genius_sport_matches_async(
@@ -2047,7 +2083,7 @@ class ApiFFBBAppClient:
             fields=fields,
             filter_criteria=filter_criteria,
             sort=sort,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     def list_genius_sports_live_logs(
@@ -2065,8 +2101,8 @@ class ApiFFBBAppClient:
                 fields=fields,
                 filter_criteria=filter_criteria,
                 sort=sort,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_genius_sports_live_logs_async(
@@ -2084,7 +2120,7 @@ class ApiFFBBAppClient:
             fields=fields,
             filter_criteria=filter_criteria,
             sort=sort,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     def get_rematch_video(
@@ -2096,8 +2132,8 @@ class ApiFFBBAppClient:
         """Retrieves a Rematch video linked to FFBB data."""
         return _run_async(
             self.get_rematch_video_async(
-                id, fields=fields, cached_session=cached_session
-            )  # type: ignore[no-any-return, arg-type]
+                id, fields=fields, cached_session=self.async_cached_session
+            )
         )
 
     def list_rematch_videos(
@@ -2115,8 +2151,8 @@ class ApiFFBBAppClient:
                 fields=fields,
                 filter_criteria=filter_criteria,
                 sort=sort,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def get_rematch_video_async(
@@ -2127,7 +2163,10 @@ class ApiFFBBAppClient:
     ) -> dict[str, Any] | None:
         """Asynchronously retrieves a Rematch video linked to FFBB data."""
         return await self._get_directus_item_async(
-            ENDPOINT_REMATCH_VIDEOS, id, fields=fields, cached_session=cached_session
+            ENDPOINT_REMATCH_VIDEOS,
+            id,
+            fields=fields,
+            cached_session=self.async_cached_session,
         )
 
     async def list_rematch_videos_async(
@@ -2145,7 +2184,7 @@ class ApiFFBBAppClient:
             fields=fields,
             filter_criteria=filter_criteria,
             sort=sort,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     def get_edf_match(
@@ -2156,8 +2195,10 @@ class ApiFFBBAppClient:
     ) -> dict[str, Any] | None:
         """Retrieves an Equipe de France match."""
         return _run_async(
-            self.get_edf_match_async(id, fields=fields, cached_session=cached_session)
-        )  # type: ignore[no-any-return, arg-type]
+            self.get_edf_match_async(
+                id, fields=fields, cached_session=self.async_cached_session
+            )
+        )
 
     async def get_edf_match_async(
         self,
@@ -2167,7 +2208,10 @@ class ApiFFBBAppClient:
     ) -> dict[str, Any] | None:
         """Asynchronously retrieves an Equipe de France match."""
         return await self._get_directus_item_async(
-            ENDPOINT_EDF_MATCHES, id, fields=fields, cached_session=cached_session
+            ENDPOINT_EDF_MATCHES,
+            id,
+            fields=fields,
+            cached_session=self.async_cached_session,
         )
 
     def list_edf_matches(
@@ -2185,8 +2229,8 @@ class ApiFFBBAppClient:
                 fields=fields,
                 filter_criteria=filter_criteria,
                 sort=sort,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_edf_matches_async(
@@ -2204,7 +2248,7 @@ class ApiFFBBAppClient:
             fields=fields,
             filter_criteria=filter_criteria,
             sort=sort,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     def get_edf_player(
@@ -2215,8 +2259,10 @@ class ApiFFBBAppClient:
     ) -> dict[str, Any] | None:
         """Retrieves an Equipe de France player."""
         return _run_async(
-            self.get_edf_player_async(id, fields=fields, cached_session=cached_session)
-        )  # type: ignore[no-any-return, arg-type]
+            self.get_edf_player_async(
+                id, fields=fields, cached_session=self.async_cached_session
+            )
+        )
 
     async def get_edf_player_async(
         self,
@@ -2226,7 +2272,10 @@ class ApiFFBBAppClient:
     ) -> dict[str, Any] | None:
         """Asynchronously retrieves an Equipe de France player."""
         return await self._get_directus_item_async(
-            ENDPOINT_EDF_PLAYERS, id, fields=fields, cached_session=cached_session
+            ENDPOINT_EDF_PLAYERS,
+            id,
+            fields=fields,
+            cached_session=self.async_cached_session,
         )
 
     def list_edf_players(
@@ -2244,8 +2293,8 @@ class ApiFFBBAppClient:
                 fields=fields,
                 filter_criteria=filter_criteria,
                 sort=sort,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_edf_players_async(
@@ -2263,7 +2312,7 @@ class ApiFFBBAppClient:
             fields=fields,
             filter_criteria=filter_criteria,
             sort=sort,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     def list_edf_teams(
@@ -2281,8 +2330,8 @@ class ApiFFBBAppClient:
                 fields=fields,
                 filter_criteria=filter_criteria,
                 sort=sort,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_edf_teams_async(
@@ -2300,7 +2349,7 @@ class ApiFFBBAppClient:
             fields=fields,
             filter_criteria=filter_criteria,
             sort=sort,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
 
     def list_edf_rosters(
@@ -2318,8 +2367,8 @@ class ApiFFBBAppClient:
                 fields=fields,
                 filter_criteria=filter_criteria,
                 sort=sort,
-                cached_session=cached_session,
-            )  # type: ignore[no-any-return, arg-type]
+                cached_session=self.async_cached_session,
+            )
         )
 
     async def list_edf_rosters_async(
@@ -2337,5 +2386,5 @@ class ApiFFBBAppClient:
             fields=fields,
             filter_criteria=filter_criteria,
             sort=sort,
-            cached_session=cached_session,
+            cached_session=self.async_cached_session,
         )
