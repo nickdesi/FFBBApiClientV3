@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2026-05-17
+
+### Changed
+- **BREAKING (internal)**: Sync methods now delegate to async counterparts via `_run_async()` helper, eliminating ~604 lines of duplication
+- Sync and async share a single source of truth — async methods are canonical
+- `ThreadPoolExecutor` fallback handles nested event loops gracefully
+
+### Added
+- **NEW**: Pre-push hook for type-check (mypy + pyright) — catches type errors before push
+- **NEW**: CodeQL security scanning in CI
+- **NEW**: Dependabot for automated dependency updates (GitHub Actions + pip)
+- **NEW**: `SECURITY.md` security policy
+
+### Fixed
+- SQLite cache concurrency: sync uses `http_cache.db`, async uses `http_cache_async.db` (prevents `database is locked`)
+- CI type check failures with proper generic typing for `_run_async(coro: Awaitable[T]) -> T`
+- `FFBBDataClient` wrapper parity — added 8 missing async method delegations
+
+### Removed
+- Dead `invalidate_pattern()` from `CacheManager` and related tests
+- `ffbb_api_client_v3` shim, dead scripts, and backward-compat alias
+
+### Security
+- CI supply chain hardened with pinned action versions and trusted publishers
+
+## [2.0.2] - 2026-05-17
+
+### Changed
+- README version updated to v2.0.2
+
 ## [1.6.1] - 2026-04-29
 
 ### Changed

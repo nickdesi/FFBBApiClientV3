@@ -37,16 +37,15 @@
 
 ---
 
-## 🚀 Version v2.0.2 — Mai 2026
+## 🚀 Version v2.1.0 — Mai 2026
 
 Principales évolutions récentes :
 
-- ajout d'entités REST et Meilisearch : rencontres, officiels, entraîneurs, communes et assets ;
-- réutilisation des clients `httpx` synchrones et asynchrones ;
-- cache Meilisearch optimisé pour limiter les copies coûteuses ;
-- retries de transport configurables via `CacheConfig.transport_retries` ;
-- mise à jour des schémas OpenAPI, collections et index ;
-- stabilisation CI, typage, tests et formatage.
+- **unification sync/async** : les méthodes synchrones délèguent désormais à leurs homologues asynchrones via `_run_async()`, éliminant ~604 lignes de duplication ;
+- **nouvelles entités** : EDF (matches, joueurs, rosters, équipes), Genius Sport (matches, live logs), Rematch Videos ;
+- **cache SQLite concurrency-safe** : fichiers séparés pour sync (`http_cache.db`) et async (`http_cache_async.db`) ;
+- **CI renforcée** : mypy + pyright + CodeQL + Dependabot + hook pre-push ;
+- **nettoyage** : suppression du shim `ffbb_api_client_v3`, scripts morts et code mort (`invalidate_pattern`).
 
 Voir aussi : [`CHANGELOG.md`](CHANGELOG.md) et [`RELEASE_NOTES.md`](RELEASE_NOTES.md).
 
@@ -96,11 +95,12 @@ lives = client.get_lives()
 | Domaine | Capacités |
 |---|---|
 | API FFBB | clubs, compétitions, organismes, saisons, poules, classements, rencontres, lives |
+| Entités additionnelles | EDF (matches, joueurs, rosters, équipes), Genius Sport, Rematch Videos |
 | Recherche | organismes, compétitions, rencontres, salles, terrains, pratiques, tournois, engagements et formations |
 | REST typé | récupération de ressources individuelles avec modèles Pydantic v2 |
-| Async | méthodes `*_async()` pour les appels réseau non bloquants |
-| Cache | cache HTTP `hishel`, sessions `httpx` réutilisées, retries configurables |
-| Sécurité | masquage des tokens dans les logs |
+| Async | méthodes `*_async()` — source de vérité ; sync délègue via `_run_async()` |
+| Cache | cache HTTP `hishel`, sessions `httpx` réutilisées, retries configurables, SQLite séparés sync/async |
+| Sécurité | masquage des tokens dans les logs, CodeQL scanning, Dependabot |
 | IA / MCP | structure compatible avec des wrappers MCP et agents IA |
 
 ---
@@ -220,14 +220,16 @@ Il est donc possible de laisser le client résoudre les tokens automatiquement o
 ```text
 src/ffbb_data_client/
 ├── clients/
-│   ├── ffbb_data_client.py       # Façade publique
-│   ├── api_ffbb_app_client.py      # Client REST FFBB
-│   └── meilisearch_ffbb_client.py  # Client recherche Meilisearch
-├── helpers/                        # Requêtes HTTP, multi-search, conversions
-├── models/                         # Modèles Pydantic v2
-├── utils/                          # cache, tokens, logging sécurisé
-└── data/                           # schémas et métadonnées embarqués
+│   ├── ffbb_data_client.py       # Façade publique (sync → async delegation)
+│   ├── api_ffbb_app_client.py    # Client REST FFBB (async source of truth)
+│   └── meilisearch_ffbb_client.py # Client recherche Meilisearch
+├── helpers/                       # Requêtes HTTP, multi-search, conversions
+├── models/                        # Modèles Pydantic v2
+├── utils/                         # cache (sync/async séparés), tokens, logging sécurisé
+└── data/                          # schémas et métadonnées embarqués
 ```
+
+> **Architecture sync/async** : Depuis v2.1.0, les méthodes asynchrones sont la source de vérité. Les méthodes synchrones délèguent via `_run_async()`, un helper qui gère les event loops imbriqués avec `ThreadPoolExecutor`.
 
 ---
 
@@ -244,7 +246,12 @@ Commandes utiles :
 pytest tests/unit/
 pytest tests/integration/
 pytest tests/ --cov=src
+tox -e type          # mypy + pyright
 ```
+
+Hooks automatiques :
+- **pre-push** : exécute mypy + pyright avant chaque push
+- **pre-commit** : black, isort, flake8, trailing-whitespace
 
 Documentation complémentaire :
 
