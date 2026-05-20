@@ -3,8 +3,6 @@ from __future__ import annotations
 import httpx
 from httpx import Client
 
-# Re-exported for backward-compatible test patching
-from ..helpers.multi_search_query_helper import generate_queries  # noqa: F401
 from ..utils.cache_manager import CacheManager
 from ..utils.input_validation import validate_boolean, validate_token
 from ..utils.token_manager import TokenManager
